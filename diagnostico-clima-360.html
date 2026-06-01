@@ -808,7 +808,7 @@
 
     function selectedOptionsFor(question) {
       const answer = state.answers[question.id];
-      if (!answer) return [];
+      if (answer === undefined || answer === null) return [];
       return Array.isArray(answer) ? answer : [answer];
     }
 
@@ -984,7 +984,10 @@
 
     nextButton.addEventListener('click', () => {
       const question = questions[state.step];
-      if (!state.answers[question.id] || (Array.isArray(state.answers[question.id]) && state.answers[question.id].length === 0)) {
+      const answer = state.answers[question.id];
+      const hasNoAnswer = answer === undefined || answer === null || (Array.isArray(answer) && answer.length === 0);
+
+      if (hasNoAnswer) {
         options.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }], { duration: 250 });
         return;
       }
