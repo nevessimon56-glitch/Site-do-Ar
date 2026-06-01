@@ -683,7 +683,7 @@
           <div class="result-badges" id="resultBadges"></div>
           <div class="actions">
             <a class="btn" id="primaryCta" href="https://www.sitedoar.com.br/" target="_blank" rel="noopener">Ver recomendados</a>
-            <a class="btn alt" href="https://wa.me/5519984176960" target="_blank" rel="noopener">Enviar para especialista</a>
+            <a class="btn alt" id="specialistCta" href="https://wa.me/5519984176960" target="_blank" rel="noopener">Enviar para especialista</a>
           </div>
         </div>
 
@@ -1035,6 +1035,7 @@
       document.getElementById('routeText').textContent = `${persona.route}${featureLabels.length ? ` Recursos citados: ${featureLabels.join(', ')}.` : ''}`;
       document.getElementById('primaryCta').href = persona.link;
       document.getElementById('primaryCta').textContent = hasUrgency || topKey === 'power' ? 'Falar no WhatsApp' : 'Ver recomendados';
+      document.getElementById('specialistCta').href = buildSpecialistWhatsappLink(persona.title, btu, dimensions[topKey]);
       document.getElementById('resultBadges').innerHTML = [
         `${btu.toLocaleString('pt-BR')} BTUs`,
         dimensions[topKey],
@@ -1044,6 +1045,20 @@
 
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function buildSpecialistWhatsappLink(profile, btu, priority) {
+      const message = [
+        'Olá! Fiz o Diagnóstico Clima 360.',
+        '',
+        `Meu perfil deu: ${profile}`,
+        `Faixa sugerida: ${btu.toLocaleString('pt-BR')} BTUs`,
+        `Prioridade: ${priority}`,
+        '',
+        'Pode me ajudar a escolher o modelo ideal?'
+      ].join('\n');
+
+      return `https://wa.me/5519984176960?text=${encodeURIComponent(message)}`;
     }
 
     options.addEventListener('click', (event) => {
