@@ -1006,7 +1006,7 @@
           title: 'Perfil Solucao Rapida',
           text: 'O cliente quer resolver logo. Reduza atrito: mostre produtos disponiveis, capacidade segura e chamada direta para WhatsApp.',
           route: 'Priorize atendimento rapido e equipamentos com capacidade bem dimensionada.',
-          link: 'https://wa.me/5519984176960'
+          link: 'https://www.sitedoar.com.br/ar-split/24000-btus?pg=1'
         },
         silence: {
           title: 'Perfil Silencio e Descanso',
@@ -1024,7 +1024,7 @@
           title: 'Perfil Alta Performance',
           text: 'O ambiente parece exigir mais potencia ou planejamento. A recomendacao deve evitar subdimensionamento e incentivar contato consultivo.',
           route: 'Leve para WhatsApp ou vitrines de maior capacidade, especialmente em comercio e ambientes com muito sol.',
-          link: 'https://wa.me/5519984176960'
+          link: 'https://www.sitedoar.com.br/ar-split/36000-btus?pg=1'
         }
       };
 
@@ -1034,7 +1034,7 @@
       document.getElementById('routeTitle').textContent = hasUrgency ? 'Rota recomendada: atendimento imediato' : 'Rota recomendada';
       document.getElementById('routeText').textContent = `${persona.route}${featureLabels.length ? ` Recursos citados: ${featureLabels.join(', ')}.` : ''}`;
       document.getElementById('primaryCta').href = persona.link;
-      document.getElementById('primaryCta').textContent = hasUrgency || topKey === 'power' ? 'Falar no WhatsApp' : 'Ver recomendados';
+      document.getElementById('primaryCta').textContent = 'Ver produtos recomendados';
       document.getElementById('specialistCta').href = buildSpecialistWhatsappLink(persona.title, btu, dimensions[topKey]);
       document.getElementById('resultBadges').innerHTML = [
         `${btu.toLocaleString('pt-BR')} BTUs`,
