@@ -432,6 +432,44 @@
       line-height: 1.42;
     }
 
+    .history-fact {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid rgba(56, 216, 255, 0.28);
+      border-radius: 22px;
+      background: rgba(56, 216, 255, 0.09);
+    }
+
+    .history-fact-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      color: #031020;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--yellow), #fff0a8);
+    }
+
+    .history-fact strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--cyan);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .history-fact p {
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
     .quiz-actions {
       display: flex;
       justify-content: space-between;
@@ -620,6 +658,13 @@
           <h2 id="questionTitle"></h2>
           <p class="hint" id="questionHint"></p>
           <div class="option-grid" id="options"></div>
+          <div class="history-fact" id="historyFact">
+            <span class="history-fact-icon">?</span>
+            <div>
+              <strong>Voce sabia?</strong>
+              <p id="historyFactText">Escolha uma resposta para desbloquear um fato historico sobre a evolucao do ar-condicionado.</p>
+            </div>
+          </div>
         </div>
 
         <div class="quiz-actions">
@@ -774,10 +819,26 @@
       }
     ];
 
+    const historyFacts = [
+      'Em 1842, o medico John Gorrie projetou uma maquina para produzir gelo e resfriar ambientes hospitalares na Florida.',
+      'Em 1902, Willis Carrier criou um sistema moderno de controle de temperatura e umidade para resolver problemas em uma grafica de Nova York.',
+      'O termo "air conditioning" foi popularizado em 1906 pelo engenheiro Stuart Cramer, que estudava controle de umidade em fabricas texteis.',
+      'Em 1904, visitantes da Feira Mundial de St. Louis conheceram uma das primeiras grandes demonstracoes publicas de resfriamento mecanico.',
+      'Na decada de 1920, cinemas com ar-condicionado viraram atracao nos Estados Unidos e ajudaram a popularizar sessoes no verao.',
+      'Em 1931, H.H. Schultz e J.Q. Sherman patentearam uma versao inicial do ar-condicionado de janela.',
+      'Em 1939, a Packard apresentou um dos primeiros sistemas de ar-condicionado para automoveis de producao.',
+      'Depois da Segunda Guerra Mundial, o ar-condicionado residencial se tornou mais acessivel e mudou o jeito de construir casas e escritorios.',
+      'A tecnologia inverter ganhou espaco por ajustar a velocidade do compressor, ajudando a economizar energia e manter temperatura mais estavel.',
+      'A evolucao dos fluidos refrigerantes foi marcada por mudancas ambientais, especialmente apos o Protocolo de Montreal limitar CFCs.',
+      'O ar-condicionado ajudou no crescimento de regioes muito quentes, tornando casas, comercios e escritorios mais confortaveis.',
+      'Sistemas modernos nao trabalham so com frio: filtragem, umidade, ruido e eficiencia energetica viraram parte importante da climatizacao.'
+    ];
+
     const bars = document.getElementById('bars');
     const questionTitle = document.getElementById('questionTitle');
     const questionHint = document.getElementById('questionHint');
     const options = document.getElementById('options');
+    const historyFactText = document.getElementById('historyFactText');
     const questionCounter = document.getElementById('questionCounter');
     const questionType = document.getElementById('questionType');
     const progressBar = document.getElementById('progressBar');
@@ -789,6 +850,7 @@
     const backButton = document.getElementById('backButton');
     const nextButton = document.getElementById('nextButton');
     const result = document.getElementById('result');
+    let lastHistoryFactIndex = -1;
 
     function createBars() {
       bars.innerHTML = Object.entries(dimensions).map(([key, label]) => `
@@ -844,6 +906,19 @@
     function normalizeBtu(value) {
       const capacities = [9000, 12000, 18000, 24000, 30000, 36000, 48000, 60000];
       return capacities.find((capacity) => value <= capacity) || 60000;
+    }
+
+    function showRandomHistoryFact() {
+      let nextIndex = Math.floor(Math.random() * historyFacts.length);
+
+      if (historyFacts.length > 1) {
+        while (nextIndex === lastHistoryFactIndex) {
+          nextIndex = Math.floor(Math.random() * historyFacts.length);
+        }
+      }
+
+      lastHistoryFactIndex = nextIndex;
+      historyFactText.textContent = historyFacts[nextIndex];
     }
 
     function updateLiveProfile() {
@@ -903,6 +978,7 @@
       }
 
       renderQuestion();
+      showRandomHistoryFact();
     }
 
     function buildResult() {
