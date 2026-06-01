@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Desafio do Ar | Site Do Ar</title>
+  <meta name="description" content="Jogue o Desafio do Ar e descubra qual ar-condicionado combina com seu ambiente.">
+  <style>
+    :root {
+      --blue: #0677ee;
+      --blue-dark: #0754ad;
+      --blue-soft: #eaf4ff;
+      --green: #4ec247;
+      --yellow: #ffd166;
+      --text: #18324a;
+      --muted: #6b7c8f;
+      --card: #ffffff;
+      --line: #dbe8f5;
+      --shadow: 0 18px 45px rgba(4, 57, 112, 0.16);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(6, 119, 238, 0.18), transparent 32rem),
+        linear-gradient(135deg, #f7fbff 0%, #eaf4ff 48%, #ffffff 100%);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .game-page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 28px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .hero-card,
+    .game-card,
+    .result-card {
+      border: 1px solid rgba(6, 119, 238, 0.14);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-card {
+      padding: clamp(24px, 4vw, 44px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--blue-dark);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--blue-soft);
+    }
+
+    h1,
+    h2,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 16px;
+      font-size: clamp(2.1rem, 5vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-text {
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.65;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 999px;
+      color: #ffffff;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 10px 24px rgba(6, 119, 238, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px rgba(6, 119, 238, 0.32);
+    }
+
+    .btn-secondary {
+      color: var(--blue-dark);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .hero-visual {
+      min-height: 360px;
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(160deg, rgba(6, 119, 238, 0.95), rgba(8, 164, 255, 0.82)),
+        radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.5), transparent 18rem);
+      box-shadow: var(--shadow);
+    }
+
+    .air-unit {
+      position: absolute;
+      top: 58px;
+      left: 50%;
+      width: min(320px, 76%);
+      height: 78px;
+      transform: translateX(-50%);
+      border-radius: 18px;
+      background: #ffffff;
+      box-shadow: 0 20px 30px rgba(0, 36, 80, 0.22);
+    }
+
+    .air-unit::before {
+      content: "";
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      bottom: 14px;
+      height: 8px;
+      border-radius: 999px;
+      background: #dbe8f5;
+    }
+
+    .wind {
+      position: absolute;
+      left: 50%;
+      top: 156px;
+      width: 7px;
+      height: 150px;
+      border-radius: 999px;
+      opacity: 0.35;
+      background: #ffffff;
+      animation: wind 1.6s ease-in-out infinite;
+    }
+
+    .wind:nth-child(2) {
+      margin-left: -74px;
+      animation-delay: 0.25s;
+    }
+
+    .wind:nth-child(3) {
+      margin-left: -28px;
+      height: 185px;
+      animation-delay: 0.1s;
+    }
+
+    .wind:nth-child(4) {
+      margin-left: 30px;
+      height: 175px;
+      animation-delay: 0.4s;
+    }
+
+    .wind:nth-child(5) {
+      margin-left: 78px;
+      animation-delay: 0.2s;
+    }
+
+    .score-bubble {
+      position: absolute;
+      right: 24px;
+      bottom: 24px;
+      width: 154px;
+      padding: 18px;
+      border-radius: 22px;
+      color: var(--blue-dark);
+      font-weight: 800;
+      background: #ffffff;
+      box-shadow: 0 20px 34px rgba(0, 36, 80, 0.18);
+    }
+
+    .score-bubble span {
+      display: block;
+      margin-top: 6px;
+      color: var(--green);
+      font-size: 2.1rem;
+    }
+
+    @keyframes wind {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(22px);
+      }
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: 0.72fr 1.28fr;
+      gap: 24px;
+    }
+
+    .game-card {
+      padding: 24px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .progress {
+      height: 12px;
+      margin: 12px 0 24px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #dbe8f5;
+    }
+
+    .progress-bar {
+      width: 25%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      transition: width 0.25s ease;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      color: var(--muted);
+      background: #f4f9ff;
+      border: 1px solid var(--line);
+      font-weight: 700;
+    }
+
+    .step-pill.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      border-color: transparent;
+    }
+
+    .step-pill.done {
+      color: var(--blue-dark);
+      background: #eaffee;
+      border-color: rgba(78, 194, 71, 0.28);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      border-radius: 999px;
+      color: var(--blue-dark);
+      background: #ffffff;
+    }
+
+    .question-card {
+      padding: clamp(22px, 4vw, 34px);
+    }
+
+    .question-card h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      letter-spacing: -0.035em;
+    }
+
+    .question-card .hint {
+      margin-bottom: 22px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .field {
+      margin: 18px 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      height: 52px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      color: var(--text);
+      font-size: 1rem;
+      background: #ffffff;
+      outline: none;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--blue);
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .choice {
+      min-height: 112px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      text-align: left;
+      color: var(--text);
+      font-weight: 800;
+      background: #ffffff;
+      cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    }
+
+    .choice small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .choice:hover,
+    .choice.selected {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      transform: translateY(-2px);
+    }
+
+    .game-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .result-card {
+      display: none;
+      margin-top: 24px;
+      padding: clamp(24px, 4vw, 40px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .result-card.show {
+      display: block;
+    }
+
+    .result-card::after {
+      content: "";
+      position: absolute;
+      right: -90px;
+      top: -90px;
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      background: rgba(78, 194, 71, 0.14);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 26px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .result-btu {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 12px 0;
+      color: var(--blue-dark);
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 900;
+      letter-spacing: -0.06em;
+    }
+
+    .result-btu span {
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .result-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .result-list li {
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: var(--muted);
+      background: #f4f9ff;
+      border: 1px solid var(--line);
+    }
+
+    .disclaimer {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 860px) {
+      .hero,
+      .game-grid,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 300px;
+      }
+
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .game-page {
+        width: min(100% - 20px, 1120px);
+        padding: 14px 0;
+      }
+
+      .hero-actions,
+      .game-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="game-page">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-card">
+        <p class="eyebrow">Desafio interativo</p>
+        <h1 id="page-title">Descubra o ar ideal para seu ambiente</h1>
+        <p class="hero-text">
+          Responda algumas perguntas rápidas, ganhe pontos no Desafio do Ar e veja uma sugestão de capacidade em BTUs para começar sua escolha.
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="#game">Começar desafio</a>
+          <a class="btn btn-secondary" href="https://www.sitedoar.com.br/" target="_blank" rel="noopener">Ver loja</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="air-unit"></div>
+        <div class="wind"></div>
+        <div class="wind"></div>
+        <div class="wind"></div>
+        <div class="wind"></div>
+        <div class="score-bubble">
+          Seu clima
+          <span id="heroScore">0%</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="game" class="game-grid" aria-label="Calculadora gamificada de BTUs">
+      <aside class="game-card">
+        <div class="progress-label">
+          <span>Progresso</span>
+          <span id="progressText">1 de 4</span>
+        </div>
+        <div class="progress" aria-hidden="true">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-pill active"><span class="step-number">1</span> Ambiente</div>
+          <div class="step-pill"><span class="step-number">2</span> Sol</div>
+          <div class="step-pill"><span class="step-number">3</span> Pessoas</div>
+          <div class="step-pill"><span class="step-number">4</span> Resultado</div>
+        </div>
+      </aside>
+
+      <div class="game-card question-card">
+        <div class="question" data-step="0">
+          <h2>Qual o tamanho do ambiente?</h2>
+          <p class="hint">Informe a área aproximada em metros quadrados. Se não souber, use uma estimativa.</p>
+          <div class="field">
+            <label for="areaRange">Área: <span id="areaValue">12</span> m²</label>
+            <input id="areaRange" type="range" min="6" max="80" value="12">
+          </div>
+          <div class="field">
+            <label for="roomType">Tipo de ambiente</label>
+            <select id="roomType">
+              <option value="bedroom">Quarto</option>
+              <option value="living">Sala</option>
+              <option value="office">Escritório</option>
+              <option value="store">Loja / Comercial</option>
+              <option value="kitchen">Cozinha / Ambiente com calor extra</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="question" data-step="1" hidden>
+          <h2>Quanto sol bate no ambiente?</h2>
+          <p class="hint">Ambientes com muito sol precisam de mais potência para manter conforto.</p>
+          <div class="choice-grid" data-choice-group="sun">
+            <button class="choice selected" type="button" data-value="low">Pouco sol<small>Janelas menores ou sombra boa.</small></button>
+            <button class="choice" type="button" data-value="medium">Sol moderado<small>Parte do dia com incidência.</small></button>
+            <button class="choice" type="button" data-value="high">Muito sol<small>Sol forte ou janela grande.</small></button>
+          </div>
+        </div>
+
+        <div class="question" data-step="2" hidden>
+          <h2>Quantas pessoas usam o ambiente?</h2>
+          <p class="hint">Pessoas e aparelhos eletrônicos também geram calor.</p>
+          <div class="field">
+            <label for="people">Pessoas normalmente no local</label>
+            <input id="people" type="number" min="1" max="30" value="2">
+          </div>
+          <div class="field">
+            <label for="electronics">Eletrônicos relevantes</label>
+            <input id="electronics" type="number" min="0" max="20" value="1">
+          </div>
+        </div>
+
+        <div class="question" data-step="3" hidden>
+          <h2>Última escolha: qual conforto você quer?</h2>
+          <p class="hint">Isso ajuda a sugerir o tipo de ar-condicionado mais interessante.</p>
+          <div class="choice-grid" data-choice-group="comfort">
+            <button class="choice selected" type="button" data-value="economy">Economia<small>Priorizar modelos inverter.</small></button>
+            <button class="choice" type="button" data-value="fast">Gelada rápido<small>Mais potência e resposta rápida.</small></button>
+            <button class="choice" type="button" data-value="hotcold">Quente/Frio<small>Conforto no inverno também.</small></button>
+          </div>
+        </div>
+
+        <div class="game-actions">
+          <button class="btn btn-secondary" id="backButton" type="button">Voltar</button>
+          <button class="btn" id="nextButton" type="button">Próxima etapa</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="result-card" id="result" aria-live="polite">
+      <div class="result-grid">
+        <div>
+          <p class="eyebrow">Resultado do desafio</p>
+          <h2>Seu ambiente pede algo próximo de:</h2>
+          <div class="result-btu"><strong id="resultBtu">12.000</strong> <span>BTUs</span></div>
+          <p id="resultText" class="hero-text"></p>
+          <div class="hero-actions">
+            <a class="btn" id="resultLink" href="https://www.sitedoar.com.br/" target="_blank" rel="noopener">Ver opções na loja</a>
+            <button class="btn btn-secondary" id="restartButton" type="button">Refazer desafio</button>
+          </div>
+        </div>
+
+        <ul class="result-list">
+          <li id="tipOne">Modelos inverter ajudam na economia de energia.</li>
+          <li id="tipTwo">Confira sempre voltagem, instalação e medidas do ambiente.</li>
+          <li>Para projetos maiores, fale com um especialista antes de comprar.</li>
+        </ul>
+      </div>
+      <p class="disclaimer">
+        Esta é uma sugestão inicial para entretenimento e orientação. O dimensionamento final pode variar conforme pé-direito, isolamento, incidência solar, quantidade de equipamentos e uso do ambiente.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      step: 0,
+      area: 12,
+      roomType: 'bedroom',
+      sun: 'low',
+      people: 2,
+      electronics: 1,
+      comfort: 'economy'
+    };
+
+    const questions = Array.from(document.querySelectorAll('.question'));
+    const stepPills = Array.from(document.querySelectorAll('.step-pill'));
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const heroScore = document.getElementById('heroScore');
+    const backButton = document.getElementById('backButton');
+    const nextButton = document.getElementById('nextButton');
+    const restartButton = document.getElementById('restartButton');
+    const result = document.getElementById('result');
+    const areaRange = document.getElementById('areaRange');
+    const areaValue = document.getElementById('areaValue');
+    const roomType = document.getElementById('roomType');
+    const people = document.getElementById('people');
+    const electronics = document.getElementById('electronics');
+
+    const btuLinks = {
+      9000: 'https://www.sitedoar.com.br/ar-split/9000-btus?pg=1',
+      12000: 'https://www.sitedoar.com.br/ar-split/12000-btus?pg=1',
+      18000: 'https://www.sitedoar.com.br/ar-split/18000-btus?pg=1',
+      24000: 'https://www.sitedoar.com.br/ar-split/24000-btus?pg=1',
+      30000: 'https://www.sitedoar.com.br/ar-split/30000-btus?pg=1',
+      36000: 'https://www.sitedoar.com.br/ar-split/36000-btus?pg=1',
+      48000: 'https://www.sitedoar.com.br/ar-split/48000-btus?pg=1',
+      60000: 'https://www.sitedoar.com.br/ar-split/60000-btus?pg=1'
+    };
+
+    function updateScreen() {
+      questions.forEach((question, index) => {
+        question.hidden = index !== state.step;
+      });
+
+      stepPills.forEach((pill, index) => {
+        pill.classList.toggle('active', index === state.step);
+        pill.classList.toggle('done', index < state.step);
+      });
+
+      const percent = Math.round(((state.step + 1) / questions.length) * 100);
+      progressBar.style.width = `${percent}%`;
+      progressText.textContent = `${state.step + 1} de ${questions.length}`;
+      heroScore.textContent = `${percent}%`;
+      backButton.disabled = state.step === 0;
+      backButton.style.opacity = state.step === 0 ? '0.5' : '1';
+      nextButton.textContent = state.step === questions.length - 1 ? 'Ver resultado' : 'Próxima etapa';
+    }
+
+    function syncFields() {
+      state.area = Number(areaRange.value);
+      state.roomType = roomType.value;
+      state.people = Math.max(1, Number(people.value || 1));
+      state.electronics = Math.max(0, Number(electronics.value || 0));
+      areaValue.textContent = state.area;
+    }
+
+    function chooseNearestBtu(value) {
+      const capacities = [9000, 12000, 18000, 24000, 30000, 36000, 48000, 60000];
+      return capacities.find((capacity) => value <= capacity) || 60000;
+    }
+
+    function calculateBtu() {
+      syncFields();
+
+      const sunMultiplier = {
+        low: 600,
+        medium: 700,
+        high: 800
+      }[state.sun];
+
+      const roomExtra = {
+        bedroom: 0,
+        living: 600,
+        office: 800,
+        store: 1600,
+        kitchen: 2200
+      }[state.roomType];
+
+      const base = state.area * sunMultiplier;
+      const peopleExtra = Math.max(0, state.people - 1) * 600;
+      const electronicsExtra = state.electronics * 600;
+      const comfortExtra = state.comfort === 'fast' ? 1200 : 0;
+      const rawBtu = base + peopleExtra + electronicsExtra + roomExtra + comfortExtra;
+
+      return chooseNearestBtu(rawBtu);
+    }
+
+    function showResult() {
+      const btu = calculateBtu();
+      const resultBtu = document.getElementById('resultBtu');
+      const resultText = document.getElementById('resultText');
+      const resultLink = document.getElementById('resultLink');
+      const tipOne = document.getElementById('tipOne');
+      const tipTwo = document.getElementById('tipTwo');
+
+      resultBtu.textContent = btu.toLocaleString('pt-BR');
+      resultLink.href = btuLinks[btu] || 'https://www.sitedoar.com.br/';
+      resultText.textContent = `Com ${state.area} m², ${state.people} pessoa(s), ${state.electronics} eletrônico(s) e o nível de sol informado, essa é uma boa capacidade inicial para comparar modelos.`;
+
+      if (state.comfort === 'economy') {
+        tipOne.textContent = 'Procure modelos inverter para maior economia no uso diário.';
+      } else if (state.comfort === 'hotcold') {
+        tipOne.textContent = 'Considere modelos quente/frio para conforto em mais épocas do ano.';
+      } else {
+        tipOne.textContent = 'Para resfriamento mais rápido, escolha uma capacidade bem dimensionada e instalação correta.';
+      }
+
+      tipTwo.textContent = state.sun === 'high'
+        ? 'Como o ambiente pega muito sol, cortinas e vedação também ajudam no rendimento.'
+        : 'Ambientes com boa vedação ajudam o ar-condicionado a trabalhar melhor.';
+
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.querySelectorAll('[data-choice-group]').forEach((group) => {
+      group.addEventListener('click', (event) => {
+        const button = event.target.closest('.choice');
+        if (!button) return;
+
+        group.querySelectorAll('.choice').forEach((choice) => choice.classList.remove('selected'));
+        button.classList.add('selected');
+        state[group.dataset.choiceGroup] = button.dataset.value;
+      });
+    });
+
+    areaRange.addEventListener('input', syncFields);
+    roomType.addEventListener('change', syncFields);
+    people.addEventListener('input', syncFields);
+    electronics.addEventListener('input', syncFields);
+
+    nextButton.addEventListener('click', () => {
+      syncFields();
+
+      if (state.step < questions.length - 1) {
+        state.step += 1;
+        updateScreen();
+        return;
+      }
+
+      showResult();
+    });
+
+    backButton.addEventListener('click', () => {
+      if (state.step === 0) return;
+      state.step -= 1;
+      updateScreen();
+    });
+
+    restartButton.addEventListener('click', () => {
+      state.step = 0;
+      result.classList.remove('show');
+      updateScreen();
+      document.getElementById('game').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    syncFields();
+    updateScreen();
+  </script>
+</body>
+</html>
