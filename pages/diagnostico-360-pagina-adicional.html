@@ -77,7 +77,11 @@
     width: 36px; height: 36px; border-radius: 10px;
     background: linear-gradient(135deg, var(--d-accent), var(--d-accent2));
     display: grid; place-items: center; font-size: 0.75rem; font-weight: 900; color: #fff;
-    box-shadow: 0 0 20px var(--d-glow); flex-shrink: 0;
+    box-shadow: 0 0 20px var(--glow); flex-shrink: 0;
+  }
+  .d-logo-img {
+    height: 40px; width: auto; max-width: 160px; object-fit: contain;
+    display: block; flex-shrink: 0;
   }
   .d-header-badge {
     padding: 6px 12px; border-radius: 999px;
@@ -296,8 +300,7 @@
 <div id="diag360-overlay">
   <header class="d-header">
     <a class="d-logo" href="/">
-      <span class="d-logo-icon">360</span>
-      Site Do Ar
+      <img class="d-logo-img" src="https://salescdn.net/H1lCyyquCFyGP-5L9KxsjvfeoRc=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1779883388540.webp" alt="Site Do Ar" width="160" height="40">
     </a>
     <span class="d-header-badge">Quiz avançado</span>
   </header>
