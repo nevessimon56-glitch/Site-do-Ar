@@ -1,0 +1,603 @@
+{% comment %}
+  Diagnóstico Clima 360 — versão isolada via iframe srcdoc.
+  O HTML do quiz fica em <script type="text/plain"> para evitar que
+  </script> interno quebre o JavaScript da página pai.
+{% endcomment %}
+
+<style>
+  #diag360-frame-wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #0a0e1a;
+    min-height: 100vh;
+  }
+  #diag360-frame {
+    width: 100%;
+    min-height: 100vh;
+    border: 0;
+    display: block;
+    background: #0a0e1a;
+  }
+</style>
+
+<div id="diag360-frame-wrapper">
+  <iframe id="diag360-frame" title="Diagnóstico Clima 360" scrolling="no"></iframe>
+</div>
+
+<script type="text/plain" id="diag360-srcdoc"><!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagnóstico Clima 360</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    background:#0a0e1a;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 10% 0%,rgba(249,115,22,.12),transparent),
+      radial-gradient(ellipse 50% 50% at 90% 100%,rgba(59,130,246,.10),transparent);
+    color:#f1f5f9;line-height:1.5;min-height:100vh;
+    --accent:#f97316;--accent2:#fb923c;--glow:rgba(249,115,22,.25);
+    --surface:#111827;--surface2:#1a2235;--border:rgba(255,255,255,.08);
+    --muted:#64748b;--muted2:#94a3b8;--cyan:#22d3ee;
+  }
+  a{text-decoration:none;color:inherit}
+  button{font-family:inherit;cursor:pointer;border:0}
+  .d-header{display:flex;align-items:center;justify-content:space-between;
+    padding:20px 32px;border-bottom:1px solid var(--border);
+    background:rgba(10,14,26,.9);backdrop-filter:blur(12px);
+    position:sticky;top:0;z-index:10}
+  .d-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1rem;
+    letter-spacing:-.02em;color:#f1f5f9}
+  .d-logo-icon{width:36px;height:36px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;place-items:center;font-size:.75rem;font-weight:900;color:#fff;
+    box-shadow:0 0 20px var(--glow)}
+  .d-header-badge{padding:6px 12px;border-radius:999px;
+    background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);
+    color:var(--accent2);font-size:.78rem;font-weight:700;
+    letter-spacing:.06em;text-transform:uppercase}
+  .d-hero{max-width:1100px;margin:0 auto;padding:64px 32px 48px;
+    display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .d-hero-text h1{font-size:clamp(2.4rem,5vw,4rem);font-weight:900;
+    line-height:1.05;letter-spacing:-.05em;margin:0 0 20px}
+  .d-hero-text h1 span{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .d-hero-text p{color:var(--muted2);line-height:1.7;font-size:1.05rem;margin:0 0 32px}
+  .d-hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+  .d-btn-primary{display:inline-flex;align-items:center;gap:8px;
+    padding:14px 24px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;font-weight:700;font-size:.95rem;
+    box-shadow:0 8px 24px var(--glow);transition:transform .18s}
+  .d-btn-primary:hover{transform:translateY(-2px)}
+  .d-btn-secondary{display:inline-flex;align-items:center;gap:8px;
+    padding:14px 24px;border-radius:12px;border:1px solid var(--border);
+    background:rgba(255,255,255,.05);color:var(--muted2);
+    font-weight:600;font-size:.95rem;transition:.18s}
+  .d-btn-secondary:hover{border-color:rgba(255,255,255,.2);color:#f1f5f9}
+  .d-hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .d-stat-card{padding:20px;border-radius:16px;border:1px solid var(--border);
+    background:var(--surface);position:relative;overflow:hidden}
+  .d-stat-card.span2{grid-column:span 2}
+  .d-stat-val{font-size:1.8rem;font-weight:900;letter-spacing:-.04em;
+    line-height:1;margin-bottom:6px;color:#f1f5f9}
+  .d-stat-label{font-size:.8rem;font-weight:500;color:var(--muted)}
+  .d-progress-hero{margin-top:14px;height:6px;border-radius:999px;
+    background:rgba(255,255,255,.07);overflow:hidden}
+  .d-progress-hero span{display:block;height:100%;border-radius:999px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    width:0%;transition:width .35s}
+  .d-divider{max-width:1100px;margin:0 auto;padding:0 32px}
+  .d-divider hr{border:0;border-top:1px solid var(--border);margin:0}
+  .d-quiz-section{max-width:1100px;margin:0 auto;padding:40px 32px 64px;
+    display:grid;grid-template-columns:280px 1fr;gap:28px;align-items:start}
+  .d-sidebar{position:sticky;top:88px}
+  .d-sidebar-card{padding:20px;border-radius:20px;border:1px solid var(--border);
+    background:var(--surface);margin-bottom:14px}
+  .d-sidebar-card h3{font-size:.8rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--muted);margin:0 0 14px}
+  .d-bars{display:grid;gap:10px}
+  .d-bar-row{display:grid;gap:5px}
+  .d-bar-label{display:flex;justify-content:space-between;
+    font-size:.82rem;font-weight:600;color:var(--muted2)}
+  .d-bar-label strong{color:var(--accent2)}
+  .d-bar{height:6px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}
+  .d-bar span{display:block;height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    width:0%;transition:width .3s}
+  .d-live-btu{text-align:center;padding:16px}
+  .d-btu-val{font-size:2.2rem;font-weight:900;letter-spacing:-.05em;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .d-btu-label{font-size:.78rem;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.1em}
+  .d-status-row{display:flex;align-items:center;gap:8px;padding:10px 14px;
+    border-radius:10px;background:rgba(249,115,22,.08);
+    border:1px solid rgba(249,115,22,.2);margin-bottom:14px}
+  .d-status-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 8px var(--accent);animation:dPulse 2s infinite}
+  @keyframes dPulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .d-status-text{font-size:.82rem;font-weight:600;color:var(--accent2)}
+  .d-quiz-card{padding:36px;border-radius:20px;border:1px solid var(--border);
+    background:var(--surface)}
+  .d-quiz-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+  .d-step-counter{display:flex;align-items:center;gap:8px}
+  .d-step-num{width:32px;height:32px;border-radius:8px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;place-items:center;font-weight:800;font-size:.85rem;color:#fff}
+  .d-step-of{font-size:.85rem;font-weight:600;color:var(--muted)}
+  .d-step-type{padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.05);
+    border:1px solid var(--border);font-size:.78rem;font-weight:600;color:var(--muted2)}
+  .d-quiz-progress{height:4px;border-radius:999px;background:rgba(255,255,255,.06);
+    margin-bottom:32px;overflow:hidden}
+  .d-quiz-progress span{display:block;height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    width:10%;transition:width .3s}
+  .d-q-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;
+    letter-spacing:-.04em;line-height:1.15;margin:0 0 10px;color:#f1f5f9}
+  .d-q-hint{font-size:.95rem;color:var(--muted2);line-height:1.6;margin:0 0 24px}
+  .d-option-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .d-option{padding:18px;border-radius:14px;border:1px solid var(--border);
+    background:var(--surface2);color:#f1f5f9;text-align:left;cursor:pointer;
+    transition:.2s;display:flex;flex-direction:column}
+  .d-option:hover{border-color:rgba(249,115,22,.4);
+    background:rgba(249,115,22,.06);transform:translateY(-2px)}
+  .d-option.selected{border-color:rgba(249,115,22,.7);
+    background:rgba(249,115,22,.1);box-shadow:0 0 0 1px rgba(249,115,22,.25) inset;
+    transform:translateY(-2px)}
+  .d-opt-emoji{width:42px;height:42px;border-radius:10px;
+    background:rgba(255,255,255,.07);display:grid;place-items:center;
+    font-size:1.25rem;margin-bottom:12px}
+  .d-option.selected .d-opt-emoji{background:rgba(249,115,22,.15)}
+  .d-opt-title{display:block;font-weight:700;font-size:.95rem;margin-bottom:5px}
+  .d-opt-desc{font-size:.82rem;color:var(--muted);line-height:1.45}
+  .d-fact-box{margin-top:20px;padding:16px 18px;border-radius:12px;
+    border:1px solid rgba(34,211,238,.2);background:rgba(34,211,238,.05);
+    display:flex;gap:12px;align-items:flex-start}
+  .d-fact-icon{width:36px;height:36px;border-radius:8px;
+    background:rgba(34,211,238,.15);color:var(--cyan);
+    display:grid;place-items:center;font-size:1rem;flex-shrink:0}
+  .d-fact-label{font-size:.72rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--cyan);margin-bottom:4px}
+  .d-fact-text{font-size:.85rem;color:var(--muted2);line-height:1.55}
+  .d-quiz-actions{display:flex;justify-content:space-between;
+    align-items:center;margin-top:28px;gap:12px}
+  .d-btn-back{display:inline-flex;align-items:center;gap:6px;
+    padding:12px 20px;border-radius:10px;border:1px solid var(--border);
+    background:transparent;color:var(--muted2);font-weight:600;font-size:.9rem;
+    transition:.18s}
+  .d-btn-back:hover{border-color:rgba(255,255,255,.2);color:#f1f5f9}
+  .d-btn-back:disabled{opacity:.3;cursor:not-allowed}
+  .d-btn-next{display:inline-flex;align-items:center;gap:8px;
+    padding:13px 28px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;font-weight:700;font-size:.95rem;
+    box-shadow:0 4px 16px var(--glow);transition:transform .18s}
+  .d-btn-next:hover{transform:translateY(-2px)}
+  .d-result{display:none;max-width:1100px;margin:0 auto;padding:0 32px 64px}
+  .d-result.show{display:block}
+  .d-result-banner{padding:40px;border-radius:20px;
+    background:linear-gradient(135deg,#1a2235,#0f172a);
+    border:1px solid rgba(249,115,22,.3);
+    box-shadow:0 0 60px rgba(249,115,22,.08);margin-bottom:20px}
+  .d-result-tag{display:inline-flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:8px;background:rgba(249,115,22,.12);
+    border:1px solid rgba(249,115,22,.3);color:var(--accent2);
+    font-size:.75rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.08em;margin-bottom:18px}
+  .d-result-grid{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start}
+  .d-result-title{font-size:clamp(2rem,4vw,3.2rem);font-weight:900;
+    letter-spacing:-.05em;line-height:1.1;margin:0 0 14px;
+    background:linear-gradient(135deg,#fff 40%,var(--muted2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .d-result-text{color:var(--muted2);line-height:1.7;font-size:1rem;margin:0 0 20px}
+  .d-result-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+  .d-badge{padding:8px 14px;border-radius:8px;background:rgba(255,255,255,.07);
+    border:1px solid var(--border);font-size:.82rem;font-weight:700;color:#f1f5f9}
+  .d-badge.hl{background:rgba(249,115,22,.12);border-color:rgba(249,115,22,.35);
+    color:var(--accent2)}
+  .d-result-ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .d-btn-products{display:inline-flex;align-items:center;gap:8px;
+    padding:14px 22px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;font-weight:700;font-size:.95rem;
+    box-shadow:0 6px 20px var(--glow);transition:transform .18s}
+  .d-btn-products:hover{transform:translateY(-2px)}
+  .d-btn-whatsapp{display:inline-flex;align-items:center;gap:8px;
+    padding:14px 22px;border-radius:12px;
+    background:linear-gradient(135deg,#25d366,#128c50);
+    color:#fff;font-weight:700;font-size:.95rem;
+    box-shadow:0 6px 20px rgba(37,211,102,.25);transition:transform .18s}
+  .d-btn-whatsapp:hover{transform:translateY(-2px)}
+  .d-route-card{padding:24px;border-radius:16px;border:1px solid var(--border);
+    background:rgba(255,255,255,.04)}
+  .d-route-card h4{font-size:.8rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--muted);margin:0 0 10px}
+  .d-route-card p{color:var(--muted2);font-size:.92rem;line-height:1.65;margin:0 0 14px}
+  .d-route-disc{font-size:.8rem;color:var(--muted);line-height:1.55;
+    padding-top:12px;border-top:1px solid var(--border)}
+  @media (max-width:960px){
+    .d-hero{grid-template-columns:1fr;gap:32px;padding:40px 24px 32px}
+    .d-quiz-section{grid-template-columns:1fr;padding:24px}
+    .d-sidebar{position:static;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .d-sidebar-card{margin-bottom:0}
+    .d-result-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:640px){
+    .d-header{padding:16px 20px}
+    .d-hero{padding:28px 20px}
+    .d-quiz-section{padding:20px;gap:16px}
+    .d-quiz-card{padding:24px 20px}
+    .d-option-grid{grid-template-columns:1fr}
+    .d-quiz-actions{flex-direction:column-reverse}
+    .d-btn-back,.d-btn-next{width:100%;justify-content:center}
+    .d-result{padding:0 20px 40px}
+    .d-result-banner{padding:24px 20px}
+    .d-result-ctas{flex-direction:column}
+    .d-btn-products,.d-btn-whatsapp{justify-content:center}
+    .d-sidebar{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="d-header">
+  <a class="d-logo" href="/" target="_top"><span class="d-logo-icon">360</span> Site Do Ar</a>
+  <span class="d-header-badge">Quiz avançado</span>
+</header>
+
+<section class="d-hero">
+  <div class="d-hero-text">
+    <h1>Diagnóstico <span>Clima 360</span></h1>
+    <p>Responda 10 perguntas e descubra o ar-condicionado ideal para o seu ambiente. O quiz cruza rotina, tamanho, prioridades e urgência para gerar uma recomendação personalizada.</p>
+    <div class="d-hero-actions">
+      <a class="d-btn-primary" href="#quiz">Começar diagnóstico →</a>
+      <a class="d-btn-secondary" href="/" target="_top">Ver loja</a>
+    </div>
+  </div>
+  <div class="d-hero-stats">
+    <div class="d-stat-card" id="statPerfil">
+      <div class="d-stat-val"><span id="heroPct">0</span>%</div>
+      <div class="d-stat-label">Perfil mapeado</div>
+      <div class="d-progress-hero"><span id="heroBar"></span></div>
+    </div>
+    <div class="d-stat-card">
+      <div class="d-stat-val" id="heroBtu">9.000</div>
+      <div class="d-stat-label">Faixa de BTUs</div>
+    </div>
+    <div class="d-stat-card span2">
+      <div class="d-stat-val" id="heroStatus" style="font-size:1.2rem">Aguardando início do diagnóstico</div>
+      <div class="d-stat-label">Status ao vivo</div>
+    </div>
+  </div>
+</section>
+
+<div class="d-divider"><hr></div>
+
+<section class="d-quiz-section" id="quiz">
+  <aside class="d-sidebar">
+    <div class="d-sidebar-card">
+      <div class="d-status-row">
+        <span class="d-status-dot"></span>
+        <span class="d-status-text" id="sideStatus">Aguardando</span>
+      </div>
+      <h3>Prioridades</h3>
+      <div class="d-bars" id="bars"></div>
+    </div>
+    <div class="d-sidebar-card">
+      <div class="d-live-btu">
+        <div class="d-btu-val" id="sideBtu">9.000</div>
+        <div class="d-btu-label">BTUs estimados</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="d-quiz-card" id="quizCard">
+    <div class="d-quiz-head">
+      <div class="d-step-counter">
+        <span class="d-step-num" id="stepNum">1</span>
+        <span class="d-step-of">de <span id="stepTotal">10</span></span>
+      </div>
+      <span class="d-step-type">Escolha única</span>
+    </div>
+    <div class="d-quiz-progress"><span id="quizBar"></span></div>
+    <h2 class="d-q-title" id="qTitle">Qual ambiente será climatizado?</h2>
+    <p class="d-q-hint" id="qHint">Define o ponto de partida para o dimensionamento em BTUs.</p>
+    <div class="d-option-grid" id="qOptions"></div>
+    <div class="d-fact-box">
+      <div class="d-fact-icon">💡</div>
+      <div>
+        <div class="d-fact-label">Você sabia?</div>
+        <div class="d-fact-text" id="qFact">Em 1902, Willis Carrier criou o primeiro sistema moderno de controle de temperatura e umidade.</div>
+      </div>
+    </div>
+    <div class="d-quiz-actions">
+      <button class="d-btn-back" id="btnBack" type="button" disabled>← Voltar</button>
+      <button class="d-btn-next" id="btnNext" type="button">Próxima →</button>
+    </div>
+  </div>
+</section>
+
+<section class="d-result" id="result">
+  <div class="d-result-banner">
+    <span class="d-result-tag">✦ Diagnóstico concluído</span>
+    <div class="d-result-grid">
+      <div>
+        <h2 class="d-result-title" id="resTitle">Sua recomendação</h2>
+        <p class="d-result-text" id="resText"></p>
+        <div class="d-result-badges" id="resBadges"></div>
+        <div class="d-result-ctas">
+          <a class="d-btn-products" href="/" target="_top">🛒 Ver produtos indicados</a>
+          <a class="d-btn-whatsapp" href="https://wa.me/" target="_top">💬 Falar com especialista</a>
+        </div>
+      </div>
+      <div class="d-route-card">
+        <h4>Rota recomendada</h4>
+        <p id="resRoute"></p>
+        <div class="d-route-disc">As sugestões são baseadas nas respostas fornecidas. Para ambientes complexos, recomendamos atendimento especializado.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var questions = [
+    {id:'ambiente',title:'Qual ambiente será climatizado?',hint:'Define o ponto de partida para o dimensionamento em BTUs.',
+     fact:'Em 1902, Willis Carrier criou o primeiro sistema moderno de controle de temperatura e umidade.',
+     options:[
+      {v:'quarto_p',emoji:'🛏',t:'Quarto pequeno',d:'Até 15 m²',btu:9000},
+      {v:'quarto_g',emoji:'🛌',t:'Quarto grande',d:'15 a 25 m²',btu:12000},
+      {v:'sala',emoji:'🛋',t:'Sala ou escritório',d:'25 a 50 m²',btu:18000},
+      {v:'grande',emoji:'🏢',t:'Ambiente grande',d:'Acima de 50 m²',btu:24000}
+     ],peso:{potencia:4}},
+    {id:'tamanho',title:'Qual o tamanho aproximado do ambiente?',hint:'O tamanho é o principal fator para definir a capacidade ideal em BTUs.',
+     fact:'Cada m² adicional exige cerca de 600 BTUs a mais de capacidade.',
+     options:[
+      {v:'p',emoji:'📐',t:'Até 15 m²',d:'Pequeno',btu:9000},
+      {v:'m',emoji:'📏',t:'16 a 25 m²',d:'Médio',btu:12000},
+      {v:'g',emoji:'📊',t:'26 a 40 m²',d:'Grande',btu:18000},
+      {v:'xg',emoji:'🏠',t:'Acima de 40 m²',d:'Muito grande',btu:24000}
+     ],peso:{potencia:4}},
+    {id:'pessoas',title:'Quantas pessoas usam o ambiente?',hint:'Cada pessoa adiciona calor ao espaço.',
+     fact:'Cada pessoa em repouso emite cerca de 600 BTUs por hora.',
+     options:[
+      {v:'1',emoji:'👤',t:'1 pessoa',d:'Uso individual',btu:0},
+      {v:'2',emoji:'👥',t:'2 pessoas',d:'Casal',btu:600},
+      {v:'3-4',emoji:'👨‍👩‍👧',t:'3 a 4 pessoas',d:'Família',btu:1800},
+      {v:'5+',emoji:'👨‍👩‍👧‍👦',t:'5 ou mais',d:'Grupo grande',btu:3000}
+     ],peso:{potencia:1,conforto:1}},
+    {id:'sol',title:'O ambiente recebe sol direto?',hint:'Insolação aumenta a carga térmica.',
+     fact:'Ambientes com sol da tarde podem precisar de 30% mais BTUs.',
+     options:[
+      {v:'nao',emoji:'🌑',t:'Não recebe sol',d:'Sombreado',btu:0},
+      {v:'manha',emoji:'🌅',t:'Sol da manhã',d:'Insolação leve',btu:500},
+      {v:'tarde',emoji:'☀️',t:'Sol da tarde',d:'Insolação forte',btu:1500},
+      {v:'todo',emoji:'🌞',t:'Sol o dia todo',d:'Insolação intensa',btu:2500}
+     ],peso:{potencia:2}},
+    {id:'rotina',title:'Quantas horas por dia será usado?',hint:'Uso intenso pede modelos mais eficientes.',
+     fact:'Modelos Inverter economizam até 40% em uso prolongado.',
+     options:[
+      {v:'pouco',emoji:'⏰',t:'Até 4 horas',d:'Uso esporádico',btu:0},
+      {v:'medio',emoji:'🕐',t:'4 a 8 horas',d:'Uso moderado',btu:0},
+      {v:'muito',emoji:'🕓',t:'8 a 12 horas',d:'Uso intenso',btu:0},
+      {v:'24h',emoji:'🕛',t:'Mais de 12 horas',d:'Uso contínuo',btu:0}
+     ],peso:{economia:3,tecnologia:2}},
+    {id:'prio',title:'O que é mais importante para você?',hint:'Vamos priorizar o que mais importa.',
+     fact:'A escolha certa pode reduzir a conta de luz em até 50%.',
+     options:[
+      {v:'eco',emoji:'💰',t:'Economia',d:'Conta de luz baixa',btu:0},
+      {v:'conf',emoji:'❄️',t:'Conforto',d:'Temperatura ideal',btu:0},
+      {v:'sil',emoji:'🔇',t:'Silêncio',d:'Operação discreta',btu:0},
+      {v:'tec',emoji:'📱',t:'Tecnologia',d:'Wi-Fi e recursos',btu:0}
+     ],peso:{}},
+    {id:'silencio',title:'Silêncio é importante?',hint:'Para quartos e escritórios isso faz diferença.',
+     fact:'Modelos premium operam abaixo de 19 dB — quase imperceptíveis.',
+     options:[
+      {v:'nao',emoji:'🔊',t:'Não me importo',d:'Ruído normal ok',btu:0},
+      {v:'pouco',emoji:'🔉',t:'Um pouco',d:'Prefiro silencioso',btu:0},
+      {v:'muito',emoji:'🔈',t:'Sim, muito',d:'Quarto/escritório',btu:0},
+      {v:'max',emoji:'🤫',t:'Essencial',d:'Sono leve',btu:0}
+     ],peso:{silencio:4}},
+    {id:'tech',title:'Quer recursos inteligentes?',hint:'Wi-Fi, app e comando de voz.',
+     fact:'90% dos lançamentos top de linha já vêm com Wi-Fi integrado.',
+     options:[
+      {v:'nao',emoji:'🎛',t:'Não preciso',d:'Controle simples',btu:0},
+      {v:'wifi',emoji:'📶',t:'Wi-Fi',d:'Controle pelo celular',btu:0},
+      {v:'voz',emoji:'🎙',t:'Comando de voz',d:'Alexa / Google',btu:0},
+      {v:'full',emoji:'🤖',t:'Tudo integrado',d:'Casa inteligente',btu:0}
+     ],peso:{tecnologia:4}},
+    {id:'orcamento',title:'Qual seu orçamento?',hint:'Filtramos as opções dentro do seu range.',
+     fact:'Modelos Inverter custam 20-30% mais, mas se pagam em 2 anos.',
+     options:[
+      {v:'eco',emoji:'💵',t:'Até R$ 2.500',d:'Custo-benefício',btu:0},
+      {v:'med',emoji:'💴',t:'R$ 2.500 a 4.000',d:'Intermediário',btu:0},
+      {v:'top',emoji:'💶',t:'R$ 4.000 a 6.000',d:'Alto desempenho',btu:0},
+      {v:'pre',emoji:'💎',t:'Acima de R$ 6.000',d:'Premium',btu:0}
+     ],peso:{economia:2}},
+    {id:'urgencia',title:'Qual sua urgência?',hint:'Vamos priorizar entrega rápida se necessário.',
+     fact:'Pedidos até as 14h podem ser despachados no mesmo dia.',
+     options:[
+      {v:'ja',emoji:'⚡',t:'Preciso agora',d:'Entrega rápida',btu:0},
+      {v:'semana',emoji:'📅',t:'Esta semana',d:'Em até 7 dias',btu:0},
+      {v:'mes',emoji:'🗓',t:'Este mês',d:'Sem pressa',btu:0},
+      {v:'pesq',emoji:'🔍',t:'Só pesquisando',d:'Comparando opções',btu:0}
+     ],peso:{rapidez:4}}
+  ];
+
+  var prios = [
+    {key:'economia',label:'Economia'},
+    {key:'conforto',label:'Conforto'},
+    {key:'rapidez',label:'Rapidez'},
+    {key:'silencio',label:'Silêncio'},
+    {key:'tecnologia',label:'Tecnologia'},
+    {key:'potencia',label:'Potência'}
+  ];
+
+  var state = {step:0,answers:{},scores:{economia:0,conforto:0,rapidez:0,silencio:0,tecnologia:0,potencia:0},btu:9000};
+
+  var els = {
+    stepNum:document.getElementById('stepNum'),
+    stepTotal:document.getElementById('stepTotal'),
+    quizBar:document.getElementById('quizBar'),
+    qTitle:document.getElementById('qTitle'),
+    qHint:document.getElementById('qHint'),
+    qFact:document.getElementById('qFact'),
+    qOptions:document.getElementById('qOptions'),
+    back:document.getElementById('btnBack'),
+    next:document.getElementById('btnNext'),
+    heroPct:document.getElementById('heroPct'),
+    heroBar:document.getElementById('heroBar'),
+    heroBtu:document.getElementById('heroBtu'),
+    heroStatus:document.getElementById('heroStatus'),
+    sideStatus:document.getElementById('sideStatus'),
+    sideBtu:document.getElementById('sideBtu'),
+    bars:document.getElementById('bars'),
+    quizCard:document.getElementById('quizCard'),
+    result:document.getElementById('result'),
+    resTitle:document.getElementById('resTitle'),
+    resText:document.getElementById('resText'),
+    resBadges:document.getElementById('resBadges'),
+    resRoute:document.getElementById('resRoute')
+  };
+
+  els.stepTotal.textContent = questions.length;
+
+  function initBars(){
+    els.bars.innerHTML = prios.map(function(p){
+      return '<div class="d-bar-row"><div class="d-bar-label">'+p.label+' <strong data-k="'+p.key+'">0</strong></div><div class="d-bar"><span data-bar="'+p.key+'"></span></div></div>';
+    }).join('');
+  }
+
+  function fmt(n){return n.toLocaleString('pt-BR');}
+
+  function renderQ(){
+    var q = questions[state.step];
+    els.stepNum.textContent = state.step+1;
+    els.qTitle.textContent = q.title;
+    els.qHint.textContent = q.hint;
+    els.qFact.textContent = q.fact;
+    els.quizBar.style.width = ((state.step+1)/questions.length*100)+'%';
+    var pct = Math.round(state.step/questions.length*100);
+    els.heroPct.textContent = pct;
+    els.heroBar.style.width = pct+'%';
+    els.heroStatus.textContent = state.step===0?'Aguardando início do diagnóstico':'Coletando sinais';
+    els.sideStatus.textContent = state.step===0?'Aguardando':'Coletando sinais';
+    els.back.disabled = state.step===0;
+    var selected = state.answers[q.id];
+    els.qOptions.innerHTML = q.options.map(function(o){
+      return '<button type="button" class="d-option'+(selected===o.v?' selected':'')+'" data-v="'+o.v+'">'+
+        '<div class="d-opt-emoji">'+o.emoji+'</div>'+
+        '<span class="d-opt-title">'+o.t+'</span>'+
+        '<span class="d-opt-desc">'+o.d+'</span></button>';
+    }).join('');
+    Array.prototype.forEach.call(els.qOptions.querySelectorAll('.d-option'),function(btn){
+      btn.addEventListener('click',function(){
+        state.answers[q.id] = btn.getAttribute('data-v');
+        recalc();
+        renderQ();
+      });
+    });
+    notifyH();
+  }
+
+  function recalc(){
+    var scores = {economia:0,conforto:0,rapidez:0,silencio:0,tecnologia:0,potencia:0};
+    var btu = 9000;
+    questions.forEach(function(q){
+      var v = state.answers[q.id]; if(!v) return;
+      var opt = q.options.find(function(x){return x.v===v;});
+      if(opt && opt.btu) btu += opt.btu;
+      if(q.peso) Object.keys(q.peso).forEach(function(k){scores[k]+=q.peso[k];});
+      if(q.id==='prio'){
+        var map = {eco:'economia',conf:'conforto',sil:'silencio',tec:'tecnologia'};
+        if(map[v]) scores[map[v]] += 3;
+      }
+    });
+    state.scores = scores;
+    state.btu = Math.min(btu,36000);
+    els.heroBtu.textContent = fmt(state.btu);
+    els.sideBtu.textContent = fmt(state.btu);
+    prios.forEach(function(p){
+      var el = els.bars.querySelector('[data-bar="'+p.key+'"]');
+      var lbl = els.bars.querySelector('[data-k="'+p.key+'"]');
+      if(el) el.style.width = Math.min(scores[p.key]/6*100,100)+'%';
+      if(lbl) lbl.textContent = scores[p.key];
+    });
+  }
+
+  els.next.addEventListener('click',function(){
+    var q = questions[state.step];
+    if(!state.answers[q.id]){
+      els.quizCard.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:260});
+      return;
+    }
+    if(state.step < questions.length-1){state.step++;renderQ();return;}
+    buildResult();
+  });
+
+  els.back.addEventListener('click',function(){
+    if(state.step>0){state.step--;renderQ();}
+  });
+
+  function buildResult(){
+    els.quizCard.style.display='none';
+    document.querySelector('.d-sidebar').style.display='none';
+    els.result.classList.add('show');
+    var s = state.scores;
+    var topKey = Object.keys(s).reduce(function(a,b){return s[a]>=s[b]?a:b;});
+    var topLabel = (prios.find(function(p){return p.key===topKey;})||{}).label||'Conforto';
+    els.resTitle.textContent = 'Ar-condicionado '+fmt(state.btu)+' BTUs';
+    els.resText.textContent = 'Com base nas suas respostas, o foco principal é '+topLabel.toLowerCase()+'. Recomendamos um modelo de '+fmt(state.btu)+' BTUs adequado ao seu ambiente e rotina.';
+    els.resBadges.innerHTML = '<span class="d-badge hl">'+fmt(state.btu)+' BTUs</span><span class="d-badge">Foco: '+topLabel+'</span>';
+    els.resRoute.textContent = 'Modelos '+fmt(state.btu)+' BTUs com prioridade em '+topLabel.toLowerCase()+'. Indicamos linha Inverter para máxima eficiência.';
+    els.heroPct.textContent='100';
+    els.heroBar.style.width='100%';
+    els.heroStatus.textContent='Diagnóstico concluído';
+    notifyH();
+  }
+
+  function notifyH(){
+    try{
+      window.parent.postMessage({type:'diag360-resize',h:document.body.scrollHeight},'*');
+    }catch(e){}
+  }
+
+  initBars(); recalc(); renderQ();
+  window.addEventListener('load',notifyH);
+  if(typeof ResizeObserver!=='undefined'){
+    new ResizeObserver(notifyH).observe(document.body);
+  }
+})();
+</script>
+</body>
+</html></script>
+
+<script>
+(function () {
+  var src = document.getElementById('diag360-srcdoc');
+  var frame = document.getElementById('diag360-frame');
+  if (!src || !frame) return;
+
+  frame.srcdoc = src.textContent;
+
+  window.addEventListener('message', function (e) {
+    if (e.data && e.data.type === 'diag360-resize' && e.data.h) {
+      frame.style.height = (e.data.h + 20) + 'px';
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Diagnóstico 360",
+  "settings": []
+}
+{% endschema %}
