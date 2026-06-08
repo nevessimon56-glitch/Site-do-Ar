@@ -294,14 +294,22 @@
 <script>
 (function(){
   try {
-    var KEY = 'diag360v2';
+    var KEY = 'diag360_seen';
 
     function isDiagPage() {
       var p = (window.location.pathname || '').toLowerCase();
       return p.indexOf('diagnostico') !== -1 || p.indexOf('diag360') !== -1;
     }
 
-    if (sessionStorage.getItem(KEY)) return;
+    function jaViu() {
+      try { return localStorage.getItem(KEY) === '1'; } catch(e) { return false; }
+    }
+
+    function marcarVisto() {
+      try { localStorage.setItem(KEY, '1'); } catch(e) {}
+    }
+
+    if (jaViu()) return;
     if (isDiagPage()) return;
 
     var el = document.getElementById('diag360pop');
@@ -314,13 +322,15 @@
       }
       el.classList.remove('show');
       el.style.display = 'none';
-      try { sessionStorage.setItem(KEY, '1'); } catch(err) {}
+      marcarVisto();
     }
 
     document.getElementById('d360close').addEventListener('click', fechar);
     document.getElementById('d360skip').addEventListener('click', fechar);
 
-    /* Fecha ao clicar fora, sem interferir nos botões internos */
+    var cta = el.querySelector('.d360cta');
+    if (cta) cta.addEventListener('click', marcarVisto);
+
     document.addEventListener('mousedown', function(e) {
       if (!el.classList.contains('show')) return;
       if (el.contains(e.target)) return;
@@ -328,7 +338,9 @@
     });
 
     setTimeout(function() {
-      if (!isDiagPage()) el.classList.add('show');
+      if (isDiagPage() || jaViu()) return;
+      el.classList.add('show');
+      marcarVisto();
     }, 5000);
   } catch(e) {
     console.error('Popup diag360:', e);
