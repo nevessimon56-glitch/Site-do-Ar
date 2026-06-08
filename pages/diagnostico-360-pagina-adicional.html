@@ -1,4 +1,5 @@
-<!-- Cole TODO este conteúdo no editor da página adicional "diagnostico-360" -->
+<!-- Cole TODO este conteúdo SOMENTE na página adicional "diagnostico-360" -->
+<!-- NÃO cole no theme.liquid, Todos-os-Produtos nem em outras páginas -->
 <!-- No admin, preencha também:
      Meta Tag title: Site Do Ar: Os Melhores Preços em Ar-Condicionado — São Paulo
      Meta Tag description: Ar-condicionado em São Paulo com os melhores preços! Split, Inverter e mais em até 12x. Compre com instalação profissional no Site Do Ar. Confira!
@@ -6,25 +7,25 @@
 -->
 
 <style>
-  /* Esconde header/footer da loja — o quiz ocupa a tela inteira */
-  body .header,
-  body .footer,
-  body .top-bar,
-  body .breadcrumb,
-  body .page-title,
-  body .page-header,
-  body > header:not(.d-header),
-  #diag360pop {
+  /* Só ativa na página do diagnóstico (classe diag360-active no body) */
+  body.diag360-active .header,
+  body.diag360-active .footer,
+  body.diag360-active .top-bar,
+  body.diag360-active .breadcrumb,
+  body.diag360-active .page-title,
+  body.diag360-active .page-header,
+  body.diag360-active > header:not(.d-header),
+  body.diag360-active #diag360pop {
     display: none !important;
   }
-  html, body {
+  body.diag360-active {
     margin: 0 !important;
     padding: 0 !important;
     background: #0a0e1a !important;
   }
-  body .container,
-  body .page-content,
-  body main {
+  body.diag360-active .container,
+  body.diag360-active .page-content,
+  body.diag360-active main {
     padding: 0 !important;
     margin: 0 !important;
     max-width: 100% !important;
@@ -32,6 +33,7 @@
   }
 
   #diag360-overlay {
+    display: none;
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: 2147483646;
@@ -41,6 +43,9 @@
       radial-gradient(ellipse 50% 50% at 90% 100%, rgba(59,130,246,0.1), transparent);
     overflow-y: auto;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  }
+  body.diag360-active #diag360-overlay {
+    display: block;
   }
 
   #diag360-overlay * { box-sizing: border-box; }
@@ -593,6 +598,19 @@
 
 <script>
 (function () {
+  function isDiagPage() {
+    var p = (window.location.pathname || '').toLowerCase();
+    return p.indexOf('diagnostico') !== -1 || p.indexOf('diag360') !== -1;
+  }
+
+  var overlay = document.getElementById('diag360-overlay');
+  if (!isDiagPage()) {
+    if (overlay) overlay.remove();
+    return;
+  }
+
+  document.body.classList.add('diag360-active');
+
   var LOGO_URL = 'https://salescdn.net/XOFBUXAbeaqnTcy-gCa7vQrXkio=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/1777059085610.webp';
   (function ensureLogo() {
     var link = document.querySelector('.d-logo');
@@ -970,11 +988,12 @@
     buildResult();
   });
 
+  if (els.result) els.result.classList.remove('show');
+
   hideStoreChrome();
   initBars();
   renderQ();
 
-  var overlay = document.getElementById('diag360-overlay');
   if (overlay && overlay.parentNode !== document.body) {
     document.body.appendChild(overlay);
   }
