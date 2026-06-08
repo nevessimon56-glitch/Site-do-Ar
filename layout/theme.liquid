@@ -6,7 +6,7 @@
 {% elsif seo.title %}
     {% assign seoTitle = seo.title %}
 {% else %}
-    {% assign seoTitle = 'Site Do Ar | Ar-Condicionado em São Paulo — Venda e Instalação' %}
+    {% assign seoTitle = 'Site Do Ar: Ar-Condicionado em São Paulo com os Melhores Preços' %}
 {% endif %}
 
 {% assign seoDescription = '' %}
@@ -18,6 +18,8 @@
     {% assign seoDescription = seo.description %}
 {% elsif store.description %}
     {% assign seoDescription = store.description %}
+{% else %}
+    {% assign seoDescription = 'Ar-condicionado em São Paulo com os melhores preços! Split, Inverter, portátil e mais em até 12x. Compre com instalação profissional no Site Do Ar. Confira!' %}
 {% endif %}
 
 {% assign seoKeywords = '' %}
