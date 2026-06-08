@@ -429,7 +429,32 @@
     .d-opt-title { font-size: 0.9rem; margin-bottom: 2px; }
     .d-opt-desc { font-size: 0.76rem; line-height: 1.35; }
 
-    .d-fact-box { display: none; }
+    .d-fact-box {
+      margin-top: 12px;
+      padding: 10px 12px;
+      gap: 8px;
+      align-items: center;
+      border-radius: 10px;
+    }
+    .d-fact-icon {
+      width: 26px;
+      height: 26px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+    }
+    .d-fact-label {
+      font-size: 0.62rem;
+      margin-bottom: 2px;
+      letter-spacing: 0.08em;
+    }
+    .d-fact-text {
+      font-size: 0.76rem;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
 
     .d-quiz-actions {
       flex-direction: column-reverse;
