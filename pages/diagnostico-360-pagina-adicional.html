@@ -650,9 +650,9 @@
     { id:'roomType', type:'single', title:'Como é a configuração do ambiente?', hint:'Afeta a eficiência do ar e o dimensionamento final.',
       options:[
         {label:'Janelas pequenas',desc:'Pouca exposição solar.',emoji:'🪟',scores:{economy:1}},
-        {label:'Muito sol direto',desc:'Exposição solar alta.',emoji:'☀',scores:{power:3},btuAdd:3000},
-        {label:'Pé-direito alto',desc:'Acima de 3 metros.',emoji:'⬆',scores:{power:2},btuAdd:3000},
-        {label:'Mezanino ou planta aberta',desc:'Espaço integrado.',emoji:'🏗',scores:{power:4},btuAdd:6000}
+        {label:'Muito sol direto',desc:'Exposição solar alta.',emoji:'☀',scores:{power:3},btuAdd:1200},
+        {label:'Pé-direito alto',desc:'Acima de 3 metros.',emoji:'⬆',scores:{power:2},btuAdd:1000},
+        {label:'Mezanino ou planta aberta',desc:'Espaço integrado.',emoji:'🏗',scores:{power:4},btuAdd:2000}
       ]
     },
     { id:'roomSize', type:'single', title:'Qual é a área aproximada do ambiente?', hint:'Principal fator para calcular os BTUs necessários.',
@@ -667,8 +667,8 @@
       options:[
         {label:'Só para dormir',desc:'6 a 8 horas por noite.',emoji:'🌙',scores:{silence:4,economy:3}},
         {label:'Tarde e noite',desc:'Uso moderado, principalmente à tarde.',emoji:'🌅',scores:{comfort:3,economy:2}},
-        {label:'O dia todo',desc:'Uso intenso e contínuo.',emoji:'☀',scores:{economy:4,power:2},btuAdd:2000},
-        {label:'Uso comercial',desc:'Abertura à fechamento.',emoji:'🏪',scores:{power:5,speed:2},btuAdd:4000}
+        {label:'O dia todo',desc:'Uso intenso e contínuo.',emoji:'☀',scores:{economy:4,power:2}},
+        {label:'Uso comercial',desc:'Abertura à fechamento.',emoji:'🏪',scores:{power:5,speed:2}}
       ]
     },
     { id:'priority', type:'single', title:'Qual fator é mais importante para você?', hint:'Define o perfil de recomendação e argumentação de venda.',
@@ -681,8 +681,8 @@
     },
     { id:'climate', type:'single', title:'Como é o clima na sua região?', hint:'Impacta a carga térmica e dimensionamento.',
       options:[
-        {label:'Muito quente',desc:'Verão intenso, acima de 35°C.',emoji:'🔥',scores:{power:3,economy:2},btuAdd:3000},
-        {label:'Quente com chuvas',desc:'Umidade alta e calor.',emoji:'🌧',scores:{comfort:2,power:2},btuAdd:1500},
+        {label:'Muito quente',desc:'Verão intenso, acima de 35°C.',emoji:'🔥',scores:{power:3,economy:2}},
+        {label:'Quente com chuvas',desc:'Umidade alta e calor.',emoji:'🌧',scores:{comfort:2,power:2}},
         {label:'Clima ameno',desc:'Temperaturas moderadas.',emoji:'🌤',scores:{economy:2,comfort:2}},
         {label:'Faz frio no inverno',desc:'Precisa aquecer também.',emoji:'❄',scores:{comfort:4}}
       ]
@@ -698,9 +698,9 @@
     { id:'occupants', type:'single', title:'Quantas pessoas ocupam o ambiente normalmente?', hint:'Cada pessoa adiciona carga térmica ao ambiente.',
       options:[
         {label:'Somente eu',desc:'Uso individual.',emoji:'👤',scores:{economy:2}},
-        {label:'2 a 3 pessoas',desc:'Uso residencial comum.',emoji:'👥',scores:{comfort:2},btuAdd:3000},
-        {label:'4 a 6 pessoas',desc:'Sala, reunião ou família grande.',emoji:'👨‍👩‍👧‍👦',scores:{power:3,comfort:2},btuAdd:6000},
-        {label:'Fluxo grande',desc:'Comercial ou entrada e saída constante.',emoji:'↔',scores:{power:5,speed:2},btuAdd:12000}
+        {label:'2 a 3 pessoas',desc:'Uso residencial comum.',emoji:'👥',scores:{comfort:2},btuAdd:600},
+        {label:'4 a 6 pessoas',desc:'Sala, reunião ou família grande.',emoji:'👨‍👩‍👧‍👦',scores:{power:3,comfort:2},btuAdd:1200},
+        {label:'Fluxo grande',desc:'Comercial ou entrada e saída constante.',emoji:'↔',scores:{power:5,speed:2},btuAdd:2000}
       ]
     },
     { id:'features', type:'multi', title:'Quais recursos fariam você escolher mais rápido?', hint:'Essa pergunta revela argumentos de venda, não apenas produto.',
@@ -790,8 +790,8 @@
 
   function recalc() {
     resetScores();
-    var areaBtus = [];
-    var addedBtu = 0;
+    var baseBtu = 9000;
+    var extras = 0;
 
     questions.forEach(function(q) {
       getSelected(q).forEach(function(i) {
@@ -799,25 +799,27 @@
         Object.entries(opt.scores || {}).forEach(function(e){ state.scores[e[0]] += e[1]; });
 
         if (q.id === 'roomSize' && opt.btu) {
-          areaBtus.push(opt.btu);
-        } else if (opt.btuAdd) {
-          addedBtu += opt.btuAdd;
+          baseBtu = opt.btu;
+        } else if ((q.id === 'roomType' || q.id === 'occupants') && opt.btuAdd) {
+          extras += opt.btuAdd;
         }
       });
     });
 
-    var baseBtu = areaBtus.length ? Math.max.apply(null, areaBtus) : 9000;
-    var raw = baseBtu + addedBtu;
-    state.btuBase = Math.ceil(raw * 1.1);
+    extras = Math.min(extras, Math.round(baseBtu * 0.25));
+    state.btuBase = normBtu(baseBtu + extras);
     updateUI();
   }
 
   function normBtu(v) {
     var caps = [9000,12000,18000,24000,30000,36000,48000,60000];
-    for (var i = 0; i < caps.length; i++) {
-      if (v <= caps[i]) return caps[i];
+    if (v <= caps[0]) return caps[0];
+    for (var i = 0; i < caps.length - 1; i++) {
+      var mid = (caps[i] + caps[i + 1]) / 2;
+      if (v <= mid) return caps[i];
+      if (v <= caps[i + 1]) return caps[i + 1];
     }
-    return 60000;
+    return caps[caps.length - 1];
   }
 
   function getTop() {
