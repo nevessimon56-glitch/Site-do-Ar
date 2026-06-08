@@ -641,10 +641,34 @@
     return 'https://wa.me/5519984176960?text='+encodeURIComponent(lines.join('\n'));
   }
 
+  /* Categorias com produtos ativos na loja (atualize se adicionar novas) */
+  var STORE_BTUS = {
+    'split-inverter': [9000, 12000, 18000, 24000, 30000],
+    'ar-split': []
+  };
+
+  function closestBtu(target, list) {
+    if (!list || !list.length) return null;
+    return list.reduce(function(best, cur) {
+      var dCur = Math.abs(cur - target);
+      var dBest = Math.abs(best - target);
+      if (dCur < dBest) return cur;
+      if (dCur === dBest && cur > best) return cur;
+      return best;
+    });
+  }
+
   function buildLink(btu, topKey) {
-    var inv = ['economy','silence','tech'].includes(topKey);
-    var slug = {9000:'9000-btus',12000:'12000-btus',18000:'18000-btus',24000:'24000-btus',30000:'30000-btus',36000:'36000-btus',48000:'48000-btus',60000:'60000-btus'}[btu]||'12000-btus';
-    return inv ? 'https://www.sitedoar.com.br/split-inverter/'+slug+'?pg=1' : 'https://www.sitedoar.com.br/ar-split/'+slug+'?pg=1';
+    var target = normBtu(btu);
+    var preferInverter = ['economy','silence','tech'].indexOf(topKey) !== -1;
+    var base = 'https://www.sitedoar.com.br/';
+    var lines = preferInverter ? ['split-inverter', 'ar-split'] : ['ar-split', 'split-inverter'];
+
+    for (var i = 0; i < lines.length; i++) {
+      var match = closestBtu(target, STORE_BTUS[lines[i]]);
+      if (match) return base + lines[i] + '/' + match + '-btus?pg=1';
+    }
+    return base + 'split-inverter/12000-btus?pg=1';
   }
 
   function buildResult() {
