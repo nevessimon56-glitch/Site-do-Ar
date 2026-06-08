@@ -324,11 +324,19 @@
       return window.matchMedia('(max-width: 767px)').matches;
     }
 
+    function isLoggedIn() {
+      try {
+        return typeof customer !== 'undefined' && customer && (customer.customerId || customer.email);
+      } catch (e) { return false; }
+    }
+
     function jaViu() {
+      if (!isLoggedIn()) return false;
       try { return localStorage.getItem(KEY) === '1'; } catch(e) { return false; }
     }
 
     function marcarVisto() {
+      if (!isLoggedIn()) return;
       try { localStorage.setItem(KEY, '1'); } catch(e) {}
     }
 
