@@ -70,13 +70,73 @@
   }
   .d-logo {
     display: flex; align-items: center;
-    min-width: 140px; min-height: 40px;
     text-decoration: none;
-    background: url('https://salescdn.net/XOFBUXAbeaqnTcy-gCa7vQrXkio=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/1777059085610.webp') no-repeat left center / contain;
+    line-height: 0;
   }
   .d-logo-img {
     height: 40px; width: auto; max-width: 180px; object-fit: contain;
     display: block; flex-shrink: 0;
+  }
+  .d-logo img + img { display: none !important; }
+
+  /* Barra compacta — só celular */
+  .d-mobile-bar {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: var(--d-surface);
+    border-bottom: 1px solid var(--d-border);
+    position: sticky;
+    top: 61px;
+    z-index: 9;
+  }
+  .d-mobile-stat {
+    flex-shrink: 0;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: rgba(249,115,22,0.08);
+    border: 1px solid rgba(249,115,22,0.2);
+    text-align: center;
+    min-width: 64px;
+  }
+  .d-mobile-val {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--d-accent2);
+    line-height: 1.1;
+  }
+  .d-mobile-lbl {
+    display: block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--d-muted);
+    margin-top: 2px;
+  }
+  .d-mobile-progress-wrap { flex: 1; min-width: 0; }
+  .d-mobile-step {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--d-muted2);
+    margin-bottom: 5px;
+  }
+  .d-mobile-track {
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+  }
+  .d-mobile-track span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--d-accent), var(--d-accent2));
+    width: 10%;
+    transition: width 0.3s ease;
   }
   .d-header-badge {
     padding: 6px 12px; border-radius: 999px;
@@ -269,26 +329,123 @@
   .d-route-card p { color: var(--d-muted2); font-size: 0.92rem; line-height: 1.65; margin-bottom: 14px; }
   .d-route-disc { font-size: 0.8rem; color: var(--d-muted); line-height: 1.55; padding-top: 12px; border-top: 1px solid var(--d-border); }
 
-  @media (max-width: 960px) {
+  /* Tablet — layout intermediário */
+  @media (max-width: 960px) and (min-width: 768px) {
     .d-hero { grid-template-columns: 1fr; gap: 32px; padding: 40px 24px 32px; }
     .d-quiz-section { grid-template-columns: 1fr; padding: 24px; }
     .d-sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .d-sidebar-card { margin-bottom: 0; }
     .d-result-grid { grid-template-columns: 1fr; }
   }
-  @media (max-width: 640px) {
-    .d-header { padding: 16px 20px; }
-    .d-hero { padding: 28px 20px; }
-    .d-quiz-section { padding: 20px; gap: 16px; }
-    .d-quiz-card { padding: 24px 20px; }
-    .d-option-grid { grid-template-columns: 1fr; }
-    .d-quiz-actions { flex-direction: column-reverse; }
-    .d-btn-back, .d-btn-next { width: 100%; justify-content: center; }
-    .d-result { padding: 0 20px 40px; }
-    .d-result-banner { padding: 24px 20px; }
+
+  /* Celular — layout próprio */
+  @media (max-width: 767px) {
+    .d-header {
+      padding: 12px 16px;
+      padding-top: calc(12px + env(safe-area-inset-top, 0px));
+    }
+    .d-logo-img { height: 32px; max-width: 140px; }
+    .d-header-badge { font-size: 0.68rem; padding: 5px 8px; }
+
+    .d-hero {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px 16px 16px;
+      max-width: 100%;
+    }
+    .d-hero-text h1 {
+      font-size: 1.75rem;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+    .d-hero-text h1 br { display: none; }
+    .d-hero-text p {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+    .d-hero-actions {
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
+    }
+    .d-btn-primary,
+    .d-btn-secondary {
+      width: 100%;
+      justify-content: center;
+      padding: 15px 20px;
+    }
+    .d-hero-stats {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      order: 2;
+    }
+    .d-stat-card { padding: 14px 12px; border-radius: 12px; }
+    .d-stat-val { font-size: 1.35rem; }
+    .d-stat-label { font-size: 0.72rem; }
+    .d-stat-card.span2 { display: none; }
+    .d-progress-hero { margin-top: 8px; height: 5px; }
+
+    .d-divider { display: none; }
+
+    .d-mobile-bar { display: flex; }
+
+    .d-quiz-section {
+      grid-template-columns: 1fr;
+      padding: 0 0 24px;
+      gap: 0;
+    }
+    .d-sidebar { display: none !important; }
+
+    .d-quiz-card {
+      padding: 20px 16px 24px;
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+      border-bottom: 0;
+    }
+    .d-quiz-head { margin-bottom: 16px; }
+    .d-step-type { display: none; }
+    .d-quiz-progress { margin-bottom: 20px; }
+    .d-q-title { font-size: 1.35rem; margin-bottom: 8px; }
+    .d-q-hint { font-size: 0.85rem; margin-bottom: 16px; }
+
+    .d-option-grid { grid-template-columns: 1fr; gap: 8px; }
+    .d-option {
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 12px;
+    }
+    .d-opt-emoji {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 0;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+    .d-opt-title { font-size: 0.9rem; margin-bottom: 2px; }
+    .d-opt-desc { font-size: 0.76rem; line-height: 1.35; }
+
+    .d-fact-box { display: none; }
+
+    .d-quiz-actions {
+      flex-direction: column-reverse;
+      margin-top: 20px;
+      gap: 10px;
+    }
+    .d-btn-back,
+    .d-btn-next { width: 100%; justify-content: center; }
+
+    .d-result { padding: 0 16px calc(32px + env(safe-area-inset-bottom, 0px)); }
+    .d-result-banner { padding: 22px 16px; border-radius: 16px; }
+    .d-result-title { font-size: 1.6rem; }
+    .d-result-grid { grid-template-columns: 1fr; gap: 20px; }
     .d-result-ctas { flex-direction: column; }
-    .d-btn-products, .d-btn-whatsapp { justify-content: center; }
-    .d-sidebar { grid-template-columns: 1fr; }
+    .d-btn-products,
+    .d-btn-whatsapp { width: 100%; justify-content: center; }
   }
 </style>
 
@@ -297,8 +454,23 @@
     <a class="d-logo" href="/" title="Site Do Ar" aria-label="Site Do Ar">
       <img class="d-logo-img" src="https://salescdn.net/XOFBUXAbeaqnTcy-gCa7vQrXkio=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/1777059085610.webp" alt="Site Do Ar" width="180" height="40">
     </a>
-    <span class="d-header-badge">Quiz avançado</span>
+    <span class="d-header-badge">Quiz</span>
   </header>
+
+  <div class="d-mobile-bar" id="dMobileBar" aria-hidden="true">
+    <div class="d-mobile-stat">
+      <span class="d-mobile-val" id="dMobBtu">9.000</span>
+      <span class="d-mobile-lbl">BTUs</span>
+    </div>
+    <div class="d-mobile-stat">
+      <span class="d-mobile-val" id="dMobFit">0%</span>
+      <span class="d-mobile-lbl">Perfil</span>
+    </div>
+    <div class="d-mobile-progress-wrap">
+      <span class="d-mobile-step" id="dMobStep">1 de 10</span>
+      <div class="d-mobile-track"><span id="dMobBar"></span></div>
+    </div>
+  </div>
 
   <section class="d-hero" id="d-hero">
     <div class="d-hero-text">
@@ -400,18 +572,21 @@
   (function ensureLogo() {
     var link = document.querySelector('.d-logo');
     if (!link) return;
-    var icon = link.querySelector('.d-logo-icon');
-    if (icon) icon.remove();
-    var img = link.querySelector('.d-logo-img');
+    link.style.background = 'none';
+    link.querySelectorAll('.d-logo-icon').forEach(function(el) { el.remove(); });
+    var imgs = link.querySelectorAll('img');
+    var img = imgs[0] || null;
     if (!img) {
+      link.textContent = '';
       img = document.createElement('img');
       img.className = 'd-logo-img';
       img.alt = 'Site Do Ar';
       img.width = 180;
       img.height = 40;
-      link.textContent = '';
       link.appendChild(img);
     }
+    for (var i = 1; i < imgs.length; i++) imgs[i].remove();
+    img.className = 'd-logo-img';
     img.src = LOGO_URL;
     link.setAttribute('title', 'Site Do Ar');
     link.setAttribute('aria-label', 'Site Do Ar');
@@ -532,6 +707,10 @@
     heroStatus: document.getElementById('dHeroStatus'),
     liveBtu: document.getElementById('dLiveBtu'),
     sideStatus: document.getElementById('dSideStatus'),
+    mobBtu: document.getElementById('dMobBtu'),
+    mobFit: document.getElementById('dMobFit'),
+    mobStep: document.getElementById('dMobStep'),
+    mobBar: document.getElementById('dMobBar'),
     back: document.getElementById('dBack'),
     next: document.getElementById('dNext'),
     result: document.getElementById('dResult')
@@ -620,6 +799,10 @@
     els.liveBtu.textContent = btuStr;
     els.sideStatus.textContent = status;
     els.quizBar.style.width = Math.round(((state.step+1)/questions.length)*100)+'%';
+    if (els.mobBtu) els.mobBtu.textContent = btuStr;
+    if (els.mobFit) els.mobFit.textContent = fit + '%';
+    if (els.mobStep) els.mobStep.textContent = (state.step + 1) + ' de ' + questions.length;
+    if (els.mobBar) els.mobBar.style.width = Math.round(((state.step + 1) / questions.length) * 100) + '%';
   }
 
   function showFact() {

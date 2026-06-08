@@ -204,6 +204,15 @@
 
 <!-- Popup Diagnóstico Clima 360 -->
 <style>
+  #diag360backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2147483646;
+    background: rgba(0,0,0,0.55);
+    -webkit-tap-highlight-color: transparent;
+  }
+  #diag360backdrop.show { display: block; }
   #diag360pop {
     display: none;
     position: fixed;
@@ -211,6 +220,7 @@
     right: 28px;
     z-index: 2147483647;
     width: 320px;
+    max-width: calc(100vw - 32px);
     border-radius: 20px;
     background: linear-gradient(145deg, #111827, #0f172a);
     border: 1px solid rgba(249,115,22,0.4);
@@ -218,9 +228,11 @@
     padding: 24px;
     font-family: Arial, sans-serif;
     color: #f1f5f9;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
   #diag360pop.show {
-    display: block;
+    display: block !important;
     animation: d360in 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
   }
   @keyframes d360in {
@@ -272,11 +284,18 @@
     font-family: Arial, sans-serif; padding: 4px;
   }
   .d360skip:hover { color: #94a3b8; }
-  @media (max-width: 420px) {
-    #diag360pop { bottom: 0; right: 0; left: 0; width: 100%; border-radius: 20px 20px 0 0; }
+  @media (max-width: 767px) {
+    #diag360pop {
+      bottom: 0; right: 0; left: 0;
+      width: 100%; max-width: 100%;
+      border-radius: 20px 20px 0 0;
+      padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -12px 48px rgba(0,0,0,0.6);
+    }
   }
 </style>
 
+<div id="diag360backdrop" aria-hidden="true"></div>
 <div id="diag360pop">
   <button id="d360close" type="button" aria-label="Fechar">&#x2715;</button>
   <div class="d360badge"><span class="d360dot"></span> Novo</div>
@@ -294,11 +313,15 @@
 <script>
 (function(){
   try {
-    var KEY = 'diag360_seen';
+    var KEY = 'diag360_dismissed';
 
     function isDiagPage() {
       var p = (window.location.pathname || '').toLowerCase();
       return p.indexOf('diagnostico') !== -1 || p.indexOf('diag360') !== -1;
+    }
+
+    function isMobile() {
+      return window.matchMedia('(max-width: 767px)').matches;
     }
 
     function jaViu() {
@@ -313,6 +336,7 @@
     if (isDiagPage()) return;
 
     var el = document.getElementById('diag360pop');
+    var backdrop = document.getElementById('diag360backdrop');
     if (!el) return;
 
     function fechar(e) {
@@ -322,26 +346,42 @@
       }
       el.classList.remove('show');
       el.style.display = 'none';
+      if (backdrop) {
+        backdrop.classList.remove('show');
+        backdrop.style.display = 'none';
+      }
       marcarVisto();
     }
 
-    document.getElementById('d360close').addEventListener('click', fechar);
-    document.getElementById('d360skip').addEventListener('click', fechar);
+    function abrir() {
+      if (isDiagPage() || jaViu()) return;
+      el.classList.add('show');
+      el.style.display = 'block';
+      if (backdrop && isMobile()) {
+        backdrop.classList.add('show');
+        backdrop.style.display = 'block';
+      }
+    }
+
+    var btnClose = document.getElementById('d360close');
+    var btnSkip = document.getElementById('d360skip');
+    if (btnClose) btnClose.addEventListener('click', fechar);
+    if (btnSkip) btnSkip.addEventListener('click', fechar);
 
     var cta = el.querySelector('.d360cta');
     if (cta) cta.addEventListener('click', marcarVisto);
 
-    document.addEventListener('mousedown', function(e) {
+    if (backdrop) backdrop.addEventListener('click', fechar);
+
+    function foraClick(e) {
       if (!el.classList.contains('show')) return;
       if (el.contains(e.target)) return;
       fechar(e);
-    });
+    }
+    document.addEventListener('mousedown', foraClick);
+    document.addEventListener('touchstart', foraClick, { passive: true });
 
-    setTimeout(function() {
-      if (isDiagPage() || jaViu()) return;
-      el.classList.add('show');
-      marcarVisto();
-    }, 5000);
+    setTimeout(abrir, isMobile() ? 3000 : 5000);
   } catch(e) {
     console.error('Popup diag360:', e);
   }
