@@ -430,8 +430,8 @@
       options:[
         {label:'Só para dormir',desc:'6 a 8 horas por noite.',emoji:'🌙',scores:{silence:4,economy:3}},
         {label:'Tarde e noite',desc:'Uso moderado, principalmente à tarde.',emoji:'🌅',scores:{comfort:3,economy:2}},
-        {label:'O dia todo',desc:'Uso intenso e contínuo.',emoji:'☀',scores:{economy:4,power:2}},
-        {label:'Uso comercial',desc:'Abertura à fechamento.',emoji:'🏪',scores:{power:5,speed:2}}
+        {label:'O dia todo',desc:'Uso intenso e contínuo.',emoji:'☀',scores:{economy:4,power:2},btuAdd:2000},
+        {label:'Uso comercial',desc:'Abertura à fechamento.',emoji:'🏪',scores:{power:5,speed:2},btuAdd:4000}
       ]
     },
     { id:'priority', type:'single', title:'Qual fator é mais importante para você?', hint:'Define o perfil de recomendação e argumentação de venda.',
@@ -549,20 +549,34 @@
 
   function recalc() {
     resetScores();
+    var areaBtus = [];
+    var addedBtu = 0;
+
     questions.forEach(function(q) {
       getSelected(q).forEach(function(i) {
         var opt = q.options[i]; if (!opt) return;
         Object.entries(opt.scores || {}).forEach(function(e){ state.scores[e[0]] += e[1]; });
-        if (opt.btu) state.btuBase = Math.max(state.btuBase, opt.btu);
-        if (opt.btuAdd) state.btuBase += opt.btuAdd;
+
+        if (q.id === 'environment' || q.id === 'roomSize') {
+          if (opt.btu) areaBtus.push(opt.btu);
+        } else if (opt.btuAdd) {
+          addedBtu += opt.btuAdd;
+        }
       });
     });
+
+    var baseBtu = areaBtus.length ? Math.max.apply(null, areaBtus) : 9000;
+    var raw = baseBtu + addedBtu;
+    state.btuBase = Math.ceil(raw * 1.1);
     updateUI();
   }
 
   function normBtu(v) {
     var caps = [9000,12000,18000,24000,30000,36000,48000,60000];
-    return caps.find(function(c){ return v <= c; }) || 60000;
+    for (var i = 0; i < caps.length; i++) {
+      if (v <= caps[i]) return caps[i];
+    }
+    return 60000;
   }
 
   function getTop() {
