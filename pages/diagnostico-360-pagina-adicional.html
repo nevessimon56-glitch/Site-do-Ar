@@ -402,12 +402,12 @@
   var state = { step: 0, answers: {}, scores: { economy:0, comfort:0, speed:0, silence:0, tech:0, power:0 }, btuBase: 9000 };
 
   var questions = [
-    { id:'environment', type:'single', title:'Qual ambiente será climatizado?', hint:'Define o ponto de partida para o dimensionamento em BTUs.',
+    { id:'environment', type:'single', title:'Qual tipo de ambiente será climatizado?', hint:'Define o perfil de uso — a metragem vem na próxima etapa.',
       options:[
-        {label:'Quarto pequeno',desc:'Até 15 m²',emoji:'🛏',btu:9000},
-        {label:'Quarto grande',desc:'15 a 25 m²',emoji:'🛏',btu:12000},
-        {label:'Sala ou escritório',desc:'25 a 50 m²',emoji:'🛋',btu:18000},
-        {label:'Ambiente grande',desc:'Acima de 50 m²',emoji:'🏢',btu:24000}
+        {label:'Quarto',desc:'Dormitório ou quarto de hóspedes.',emoji:'🛏',scores:{silence:2,comfort:2}},
+        {label:'Sala de estar',desc:'Área de convivência da casa.',emoji:'🛋',scores:{comfort:3,power:1}},
+        {label:'Escritório',desc:'Home office ou sala de estudos.',emoji:'💻',scores:{silence:2,tech:2}},
+        {label:'Comercial',desc:'Loja, consultório ou recepção.',emoji:'🏢',scores:{power:3,speed:2}}
       ]
     },
     { id:'roomType', type:'single', title:'Como é a configuração do ambiente?', hint:'Afeta a eficiência do ar e o dimensionamento final.',
@@ -418,7 +418,7 @@
         {label:'Mezanino ou planta aberta',desc:'Espaço integrado.',emoji:'🏗',scores:{power:4},btuAdd:6000}
       ]
     },
-    { id:'roomSize', type:'single', title:'Qual é a área aproximada do ambiente?', hint:'Refinamento do cálculo de BTUs necessários.',
+    { id:'roomSize', type:'single', title:'Qual é a área aproximada do ambiente?', hint:'Principal fator para calcular os BTUs necessários.',
       options:[
         {label:'Até 10 m²',desc:'Quarto individual, home office pequeno.',emoji:'📐',btu:9000},
         {label:'10 a 20 m²',desc:'Quarto casal ou sala pequena.',emoji:'📐',btu:12000},
@@ -557,8 +557,8 @@
         var opt = q.options[i]; if (!opt) return;
         Object.entries(opt.scores || {}).forEach(function(e){ state.scores[e[0]] += e[1]; });
 
-        if (q.id === 'environment' || q.id === 'roomSize') {
-          if (opt.btu) areaBtus.push(opt.btu);
+        if (q.id === 'roomSize' && opt.btu) {
+          areaBtus.push(opt.btu);
         } else if (opt.btuAdd) {
           addedBtu += opt.btuAdd;
         }
@@ -646,9 +646,9 @@
     };
     var lines = ['Olá! Fiz o Diagnóstico Clima 360 no site.','','📊 *Meu perfil:* '+persona.title,'🌡 *BTUs sugeridos:* '+btu.toLocaleString('pt-BR')+' BTUs','⚡ *Prioridade:* '+priority,''];
     var env=get('environment'),type=get('roomType'),size=get('roomSize'),urg=get('urgency');
-    if(env) lines.push('🏠 *Ambiente:* '+env);
+    if(env) lines.push('🏠 *Tipo de ambiente:* '+env);
+    if(size) lines.push('📏 *Área:* '+size);
     if(type) lines.push('🔧 *Configuração:* '+type);
-    if(size) lines.push('📏 *Tamanho:* '+size);
     if(urg) lines.push('⏰ *Urgência:* '+urg);
     if(feats.length) lines.push('✅ *Recursos:* '+feats.join(', '));
     lines.push('','Pode me ajudar a escolher o modelo ideal?');
