@@ -69,18 +69,13 @@
     position: sticky; top: 0; z-index: 10;
   }
   .d-logo {
-    display: flex; align-items: center; gap: 10px;
-    font-weight: 800; font-size: 1rem; letter-spacing: -0.02em; color: var(--d-white);
+    display: flex; align-items: center;
+    min-width: 140px; min-height: 40px;
     text-decoration: none;
-  }
-  .d-logo-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: linear-gradient(135deg, var(--d-accent), var(--d-accent2));
-    display: grid; place-items: center; font-size: 0.75rem; font-weight: 900; color: #fff;
-    box-shadow: 0 0 20px var(--glow); flex-shrink: 0;
+    background: url('https://salescdn.net/XOFBUXAbeaqnTcy-gCa7vQrXkio=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/1777059085610.webp') no-repeat left center / contain;
   }
   .d-logo-img {
-    height: 40px; width: auto; max-width: 160px; object-fit: contain;
+    height: 40px; width: auto; max-width: 180px; object-fit: contain;
     display: block; flex-shrink: 0;
   }
   .d-header-badge {
@@ -299,8 +294,8 @@
 
 <div id="diag360-overlay">
   <header class="d-header">
-    <a class="d-logo" href="/">
-      <img class="d-logo-img" src="https://salescdn.net/H1lCyyquCFyGP-5L9KxsjvfeoRc=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1779883388540.webp" alt="Site Do Ar" width="160" height="40">
+    <a class="d-logo" href="/" title="Site Do Ar" aria-label="Site Do Ar">
+      <img class="d-logo-img" src="https://salescdn.net/XOFBUXAbeaqnTcy-gCa7vQrXkio=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/1777059085610.webp" alt="Site Do Ar" width="180" height="40">
     </a>
     <span class="d-header-badge">Quiz avançado</span>
   </header>
@@ -401,6 +396,27 @@
 
 <script>
 (function () {
+  var LOGO_URL = 'https://salescdn.net/XOFBUXAbeaqnTcy-gCa7vQrXkio=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/1777059085610.webp';
+  (function ensureLogo() {
+    var link = document.querySelector('.d-logo');
+    if (!link) return;
+    var icon = link.querySelector('.d-logo-icon');
+    if (icon) icon.remove();
+    var img = link.querySelector('.d-logo-img');
+    if (!img) {
+      img = document.createElement('img');
+      img.className = 'd-logo-img';
+      img.alt = 'Site Do Ar';
+      img.width = 180;
+      img.height = 40;
+      link.textContent = '';
+      link.appendChild(img);
+    }
+    img.src = LOGO_URL;
+    link.setAttribute('title', 'Site Do Ar');
+    link.setAttribute('aria-label', 'Site Do Ar');
+  })();
+
   var dims = { economy: 'Economia', comfort: 'Conforto', speed: 'Agilidade', silence: 'Silêncio', tech: 'Tecnologia', power: 'Potência' };
   var state = { step: 0, answers: {}, scores: { economy:0, comfort:0, speed:0, silence:0, tech:0, power:0 }, btuBase: 9000 };
 

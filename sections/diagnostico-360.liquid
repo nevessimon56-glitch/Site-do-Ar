@@ -51,12 +51,9 @@
     padding:20px 32px;border-bottom:1px solid var(--border);
     background:rgba(10,14,26,.9);backdrop-filter:blur(12px);
     position:sticky;top:0;z-index:10}
-  .d-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1rem;
-    letter-spacing:-.02em;color:#f1f5f9}
-  .d-logo-icon{width:36px;height:36px;border-radius:10px;
-    background:linear-gradient(135deg,var(--accent),var(--accent2));
-    display:grid;place-items:center;font-size:.75rem;font-weight:900;color:#fff;
-    box-shadow:0 0 20px var(--glow)}
+  .d-logo{display:flex;align-items:center;min-width:140px;min-height:40px;text-decoration:none;
+    background:url('https://salescdn.net/XOFBUXAbeaqnTcy-gCa7vQrXkio=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/1777059085610.webp') no-repeat left center/contain}
+  .d-logo-img{height:40px;width:auto;max-width:180px;object-fit:contain;display:block}
   .d-header-badge{padding:6px 12px;border-radius:999px;
     background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);
     color:var(--accent2);font-size:.78rem;font-weight:700;
@@ -248,7 +245,9 @@
 <body>
 
 <header class="d-header">
-  <a class="d-logo" href="/" target="_top"><span class="d-logo-icon">360</span> Site Do Ar</a>
+  <a class="d-logo" href="/" target="_top" title="Site Do Ar" aria-label="Site Do Ar">
+    <img class="d-logo-img" src="https://salescdn.net/XOFBUXAbeaqnTcy-gCa7vQrXkio=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/1777059085610.webp" alt="Site Do Ar" width="180" height="40">
+  </a>
   <span class="d-header-badge">Quiz avançado</span>
 </header>
 
