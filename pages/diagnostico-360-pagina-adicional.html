@@ -638,17 +638,16 @@
   var dims = { economy: 'Economia', comfort: 'Conforto', speed: 'Agilidade', silence: 'Silêncio', tech: 'Tecnologia', power: 'Potência' };
   var state = { step: 0, answers: {}, scores: { economy:0, comfort:0, speed:0, silence:0, tech:0, power:0 }, btuRaw: 9000, btuBase: 9000 };
 
-  /* Mesma tabela e fórmula da calculadora BTUs do site (.sda-calc) */
+  /* Faixas com URLs reais do catálogo (sem 36k split — vitrine inexistente na loja) */
   var BTU_RANGES = [
-    { max:  9000, label: '9.000' },
-    { max: 12000, label: '12.000' },
-    { max: 18000, label: '18.000' },
-    { max: 24000, label: '24.000' },
-    { max: 30000, label: '30.000' },
-    { max: 36000, label: '36.000' },
-    { max: 48000, label: '48.000' },
-    { max: 56000, label: '56.000' },
-    { max: 99999, label: '60.000+' }
+    { max:  9000, btu:  9000, label: '9.000',  url: '/split-inverter/9000-btus' },
+    { max: 12000, btu: 12000, label: '12.000', url: '/split-inverter/12000-Btus' },
+    { max: 18000, btu: 18000, label: '18.000', url: '/split-inverter/18000-Btus' },
+    { max: 24000, btu: 24000, label: '24.000', url: '/split-inverter/24000-Btus' },
+    { max: 30000, btu: 30000, label: '30.000', url: '/split-inverter/30000-Btus' },
+    { max: 48000, btu: 48000, label: '48.000', url: '/Piso-Teto/48000-Btus' },
+    { max: 56000, btu: 56000, label: '56.000', url: '/Piso-Teto/56000-btus' },
+    { max: 99999, btu: 56000, label: '56.000', url: '/Piso-Teto/56000-btus' }
   ];
 
   var questions = [
@@ -846,13 +845,15 @@
     return Math.ceil(btus / 500) * 500;
   }
 
-  function recommendBtu(raw) {
-    var idealIdx = -1;
+  function recommendBtuRange(raw) {
     for (var i = 0; i < BTU_RANGES.length; i++) {
-      if (raw <= BTU_RANGES[i].max) { idealIdx = i; break; }
+      if (raw <= BTU_RANGES[i].max) return BTU_RANGES[i];
     }
-    if (idealIdx < 0) idealIdx = BTU_RANGES.length - 1;
-    return BTU_RANGES[idealIdx].max === 99999 ? 60000 : BTU_RANGES[idealIdx].max;
+    return BTU_RANGES[BTU_RANGES.length - 1];
+  }
+
+  function recommendBtu(raw) {
+    return recommendBtuRange(raw).btu;
   }
 
   function normBtu(v) {
@@ -955,34 +956,9 @@
     return 'https://wa.me/5519984176960?text='+encodeURIComponent(lines.join('\n'));
   }
 
-  /* Categorias com produtos ativos na loja (atualize se adicionar novas) */
-  var STORE_BTUS = {
-    'split-inverter': [9000, 12000, 18000, 24000, 30000, 36000],
-    'ar-split': []
-  };
-
-  function closestBtu(target, list) {
-    if (!list || !list.length) return null;
-    return list.reduce(function(best, cur) {
-      var dCur = Math.abs(cur - target);
-      var dBest = Math.abs(best - target);
-      if (dCur < dBest) return cur;
-      if (dCur === dBest && cur > best) return cur;
-      return best;
-    });
-  }
-
-  function buildLink(btu, topKey) {
-    var target = normBtu(btu);
-    var preferInverter = ['economy','silence','tech'].indexOf(topKey) !== -1;
-    var base = 'https://www.sitedoar.com.br/';
-    var lines = preferInverter ? ['split-inverter', 'ar-split'] : ['ar-split', 'split-inverter'];
-
-    for (var i = 0; i < lines.length; i++) {
-      var match = closestBtu(target, STORE_BTUS[lines[i]]);
-      if (match) return base + lines[i] + '/' + match + '-btus?pg=1';
-    }
-    return base + 'split-inverter/12000-btus?pg=1';
+  function buildLink(rawBtu) {
+    var range = recommendBtuRange(rawBtu || state.btuRaw);
+    return 'https://www.sitedoar.com.br' + range.url + '?pg=1';
   }
 
   function buildResult() {
@@ -999,7 +975,7 @@
       speed:   {title:'Perfil Solução Rápida',text:'O cliente quer resolver logo. Reduza atrito: mostre produtos disponíveis e capacidade segura.',route:'Priorize atendimento rápido e equipamentos com capacidade bem dimensionada.'},
       silence: {title:'Perfil Silêncio e Descanso',text:'O cliente se preocupa com ruído e estabilidade. Destaque linhas silenciosas e inverter.',route:'Indique modelos para quarto, home office e ambientes de descanso.'},
       tech:    {title:'Perfil Smart Control',text:'O cliente valoriza praticidade, Wi-Fi e controle pelo celular.',route:'Mostre modelos com Wi-Fi e explique cenários de uso no dia a dia.'},
-      power:   {title:'Perfil Alta Performance',text:'O ambiente exige mais potência. Evite subdimensionamento e incentive contato consultivo.',route:'Leve para WhatsApp ou vitrines de maior capacidade.'}
+      power:   {title:'Perfil Alta Performance',text:'O ambiente exige mais potência. Evite subdimensionamento e incentive contato consultivo.',route:'Para ambientes grandes, priorize linhas Piso-Teto ou atendimento consultivo no WhatsApp.'}
     };
     var p = personas[topKey] || personas.comfort;
 
@@ -1007,7 +983,7 @@
     document.getElementById('dResultText').textContent = p.text+' Faixa sugerida: '+btu.toLocaleString('pt-BR')+' BTUs.';
     document.getElementById('dRouteTitle').textContent = hasUrgency ? 'Rota: atendimento imediato' : 'Rota recomendada';
     document.getElementById('dRouteText').textContent = p.route+(feats.length ? ' Recursos citados: '+feats.join(', ')+'.' : '');
-    document.getElementById('dPrimaryCta').href = buildLink(btu, topKey);
+    document.getElementById('dPrimaryCta').href = buildLink(state.btuRaw);
     document.getElementById('dWaCta').href = buildWa(p, btu, dims[topKey], feats);
     document.getElementById('dResultBadges').innerHTML = [
       {label:btu.toLocaleString('pt-BR')+' BTUs',h:true},
