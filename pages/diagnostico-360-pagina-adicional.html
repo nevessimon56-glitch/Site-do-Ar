@@ -636,7 +636,20 @@
   })();
 
   var dims = { economy: 'Economia', comfort: 'Conforto', speed: 'Agilidade', silence: 'Silêncio', tech: 'Tecnologia', power: 'Potência' };
-  var state = { step: 0, answers: {}, scores: { economy:0, comfort:0, speed:0, silence:0, tech:0, power:0 }, btuBase: 9000 };
+  var state = { step: 0, answers: {}, scores: { economy:0, comfort:0, speed:0, silence:0, tech:0, power:0 }, btuRaw: 9000, btuBase: 9000 };
+
+  /* Mesma tabela e fórmula da calculadora BTUs do site (.sda-calc) */
+  var BTU_RANGES = [
+    { max:  9000, label: '9.000' },
+    { max: 12000, label: '12.000' },
+    { max: 18000, label: '18.000' },
+    { max: 24000, label: '24.000' },
+    { max: 30000, label: '30.000' },
+    { max: 36000, label: '36.000' },
+    { max: 48000, label: '48.000' },
+    { max: 56000, label: '56.000' },
+    { max: 99999, label: '60.000+' }
+  ];
 
   var questions = [
     { id:'environment', type:'single', title:'Qual tipo de ambiente será climatizado?', hint:'Define o perfil de uso — a metragem vem na próxima etapa.',
@@ -650,17 +663,17 @@
     { id:'roomType', type:'single', title:'Como é a configuração do ambiente?', hint:'Afeta a eficiência do ar e o dimensionamento final.',
       options:[
         {label:'Janelas pequenas',desc:'Pouca exposição solar.',emoji:'🪟',scores:{economy:1}},
-        {label:'Muito sol direto',desc:'Exposição solar alta.',emoji:'☀',scores:{power:3},btuAdd:1200},
-        {label:'Pé-direito alto',desc:'Acima de 3 metros.',emoji:'⬆',scores:{power:2},btuAdd:1000},
-        {label:'Mezanino ou planta aberta',desc:'Espaço integrado.',emoji:'🏗',scores:{power:4},btuAdd:2000}
+        {label:'Muito sol direto',desc:'Exposição solar alta.',emoji:'☀',scores:{power:3}},
+        {label:'Pé-direito alto',desc:'Acima de 3 metros.',emoji:'⬆',scores:{power:2}},
+        {label:'Mezanino ou planta aberta',desc:'Espaço integrado.',emoji:'🏗',scores:{power:4}}
       ]
     },
-    { id:'roomSize', type:'single', title:'Qual é a área aproximada do ambiente?', hint:'Principal fator para calcular os BTUs necessários.',
+    { id:'roomSize', type:'single', title:'Qual é a área aproximada do ambiente?', hint:'Usamos a mesma fórmula da calculadora de BTUs do site (600 BTU/m²).',
       options:[
-        {label:'Até 10 m²',desc:'Quarto individual, home office pequeno.',emoji:'📐',btu:9000},
-        {label:'10 a 20 m²',desc:'Quarto casal ou sala pequena.',emoji:'📐',btu:12000},
-        {label:'20 a 40 m²',desc:'Sala de estar, escritório médio.',emoji:'📐',btu:18000},
-        {label:'Mais de 40 m²',desc:'Sala grande, espaço comercial.',emoji:'📐',btu:24000}
+        {label:'Até 10 m²',desc:'Quarto individual, home office pequeno.',emoji:'📐'},
+        {label:'10 a 20 m²',desc:'Quarto casal ou sala pequena.',emoji:'📐'},
+        {label:'20 a 40 m²',desc:'Sala de estar, escritório médio.',emoji:'📐'},
+        {label:'Mais de 40 m²',desc:'Sala grande, espaço comercial.',emoji:'📐'}
       ]
     },
     { id:'usage', type:'single', title:'Qual é a rotina de uso do ar-condicionado?', hint:'Frequência de uso influencia eficiência e payback.',
@@ -698,9 +711,9 @@
     { id:'occupants', type:'single', title:'Quantas pessoas ocupam o ambiente normalmente?', hint:'Cada pessoa adiciona carga térmica ao ambiente.',
       options:[
         {label:'Somente eu',desc:'Uso individual.',emoji:'👤',scores:{economy:2}},
-        {label:'2 a 3 pessoas',desc:'Uso residencial comum.',emoji:'👥',scores:{comfort:2},btuAdd:600},
-        {label:'4 a 6 pessoas',desc:'Sala, reunião ou família grande.',emoji:'👨‍👩‍👧‍👦',scores:{power:3,comfort:2},btuAdd:1200},
-        {label:'Fluxo grande',desc:'Comercial ou entrada e saída constante.',emoji:'↔',scores:{power:5,speed:2},btuAdd:2000}
+        {label:'2 a 3 pessoas',desc:'Uso residencial comum.',emoji:'👥',scores:{comfort:2}},
+        {label:'4 a 6 pessoas',desc:'Sala, reunião ou família grande.',emoji:'👨‍👩‍👧‍👦',scores:{power:3,comfort:2}},
+        {label:'Fluxo grande',desc:'Comercial ou entrada e saída constante.',emoji:'↔',scores:{power:5,speed:2}}
       ]
     },
     { id:'features', type:'multi', title:'Quais recursos fariam você escolher mais rápido?', hint:'Essa pergunta revela argumentos de venda, não apenas produto.',
@@ -785,41 +798,81 @@
 
   function resetScores() {
     Object.keys(state.scores).forEach(function(k){ state.scores[k] = 0; });
+    state.btuRaw = 9000;
     state.btuBase = 9000;
+  }
+
+  /* Converte respostas do quiz nos parâmetros da calculadora BTUs do site */
+  function mapAnswersToBtuParams() {
+    var areaBySize = [8, 15, 30, 50];
+    var area = 15;
+    if (state.answers.roomSize !== undefined) {
+      area = areaBySize[state.answers.roomSize] || 15;
+    }
+
+    var fatSol = 1.10;
+    var fatPe = 1.0;
+    if (state.answers.roomType !== undefined) {
+      var solByType = [1.0, 1.25, 1.10, 1.10];
+      fatSol = solByType[state.answers.roomType] || 1.10;
+      if (state.answers.roomType === 2) fatPe = 3.0 / 2.6;
+    }
+
+    var fatUso = 1.10;
+    if (state.answers.environment !== undefined) {
+      var usoByEnv = [1.0, 1.10, 1.10, 1.50];
+      fatUso = usoByEnv[state.answers.environment] || 1.10;
+    }
+    if (state.answers.usage === 3) fatUso = Math.max(fatUso, 1.50);
+
+    var pessoas = 2;
+    if (state.answers.occupants !== undefined) {
+      pessoas = [1, 3, 5, 10][state.answers.occupants] || 2;
+    }
+
+    var equip = 0;
+    if (state.answers.environment === 1) equip = 600;
+    if (state.answers.environment === 2 || state.answers.environment === 3) equip = 1500;
+    if (state.answers.usage === 3) equip = Math.max(equip, 1500);
+
+    return { area: area, fatSol: fatSol, fatUso: fatUso, fatPe: fatPe, pessoas: pessoas, equip: equip };
+  }
+
+  /* Fórmula idêntica à sdaCalcular(): 600 BTU/m² × fatores + pessoas + equipamentos */
+  function calcBtuSiteDoAr(params) {
+    var btus = params.area * 600 * params.fatSol * params.fatUso * params.fatPe;
+    if (params.pessoas > 1) btus += (params.pessoas - 1) * 600;
+    btus += params.equip || 0;
+    return Math.ceil(btus / 500) * 500;
+  }
+
+  function recommendBtu(raw) {
+    var idealIdx = -1;
+    for (var i = 0; i < BTU_RANGES.length; i++) {
+      if (raw <= BTU_RANGES[i].max) { idealIdx = i; break; }
+    }
+    if (idealIdx < 0) idealIdx = BTU_RANGES.length - 1;
+    return BTU_RANGES[idealIdx].max === 99999 ? 60000 : BTU_RANGES[idealIdx].max;
+  }
+
+  function normBtu(v) {
+    return recommendBtu(v);
   }
 
   function recalc() {
     resetScores();
-    var baseBtu = 9000;
-    var extras = 0;
 
     questions.forEach(function(q) {
       getSelected(q).forEach(function(i) {
         var opt = q.options[i]; if (!opt) return;
         Object.entries(opt.scores || {}).forEach(function(e){ state.scores[e[0]] += e[1]; });
-
-        if (q.id === 'roomSize' && opt.btu) {
-          baseBtu = opt.btu;
-        } else if ((q.id === 'roomType' || q.id === 'occupants') && opt.btuAdd) {
-          extras += opt.btuAdd;
-        }
       });
     });
 
-    extras = Math.min(extras, Math.round(baseBtu * 0.25));
-    state.btuBase = normBtu(baseBtu + extras);
+    var params = mapAnswersToBtuParams();
+    state.btuRaw = calcBtuSiteDoAr(params);
+    state.btuBase = recommendBtu(state.btuRaw);
     updateUI();
-  }
-
-  function normBtu(v) {
-    var caps = [9000,12000,18000,24000,30000,36000,48000,60000];
-    if (v <= caps[0]) return caps[0];
-    for (var i = 0; i < caps.length - 1; i++) {
-      var mid = (caps[i] + caps[i + 1]) / 2;
-      if (v <= mid) return caps[i];
-      if (v <= caps[i + 1]) return caps[i + 1];
-    }
-    return caps[caps.length - 1];
   }
 
   function getTop() {
@@ -904,7 +957,7 @@
 
   /* Categorias com produtos ativos na loja (atualize se adicionar novas) */
   var STORE_BTUS = {
-    'split-inverter': [9000, 12000, 18000, 24000, 30000],
+    'split-inverter': [9000, 12000, 18000, 24000, 30000, 36000],
     'ar-split': []
   };
 
