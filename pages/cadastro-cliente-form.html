@@ -1,4 +1,4 @@
-<!-- CADASTRO DE CLIENTE — Site do Ar | Web3Forms -->
+<!-- CADASTRO DE CLIENTE — Site do Ar | Basin -->
 <p></p>
 <p style="text-align:center;">
   <img src="https://salescdn.net/H1lCyyquCFyGP-5L9KxsjvfeoRc=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1779883388540.webp" width="260" height="56" alt="Site do Ar" />
@@ -27,10 +27,7 @@
 </style>
 
 <div class="sda-widget">
-  <form id="sdaCadastroForm" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="access_key" value="6fa6327e-1232-4de9-bd25-fbb16e53ca03">
-    <input type="hidden" name="subject" value="Cadastro de Cliente — Site do Ar">
-    <input type="checkbox" name="botcheck" style="display:none;">
+  <form id="sdaCadastroForm" action="https://usebasin.com/f/e8e5c5de6061" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
 
     <div class="card">
       <div class="card-title"><span class="num">1</span> Tipo de Cadastro</div>
@@ -141,8 +138,8 @@
 
     <div class="card">
       <div class="card-title"><span class="num">9</span> Documentos Obrigatórios</div>
-      <input type="file" name="attachment" multiple>
-      <p style="font-size:12px;color:#64748b;margin-top:8px;">Anexe contrato social, cartão CNPJ e demais documentos solicitados.</p>
+      <input type="file" name="attachments[]" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+      <p style="font-size:12px;color:#64748b;margin-top:8px;">Anexe contrato social, cartão CNPJ e demais documentos (até 100 MB por arquivo).</p>
     </div>
 
     <button type="submit" class="btn-submit">ENVIAR CADASTRO</button>
@@ -165,18 +162,19 @@
     var btn = form.querySelector('.btn-submit');
     btn.disabled = true;
 
-    fetch('https://api.web3forms.com/submit', {
+    fetch(form.action, {
       method: 'POST',
-      body: new FormData(form)
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
     })
       .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
       .then(function (result) {
-        if (result.ok && result.json.success) {
+        if (result.ok) {
           msg.textContent = 'Cadastro enviado com sucesso! Em breve entraremos em contato.';
           msg.className = 'form-msg ok';
           form.reset();
         } else {
-          throw new Error(result.json.message || 'Não foi possível enviar o cadastro.');
+          throw new Error((result.json && result.json.error) || 'Não foi possível enviar o cadastro.');
         }
       })
       .catch(function (err) {
