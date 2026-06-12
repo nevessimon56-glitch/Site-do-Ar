@@ -1,0 +1,191 @@
+<!-- CADASTRO DE CLIENTE — Site do Ar | Web3Forms -->
+<p></p>
+<p style="text-align:center;">
+  <img src="https://salescdn.net/H1lCyyquCFyGP-5L9KxsjvfeoRc=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1779883388540.webp" width="260" height="56" alt="Site do Ar" />
+</p>
+<p></p>
+
+<style>
+  .sda-widget { font-family: 'Barlow', sans-serif; max-width: 850px; margin: auto; padding: 20px; background: #f7f9fc; border-radius: 12px; }
+  .card { background: #fff; padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+  .card-title { color: #2F5D8C; font-weight: 700; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; font-size: 17px; }
+  .num { background: #2563eb; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .full { grid-column: 1 / -1; }
+  label { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+  input, select, textarea { padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+  th { background: #eff6ff; color: #2F5D8C; padding: 10px; text-align: left; border: 1px solid #e2e8f0; }
+  td { padding: 5px; border: 1px solid #e2e8f0; }
+  td input { border: none; background: transparent; }
+  .btn-submit { width: 100%; padding: 18px; background: #2F5D8C; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; text-transform: uppercase; }
+  .btn-submit:hover { opacity: 0.92; }
+  .form-msg { display: none; margin-top: 16px; padding: 14px 18px; border-radius: 8px; font-size: 14px; text-align: center; }
+  .form-msg.ok { display: block; background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
+  .form-msg.err { display: block; background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+</style>
+
+<div class="sda-widget">
+  <form id="sdaCadastroForm" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="access_key" value="6fa6327e-1232-4de9-bd25-fbb16e53ca03">
+    <input type="hidden" name="subject" value="Cadastro de Cliente — Site do Ar">
+    <input type="checkbox" name="botcheck" style="display:none;">
+
+    <div class="card">
+      <div class="card-title"><span class="num">1</span> Tipo de Cadastro</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Tipo de ficha</label>
+          <select name="tipo_ficha">
+            <option>Cliente Novo</option>
+            <option>Atualização</option>
+            <option>Alteração</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tipo de contato</label>
+          <select name="tipo_contato">
+            <option>Consultor / Representante</option>
+            <option>Cliente</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">2</span> Identificação da Empresa</div>
+      <div class="form-grid">
+        <div class="form-group full"><label>Razão Social *</label><input type="text" name="razao_social" required></div>
+        <div class="form-group"><label>CNPJ *</label><input type="text" name="cnpj" required></div>
+        <div class="form-group"><label>Inscrição Estadual</label><input type="text" name="ie"></div>
+        <div class="form-group full"><label>Nome Fantasia</label><input type="text" name="nome_fantasia"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">3</span> Endereço de Faturamento</div>
+      <div class="form-grid">
+        <div class="form-group full"><label>Endereço *</label><input type="text" name="endereco" required></div>
+        <div class="form-group"><label>Bairro</label><input type="text" name="bairro"></div>
+        <div class="form-group">
+          <label>UF *</label>
+          <input list="lista-ufs" name="uf" required type="text">
+          <datalist id="lista-ufs">
+            <option value="AC - Acre"></option>
+            <option value="AL - Alagoas"></option>
+            <option value="AP - Amapá"></option>
+            <option value="AM - Amazonas"></option>
+            <option value="BA - Bahia"></option>
+            <option value="CE - Ceará"></option>
+            <option value="DF - Distrito Federal"></option>
+            <option value="ES - Espírito Santo"></option>
+            <option value="GO - Goiás"></option>
+            <option value="MA - Maranhão"></option>
+            <option value="MT - Mato Grosso"></option>
+            <option value="MS - Mato Grosso do Sul"></option>
+            <option value="MG - Minas Gerais"></option>
+            <option value="PA - Pará"></option>
+            <option value="PB - Paraíba"></option>
+            <option value="PR - Paraná"></option>
+            <option value="PE - Pernambuco"></option>
+            <option value="PI - Piauí"></option>
+            <option value="RJ - Rio de Janeiro"></option>
+            <option value="RN - Rio Grande do Norte"></option>
+            <option value="RS - Rio Grande do Sul"></option>
+            <option value="RO - Rondônia"></option>
+            <option value="RR - Roraima"></option>
+            <option value="SC - Santa Catarina"></option>
+            <option value="SP - São Paulo"></option>
+            <option value="SE - Sergipe"></option>
+            <option value="TO - Tocantins"></option>
+          </datalist>
+        </div>
+        <div class="form-group"><label>CEP</label><input type="text" name="cep"></div>
+        <div class="form-group"><label>E-mail *</label><input type="email" name="email" required></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">4</span> Histórico da Empresa</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Data Fundação</label><input type="date" name="data_fundacao"></div>
+        <div class="form-group full"><label>Ramo de Atividade</label><input type="text" name="ramo"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">5</span> Sócios</div>
+      <table>
+        <tbody>
+          <tr>
+            <th>Nome</th>
+            <th>Nascimento</th>
+            <th>CPF</th>
+          </tr>
+          <tr>
+            <td><input type="text" name="socio1_nome"></td>
+            <td><input type="date" name="socio1_nasc"></td>
+            <td><input type="text" name="socio1_cpf"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">6</span> Referências Comerciais</div>
+      <div class="form-grid">
+        <div class="form-group full"><input type="text" name="ref_com" placeholder="Empresa e Telefone"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">9</span> Documentos Obrigatórios</div>
+      <input type="file" name="attachment" multiple>
+      <p style="font-size:12px;color:#64748b;margin-top:8px;">Anexe contrato social, cartão CNPJ e demais documentos solicitados.</p>
+    </div>
+
+    <button type="submit" class="btn-submit">ENVIAR CADASTRO</button>
+    <div id="sdaFormMsg" class="form-msg" role="status"></div>
+  </form>
+</div>
+
+<script>
+(function () {
+  var form = document.getElementById('sdaCadastroForm');
+  var msg = document.getElementById('sdaFormMsg');
+  if (!form) return;
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msg.className = 'form-msg';
+    msg.textContent = 'Enviando cadastro...';
+    msg.classList.add('ok');
+
+    var btn = form.querySelector('.btn-submit');
+    btn.disabled = true;
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: new FormData(form)
+    })
+      .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
+      .then(function (result) {
+        if (result.ok && result.json.success) {
+          msg.textContent = 'Cadastro enviado com sucesso! Em breve entraremos em contato.';
+          msg.className = 'form-msg ok';
+          form.reset();
+        } else {
+          throw new Error(result.json.message || 'Não foi possível enviar o cadastro.');
+        }
+      })
+      .catch(function (err) {
+        msg.textContent = err.message || 'Erro ao enviar. Tente novamente ou fale conosco pelo WhatsApp.';
+        msg.className = 'form-msg err';
+      })
+      .finally(function () {
+        btn.disabled = false;
+      });
+  });
+})();
+</script>
