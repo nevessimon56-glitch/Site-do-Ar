@@ -1,0 +1,120 @@
+<!-- PREÇO COM DESCONTO PIX (5%) — Site do Ar -->
+<!-- Cole no final do layout/theme.liquid, antes do popup do diagnóstico -->
+<style>
+  .showcase-prices_strike s,
+  .product-prices_strike s {
+    color: #94a3b8;
+    font-weight: 600;
+    text-decoration: line-through;
+  }
+  .showcase-prices_pix,
+  .product-prices_pix {
+    color: #16a34a;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-top: 4px;
+  }
+  .showcase-prices_pix::before,
+  .product-prices_pix::before {
+    content: "● ";
+    font-size: 10px;
+    vertical-align: middle;
+  }
+  .product-prices .product-box_prices .product-prices_price {
+    color: #2f5d8c;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1em;
+  }
+  .showcase-prices .showcase-prices_price b,
+  .showcase-prices .showcase-prices_price {
+    color: #2f5d8c;
+  }
+</style>
+<script>
+(function () {
+  var PIX_DISCOUNT = 0.05;
+  var PIX_LABEL = '5% de desconto no Pix';
+
+  function parseBRL(text) {
+    if (!text) return null;
+    var cleaned = String(text).replace(/\s/g, '').replace(/[^\d,]/g, '').replace(',', '.');
+    var value = parseFloat(cleaned);
+    return isNaN(value) ? null : value;
+  }
+
+  function formatBRL(value) {
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function originalFromPix(pixPrice) {
+    return Math.round((pixPrice / (1 - PIX_DISCOUNT)) * 100) / 100;
+  }
+
+  function transformShowcasePrice(container) {
+    if (!container || container.dataset.pixDone === '1') return;
+    var priceNode = container.querySelector('.showcase-prices_price b, .showcase-prices_price');
+    if (!priceNode) return;
+    var pixPrice = parseBRL(priceNode.textContent);
+    if (!pixPrice) return;
+
+    var original = originalFromPix(pixPrice);
+    container.innerHTML =
+      '<p class="showcase-prices_strike"><s>' + formatBRL(original) + '</s></p>' +
+      '<p class="showcase-prices_price"><b>' + formatBRL(pixPrice) + '</b></p>' +
+      '<p class="showcase-prices_pix">' + PIX_LABEL + '</p>';
+    container.dataset.pixDone = '1';
+  }
+
+  function transformProductPrice() {
+    var box = document.querySelector('.product-prices .product-box_prices');
+    if (!box || box.dataset.pixDone === '1') return;
+
+    var priceNode = box.querySelector('.product-prices_price');
+    if (!priceNode) return;
+
+    var pixPrice = parseBRL(priceNode.textContent);
+    if (!pixPrice) return;
+
+    var original = originalFromPix(pixPrice);
+    var plots = box.querySelector('.product-prices_plots');
+
+    var strike = document.createElement('p');
+    strike.className = 'product-prices_strike';
+    strike.innerHTML = '<s>' + formatBRL(original) + '</s>';
+
+    var pix = document.createElement('p');
+    pix.className = 'product-prices_pix';
+    pix.textContent = PIX_LABEL;
+
+    priceNode.textContent = formatBRL(pixPrice);
+    box.insertBefore(strike, priceNode);
+    if (plots) {
+      box.insertBefore(pix, plots);
+    } else {
+      priceNode.insertAdjacentElement('afterend', pix);
+    }
+
+    box.dataset.pixDone = '1';
+  }
+
+  function run() {
+    document.querySelectorAll('.showcase-prices').forEach(transformShowcasePrice);
+    transformProductPrice();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+
+  var timer;
+  var observer = new MutationObserver(function () {
+    clearTimeout(timer);
+    timer = setTimeout(run, 120);
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+</script>

@@ -1,0 +1,35 @@
+/* Preço original riscado + valor no Pix — Site do Ar */
+.showcase-prices_strike s,
+.product-prices_strike s {
+  color: #94a3b8;
+  font-weight: 600;
+  text-decoration: line-through;
+}
+
+.showcase-prices_pix,
+.product-prices_pix {
+  color: #16a34a;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 4px;
+}
+
+.showcase-prices_pix::before,
+.product-prices_pix::before {
+  content: "● ";
+  font-size: 10px;
+  vertical-align: middle;
+}
+
+.product-prices .product-box_prices .product-prices_price {
+  color: #2f5d8c;
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1em;
+}
+
+.showcase-prices .showcase-prices_price b,
+.showcase-prices .showcase-prices_price {
+  color: #2f5d8c;
+}
