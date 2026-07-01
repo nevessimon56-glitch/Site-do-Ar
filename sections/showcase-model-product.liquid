@@ -89,7 +89,30 @@
                             {% assign classShowcaseLoginPrice = ' login-btn_logged d-hide' %}
                         {% endif %}
                         <div class="showcase-prices{{ classShowcaseLoginPrice }}">
-                            {%- render 'sections/showcase-prices-pix', product: product, productPricePrimary: productPricePrimary -%}
+                            {% assign _pixPrice = productPricePrimary.price %}
+                            {% if productPricePrimary.promotionPrice > 0 %}
+                                {% assign _pixPrice = productPricePrimary.promotionPrice %}
+                            {% endif %}
+                            {% assign _hasPixDiscount = false %}
+                            {% if product.primaryPrice and product.price.price > _pixPrice %}
+                                {% assign _hasPixDiscount = true %}
+                            {% endif %}
+                            {% if _hasPixDiscount %}
+                                <del class="showcase-prices_strike"><s>{{ product.price.price | money }}</s></del>
+                                <p class="showcase-prices_price"><b>{{ _pixPrice | money }}</b></p>
+                                <p class="showcase-prices_pix">
+                                    {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
+                                        {{ productPricePrimary.discountPercentage | round }}% de desconto no Pix
+                                    {% else %}
+                                        5% de desconto no Pix
+                                    {% endif %}
+                                </p>
+                            {% elsif product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                                <del class="showcase-prices_strike">{{ product.price.price | money }}</del>
+                                <p class="showcase-prices_price"><b>{{ _pixPrice | money }}</b></p>
+                            {% else %}
+                                <p class="showcase-prices_price"><b>{{ _pixPrice | money }}</b></p>
+                            {% endif %}
                         </div>
                     {% endif %}
                     <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
