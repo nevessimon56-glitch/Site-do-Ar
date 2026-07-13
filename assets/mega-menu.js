@@ -6,6 +6,76 @@
 (function () {
   'use strict';
 
+  function initMegaMenuCarousel(root) {
+    var carousel = root ? root.querySelector('[data-mega-carousel]') : document.querySelector('[data-mega-carousel]');
+    if (!carousel || carousel.getAttribute('data-mega-carousel-init') === '1') return;
+
+    var slides = carousel.querySelectorAll('.mega-menu-ar__slide');
+    if (!slides.length) return;
+
+    carousel.setAttribute('data-mega-carousel-init', '1');
+
+    var dots = carousel.querySelectorAll('.mega-menu-ar__dot');
+    var current = 0;
+    var timer = null;
+    var delay = 5000;
+
+    function goTo(index) {
+      current = index;
+      if (current >= slides.length) current = 0;
+      if (current < 0) current = slides.length - 1;
+
+      for (var i = 0; i < slides.length; i++) {
+        if (i === current) {
+          slides[i].classList.add('is-active');
+        } else {
+          slides[i].classList.remove('is-active');
+        }
+      }
+
+      for (var j = 0; j < dots.length; j++) {
+        if (j === current) {
+          dots[j].classList.add('is-active');
+        } else {
+          dots[j].classList.remove('is-active');
+        }
+      }
+    }
+
+    function nextSlide() {
+      goTo(current + 1 >= slides.length ? 0 : current + 1);
+    }
+
+    function startCarousel() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(nextSlide, delay);
+    }
+
+    function stopCarousel() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    for (var d = 0; d < dots.length; d++) {
+      (function (idx) {
+        dots[idx].addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          goTo(idx);
+          startCarousel();
+        });
+      })(d);
+    }
+
+    carousel.addEventListener('mouseenter', stopCarousel);
+    carousel.addEventListener('mouseleave', startCarousel);
+
+    goTo(0);
+    startCarousel();
+  }
+
   function initMegaMenuAr() {
     if (!window.matchMedia('(min-width: 992px)').matches) return false;
 
@@ -29,7 +99,10 @@
       }
     }
 
-    if (nav.querySelector('.mega-menu-ar')) return true;
+    if (nav.querySelector('.mega-menu-ar')) {
+      initMegaMenuCarousel(document);
+      return true;
+    }
 
     var inner = template.querySelector('.mega-menu-ar__inner');
     if (!inner) return false;
@@ -79,6 +152,7 @@
       if (!megaItem.contains(e.relatedTarget)) closeMenu();
     });
 
+    initMegaMenuCarousel(panel);
     return true;
   }
 
