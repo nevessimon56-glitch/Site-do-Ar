@@ -1,0 +1,134 @@
+{% comment %}
+  ARQUIVO: showcase-model-product.liquid
+  No editor WDNA: abra o arquivo que ja existe com este nome e substitua TODO o conteudo.
+{% endcomment %}
+{% assign maximumProducts = 60 %}
+{% assign products = showcaseSection.products %}
+{% if sectionConfig.rowQuantity and sectionConfig.columnQuantity %}
+    {% assign maximumProducts = sectionConfig.rowQuantity | times: sectionConfig.columnQuantity %}
+{% endif %}
+{% if products %}
+    {% assign products = products %}
+{% endif %}
+{% for product in products limit: maximumProducts %}
+
+    {% assign buyButtonText = 'Comprar' %}
+    {% if product.customBuyButton and product.customBuyButton.type == 'product' %}
+        {% assign buyButtonText = 'Ver mais' %}
+        {% if product.customBuyButton.text and product.customBuyButton.text != '' %}
+            {% assign buyButtonText = product.customBuyButton.text %}
+        {% endif %}
+    {% endif %}
+
+    {% assign productPricePrimary = product.price %}
+    {% if product.primaryPrice %}
+        {% assign productPricePrimary = product.primaryPrice %}
+    {% endif %}
+    {% if product.secondaryPrice %}
+        {% assign productPriceSecond = product.secondaryPrice %}
+    {% endif %}
+    <li class="showcase-item">
+        <div class="showcase-product card{% if product.medias[1].path != blank %} has-hover-image{% endif %}">
+            {% if themeConfig.price.type != 'hide' %}
+                {% if product.promotion %}
+                    <div class="showcase-tag">
+                        {{ product.promotion.label }}
+                    </div>
+                {% endif %}
+                {% if product.freeShipping == true %}
+                    <div class="showcase-tag showcase-tag-free_shipping">
+                        Frete Grátis
+                    </div>
+                {% endif %}
+            {% endif %}
+            <div class="showcase-product_image card-image">
+                {% if themeConfig.price.type != 'hide' %}
+                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                        {% assign classBtnBuy = '' %}
+                        {% if themeConfig.price.type == 'show-logged' %}
+                            {% assign classBtnBuy = ' login-btn_logged d-hide' %}
+                        {% endif %}
+                        <div class="showcase-offer{{ classBtnBuy }}">
+                            <div class="showcase-offer_text">
+                                <span>{{ product.price.promotionMargin | round }}%</span>
+                                <span>OFF</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                <a class="showcase-product_link showcase-product_link__image" href="{{ product.url }}">
+                    {% if product.medias[0].path != blank %}
+                        <span class="product-hover-wrap">
+                            <img class="lazy product-hover-img product-hover-img--main" data-src="{{ product.medias[0].path | imgUrl: 250 }}" alt="{{ product.title }}">
+                            {% if product.medias[1].path != blank %}
+                                <img class="lazy product-hover-img product-hover-img--alt" data-src="{{ product.medias[1].path | imgUrl: 250 }}" alt="{{ product.title }}" loading="lazy">
+                            {% endif %}
+                        </span>
+                    {% else %}
+                        {{ themeConfig.icons.image }}
+                    {% endif %}
+                </a>
+            </div>
+            <div class="card-header">
+                <h3>
+                    {% assign productTitle = product.title %}
+                    {% if product.multiple > 1 %}
+                        {% assign productTitle = productTitle | append: ' - ' | append: product.multiple %}
+                        {% if product.unitName %}
+                            {% assign productUnitName = product.unitName | downcase %}
+                            {% assign productTitle = productTitle | append: ' ' | append: productUnitName | append: 's' %}
+                        {% endif %}
+                    {% endif %}
+                    <a class="showcase-product_link showcase-product_link_title" href="{{ product.url }}" title="{{ productTitle }}">
+                        {{ productTitle }}
+                    </a>
+                </h3>
+            </div>
+            <div class="card-footer">
+                {% if product.price.showPrice == false and themeConfig.buyAction.type != 'hide' %}
+                    <div class="showcase-prices"></div>
+                    {% assign msgChatContact = 'Olá, gostaria de saber preço do produto:%0A%0A'| append: product.title | append: '%0AID: ' | append: product.id %}
+                    <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
+                        Sob consulta
+                    </a>
+                {% else %}
+                    {% if themeConfig.price.type == 'show' or themeConfig.price.type == 'show-logged' %}
+                        {% assign classShowcaseLoginPrice = '' %}
+                        {% if themeConfig.price.type == 'show-logged' %}
+                            {% assign classShowcaseLoginPrice = ' login-btn_logged d-hide' %}
+                        {% endif %}
+                        <div class="showcase-prices{{ classShowcaseLoginPrice }}">
+                            {% assign _pixPrice = productPricePrimary.price %}
+                            {% if productPricePrimary.promotionPrice > 0 %}
+                                {% assign _pixPrice = productPricePrimary.promotionPrice %}
+                            {% endif %}
+                            {% assign _hasPixDiscount = false %}
+                            {% if product.primaryPrice and product.price.price > _pixPrice %}
+                                {% assign _hasPixDiscount = true %}
+                            {% endif %}
+                            {% if _hasPixDiscount %}
+                                <del class="showcase-prices_strike"><s>{{ product.price.price | money }}</s></del>
+                                <p class="showcase-prices_price"><b>{{ _pixPrice | money }}</b></p>
+                                <p class="showcase-prices_pix">
+                                    {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
+                                        {{ productPricePrimary.discountPercentage | round }}% de desconto no Pix
+                                    {% else %}
+                                        5% de desconto no Pix
+                                    {% endif %}
+                                </p>
+                            {% elsif product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                                <del class="showcase-prices_strike">{{ product.price.price | money }}</del>
+                                <p class="showcase-prices_price"><b>{{ _pixPrice | money }}</b></p>
+                            {% else %}
+                                <p class="showcase-prices_price"><b>{{ _pixPrice | money }}</b></p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
+                        Comprar
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </li>
+{% endfor %}
