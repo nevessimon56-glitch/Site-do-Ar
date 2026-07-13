@@ -1,0 +1,403 @@
+{% assign seoTitle = '' %}
+{% if product.seoTitle %}
+    {% assign seoTitle = product.seoTitle %}
+{% elsif search.results[0].categories[0].title %}
+    {% assign seoTitle = search.results[0].categories[0].title %}
+{% elsif seo.title %}
+    {% assign seoTitle = seo.title %}
+{% else %}
+    {% assign seoTitle = 'Site Do Ar: Os Melhores Preços Aqui!!' %}
+{% endif %}
+
+{% assign seoDescription = '' %}
+{% if product.seoDescription %}
+    {% assign seoDescription = product.seoDescription %}
+{% elsif search.results[0].categories[0].description %}
+    {% assign seoDescription = search.results[0].categories[0].description %}
+{% elsif seo.description %}
+    {% assign seoDescription = seo.description %}
+{% elsif store.description %}
+    {% assign seoDescription = store.description %}
+{% else %}
+    {% assign seoDescription = 'Ar-condicionado em São Paulo com os melhores preços! Split, Inverter, portátil e mais em até 12x. Compre com instalação profissional no Site Do Ar. Confira!' %}
+{% endif %}
+
+{% assign seoKeywords = '' %}
+{% if product.tags %}
+    {% assign seoKeywords = product.tags %}
+{% elsif search.results[0].categories[0].tags %}
+    {% assign seoKeywords = search.results[0].categories[0].tags %}
+{% elsif seo.keywords %}
+    {% assign seoKeywords = seo.keywords %}
+{% elsif store.keywords %}
+    {% assign seoKeywords = store.keywords %}
+{% endif %}
+
+{% assign seoImage = '' %}
+{% assign seoImageType = '' %}
+{% assign seoImageWidth = '' %}
+{% assign seoImageHeight = '' %}
+{% if product.medias[0].path %}
+    {% assign seoImage = product.medias[0].path | imgUrl: 200 %}
+    {% if product.medias[0].mimeType %}
+        {% assign seoImageType = product.medias[0].mimeType %}
+    {% endif %}
+    {% if product.medias[0].width %}
+        {% assign seoImageWidth = product.medias[0].width %}
+    {% endif %}
+    {% if product.medias[0].height %}
+        {% assign seoImageHeight = product.medias[0].height %}
+    {% endif %}
+{% elsif theme.logo.path %}
+    {% assign seoImage = theme.logo.path | imgUrl %}
+    {% if theme.logo.file.mimeType %}
+        {% assign seoImageType = theme.logo.file.mimeType %}
+    {% endif %}
+    {% if theme.logo.width %}
+        {% assign seoImageWidth = theme.logo.width %}
+    {% endif %}
+    {% if theme.logo.height %}
+        {% assign seoImageHeight = theme.logo.height %}
+    {% endif %}
+{%endif%}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <title>{{ seoTitle }}</title>
+    <meta http-equiv="Content-Language" content="pt-br">
+    <meta name="description" content="{{ seoDescription }}">
+    <meta name="keywords" content="{{ seoKeywords }}">
+    <meta name="theme-color" content="{{ themeConfig.color }}"/>
+    <link rel="icon" href="{{ theme.favicon.path | imgUrl: 48 }}" sizes="48x48" type="image/webp">
+    <link rel="shortcut icon" href="{{ theme.favicon.path | imgUrl: 48 }}" type="image/webp">
+    <link rel="apple-touch-icon" href="{{ theme.favicon.path | imgUrl: 180 }}" sizes="180x180">
+    <link rel="preconnect" href="https://salescdn.net" crossorigin>
+    <link rel="preload" href="{{ 'assets/theme.js' | themeAssetUrl }}" as="script">
+    <script src="{{ 'assets/theme.js' | themeAssetUrl }}"></script>
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-plugins.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-semibold.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-black.woff2" type="font/woff2" crossorigin="anonymous">
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="{{ seoTitle }}"/>
+    <meta name="twitter:image" content="{{ seoImage }}"/>
+    <meta name="twitter:url" content="{{ store.url }}"/>
+    <meta name="twitter:description" content="{{ seoDescription }}">
+    <meta property="og:locale" content="pt-BR"/>
+    <meta property="og:title" content="{{ seoTitle }}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="{{ store.url }}"/>
+    <meta property="og:image" content="{{ seoImage }}"/>
+    <meta property="og:image:width" content="{{ seoImageWidth }}"/>
+    <meta property="og:image:height" content="{{ seoImageHeight }}"/>
+    {% if seoImageType != '' %}<meta property="og:image:type" content="{{ seoImageType }}"/>{% endif %}
+    <meta property="og:site_name" content="{{ seoTitle }}"/>
+    <meta property="og:description" content="{{ seoDescription }}"/>
+    <meta name="csrf-token" content="{{ csrfToken }}">
+    {%- for script in scripts.header -%}
+        {{ script.code }}
+    {%- endfor -%}
+    {% block head %}{% endblock %}
+</head>
+<body x-data="setupStore()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
+{%- for script in scripts.content -%}
+    {{ script.code }}
+{%- endfor -%}
+<span class="sidenav-overlay_background" onclick="changeSidenavOverlayBackground()"></span>
+<span class="loading-main loading"></span>
+{% render 'sections/check-cookie'%}
+{% render 'sections/sidenav-overlay-cart', cart: cart, store: store, themeConfig: themeConfig %}
+{% render 'sections/mega-menu-ar' %}
+{% block content %}{% endblock %}
+{% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
+<script>
+    window.onunload = function(){};
+    window.onload = function() {
+        loadFilesJSDefer();
+        loadInputMask();
+    }
+    function loadFilesJSDefer() {
+        var all_defer_script = document.createElement('script');
+        all_defer_script.setAttribute('src', '{{ 'assets/theme-defer.js' | themeAssetUrl }}');
+        document.querySelector('body').appendChild(all_defer_script);
+    }
+    captureUrlParameter();
+    function captureUrlParameter() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let sellerInit = null;
+        let linkSellerInit = null;
+        let refInit = null;
+        urlParams.forEach((value, key) => {
+            if (key.toLowerCase() === 'seller') sellerInit = value;
+            if (key.toLowerCase() === 'linkseller') linkSellerInit = value;
+            if (key.toLowerCase() === 'ref') refInit = value;
+        });
+        if (linkSellerInit) {
+            localStorage.setItem('linkSeller', linkSellerInit);
+            localStorage.removeItem('seller');
+            localStorage.removeItem('ref');
+        } else if (sellerInit) {
+            localStorage.setItem('seller', sellerInit);
+            localStorage.removeItem('linkSeller');
+            localStorage.removeItem('ref');
+        } else if (refInit) {
+            localStorage.setItem('ref', refInit);
+            localStorage.removeItem('seller');
+            localStorage.removeItem('linkSeller');
+        }
+    }
+    window.currencyStore = {% if store.symbolPrice %}"{{ store.symbolPrice }}"{% else %}null{% endif %};
+</script>
+<script src="{{ scripts.main.src }}"></script>
+<script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
+<script>
+    function setupStore() {
+        return {
+            data: { isLogged: null, user: '' },
+            headerLogout: function headerLogout() {
+                StoreSDK.request.post('/ajax/logout').then(function() {
+                    window.location.href = window.location.href;
+                });
+            },
+            changeCustomerLogin: function changeCustomerLogin(customer) {
+                this.data.isLogged = !!customer;
+                if (customer) this.data.user = customer.name || '';
+                var cls = this.data.isLogged ? '.login-btn_logged' : '.login-btn_not_logged';
+                var els = document.querySelectorAll(cls);
+                for (var i = 0; i < els.length; i++) els[i].classList.remove('d-hide');
+            },
+            openSideNavOverlayCartB2B: function openSideNavOverlayCartB2B() {
+                if (this.data.isLogged) {
+                    openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true});
+                } else {
+                    openSideNavOverlay('.sidenav-overlay_account', true);
+                }
+            },
+            checkLoginLogged: function checkLoginLogged() {
+                this.changeCustomerLogin(this.data.isLogged ? {name: this.data.user} : null);
+            },
+        };
+    }
+    const customer = {{ customer | json }};
+    if (typeof mb_track !== 'undefined') {
+        mb_track('setRecoveryUrl', 'https://{{ store.url }}/checkout');
+    }
+    if (customer && typeof mb_track !== 'undefined') {
+        window.mb_track('accountSync', {
+            user: {
+                user_id: customer?.customerId,
+                email: customer?.email,
+                phone: customer?.cellphone,
+                name: customer?.name || customer?.fantasyName,
+            }
+        });
+    }
+</script>
+{% block script_footer %}{% endblock %}
+{%- for script in scripts.footer -%}
+    {{ script.code }}
+{%- endfor -%}
+
+<!-- Popup Diagnóstico Clima 360 -->
+<style>
+  #diag360backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2147483646;
+    background: rgba(0,0,0,0.55);
+    -webkit-tap-highlight-color: transparent;
+  }
+  #diag360backdrop.show { display: block; }
+  #diag360pop {
+    display: none;
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 2147483647;
+    width: 320px;
+    max-width: calc(100vw - 32px);
+    border-radius: 20px;
+    background: linear-gradient(145deg, #111827, #0f172a);
+    border: 1px solid rgba(249,115,22,0.4);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+    padding: 24px;
+    font-family: Arial, sans-serif;
+    color: #f1f5f9;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  #diag360pop.show {
+    display: block !important;
+    animation: d360in 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  @keyframes d360in {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  #d360close {
+    position: absolute; top: 12px; right: 14px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%; width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #94a3b8; font-size: 14px; line-height: 1;
+  }
+  #d360close:hover { background: rgba(255,255,255,0.15); color: #fff; }
+  .d360badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 10px; border-radius: 999px;
+    background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.35);
+    color: #fb923c; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px;
+  }
+  .d360dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #f97316; box-shadow: 0 0 6px #f97316;
+    animation: d360pulse 1.8s infinite;
+  }
+  @keyframes d360pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .d360title { font-size: 16px; font-weight: 800; line-height: 1.3; margin: 0 0 8px; color: #f1f5f9; }
+  .d360text  { font-size: 13px; color: #64748b; line-height: 1.55; margin: 0 0 14px; }
+  .d360items { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .d360item  { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #94a3b8; }
+  .d360item::before {
+    content: "✓"; min-width: 18px; height: 18px; border-radius: 5px;
+    background: rgba(249,115,22,0.15); color: #fb923c; font-size: 11px;
+    font-weight: 900; display: flex; align-items: center; justify-content: center;
+  }
+  .d360cta {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 13px 20px; border-radius: 12px; border: 0;
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    color: #fff !important; font-weight: 700; font-size: 14px;
+    cursor: pointer; text-decoration: none !important;
+    box-shadow: 0 6px 20px rgba(249,115,22,0.35); margin-bottom: 10px;
+  }
+  .d360cta:hover { opacity: 0.9; }
+  .d360skip {
+    display: block; text-align: center; color: #475569; font-size: 12px;
+    cursor: pointer; background: none; border: 0; width: 100%;
+    font-family: Arial, sans-serif; padding: 4px;
+  }
+  .d360skip:hover { color: #94a3b8; }
+  @media (max-width: 767px) {
+    #diag360pop {
+      bottom: 0; right: 0; left: 0;
+      width: 100%; max-width: 100%;
+      border-radius: 20px 20px 0 0;
+      padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -12px 48px rgba(0,0,0,0.6);
+    }
+  }
+</style>
+
+<div id="diag360backdrop" aria-hidden="true"></div>
+<div id="diag360pop">
+  <button id="d360close" type="button" aria-label="Fechar">&#x2715;</button>
+  <div class="d360badge"><span class="d360dot"></span> Novo</div>
+  <p class="d360title">Qual ar-condicionado é ideal para você?</p>
+  <p class="d360text">Responda 10 perguntas e descubra a recomendação certa para o seu ambiente.</p>
+  <div class="d360items">
+    <span class="d360item">BTUs ideais para o seu espaço</span>
+    <span class="d360item">Perfil personalizado de climatização</span>
+    <span class="d360item">Link direto para os produtos certos</span>
+  </div>
+  <a class="d360cta" href="/pagina/diagnostico-360">&#127777; Fazer diagnóstico grátis</a>
+  <button class="d360skip" id="d360skip" type="button">Agora não</button>
+</div>
+
+<script>
+(function(){
+  try {
+    var KEY = 'diag360_dismissed';
+
+    function isDiagPage() {
+      var p = (window.location.pathname || '').toLowerCase();
+      return p.indexOf('diagnostico') !== -1 || p.indexOf('diag360') !== -1;
+    }
+
+    function isMobile() {
+      return window.matchMedia('(max-width: 767px)').matches;
+    }
+
+    function isLoggedIn() {
+      try {
+        return typeof customer !== 'undefined' && customer && (customer.customerId || customer.email);
+      } catch (e) { return false; }
+    }
+
+    function jaViu() {
+      if (!isLoggedIn()) return false;
+      try { return localStorage.getItem(KEY) === '1'; } catch(e) { return false; }
+    }
+
+    function marcarVisto() {
+      if (!isLoggedIn()) return;
+      try { localStorage.setItem(KEY, '1'); } catch(e) {}
+    }
+
+    if (jaViu()) return;
+    if (isDiagPage()) return;
+
+    var el = document.getElementById('diag360pop');
+    var backdrop = document.getElementById('diag360backdrop');
+    if (!el) return;
+
+    function fechar(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      el.classList.remove('show');
+      el.style.display = 'none';
+      if (backdrop) {
+        backdrop.classList.remove('show');
+        backdrop.style.display = 'none';
+      }
+      marcarVisto();
+    }
+
+    function abrir() {
+      if (isDiagPage() || jaViu()) return;
+      el.classList.add('show');
+      el.style.display = 'block';
+      if (backdrop && isMobile()) {
+        backdrop.classList.add('show');
+        backdrop.style.display = 'block';
+      }
+    }
+
+    var btnClose = document.getElementById('d360close');
+    var btnSkip = document.getElementById('d360skip');
+    if (btnClose) btnClose.addEventListener('click', fechar);
+    if (btnSkip) btnSkip.addEventListener('click', fechar);
+
+    var cta = el.querySelector('.d360cta');
+    if (cta) cta.addEventListener('click', marcarVisto);
+
+    if (backdrop) backdrop.addEventListener('click', fechar);
+
+    function foraClick(e) {
+      if (!el.classList.contains('show')) return;
+      if (el.contains(e.target)) return;
+      fechar(e);
+    }
+    document.addEventListener('mousedown', foraClick);
+    document.addEventListener('touchstart', foraClick, { passive: true });
+
+    setTimeout(abrir, isMobile() ? 3000 : 5000);
+  } catch(e) {
+    console.error('Popup diag360:', e);
+  }
+})();
+</script>
+
+</body>
+</html>

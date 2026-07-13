@@ -1,0 +1,33 @@
+{% layout 'theme' %}
+
+{% block head %}
+<style>
+  /* Remove chrome do tema nesta página — o quiz ocupa a tela inteira */
+  body.diag360-page .header,
+  body.diag360-page .footer,
+  body.diag360-page .top-bar,
+  body.diag360-page .breadcrumb,
+  body.diag360-page #diag360pop,
+  body.diag360-page .sidenav-overlay_background {
+    display: none !important;
+  }
+  body.diag360-page {
+    background: #0a0e1a !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  body.diag360-page main,
+  body.diag360-page .page-content,
+  body.diag360-page .container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+</style>
+<script>document.body.classList.add('diag360-page');</script>
+{% endblock %}
+
+{% block content %}
+  {% section 'diagnostico-360' %}
+{% endblock %}
