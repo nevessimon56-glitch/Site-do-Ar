@@ -122,8 +122,9 @@
     var hoverSrc = getHoverSrc(img);
     if (!hoverSrc) return;
 
-    urlOk(hoverSrc, function (ok) {
-      if (!ok || !link.isConnected) return;
+    function attach() {
+      if (!link.isConnected) return;
+      if (link.getAttribute(PROCESSED) === '1') return;
 
       if (!img.getAttribute('data-hover-src')) {
         img.setAttribute('data-hover-src', hoverSrc);
@@ -159,6 +160,16 @@
         },
         { passive: false }
       );
+    }
+
+    if (img.getAttribute('data-hover-src')) {
+      attach();
+      return;
+    }
+
+    urlOk(hoverSrc, function (ok) {
+      if (!ok) return;
+      attach();
     });
   }
 
