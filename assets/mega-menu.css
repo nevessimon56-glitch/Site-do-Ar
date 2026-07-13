@@ -1,6 +1,7 @@
 /**
  * Mega Menu — Ar Condicionado (Site do Ar)
- * ARQUIVO: assets/mega-menu.css — ESTILOS (não colar no .js)
+ * ARQUIVO: assets/mega-menu.css — ESTILOS (nao colar no .js)
+ * Layout em flexbox (compativel com editor WDNA)
  */
 
 @media (min-width: 992px) {
@@ -49,10 +50,24 @@
   }
 
   .mega-menu-ar__grid {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) 220px;
-    gap: 28px 24px;
-    align-items: start;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .mega-menu-ar__col {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+
+  .mega-menu-ar__col.mega-menu-ar__banner {
+    flex: 0 0 220px;
+    width: 220px;
+    padding-right: 0;
   }
 
   .mega-menu-ar__col-title {
@@ -69,9 +84,10 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+  }
+
+  .mega-menu-ar__links li {
+    margin: 0 0 2px;
   }
 
   .mega-menu-ar__links a {
@@ -143,7 +159,7 @@
     justify-content: center;
     min-height: 150px;
     padding: 16px 12px 8px;
-    background: linear-gradient(180deg, #f0f7fc 0%, #fff 100%);
+    background: #f0f7fc;
   }
 
   .mega-menu-ar__banner-img {
@@ -152,7 +168,6 @@
     max-width: 200px;
     height: auto;
     max-height: 130px;
-    object-fit: contain;
   }
 
   .mega-menu-ar__banner-body {
@@ -182,10 +197,7 @@
   }
 
   .mega-menu-ar__banner-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    align-self: flex-start;
+    display: inline-block;
     margin-top: auto;
     padding: 8px 14px;
     border-radius: 8px;
@@ -204,11 +216,19 @@
 
 @media (min-width: 992px) and (max-width: 1199px) {
   .mega-menu-ar__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    flex-wrap: wrap;
   }
 
-  .mega-menu-ar__banner {
-    grid-column: span 1;
+  .mega-menu-ar__col {
+    flex: 0 0 33.333%;
+    width: 33.333%;
+    padding-right: 20px;
+    margin-bottom: 20px;
+  }
+
+  .mega-menu-ar__col.mega-menu-ar__banner {
+    flex: 0 0 33.333%;
+    width: 33.333%;
   }
 }
 
