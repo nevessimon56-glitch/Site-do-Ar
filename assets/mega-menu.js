@@ -66,6 +66,14 @@
           });
         })(d);
       }
+
+      for (var s = 0; s < slides.length; s++) {
+        (function (slide) {
+          slide.addEventListener('touchstart', function () {
+            slide.classList.toggle('is-img-hover');
+          }, { passive: true });
+        })(slides[s]);
+      }
     }
 
     goTo(0);
