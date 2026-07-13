@@ -156,6 +156,13 @@
 <script src="{{ scripts.main.src }}"></script>
 <script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
 <script>
+  window.addEventListener('load', function () {
+    if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
+      window.initMegaMenuAr();
+    }
+  });
+</script>
+<script>
     function setupStore() {
         return {
             data: { isLogged: null, user: '' },
