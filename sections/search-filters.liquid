@@ -5,12 +5,13 @@
             {% assign linkSearch = currentPage.path %}
         {% endif %}
 
-        {% comment %} Preserva marca, preço e ordem ao trocar BTU/Ciclo {% endcomment %}
-        {% capture filterExtraQuery %}{% if search.query.marcas.size > 0 %}{% for marcaItem in search.query.marcas %}&marcas={{ marcaItem }}{% endfor %}{% endif %}{% if search.query.preco %}&preco={{ search.query.preco }}{% endif %}{% if search.query.ordem %}&ordem={{ search.query.ordem }}{% endif %}{% if search.query.qtdPag %}&qtdPag={{ search.query.qtdPag }}{% endif %}{% endcapture %}
+        {% comment %} Preserva marca e ordem ao trocar BTU/Ciclo (preco não — varia por categoria) {% endcomment %}
+        {% capture filterExtraQuery %}{% if search.query.marcas.size > 0 %}{% for marcaItem in search.query.marcas %}&marcas={{ marcaItem }}{% endfor %}{% endif %}{% if search.query.ordem %}&ordem={{ search.query.ordem }}{% endif %}{% if search.query.qtdPag %}&qtdPag={{ search.query.qtdPag }}{% endif %}{% endcapture %}
         {% assign filterExtraQuery = filterExtraQuery | strip %}
 
-        {% assign priceMin = search.facets.priceRange.min %}
-        {% assign priceMax = search.facets.priceRange.max %}
+        {% comment %} WDNA exige preco inteiro (ex: 0,5000) — centavos quebram a URL {% endcomment %}
+        {% assign priceMin = search.facets.priceRange.min | round %}
+        {% assign priceMax = search.facets.priceRange.max | round %}
         {% assign priceCurrent = priceMin | append: ',' | append: priceMax %}
         {% if search.query.preco %}
             {% assign priceCurrent = search.query.preco %}
@@ -515,8 +516,37 @@
 
 <script>
 (function () {
-  var rangeMin = Number('{{ search.facets.priceRange.min }}');
-  var rangeMax = Number('{{ search.facets.priceRange.max }}');
+  var rangeMin = Number('{{ priceMin }}');
+  var rangeMax = Number('{{ priceMax }}');
+
+  function normalizePrecoString(precoStr) {
+    if (!precoStr) return '';
+    var parts = String(precoStr).split(',');
+    if (parts.length < 2) return '';
+    var min = Math.round(parseFloat(parts[0]) || 0);
+    var max = Math.round(parseFloat(parts[1]) || 0);
+    return min + ',' + max;
+  }
+
+  function buildPrecoParam(minVal, maxVal) {
+    var minRounded = Math.round(minVal);
+    var maxRounded = Math.round(maxVal);
+    if (minRounded <= rangeMin && maxRounded >= rangeMax) return '';
+    return (minRounded <= rangeMin ? '0' : String(minRounded)) + ',' + String(maxRounded);
+  }
+
+  document.querySelectorAll('.priceBySearchTemp').forEach(function (el) {
+    var normalized = normalizePrecoString(el.getAttribute('data-prices'));
+    if (normalized) {
+      el.setAttribute('data-prices', normalized);
+      el.setAttribute('data-pricesTemp', normalized);
+    }
+  });
+
+  document.querySelectorAll('input.priceBySearch').forEach(function (input) {
+    var normalized = normalizePrecoString(input.value);
+    if (normalized) input.value = normalized;
+  });
 
   function syncPriceInput(form) {
     if (!(rangeMin < rangeMax)) return;
@@ -533,13 +563,12 @@
     var minVal = values[0];
     var maxVal = values[1];
     var input = form.querySelector('input.priceBySearch');
+    var precoStr = buildPrecoParam(minVal, maxVal);
 
-    if (minVal <= rangeMin && maxVal >= rangeMax) {
+    if (!precoStr) {
       if (input) input.remove();
       return;
     }
-
-    var precoStr = (minVal <= rangeMin ? '0' : String(minVal)) + ',' + String(maxVal);
 
     if (!input) {
       input = document.createElement('input');
