@@ -326,3 +326,7 @@
 }
 
 /* Hover de imagem nos cards de produto — sem alterar opacidade */
+
+.showcase-product_link__image:hover {
+  opacity: 1 !important;
+}
