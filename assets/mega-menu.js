@@ -80,64 +80,70 @@
     startCarousel();
   }
 
-  function initMegaMenuAr() {
-    if (!window.matchMedia('(min-width: 992px)').matches) return false;
+  var ARROW_SVG =
+    '<svg class="icon_arrow_down" width="40" height="40" viewBox="0 0 451.847 451.847" aria-hidden="true">' +
+      '<path d="M225.923,354.706c-8.098,0-16.195-3.092-22.369-9.263L9.27,151.157c-12.359-12.359-12.359-32.397,0-44.751c12.354-12.354,32.388-12.354,44.748,0l171.905,171.915l171.906-171.909c12.359-12.354,32.391-12.354,44.744,0c12.365,12.354,12.365,32.392,0,44.751L248.292,345.449C242.115,351.621,234.018,354.706,225.923,354.706z"></path>' +
+    '</svg>';
 
-    var nav = document.querySelector('.nav-main');
-    var template = document.getElementById('mega-menu-ar-template');
-    if (!nav || !template) return false;
-
-    var legacySlugs = ['split-inverter', 'piso-teto', 'janela'];
+  function findModelosNavItem(nav) {
     var items = nav.querySelectorAll('.nav-main_item');
-
     for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      var link = item.querySelector('a.nav-main_link');
+      var link = items[i].querySelector('a.nav-main_link');
       if (!link) continue;
+      var text = (link.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
       var path = (link.getAttribute('href') || '').toLowerCase();
-      for (var j = 0; j < legacySlugs.length; j++) {
-        if (path.indexOf(legacySlugs[j]) !== -1) {
-          item.classList.add('nav-main_item--legacy-ac');
-          break;
-        }
+      if (
+        text === 'modelos' ||
+        text.indexOf('modelos') === 0 ||
+        text.indexOf('ar condicionado') === 0 ||
+        path.indexOf('/modelos') !== -1
+      ) {
+        return items[i];
       }
     }
+    return null;
+  }
 
-    if (nav.querySelector('.mega-menu-ar')) {
-      var existingPanel = nav.querySelector('.mega-menu-ar .mega-menu-ar__panel');
-      initMegaMenuCarousel(existingPanel || document);
-      return true;
+  function ensureModelosLabel(megaItem) {
+    var link = megaItem.querySelector('a.nav-main_link');
+    if (!link) return;
+    link.setAttribute('title', 'Modelos');
+    var textEl = link.querySelector('.nav-main_text');
+    if (textEl) textEl.textContent = 'Modelos';
+    if (!link.querySelector('.nav-main_arrow')) {
+      var box = link.querySelector('.nav-main-box_link');
+      if (box) {
+        var arrow = document.createElement('div');
+        arrow.className = 'nav-main_arrow';
+        arrow.innerHTML = ARROW_SVG;
+        box.appendChild(arrow);
+      }
     }
+    if (!link.classList.contains('dropdown-toggle')) {
+      link.classList.add('dropdown-toggle');
+    }
+  }
 
-    var inner = template.querySelector('.mega-menu-ar__inner');
-    if (!inner) return false;
-
+  function buildModelosNavItem() {
     var megaItem = document.createElement('div');
     megaItem.className = 'nav-main_item dropdown mega-menu-ar';
     megaItem.innerHTML =
-      '<a href="/Todos-os-Produtos" class="nav-main_link dropdown-toggle" tabindex="0" title="Ar Condicionado">' +
+      '<a href="/Todos-os-Produtos" class="nav-main_link dropdown-toggle" tabindex="0" title="Modelos">' +
         '<div class="nav-main-box_link">' +
-          '<div class="nav-main_text">Ar Condicionado</div>' +
-          '<div class="nav-main_arrow">' +
-            '<svg class="icon_arrow_down" width="40" height="40" viewBox="0 0 451.847 451.847" aria-hidden="true">' +
-              '<path d="M225.923,354.706c-8.098,0-16.195-3.092-22.369-9.263L9.27,151.157c-12.359-12.359-12.359-32.397,0-44.751c12.354-12.354,32.388-12.354,44.748,0l171.905,171.915l171.906-171.909c12.359-12.354,32.391-12.354,44.744,0c12.365,12.354,12.365,32.392,0,44.751L248.292,345.449C242.115,351.621,234.018,354.706,225.923,354.706z"></path>' +
-            '</svg>' +
-          '</div>' +
+          '<div class="nav-main_text">Modelos</div>' +
+          '<div class="nav-main_arrow">' + ARROW_SVG + '</div>' +
         '</div>' +
       '</a>' +
-      '<div class="mega-menu-ar__panel dropdown-content" role="region" aria-label="Categorias de ar-condicionado"></div>';
+      '<div class="mega-menu-ar__panel dropdown-content" role="region" aria-label="Categorias de modelos"></div>';
+    return megaItem;
+  }
 
-    var panel = megaItem.querySelector('.mega-menu-ar__panel');
-    panel.appendChild(inner);
-
-    var todosItem = nav.querySelector('.nav-main_item');
-    if (todosItem && todosItem.nextSibling) {
-      nav.insertBefore(megaItem, todosItem.nextSibling);
-    } else {
-      nav.appendChild(megaItem);
+  function bindMegaMenuEvents(megaItem, panel) {
+    if (megaItem.getAttribute('data-mega-menu-bound') === '1') {
+      initMegaMenuCarousel(panel);
+      return;
     }
-
-    template.parentNode.removeChild(template);
+    megaItem.setAttribute('data-mega-menu-bound', '1');
 
     var closeTimer;
     function openMenu() {
@@ -161,6 +167,57 @@
     });
 
     initMegaMenuCarousel(panel);
+  }
+
+  function mountMegaMenuPanel(megaItem, inner, template) {
+    var panel = megaItem.querySelector('.mega-menu-ar__panel');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.className = 'mega-menu-ar__panel dropdown-content';
+      panel.setAttribute('role', 'region');
+      panel.setAttribute('aria-label', 'Categorias de modelos');
+      megaItem.appendChild(panel);
+    }
+
+    if (!panel.querySelector('.mega-menu-ar__inner')) {
+      panel.appendChild(inner);
+      if (template && template.parentNode) {
+        template.parentNode.removeChild(template);
+      }
+    }
+
+    bindMegaMenuEvents(megaItem, panel);
+  }
+
+  function initMegaMenuAr() {
+    if (!window.matchMedia('(min-width: 992px)').matches) return false;
+
+    var nav = document.querySelector('.nav-main');
+    var template = document.getElementById('mega-menu-ar-template');
+    if (!nav || !template) return false;
+
+    var inner = template.querySelector('.mega-menu-ar__inner');
+    if (!inner) return false;
+
+    var megaItem = nav.querySelector('.mega-menu-ar') || findModelosNavItem(nav);
+
+    if (megaItem) {
+      megaItem.classList.add('dropdown', 'mega-menu-ar');
+      ensureModelosLabel(megaItem);
+      mountMegaMenuPanel(megaItem, inner, template);
+      return true;
+    }
+
+    megaItem = buildModelosNavItem();
+    mountMegaMenuPanel(megaItem, inner, template);
+
+    var todosItem = nav.querySelector('.nav-main_item');
+    if (todosItem && todosItem.nextSibling) {
+      nav.insertBefore(megaItem, todosItem.nextSibling);
+    } else {
+      nav.appendChild(megaItem);
+    }
+
     return true;
   }
 

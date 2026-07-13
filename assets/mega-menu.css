@@ -1,14 +1,10 @@
 /**
- * Mega Menu — Ar Condicionado (Site do Ar)
+ * Mega Menu — Modelos (Site do Ar)
  * ARQUIVO: assets/mega-menu.css — ESTILOS (nao colar no .js)
  * Layout em flexbox (compativel com editor WDNA)
  */
 
 @media (min-width: 992px) {
-  .nav-main_item--legacy-ac {
-    display: none !important;
-  }
-
   .nav-content {
     position: relative;
   }
@@ -49,6 +45,22 @@
     padding: 28px 32px;
   }
 
+  .mega-menu-ar__section + .mega-menu-ar__section {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e8edf2;
+  }
+
+  .mega-menu-ar__section-title {
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin: 0 0 16px;
+  }
+
   .mega-menu-ar__grid {
     display: flex;
     flex-direction: row;
@@ -64,10 +76,17 @@
     box-sizing: border-box;
   }
 
-  .mega-menu-ar__col.mega-menu-ar__banner {
-    flex: 0 0 220px;
-    width: 220px;
-    padding-right: 0;
+  .mega-menu-ar__produtos {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .mega-menu-ar__section--produtos .mega-menu-ar__banner {
+    flex: 0 0 240px;
+    width: 240px;
+    max-width: 100%;
   }
 
   .mega-menu-ar__col-title {
@@ -313,9 +332,10 @@
     margin-bottom: 20px;
   }
 
-  .mega-menu-ar__col.mega-menu-ar__banner {
-    flex: 0 0 33.333%;
-    width: 33.333%;
+  .mega-menu-ar__section--produtos .mega-menu-ar__banner {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 280px;
   }
 }
 
