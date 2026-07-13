@@ -240,10 +240,11 @@
             {% endif %}
 
             {% comment %}
-              BTU: lista fixa + inclui slugs extras vindos das categorias da busca.
-              Novas categorias no admin NÃO entram sozinhas — adicione o slug aqui.
+              BTU: lista manual — só inclua slugs com produtos ativos na loja.
+              Teste: abrir /{slug} no site e ver se lista produtos.
+              55000 btus e 58000 btus: categoria existe no menu, mas sem produtos na busca.
             {% endcomment %}
-            {% assign btuSlugs = '9000 btus,12000 btus,18000 btus,24000 btus,30000 btus,36000 btus,46000 btus,48000 btus,55000 btus,56000 btus,58000 btus' | split: ',' %}
+            {% assign btuSlugs = '9000 btus,12000 btus,18000 btus,24000 btus,30000 btus,36000 btus,46000 btus,48000 btus,56000 btus' | split: ',' %}
             <details class="search-filter search-filter_btu" open>
                 <summary class="search-filter-header">
                     <div class="search-filter-title">
