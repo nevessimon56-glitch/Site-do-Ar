@@ -378,27 +378,24 @@
                                 </div>
                                 {% endif %}
                                 {% if product.typeId != 2 or product.gridOptions.size > 0 %}
-                                    {% assign _pixPrice = productPricePrimary.price %}
-                                    {% if productPricePrimary.promotionPrice > 0 %}{% assign _pixPrice = productPricePrimary.promotionPrice %}{% endif %}
-                                    {% assign _hasPixDiscount = false %}
-                                    {% if product.primaryPrice and product.price.price > _pixPrice %}{% assign _hasPixDiscount = true %}{% endif %}
+                                    {% assign _displayPrice = productPricePrimary.price %}
+                                    {% if productPricePrimary.promotionPrice > 0 %}
+                                        {% assign _displayPrice = productPricePrimary.promotionPrice %}
+                                    {% endif %}
+                                    {% assign _hasPromotion = false %}
+                                    {% if productPricePrimary.promotionPrice > 0 and productPricePrimary.price > productPricePrimary.promotionPrice %}
+                                        {% assign _hasPromotion = true %}
+                                    {% endif %}
                                     <div class="product-prices">
                                         <div class="product-content_box product-box_prices col-12">
-                                            {% if _hasPixDiscount %}
-                                                <del class="product-prices_strike"><s>{{ product.price.price | money }}</s></del>
-                                                <p class="product-prices_price">{{ _pixPrice | money }}</p>
-                                                <p class="product-prices_pix">
-                                                    {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
-                                                        {{ productPricePrimary.discountPercentage | round }}% de desconto no Pix
-                                                    {% else %}
-                                                        5% de desconto no Pix
-                                                    {% endif %}
-                                                </p>
-                                            {% else %}
-                                                {% if productPricePrimary.promotionPrice > 0 and productPricePrimary.price > productPricePrimary.promotionPrice %}
-                                                    <del class="product-prices_strike">{{ productPricePrimary.price | money }}</del>
+                                            {% if _hasPromotion %}
+                                                <del class="product-prices_strike"><s>{{ productPricePrimary.price | money }}</s></del>
+                                                <p class="product-prices_price">{{ _displayPrice | money }}</p>
+                                                {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
+                                                    <p class="product-prices_pix">{{ productPricePrimary.discountPercentage | round }}% de desconto no Pix</p>
                                                 {% endif %}
-                                                <p class="product-prices_price">{{ _pixPrice | money }}</p>
+                                            {% else %}
+                                                <p class="product-prices_price">{{ _displayPrice | money }}</p>
                                             {% endif %}
                                             {% if productPriceSecond %}
                                                 {% assign _mainPriceSecond = productPriceSecond.price %}
