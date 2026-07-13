@@ -1,0 +1,53 @@
+/**
+ * ARQUIVO: assets/product-hover-image.css
+ * Efeito Nike: troca de imagem no hover em todos os cards de produto (.showcase-product)
+ */
+
+.showcase-product_link__image .product-hover-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.showcase-product_link__image .product-hover-img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  object-fit: contain;
+  transition: opacity 0.3s ease;
+}
+
+.showcase-product_link__image .product-hover-img--main {
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+}
+
+.showcase-product_link__image .product-hover-img--alt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  max-height: 100%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+.showcase-product.has-hover-image:hover .product-hover-img--main,
+.showcase-product.has-hover-image.is-img-hover .product-hover-img--main {
+  opacity: 0;
+}
+
+.showcase-product.has-hover-image:hover .product-hover-img--alt,
+.showcase-product.has-hover-image.is-img-hover .product-hover-img--alt {
+  opacity: 1;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .showcase-product.has-hover-image .product-hover-img--alt {
+    pointer-events: none;
+  }
+}
