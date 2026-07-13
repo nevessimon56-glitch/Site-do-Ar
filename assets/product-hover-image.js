@@ -130,6 +130,7 @@
         img.setAttribute('data-hover-src', hoverSrc);
       }
 
+      rememberMain(img);
       link.setAttribute(PROCESSED, '1');
       var showingHover = false;
 
@@ -198,6 +199,8 @@
   } else {
     init();
   }
+
+  window.addEventListener('load', init);
 
   window.initProductHoverImage = init;
 })();
