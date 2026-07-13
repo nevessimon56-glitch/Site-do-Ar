@@ -4,21 +4,34 @@
         {% if currentPage.path %}
             {% assign linkSearch = currentPage.path %}
         {% endif %}
-        <form method="GET" action="{{ linkSearch }}">
 
-            {% comment %} Mantém categoria, ordem e paginação ao clicar em Filtrar {% endcomment %}
-            {% if search.query.categorias.size > 0 %}
-                {% for cat in search.query.categorias %}
-                    <input type="hidden" name="categorias" value="{{ cat }}">
-                {% endfor %}
-            {% elsif search.termCategory.slug %}
-                <input type="hidden" name="categorias" value="{{ search.termCategory.slug }}">
+        {% comment %} Preserva marca, preço e ordem ao trocar BTU/Ciclo {% endcomment %}
+        {% capture filterExtraQuery %}{% if search.query.marcas.size > 0 %}{% for marcaItem in search.query.marcas %}&marcas={{ marcaItem }}{% endfor %}{% endif %}{% if search.query.preco %}&preco={{ search.query.preco }}{% endif %}{% if search.query.ordem %}&ordem={{ search.query.ordem }}{% endif %}{% if search.query.qtdPag %}&qtdPag={{ search.query.qtdPag }}{% endif %}{% endcapture %}
+        {% assign filterExtraQuery = filterExtraQuery | strip %}
+
+        {% assign priceMin = search.facets.priceRange.min %}
+        {% assign priceMax = search.facets.priceRange.max %}
+        {% assign priceCurrent = priceMin | append: ',' | append: priceMax %}
+        {% if search.query.preco %}
+            {% assign priceCurrent = search.query.preco %}
+        {% endif %}
+
+        <form method="GET" action="{{ linkSearch }}" class="search-filters-form">
+
+            {% comment %} categorias hidden só em Todos os Produtos e /busca {% endcomment %}
+            {% if currentPage.path == '/Todos-os-Produtos' %}
+                <input type="hidden" name="categorias" value="todos-os-produtos">
+            {% elsif linkSearch contains 'busca' %}
+                {% if search.query.categorias.size > 0 %}
+                    {% for cat in search.query.categorias %}
+                        <input type="hidden" name="categorias" value="{{ cat }}">
+                    {% endfor %}
+                {% endif %}
             {% endif %}
             <input type="hidden" name="ordem" value="{% if search.query.ordem %}{{ search.query.ordem }}{% else %}score{% endif %}">
             <input type="hidden" name="qtdPag" value="{% if search.query.qtdPag %}{{ search.query.qtdPag }}{% else %}12{% endif %}">
             <input type="hidden" name="pag" value="1">
 
-            {% comment %} Link Todos os Produtos - Mobile {% endcomment %}
             <a href="/Todos-os-Produtos" class="mobile-todos-produtos">
                 Todos os Produtos
             </a>
@@ -111,8 +124,6 @@
                                     {% if termCategorie == newCategorySlug %}
                                         {% assign isCategoryDefault = true %}
                                     {% endif %}
-                                {% else %}
-                                    {{ search.termCategory.slug }}
                                 {% endfor %}
                                 {% if isFilterSearch == false %}
                                     {% assign classActiveCategory = '' %}
@@ -121,7 +132,11 @@
                                             {% assign classActiveCategory = ' active' %}
                                         {% endif %}
                                     {% endfor %}
-                                    <a href="{{ currentPage.path | linkPreviousCategory: search.query, category.slug }}" class="search-filter-link_category{{ classActiveCategory }}" title="{{ category.name }}">
+                                    {% assign categoryHref = '/' | append: category.slug %}
+                                    {% if filterExtraQuery != blank %}
+                                        {% assign categoryHref = categoryHref | append: '?' | append: filterExtraQuery | remove_first: '&' %}
+                                    {% endif %}
+                                    <a href="{{ categoryHref }}" class="search-filter-link_category{{ classActiveCategory }}" title="{{ category.name }}">
                                         <label class="form-radio">
                                             <i class="form-icon"></i>
                                             <div class="form-text">{{ category.name }}</div>
@@ -137,7 +152,11 @@
                                         {%- assign queryCategorieArray = search.query.categorias | split: '/' -%}
                                         {% assign isVisibleCategoryChildren1 = categoryChildren1.slug | filterString: queryCategorieArray[1] %}
                                         {% if isVisibleCategoryChildren1 %}
-                                            <a href="{{ currentPage.path | linkPreviousCategory: search.query, categoryChildren1.slug }}" class="search-filter-link_category search-filter-link_category__child{{ classActiveCategoryChildren1 }}" title="{{ categoryChildren1.name }}">
+                                            {% assign categoryChildHref = '/' | append: categoryChildren1.slug %}
+                                            {% if filterExtraQuery != blank %}
+                                                {% assign categoryChildHref = categoryChildHref | append: '?' | append: filterExtraQuery | remove_first: '&' %}
+                                            {% endif %}
+                                            <a href="{{ categoryChildHref }}" class="search-filter-link_category search-filter-link_category__child{{ classActiveCategoryChildren1 }}" title="{{ categoryChildren1.name }}">
                                                 <label class="form-radio">
                                                     <i class="form-icon"></i>
                                                     <div class="form-text">{{ categoryChildren1.name }}</div>
@@ -152,7 +171,11 @@
                                                 {% endfor %}
                                                 {% assign isVisibleCategoryChildren2 = categoryChildren2.slug | filterString: queryCategorieArray[2] %}
                                                 {% if isVisibleCategoryChildren2 %}
-                                                    <a href="{{ currentPage.path | linkPreviousCategory: search.query, categoryChildren2.slug }}" class="search-filter-link_category search-filter-link_category__child2{{ classActiveCategoryChildren2 }}" title="{{ categoryChildren2.name }}">
+                                                    {% assign categoryChild2Href = '/' | append: categoryChildren2.slug %}
+                                                    {% if filterExtraQuery != blank %}
+                                                        {% assign categoryChild2Href = categoryChild2Href | append: '?' | append: filterExtraQuery | remove_first: '&' %}
+                                                    {% endif %}
+                                                    <a href="{{ categoryChild2Href }}" class="search-filter-link_category search-filter-link_category__child2{{ classActiveCategoryChildren2 }}" title="{{ categoryChildren2.name }}">
                                                         <label class="form-radio">
                                                             <i class="form-icon"></i>
                                                             <div class="form-text">{{ categoryChildren2.name }}</div>
@@ -215,8 +238,11 @@
                 </details>
             {% endif %}
 
-            {% comment %} Filtro BTU — permanece na página atual (linkPreviousCategory) {% endcomment %}
-            {% assign btuSlugs = '9000 btus,12000 btus,18000 btus,24000 btus,30000 btus,36000 btus,48000 btus,55000 btus,56000 btus,58000 btus' | split: ',' %}
+            {% comment %}
+              BTU: lista fixa + inclui slugs extras vindos das categorias da busca.
+              Novas categorias no admin NÃO entram sozinhas — adicione o slug aqui.
+            {% endcomment %}
+            {% assign btuSlugs = '9000 btus,12000 btus,18000 btus,24000 btus,30000 btus,36000 btus,46000 btus,48000 btus,55000 btus,56000 btus,58000 btus' | split: ',' %}
             <details class="search-filter search-filter_btu" open>
                 <summary class="search-filter-header">
                     <div class="search-filter-title">
@@ -229,11 +255,16 @@
                 <div class="search-filter-body search-filter-body_btu">
                     {% for btuSlug in btuSlugs %}
                         {% assign classActive = '' %}
-                        {% for categorie in search.query.categorias %}
-                            {% if categorie == btuSlug %}
-                                {% assign classActive = ' active' %}
-                            {% endif %}
-                        {% endfor %}
+                        {% if search.termCategory.slug == btuSlug %}
+                            {% assign classActive = ' active' %}
+                        {% endif %}
+                        {% if classActive == '' %}
+                            {% for categorie in search.query.categorias %}
+                                {% if categorie == btuSlug %}
+                                    {% assign classActive = ' active' %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                         {% if classActive == '' and search.termCategory.slug %}
                             {% assign slugPartsCheck = search.termCategory.slug | split: '/' %}
                             {% for part in slugPartsCheck %}
@@ -242,15 +273,17 @@
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
-                        <a href="{{ currentPage.path | linkPreviousCategory: search.query, btuSlug }}"
-                           class="btu-filter-btn{{ classActive }}">
+                        {% assign btuHref = '/' | append: btuSlug %}
+                        {% if filterExtraQuery != blank %}
+                            {% assign btuHref = btuHref | append: '?' | append: filterExtraQuery | remove_first: '&' %}
+                        {% endif %}
+                        <a href="{{ btuHref }}" class="btu-filter-btn{{ classActive }}">
                             {{ btuSlug }}
                         </a>
                     {% endfor %}
                 </div>
             </details>
 
-            {% comment %} Filtro Ciclo — permanece na página atual {% endcomment %}
             {% assign cicloSlugs = 'frio,quente-frio' | split: ',' %}
             {% assign cicloLabels = 'Frio,Quente/Frio' | split: ',' %}
 
@@ -265,11 +298,16 @@
                         {% assign cicloLabel = cicloLabels[i] %}
 
                         {% assign classActive = '' %}
-                        {% for categorie in search.query.categorias %}
-                            {% if categorie == cicloSlug %}
-                                {% assign classActive = ' active' %}
-                            {% endif %}
-                        {% endfor %}
+                        {% if search.termCategory.slug == cicloSlug %}
+                            {% assign classActive = ' active' %}
+                        {% endif %}
+                        {% if classActive == '' %}
+                            {% for categorie in search.query.categorias %}
+                                {% if categorie == cicloSlug %}
+                                    {% assign classActive = ' active' %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                         {% if classActive == '' and search.termCategory.slug %}
                             {% assign slugPartsCiclo = search.termCategory.slug | split: '/' %}
                             {% for part in slugPartsCiclo %}
@@ -279,8 +317,11 @@
                             {% endfor %}
                         {% endif %}
 
-                        <a href="{{ currentPage.path | linkPreviousCategory: search.query, cicloSlug }}"
-                           class="btu-filter-btn{{ classActive }}">
+                        {% assign cicloHref = '/' | append: cicloSlug %}
+                        {% if filterExtraQuery != blank %}
+                            {% assign cicloHref = cicloHref | append: '?' | append: filterExtraQuery | remove_first: '&' %}
+                        {% endif %}
+                        <a href="{{ cicloHref }}" class="btu-filter-btn{{ classActive }}">
                             {{ cicloLabel }}
                         </a>
                     {% endfor %}
@@ -460,10 +501,8 @@
                                 </span>
                             </div>
                             <div class="search-filter-price_slider"></div>
-                            {% if search.query.preco %}
-                                <input type="hidden" value="{{ search.query.preco }}" name="preco" class="priceBySearch"/>
-                            {% endif %}
-                            <div class="priceBySearchTemp d-hide" data-prices="{{ search.query.preco }}" data-pricesTemp="{{ search.query.preco }}"></div>
+                            <input type="hidden" name="preco" class="priceBySearch" value="{{ priceCurrent }}"/>
+                            <div class="priceBySearchTemp d-hide" data-prices="{{ priceCurrent }}" data-pricesTemp="{{ priceCurrent }}"></div>
                         </div>
                     </div>
                 </details>
@@ -476,23 +515,68 @@
 
 <script>
 (function () {
-    document.querySelectorAll('.search-filter_brand .form-checkbox').forEach(function (label) {
-        var checkbox = label.querySelector('input[type="checkbox"]');
-        if (!checkbox) return;
+  var rangeMin = Number('{{ search.facets.priceRange.min }}');
+  var rangeMax = Number('{{ search.facets.priceRange.max }}');
 
-        function syncBrandChecked() {
-            if (checkbox.checked) {
-                label.classList.add('brand-checked');
-            } else {
-                label.classList.remove('brand-checked');
-            }
-        }
+  function syncPriceInput(form) {
+    if (!(rangeMin < rangeMax)) return;
 
-        checkbox.addEventListener('change', syncBrandChecked);
-        label.addEventListener('click', function () {
-            setTimeout(syncBrandChecked, 0);
-        });
-        syncBrandChecked();
+    var forms = document.querySelectorAll('.search-filters-form');
+    var formIndex = Array.prototype.indexOf.call(forms, form);
+    if (formIndex < 0) return;
+
+    var sliders = document.getElementsByClassName('search-filter-price_slider');
+    var slider = sliders[formIndex];
+    if (!slider || !slider.noUiSlider) return;
+
+    var values = slider.noUiSlider.get().map(function (v) { return parseFloat(v); });
+    var minVal = values[0];
+    var maxVal = values[1];
+    var input = form.querySelector('input.priceBySearch');
+
+    if (minVal <= rangeMin && maxVal >= rangeMax) {
+      if (input) input.remove();
+      return;
+    }
+
+    var precoStr = (minVal <= rangeMin ? '0' : String(minVal)) + ',' + String(maxVal);
+
+    if (!input) {
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'preco';
+      input.className = 'priceBySearch';
+      var priceBox = form.querySelector('.search-filter-price');
+      if (priceBox) priceBox.appendChild(input);
+      else form.appendChild(input);
+    }
+
+    input.value = precoStr;
+  }
+
+  document.querySelectorAll('.search-filters-form').forEach(function (form) {
+    form.addEventListener('submit', function () {
+      syncPriceInput(form);
     });
+  });
+
+  document.querySelectorAll('.search-filter_brand .form-checkbox').forEach(function (label) {
+    var checkbox = label.querySelector('input[type="checkbox"]');
+    if (!checkbox) return;
+
+    function syncBrandChecked() {
+      if (checkbox.checked) {
+        label.classList.add('brand-checked');
+      } else {
+        label.classList.remove('brand-checked');
+      }
+    }
+
+    checkbox.addEventListener('change', syncBrandChecked);
+    label.addEventListener('click', function () {
+      setTimeout(syncBrandChecked, 0);
+    });
+    syncBrandChecked();
+  });
 })();
 </script>
