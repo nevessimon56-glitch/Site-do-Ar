@@ -1,58 +1,12 @@
 /**
  * ARQUIVO: assets/product-hover-image.css
- * Efeito Nike: troca de imagem no hover em todos os cards de produto (.showcase-product)
+ * Transição suave ao trocar a imagem no hover (efeito Nike).
  */
 
-.showcase-product_link__image .product-hover-wrap {
-  position: relative;
-  display: block;
-  width: 100%;
-  overflow: hidden;
+.showcase-product_link__image .product-hover-swap {
+  transition: opacity 0.2s ease;
 }
 
-.showcase-product_link__image .product-hover-img {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  margin: 0 auto;
-  object-fit: contain;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.showcase-product.has-hover-image .product-hover-img--main {
-  position: relative;
-  z-index: 1;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.showcase-product.has-hover-image .product-hover-img--alt {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  max-height: 100%;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-.showcase-product.has-hover-image:hover .product-hover-img--main,
-.showcase-product.has-hover-image.is-product-hover-active .product-hover-img--main {
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
-
-.showcase-product.has-hover-image:hover .product-hover-img--alt,
-.showcase-product.has-hover-image.is-product-hover-active .product-hover-img--alt {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-@media (hover: none) and (pointer: coarse) {
-  .showcase-product.has-hover-image .product-hover-img--alt {
-    pointer-events: none;
-  }
+.showcase-product_link__image.is-hovering .product-hover-swap {
+  opacity: 0.92;
 }

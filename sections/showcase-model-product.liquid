@@ -24,7 +24,7 @@
         {% assign productPriceSecond = product.secondaryPrice %}
     {% endif %}
     <li class="showcase-item">
-        <div class="showcase-product card{% if product.medias[1].path != blank %} has-hover-image{% endif %}">
+        <div class="showcase-product card">
             {% if themeConfig.price.type != 'hide' %}
                 {% if product.promotion %}
                     <div class="showcase-tag">
@@ -54,12 +54,11 @@
                 {% endif %}
                 <a class="showcase-product_link showcase-product_link__image" href="{{ product.url }}">
                     {% if product.medias[0].path != blank %}
-                        <span class="product-hover-wrap">
-                            <img class="lazy product-hover-img product-hover-img--main" data-src="{{ product.medias[0].path | imgUrl: 250 }}" alt="{{ product.title }}">
-                            {% if product.medias[1].path != blank %}
-                                <img class="product-hover-img product-hover-img--alt" data-hover-src="{{ product.medias[1].path | imgUrl: 250 }}" alt="" aria-hidden="true">
-                            {% endif %}
-                        </span>
+                        <img
+                            class="lazy product-hover-swap"
+                            data-src="{{ product.medias[0].path | imgUrl: 250 }}"
+                            {% if product.medias[1].path != blank %}data-hover-src="{{ product.medias[1].path | imgUrl: 250 }}"{% endif %}
+                            alt="{{ product.title }}">
                     {% else %}
                         {{ themeConfig.icons.image }}
                     {% endif %}

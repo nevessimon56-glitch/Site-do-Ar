@@ -28,7 +28,7 @@
         {% assign productPriceSecond = product.secondaryPrice %}
     {% endif %}
     <li class="showcase-item">
-        <div class="showcase-product card{% if product.medias[1].path != blank %} has-hover-image{% endif %}">
+        <div class="showcase-product card">
             {% if themeConfig.price.type != 'hide' %}
                 {% if product.promotion %}
                     <div class="showcase-tag">
