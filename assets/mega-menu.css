@@ -325,11 +325,4 @@
   }
 }
 
-/* Hover de imagem nos cards de produto (site inteiro) */
-.showcase-product_link__image .product-hover-swap {
-  transition: opacity 0.2s ease;
-}
-
-.showcase-product_link__image.is-hovering .product-hover-swap {
-  opacity: 0.92;
-}
+/* Hover de imagem nos cards de produto — sem alterar opacidade */

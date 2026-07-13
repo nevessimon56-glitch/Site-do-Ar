@@ -1,12 +1,4 @@
 /**
  * ARQUIVO: assets/product-hover-image.css
- * Transição suave ao trocar a imagem no hover (efeito Nike).
+ * (Opcional — hover já está no mega-menu.css / mega-menu.js)
  */
-
-.showcase-product_link__image .product-hover-swap {
-  transition: opacity 0.2s ease;
-}
-
-.showcase-product_link__image.is-hovering .product-hover-swap {
-  opacity: 0.92;
-}
