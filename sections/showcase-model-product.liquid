@@ -89,21 +89,16 @@
                             {% assign classShowcaseLoginPrice = ' login-btn_logged d-hide' %}
                         {% endif %}
                         <div class="showcase-prices{{ classShowcaseLoginPrice }}">
-                            {% assign _displayPrice = productPricePrimary.price %}
-                            {% if productPricePrimary.promotionPrice > 0 %}
-                                {% assign _displayPrice = productPricePrimary.promotionPrice %}
+                            {% assign _hasTablePromo = false %}
+                            {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                                {% assign _hasTablePromo = true %}
                             {% endif %}
-                            {% assign _hasPromotion = false %}
-                            {% if productPricePrimary.promotionPrice > 0 and productPricePrimary.price > productPricePrimary.promotionPrice %}
-                                {% assign _hasPromotion = true %}
-                            {% endif %}
-                            {% if _hasPromotion %}
-                                <del class="showcase-prices_strike"><s>{{ productPricePrimary.price | money }}</s></del>
-                                <p class="showcase-prices_price"><b>{{ _displayPrice | money }}</b></p>
-                                {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
-                                    <p class="showcase-prices_pix">{{ productPricePrimary.discountPercentage | round }}% de desconto no Pix</p>
-                                {% endif %}
+                            {% if _hasTablePromo %}
+                                <del class="showcase-prices_strike"><s>{{ product.price.price | money }}</s></del>
+                                <p class="showcase-prices_price"><b>{{ product.price.promotionPrice | money }}</b></p>
+                                <p class="showcase-prices_pix">{{ product.price.promotionMargin | round }}% de desconto no Pix</p>
                             {% else %}
+                                {% assign _displayPrice = productPricePrimary.price %}
                                 <p class="showcase-prices_price"><b>{{ _displayPrice | money }}</b></p>
                             {% endif %}
                         </div>

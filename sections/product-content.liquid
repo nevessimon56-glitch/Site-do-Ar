@@ -378,23 +378,18 @@
                                 </div>
                                 {% endif %}
                                 {% if product.typeId != 2 or product.gridOptions.size > 0 %}
-                                    {% assign _displayPrice = productPricePrimary.price %}
-                                    {% if productPricePrimary.promotionPrice > 0 %}
-                                        {% assign _displayPrice = productPricePrimary.promotionPrice %}
-                                    {% endif %}
-                                    {% assign _hasPromotion = false %}
-                                    {% if productPricePrimary.promotionPrice > 0 and productPricePrimary.price > productPricePrimary.promotionPrice %}
-                                        {% assign _hasPromotion = true %}
+                                    {% assign _hasTablePromo = false %}
+                                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                                        {% assign _hasTablePromo = true %}
                                     {% endif %}
                                     <div class="product-prices">
                                         <div class="product-content_box product-box_prices col-12">
-                                            {% if _hasPromotion %}
-                                                <del class="product-prices_strike"><s>{{ productPricePrimary.price | money }}</s></del>
-                                                <p class="product-prices_price">{{ _displayPrice | money }}</p>
-                                                {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
-                                                    <p class="product-prices_pix">{{ productPricePrimary.discountPercentage | round }}% de desconto no Pix</p>
-                                                {% endif %}
+                                            {% if _hasTablePromo %}
+                                                <del class="product-prices_strike"><s>{{ product.price.price | money }}</s></del>
+                                                <p class="product-prices_price">{{ product.price.promotionPrice | money }}</p>
+                                                <p class="product-prices_pix">{{ product.price.promotionMargin | round }}% de desconto no Pix</p>
                                             {% else %}
+                                                {% assign _displayPrice = productPricePrimary.price %}
                                                 <p class="product-prices_price">{{ _displayPrice | money }}</p>
                                             {% endif %}
                                             {% if productPriceSecond %}
