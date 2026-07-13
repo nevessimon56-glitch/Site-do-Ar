@@ -325,8 +325,51 @@
   }
 }
 
-/* Hover de imagem nos cards de produto — sem alterar opacidade */
+/* Hover de imagem nos cards de produto — duas imagens empilhadas, sem fade no link */
 
-.showcase-product_link__image:hover {
+.showcase-product_link.showcase-product_link__image,
+.showcase-product_link.showcase-product_link__image:hover,
+.showcase-product_link.showcase-product_link__image:focus,
+.showcase-product_link.showcase-product_link__image.is-hovering {
+  opacity: 1 !important;
+}
+
+.showcase-product_link__image {
+  position: relative;
+  display: block;
+}
+
+.showcase-product_link__image img.product-hover-img--main,
+.showcase-product_link__image img.product-hover-swap:not(.product-hover-img--hover) {
+  position: relative;
+  z-index: 1;
+  opacity: 1 !important;
+  transition: opacity 0.25s ease;
+}
+
+.showcase-product_link__image img.product-hover-img--hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 2;
+  opacity: 0 !important;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.showcase-product_link__image.is-hovering img.product-hover-img--hover,
+.showcase-product_link__image:hover img.product-hover-img--hover {
+  opacity: 1 !important;
+}
+
+.showcase-product_link__image.is-hovering img.product-hover-img--main,
+.showcase-product_link__image:hover img.product-hover-img--main {
+  opacity: 0 !important;
+}
+
+.showcase-product_link__image img.lazy.loaded {
   opacity: 1 !important;
 }

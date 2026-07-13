@@ -244,18 +244,23 @@
     }
   }
 
-  function showHover(img) {
-    var hoverSrc = getHoverSrc(img);
-    if (!hoverSrc) return;
+  function setupDualImage(link, img, hoverSrc) {
     rememberMain(img);
-    img.setAttribute('src', hoverSrc);
+    if (!img.getAttribute('data-hover-src')) img.setAttribute('data-hover-src', hoverSrc);
+    img.classList.add('product-hover-img--main');
     if (img.classList.contains('lazy')) img.classList.add('loaded');
-  }
 
-  function showMain(img) {
-    var mainSrc = img.getAttribute('data-main-src') || img.getAttribute('data-src');
-    if (!mainSrc) return;
-    img.setAttribute('src', mainSrc);
+    var hoverImg = link.querySelector('.product-hover-img--hover');
+    if (!hoverImg) {
+      hoverImg = document.createElement('img');
+      hoverImg.className = 'product-hover-img--hover lazy loaded';
+      hoverImg.alt = img.alt || '';
+      hoverImg.setAttribute('src', hoverSrc);
+      link.appendChild(hoverImg);
+    } else if (!hoverImg.getAttribute('src')) {
+      hoverImg.setAttribute('src', hoverSrc);
+    }
+    hoverImg.classList.add('loaded');
   }
 
   function bindLink(link) {
@@ -267,28 +272,24 @@
 
     function attach() {
       if (!link.isConnected || link.getAttribute(PROCESSED) === '1') return;
-      if (!img.getAttribute('data-hover-src')) img.setAttribute('data-hover-src', hoverSrc);
-      rememberMain(img);
+      setupDualImage(link, img, hoverSrc);
       link.setAttribute(PROCESSED, '1');
       var showingHover = false;
 
       link.addEventListener('mouseenter', function () {
         if (isTouchOnly()) return;
         link.classList.add('is-hovering');
-        showHover(img);
         showingHover = true;
       });
       link.addEventListener('mouseleave', function () {
         if (isTouchOnly()) return;
         link.classList.remove('is-hovering');
-        showMain(img);
         showingHover = false;
       });
       link.addEventListener('touchend', function (e) {
         if (!isTouchOnly()) return;
         if (!showingHover) {
           e.preventDefault();
-          showHover(img);
           showingHover = true;
           link.classList.add('is-hovering');
         }
