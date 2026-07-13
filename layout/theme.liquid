@@ -6,7 +6,7 @@
 {% elsif seo.title %}
     {% assign seoTitle = seo.title %}
 {% else %}
-    {% assign seoTitle = 'Site Do Ar: Os Melhores Preços Aqui!!' %}
+    {% assign seoTitle = 'Site Do Ar | Ar-Condicionado com os Melhores Preços em SP' %}
 {% endif %}
 
 {% assign seoDescription = '' %}
@@ -18,8 +18,6 @@
     {% assign seoDescription = seo.description %}
 {% elsif store.description %}
     {% assign seoDescription = store.description %}
-{% else %}
-    {% assign seoDescription = 'Ar-condicionado em São Paulo com os melhores preços! Split, Inverter, portátil e mais em até 12x. Compre com instalação profissional no Site Do Ar. Confira!' %}
 {% endif %}
 
 {% assign seoKeywords = '' %}
@@ -162,42 +160,64 @@
         return {
             data: { isLogged: null, user: '' },
             headerLogout: function headerLogout() {
-                StoreSDK.request.post('/ajax/logout').then(function() {
-                    window.location.href = window.location.href;
+                StoreSDK.request.post('/ajax/logout').then((res) => {
+                    window.location.href = window.location.href
                 });
             },
             changeCustomerLogin: function changeCustomerLogin(customer) {
                 this.data.isLogged = !!customer;
-                if (customer) this.data.user = customer.name || '';
-                var cls = this.data.isLogged ? '.login-btn_logged' : '.login-btn_not_logged';
-                var els = document.querySelectorAll(cls);
-                for (var i = 0; i < els.length; i++) els[i].classList.remove('d-hide');
+                if(customer){
+                    this.data.user = customer.name || '';
+                }
+                if (this.data.isLogged) {
+                    var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
+                    for (var i = 0; i < elsShowcaseBtnLoginBuy.length; i++) {
+                        elsShowcaseBtnLoginBuy[i].classList.remove('d-hide');
+                    }
+                } else {
+                    var elsShowcasePriceLogin = document.querySelectorAll('.login-btn_not_logged');
+                    for (var i = 0; i < elsShowcasePriceLogin.length; i++) {
+                        elsShowcasePriceLogin[i].classList.remove('d-hide');
+                    }
+                }
             },
             openSideNavOverlayCartB2B: function openSideNavOverlayCartB2B() {
-                if (this.data.isLogged) {
+                if(this.data.isLogged){
                     openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true});
                 } else {
                     openSideNavOverlay('.sidenav-overlay_account', true);
                 }
             },
             checkLoginLogged: function checkLoginLogged() {
-                this.changeCustomerLogin(this.data.isLogged ? {name: this.data.user} : null);
+                if (this.data.isLogged) {
+                    var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
+                    for (var i = 0; i < elsShowcaseBtnLoginBuy.length; i++) {
+                        elsShowcaseBtnLoginBuy[i].classList.remove('d-hide');
+                    }
+                } else {
+                    var elsShowcasePriceLogin = document.querySelectorAll('.login-btn_not_logged');
+                    for (var i = 0; i < elsShowcasePriceLogin.length; i++) {
+                        elsShowcasePriceLogin[i].classList.remove('d-hide');
+                    }
+                }
             },
-        };
+        }
     }
     const customer = {{ customer | json }};
     if (typeof mb_track !== 'undefined') {
         mb_track('setRecoveryUrl', 'https://{{ store.url }}/checkout');
     }
-    if (customer && typeof mb_track !== 'undefined') {
-        window.mb_track('accountSync', {
-            user: {
-                user_id: customer?.customerId,
-                email: customer?.email,
-                phone: customer?.cellphone,
-                name: customer?.name || customer?.fantasyName,
-            }
-        });
+    if (customer) {
+        if (typeof mb_track !== 'undefined') {
+            window.mb_track('accountSync', {
+                user: {
+                    user_id: customer?.customerId,
+                    email: customer?.email,
+                    phone: customer?.cellphone,
+                    name: customer?.name || customer?.fantasyName,
+                }
+            });
+        }
     }
 </script>
 {% block script_footer %}{% endblock %}
@@ -226,7 +246,7 @@
     max-width: calc(100vw - 32px);
     border-radius: 20px;
     background: linear-gradient(145deg, #111827, #0f172a);
-    border: 1px solid rgba(249,115,22,0.4);
+    border: 1px solid rgba(14,165,233,0.4);
     box-shadow: 0 24px 64px rgba(0,0,0,0.7);
     padding: 24px;
     font-family: Arial, sans-serif;
@@ -253,13 +273,13 @@
   .d360badge {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 5px 10px; border-radius: 999px;
-    background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.35);
-    color: #fb923c; font-size: 11px; font-weight: 700;
+    background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.35);
+    color: #38bdf8; font-size: 11px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px;
   }
   .d360dot {
     width: 7px; height: 7px; border-radius: 50%;
-    background: #f97316; box-shadow: 0 0 6px #f97316;
+    background: #0ea5e9; box-shadow: 0 0 6px #0ea5e9;
     animation: d360pulse 1.8s infinite;
   }
   @keyframes d360pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
@@ -269,16 +289,16 @@
   .d360item  { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #94a3b8; }
   .d360item::before {
     content: "✓"; min-width: 18px; height: 18px; border-radius: 5px;
-    background: rgba(249,115,22,0.15); color: #fb923c; font-size: 11px;
+    background: rgba(14,165,233,0.15); color: #38bdf8; font-size: 11px;
     font-weight: 900; display: flex; align-items: center; justify-content: center;
   }
   .d360cta {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     width: 100%; padding: 13px 20px; border-radius: 12px; border: 0;
-    background: linear-gradient(135deg, #f97316, #fb923c);
+    background: linear-gradient(135deg, #0ea5e9, #38bdf8);
     color: #fff !important; font-weight: 700; font-size: 14px;
     cursor: pointer; text-decoration: none !important;
-    box-shadow: 0 6px 20px rgba(249,115,22,0.35); margin-bottom: 10px;
+    box-shadow: 0 6px 20px rgba(14,165,233,0.35); margin-bottom: 10px;
   }
   .d360cta:hover { opacity: 0.9; }
   .d360skip {
@@ -289,11 +309,23 @@
   .d360skip:hover { color: #94a3b8; }
   @media (max-width: 767px) {
     #diag360pop {
-      bottom: 0; right: 0; left: 0;
-      width: 100%; max-width: 100%;
-      border-radius: 20px 20px 0 0;
-      padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
-      box-shadow: 0 -12px 48px rgba(0,0,0,0.6);
+      top: 50%;
+      bottom: auto;
+      left: 16px;
+      right: 16px;
+      width: auto;
+      max-width: 100%;
+      transform: translateY(-50%);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+    }
+    #diag360pop.show {
+      animation: d360in-mobile 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes d360in-mobile {
+      from { opacity: 0; transform: translateY(calc(-50% + 20px)); }
+      to   { opacity: 1; transform: translateY(-50%); }
     }
   }
 </style>
@@ -305,7 +337,7 @@
   <p class="d360title">Qual ar-condicionado é ideal para você?</p>
   <p class="d360text">Responda 10 perguntas e descubra a recomendação certa para o seu ambiente.</p>
   <div class="d360items">
-    <span class="d360item">BTUs ideais para o seu espaço</span>
+    <span class="d360item">BTUs ideais para o seu ambiente</span>
     <span class="d360item">Perfil personalizado de climatização</span>
     <span class="d360item">Link direto para os produtos certos</span>
   </div>
@@ -316,74 +348,43 @@
 <script>
 (function(){
   try {
-    var KEY = 'diag360_dismissed';
-
+    var KEY = 'diag360_shown_session';
     function isDiagPage() {
       var p = (window.location.pathname || '').toLowerCase();
       return p.indexOf('diagnostico') !== -1 || p.indexOf('diag360') !== -1;
     }
-
     function isMobile() {
       return window.matchMedia('(max-width: 767px)').matches;
     }
-
-    function isLoggedIn() {
-      try {
-        return typeof customer !== 'undefined' && customer && (customer.customerId || customer.email);
-      } catch (e) { return false; }
-    }
-
     function jaViu() {
-      if (!isLoggedIn()) return false;
-      try { return localStorage.getItem(KEY) === '1'; } catch(e) { return false; }
+      try { return sessionStorage.getItem(KEY) === '1'; } catch(e) { return false; }
     }
-
     function marcarVisto() {
-      if (!isLoggedIn()) return;
-      try { localStorage.setItem(KEY, '1'); } catch(e) {}
+      try { sessionStorage.setItem(KEY, '1'); } catch(e) {}
     }
-
     if (jaViu()) return;
     if (isDiagPage()) return;
-
     var el = document.getElementById('diag360pop');
     var backdrop = document.getElementById('diag360backdrop');
     if (!el) return;
-
     function fechar(e) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+      if (e) { e.preventDefault(); e.stopPropagation(); }
       el.classList.remove('show');
       el.style.display = 'none';
-      if (backdrop) {
-        backdrop.classList.remove('show');
-        backdrop.style.display = 'none';
-      }
-      marcarVisto();
+      if (backdrop) { backdrop.classList.remove('show'); backdrop.style.display = 'none'; }
     }
-
     function abrir() {
       if (isDiagPage() || jaViu()) return;
+      marcarVisto();
       el.classList.add('show');
       el.style.display = 'block';
-      if (backdrop && isMobile()) {
-        backdrop.classList.add('show');
-        backdrop.style.display = 'block';
-      }
+      if (backdrop && isMobile()) { backdrop.classList.add('show'); backdrop.style.display = 'block'; }
     }
-
     var btnClose = document.getElementById('d360close');
     var btnSkip = document.getElementById('d360skip');
     if (btnClose) btnClose.addEventListener('click', fechar);
     if (btnSkip) btnSkip.addEventListener('click', fechar);
-
-    var cta = el.querySelector('.d360cta');
-    if (cta) cta.addEventListener('click', marcarVisto);
-
     if (backdrop) backdrop.addEventListener('click', fechar);
-
     function foraClick(e) {
       if (!el.classList.contains('show')) return;
       if (el.contains(e.target)) return;
@@ -391,7 +392,6 @@
     }
     document.addEventListener('mousedown', foraClick);
     document.addEventListener('touchstart', foraClick, { passive: true });
-
     setTimeout(abrir, isMobile() ? 3000 : 5000);
   } catch(e) {
     console.error('Popup diag360:', e);
