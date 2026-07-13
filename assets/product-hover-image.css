@@ -17,33 +17,38 @@
   height: auto;
   margin: 0 auto;
   object-fit: contain;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.showcase-product_link__image .product-hover-img--main {
+.showcase-product.has-hover-image .product-hover-img--main {
   position: relative;
   z-index: 1;
-  opacity: 1;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-.showcase-product_link__image .product-hover-img--alt {
+.showcase-product.has-hover-image .product-hover-img--alt {
   position: absolute;
   top: 50%;
   left: 50%;
   z-index: 2;
   max-height: 100%;
-  opacity: 0;
+  opacity: 0 !important;
+  visibility: hidden !important;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .showcase-product.has-hover-image:hover .product-hover-img--main,
-.showcase-product.has-hover-image.is-img-hover .product-hover-img--main {
-  opacity: 0;
+.showcase-product.has-hover-image.is-product-hover-active .product-hover-img--main {
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 .showcase-product.has-hover-image:hover .product-hover-img--alt,
-.showcase-product.has-hover-image.is-img-hover .product-hover-img--alt {
-  opacity: 1;
+.showcase-product.has-hover-image.is-product-hover-active .product-hover-img--alt {
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 @media (hover: none) and (pointer: coarse) {

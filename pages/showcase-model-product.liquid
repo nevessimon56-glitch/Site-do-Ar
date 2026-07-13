@@ -61,7 +61,7 @@
                         <span class="product-hover-wrap">
                             <img class="lazy product-hover-img product-hover-img--main" data-src="{{ product.medias[0].path | imgUrl: 250 }}" alt="{{ product.title }}">
                             {% if product.medias[1].path != blank %}
-                                <img class="lazy product-hover-img product-hover-img--alt" data-src="{{ product.medias[1].path | imgUrl: 250 }}" alt="{{ product.title }}" loading="lazy">
+                                <img class="product-hover-img product-hover-img--alt" data-hover-src="{{ product.medias[1].path | imgUrl: 250 }}" alt="" aria-hidden="true">
                             {% endif %}
                         </span>
                     {% else %}

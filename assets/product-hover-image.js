@@ -1,18 +1,30 @@
 /**
  * ARQUIVO: assets/product-hover-image.js
  * Hover de imagem estilo Nike em todos os cards .showcase-product (site inteiro).
- * Mobile: toque na imagem alterna entre foto 1 e 2.
+ * Mobile: toque na imagem mostra a 2ª foto; segundo toque abre o produto.
  */
 (function () {
   'use strict';
 
   var HOVER_CLASS = 'has-hover-image';
-  var TOUCH_CLASS = 'is-img-hover';
+  var ACTIVE_CLASS = 'is-product-hover-active';
   var PROCESSED = 'data-hover-ready';
   var cache = {};
 
+  function isTouchDevice() {
+    return window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  }
+
   function imgSrc(img) {
-    return img.getAttribute('src') || img.getAttribute('data-src') || '';
+    return img.getAttribute('src') || img.getAttribute('data-src') || img.getAttribute('data-hover-src') || '';
+  }
+
+  function loadAltImage(altImg) {
+    if (!altImg || altImg.getAttribute('data-hover-loaded') === '1') return;
+    var src = altImg.getAttribute('data-hover-src') || altImg.getAttribute('data-src') || '';
+    if (!src) return;
+    altImg.setAttribute('src', src);
+    altImg.setAttribute('data-hover-loaded', '1');
   }
 
   function guessHoverUrl(mainUrl) {
@@ -56,16 +68,53 @@
     wrap.appendChild(main);
 
     var alt = document.createElement('img');
-    alt.className = 'lazy product-hover-img product-hover-img--alt';
+    alt.className = 'product-hover-img product-hover-img--alt';
     alt.alt = mainImg.alt || '';
-    alt.loading = 'lazy';
-    alt.setAttribute('data-src', altSrc);
-    if (mainImg.src && mainImg.src.indexOf('data:') !== 0) {
-      alt.src = altSrc;
-    }
+    alt.setAttribute('data-hover-src', altSrc);
+    alt.setAttribute('aria-hidden', 'true');
     wrap.appendChild(alt);
 
     return wrap;
+  }
+
+  function bindHover(card, link) {
+    if (link.getAttribute('data-hover-bound') === '1') return;
+    link.setAttribute('data-hover-bound', '1');
+
+    var altImg = link.querySelector('.product-hover-img--alt');
+    if (!altImg) return;
+
+    function activate() {
+      loadAltImage(altImg);
+      card.classList.add(ACTIVE_CLASS);
+    }
+
+    function deactivate() {
+      card.classList.remove(ACTIVE_CLASS);
+    }
+
+    card.addEventListener('mouseenter', function () {
+      if (isTouchDevice()) return;
+      activate();
+    });
+
+    card.addEventListener('mouseleave', function () {
+      if (isTouchDevice()) return;
+      deactivate();
+    });
+
+    link.addEventListener(
+      'touchend',
+      function (e) {
+        if (!isTouchDevice()) return;
+        if (!card.classList.contains(HOVER_CLASS)) return;
+        if (!card.classList.contains(ACTIVE_CLASS)) {
+          e.preventDefault();
+          activate();
+        }
+      },
+      { passive: false }
+    );
   }
 
   function enhanceCard(card) {
@@ -77,9 +126,17 @@
 
     var existingAlt = link.querySelector('.product-hover-img--alt');
     if (existingAlt) {
+      if (existingAlt.classList.contains('lazy')) {
+        existingAlt.classList.remove('lazy');
+      }
+      if (!existingAlt.getAttribute('data-hover-src') && existingAlt.getAttribute('data-src')) {
+        existingAlt.setAttribute('data-hover-src', existingAlt.getAttribute('data-src'));
+        existingAlt.removeAttribute('data-src');
+        existingAlt.removeAttribute('src');
+      }
       card.classList.add(HOVER_CLASS);
       card.setAttribute(PROCESSED, '1');
-      bindTouch(card, link);
+      bindHover(card, link);
       return;
     }
 
@@ -105,26 +162,8 @@
       mainImg.parentNode.replaceChild(wrap, mainImg);
       card.classList.add(HOVER_CLASS);
       card.setAttribute(PROCESSED, '1');
-      bindTouch(card, link);
+      bindHover(card, link);
     });
-  }
-
-  function bindTouch(card, link) {
-    if (link.getAttribute('data-hover-touch') === '1') return;
-    link.setAttribute('data-hover-touch', '1');
-
-    link.addEventListener(
-      'touchend',
-      function (e) {
-        if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
-        if (!card.classList.contains(HOVER_CLASS)) return;
-        if (!card.classList.contains(TOUCH_CLASS)) {
-          e.preventDefault();
-          card.classList.add(TOUCH_CLASS);
-        }
-      },
-      { passive: false }
-    );
   }
 
   function scan(root) {
