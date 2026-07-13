@@ -213,17 +213,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 150px;
-    padding: 16px 12px 8px;
+    height: 160px;
+    min-height: 160px;
+    padding: 12px 10px;
     background: #f0f7fc;
+    overflow: hidden;
   }
 
   .mega-menu-ar__banner-img {
     display: block;
-    width: 100%;
-    max-width: 200px;
+    width: auto;
+    max-width: 100%;
     height: auto;
-    max-height: 130px;
+    max-height: 140px;
+    margin: 0 auto;
+    object-fit: contain;
   }
 
   .mega-menu-ar__banner-body {

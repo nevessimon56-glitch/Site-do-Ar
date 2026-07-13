@@ -8,22 +8,24 @@
 
   function initMegaMenuCarousel(root) {
     var carousel = root ? root.querySelector('[data-mega-carousel]') : document.querySelector('[data-mega-carousel]');
-    if (!carousel || carousel.getAttribute('data-mega-carousel-init') === '1') return;
+    if (!carousel) return;
 
     var slides = carousel.querySelectorAll('.mega-menu-ar__slide');
     if (!slides.length) return;
 
-    carousel.setAttribute('data-mega-carousel-init', '1');
-
     var dots = carousel.querySelectorAll('.mega-menu-ar__dot');
     var current = 0;
-    var timer = null;
-    var delay = 5000;
+    var delay = 3000;
+
+    if (carousel._megaCarouselTimer) {
+      clearInterval(carousel._megaCarouselTimer);
+      carousel._megaCarouselTimer = null;
+    }
 
     function goTo(index) {
+      if (index >= slides.length) index = 0;
+      if (index < 0) index = slides.length - 1;
       current = index;
-      if (current >= slides.length) current = 0;
-      if (current < 0) current = slides.length - 1;
 
       for (var i = 0; i < slides.length; i++) {
         if (i === current) {
@@ -43,34 +45,28 @@
     }
 
     function nextSlide() {
-      goTo(current + 1 >= slides.length ? 0 : current + 1);
+      goTo(current + 1);
     }
 
     function startCarousel() {
-      if (timer) clearInterval(timer);
-      timer = setInterval(nextSlide, delay);
+      if (carousel._megaCarouselTimer) clearInterval(carousel._megaCarouselTimer);
+      carousel._megaCarouselTimer = setInterval(nextSlide, delay);
     }
 
-    function stopCarousel() {
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
+    if (carousel.getAttribute('data-mega-carousel-init') !== '1') {
+      carousel.setAttribute('data-mega-carousel-init', '1');
+
+      for (var d = 0; d < dots.length; d++) {
+        (function (idx) {
+          dots[idx].addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            goTo(idx);
+            startCarousel();
+          });
+        })(d);
       }
     }
-
-    for (var d = 0; d < dots.length; d++) {
-      (function (idx) {
-        dots[idx].addEventListener('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          goTo(idx);
-          startCarousel();
-        });
-      })(d);
-    }
-
-    carousel.addEventListener('mouseenter', stopCarousel);
-    carousel.addEventListener('mouseleave', startCarousel);
 
     goTo(0);
     startCarousel();
@@ -100,7 +96,8 @@
     }
 
     if (nav.querySelector('.mega-menu-ar')) {
-      initMegaMenuCarousel(document);
+      var existingPanel = nav.querySelector('.mega-menu-ar .mega-menu-ar__panel');
+      initMegaMenuCarousel(existingPanel || document);
       return true;
     }
 
@@ -145,7 +142,10 @@
       }, 120);
     }
 
-    megaItem.addEventListener('mouseenter', openMenu);
+    megaItem.addEventListener('mouseenter', function () {
+      openMenu();
+      initMegaMenuCarousel(panel);
+    });
     megaItem.addEventListener('mouseleave', closeMenu);
     megaItem.addEventListener('focusin', openMenu);
     megaItem.addEventListener('focusout', function (e) {
