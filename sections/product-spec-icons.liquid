@@ -1,9 +1,46 @@
 {% comment %}
   Ícones de especificação — Estilo 3 (compacto)
+  Lê a aba Especificações do produto (tabela HTML no painel), atributos e título.
   Uso: {% render 'sections/product-spec-icons', product: product %}
 {% endcomment %}
 
-{% assign specBlob = product.title | downcase %}
+{% assign specTitle = product.title | downcase %}
+{% assign specBlob = specTitle %}
+
+{% capture specHtmlRaw %}
+{% if product.specification and product.specification != '' %}{{ product.specification }}{% endif %}
+{% if product.specifications and product.specifications != '' %}{{ product.specifications }}{% endif %}
+{% if product.specificationText and product.specificationText != '' %}{{ product.specificationText }}{% endif %}
+{% if product.especificacao and product.especificacao != '' %}{{ product.especificacao }}{% endif %}
+{% if product.especificacoes and product.especificacoes != '' %}{{ product.especificacoes }}{% endif %}
+{% endcapture %}
+
+{% assign specHtmlRaw = specHtmlRaw | strip %}
+{% if specHtmlRaw != '' %}
+  {% assign specPlain = specHtmlRaw
+    | replace: '<br>', ' | '
+    | replace: '<br/>', ' | '
+    | replace: '<br />', ' | '
+    | replace: '</tr>', ' | '
+    | replace: '</td>', ' '
+    | replace: '<td>', ' '
+    | replace: '</th>', ' '
+    | replace: '<th>', ' '
+    | replace: '<tr>', ' '
+    | replace: '<tbody>', ' '
+    | replace: '</tbody>', ' '
+    | replace: '<table>', ' '
+    | replace: '</table>', ' '
+    | replace: '<p>', ' '
+    | replace: '</p>', ' '
+    | replace: '<strong>', ' '
+    | replace: '</strong>', ' '
+    | replace: '<b>', ' '
+    | replace: '</b>', ' '
+    | downcase
+  %}
+  {% assign specBlob = specBlob | append: ' | ' | append: specPlain %}
+{% endif %}
 
 {% if product.attributes and product.attributes.size > 0 %}
   {% for attr in product.attributes %}
@@ -43,9 +80,9 @@
   {% assign iconProcelA = true %}
 {% endif %}
 
-{% if specBlob contains 'quente/frio' or specBlob contains 'quente-frio' or specBlob contains 'quente e frio' or specBlob contains 'ciclo reverso' or specBlob contains ' q/f' or specBlob contains ' q-f' %}
+{% if specBlob contains 'ciclo: quente/frio' or specBlob contains 'ciclo: quente e frio' or specBlob contains 'ciclo quente/frio' or specBlob contains 'ciclo quente e frio' or specBlob contains 'quente/frio' or specBlob contains 'quente-frio' or specBlob contains 'quente e frio' or specBlob contains 'ciclo reverso' or specBlob contains ' q/f' or specBlob contains ' q-f' %}
   {% assign iconQuenteFrio = true %}
-{% elsif specBlob contains 'só frio' or specBlob contains 'so frio' or specBlob contains 'somente frio' %}
+{% elsif specBlob contains 'ciclo: só frio' or specBlob contains 'ciclo: so frio' or specBlob contains 'ciclo só frio' or specBlob contains 'ciclo so frio' or specBlob contains 'só frio' or specBlob contains 'so frio' or specBlob contains 'somente frio' %}
   {% assign iconFrio = true %}
 {% elsif specBlob contains 'frio' %}
   {% unless specBlob contains 'quente' %}
@@ -53,11 +90,18 @@
   {% endunless %}
 {% endif %}
 
-{% if specBlob contains 'cobre' %}
-  {% assign iconCobre = true %}
+{% if specBlob contains 'cobre' or specBlob contains 'copper' %}
+  {% unless specBlob contains 'alumínio' or specBlob contains 'aluminio' %}
+    {% assign iconCobre = true %}
+  {% endunless %}
 {% endif %}
 
-{% if specBlob contains 'wi-fi' or specBlob contains 'wifi' or specBlob contains 'wi fi' %}
+{% assign iconWifi = false %}
+{% if specBlob contains 'compatibilidade wi-fi: sim' or specBlob contains 'compatibilidade wifi: sim' or specBlob contains 'wi-fi integrado' or specBlob contains 'wifi integrado' or specBlob contains 'wi-fi de fábrica' or specBlob contains 'wi-fi de fabrica' or specBlob contains 'com wi-fi' or specBlob contains 'com wifi' %}
+  {% assign iconWifi = true %}
+{% elsif specBlob contains 'compatibilidade wi-fi: não' or specBlob contains 'compatibilidade wi-fi: nao' or specBlob contains 'compatibilidade wifi: não' or specBlob contains 'compatibilidade wifi: nao' or specBlob contains 'compatibilidade wi-fi não' or specBlob contains 'compatibilidade wi-fi nao' or specBlob contains 'compatibilidade wifi não' or specBlob contains 'compatibilidade wifi nao' %}
+  {% assign iconWifi = false %}
+{% elsif specTitle contains 'wi-fi' or specTitle contains 'wifi' %}
   {% assign iconWifi = true %}
 {% endif %}
 
