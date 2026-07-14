@@ -417,10 +417,35 @@
   function initProductHoverImage() {
     scan(document);
     if (typeof MutationObserver !== 'undefined' && !document.body._productHoverObserver) {
-      document.body._productHoverObserver = new MutationObserver(function () { scan(document); });
+      document.body._productHoverObserver = new MutationObserver(function () {
+        scan(document);
+        cleanupDuplicateSpecBars();
+      });
       document.body._productHoverObserver.observe(document.body, { childList: true, subtree: true });
     }
+    cleanupDuplicateSpecBars();
   }
+
+  function cleanupDuplicateSpecBars() {
+    var cards = document.querySelectorAll('.showcase-product');
+    for (var i = 0; i < cards.length; i++) {
+      var imageArea = cards[i].querySelector('.showcase-product_image, .card-image');
+      if (imageArea) {
+        var dupes = imageArea.querySelectorAll('.showcase-spec-bar, .showcase-spec-wrap, .showcase-spec-bar__item, .showcase-spec-bar__badge');
+        for (var j = 0; j < dupes.length; j++) {
+          if (dupes[j].parentNode) dupes[j].parentNode.removeChild(dupes[j]);
+        }
+      }
+      var wraps = cards[i].querySelectorAll('.showcase-spec-wrap');
+      if (wraps.length > 1) {
+        for (var k = 1; k < wraps.length; k++) {
+          if (wraps[k].parentNode) wraps[k].parentNode.removeChild(wraps[k]);
+        }
+      }
+    }
+  }
+
+  window.cleanupDuplicateSpecBars = cleanupDuplicateSpecBars;
 
   window.initProductHoverImage = initProductHoverImage;
   document.addEventListener('DOMContentLoaded', initProductHoverImage);

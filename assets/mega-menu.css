@@ -576,11 +576,12 @@
   visibility: visible !important;
 }
 
-/* Faixa de especificações nos cards — Estilo 3 */
+/* Faixa de especificações nos cards — pills de texto, mobile-first */
 
 .showcase-spec-wrap {
   width: 100%;
   box-sizing: border-box;
+  padding: 0 10px 8px;
 }
 
 .showcase-spec-bar {
@@ -589,81 +590,127 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   margin: 0;
-  padding: 7px 8px;
-  background: #f5f7fa;
-  border-top: 1px solid #e8edf2;
-  border-bottom: 1px solid #e8edf2;
-  min-height: 32px;
+  padding: 0;
+  list-style: none;
+  background: transparent;
+  border: 0;
+  min-height: 0;
   box-sizing: border-box;
 }
 
-.showcase-spec-bar__badge {
+.showcase-spec-bar__tag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
   flex: 0 0 auto;
-  height: 22px;
+  height: 20px;
   padding: 0 7px;
-  border-radius: 4px;
+  margin: 0;
+  border: 1px solid #c5d3de;
+  border-radius: 3px;
+  background: #fff;
+  color: #3a5f7d;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 10px;
-  font-weight: 800;
+  font-size: 9px;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: 0.02em;
+  text-transform: uppercase;
   white-space: nowrap;
   box-sizing: border-box;
 }
 
-.showcase-spec-bar__badge--procel {
-  min-width: 22px;
-  padding: 0;
+.showcase-spec-bar__tag--procel {
+  border-color: #8bc53f;
   background: #8bc53f;
   color: #fff;
+  min-width: 20px;
+  padding: 0 5px;
 }
 
-.showcase-spec-bar__badge--cycle {
-  padding: 0 6px;
-  background: #eef5fb;
-  color: #4b96d4;
-}
-
-.showcase-spec-bar__badge--cycle .showcase-spec-bar__icon--sun {
-  color: #f5a623;
-}
-
-.showcase-spec-bar__badge--cobre {
-  background: #fff8e6;
-  color: #b8860b;
-}
-
-.showcase-spec-bar__badge--voltage {
-  background: #eef5fb;
-  color: #2c77bb;
-}
-
-.showcase-spec-bar__badge--wifi {
-  background: #edf6f8;
-  color: #5a9aaa;
-}
-
-.showcase-spec-bar__icon {
-  display: block;
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-}
-
-.showcase-spec-bar__label {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 1;
-}
-
+/* Esconde duplicatas (versão antiga dentro da imagem) */
 .showcase-product_image .showcase-spec-bar,
-.showcase-product_image .showcase-spec-wrap {
+.showcase-product_image .showcase-spec-wrap,
+.showcase-product_image .showcase-spec-bar__item,
+.showcase-product_image .showcase-spec-bar__badge,
+.showcase-product_image svg.showcase-spec-bar__svg,
+.card-image .showcase-spec-bar,
+.card-image .showcase-spec-wrap,
+.card-image .showcase-spec-bar__item,
+.card-image .showcase-spec-bar__badge {
   display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+@media (max-width: 767px) {
+  .showcase-spec-wrap {
+    padding: 0 8px 6px;
+  }
+
+  .showcase-spec-bar {
+    gap: 3px;
+    justify-content: center;
+  }
+
+  .showcase-spec-bar__tag {
+    height: 18px;
+    padding: 0 5px;
+    font-size: 8px;
+  }
+
+  .showcase-product .card-header h3 {
+    font-size: 12px;
+    line-height: 1.25;
+    margin-bottom: 4px;
+  }
+
+  .showcase-product .card-header h3 a {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .showcase-product .card-footer {
+    padding-top: 4px;
+  }
+
+  .showcase-product .showcase-prices_price {
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
+  .showcase-product .showcase-prices_pix {
+    font-size: 10px;
+    line-height: 1.2;
+    margin-top: 2px;
+  }
+
+  .showcase-product .showcase-product_buy {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .showcase-spec-bar {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .showcase-spec-bar::-webkit-scrollbar {
+    display: none;
+  }
 }

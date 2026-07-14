@@ -68,9 +68,6 @@
                     {% endif %}
                 </a>
             </div>
-            <div class="showcase-spec-wrap">
-                {% render 'sections/product-spec-icons', product: product %}
-            </div>
             <div class="card-header">
                 <h3>
                     {% assign productTitle = product.title %}
@@ -85,6 +82,9 @@
                         {{ productTitle }}
                     </a>
                 </h3>
+            </div>
+            <div class="showcase-spec-wrap">
+                {% render 'sections/product-spec-icons', product: product %}
             </div>
             <div class="card-footer">
                 {% if product.price.showPrice == false and themeConfig.buyAction.type != 'hide' %}

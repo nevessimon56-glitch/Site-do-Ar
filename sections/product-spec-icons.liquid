@@ -1,6 +1,6 @@
 {% comment %}
-  Ícones de especificação — Estilo 3 (compacto)
-  Lê a aba Especificações do produto (tabela HTML no painel), atributos e título.
+  Ícones de especificação — pills de texto (sem SVG, compatível mobile)
+  Lê a aba Especificações do produto (tabela HTML), atributos e título.
   Uso: {% render 'sections/product-spec-icons', product: product %}
 {% endcomment %}
 
@@ -119,40 +119,24 @@
 {% endif %}
 
 {% if hasSpecIcons %}
-<div class="showcase-spec-bar" aria-label="Características do produto">
+<ul class="showcase-spec-bar" aria-label="Características do produto">
   {% if iconProcelA %}
-  <span class="showcase-spec-bar__badge showcase-spec-bar__badge--procel" title="Classificação A — Procel">A</span>
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--procel" title="Classificação A — Procel">A</li>
   {% endif %}
-
   {% if iconQuenteFrio %}
-  <span class="showcase-spec-bar__badge showcase-spec-bar__badge--cycle" title="Quente e Frio">
-    <svg class="showcase-spec-bar__icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1v10M8 1L5 4M8 1l3 3M8 11l-3-3M8 11l3-3" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><circle cx="8" cy="6" r="1" fill="currentColor"/></svg>
-    <svg class="showcase-spec-bar__icon showcase-spec-bar__icon--sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3" fill="currentColor"/><g stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/></g></svg>
-  </span>
+  <li class="showcase-spec-bar__tag" title="Quente e Frio">Q/F</li>
   {% endif %}
-
   {% if iconFrio and iconQuenteFrio == false %}
-  <span class="showcase-spec-bar__badge showcase-spec-bar__badge--cycle" title="Frio">
-    <svg class="showcase-spec-bar__icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1v12M8 1L5 4M8 1l3 3M8 13l-3-3M8 13l3-3" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><circle cx="8" cy="7" r="1" fill="currentColor"/></svg>
-  </span>
+  <li class="showcase-spec-bar__tag" title="Frio">Frio</li>
   {% endif %}
-
   {% if iconCobre %}
-  <span class="showcase-spec-bar__badge showcase-spec-bar__badge--cobre" title="Serpentina de Cobre">COBRE</span>
+  <li class="showcase-spec-bar__tag" title="Serpentina de Cobre">Cobre</li>
   {% endif %}
-
   {% if iconVoltage != '' %}
-  <span class="showcase-spec-bar__badge showcase-spec-bar__badge--voltage" title="{{ iconVoltage }}">
-    <svg class="showcase-spec-bar__icon" viewBox="0 0 12 16" aria-hidden="true"><path d="M2 1l4 12 2-5 4 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span class="showcase-spec-bar__label">{{ iconVoltage }}</span>
-  </span>
+  <li class="showcase-spec-bar__tag" title="{{ iconVoltage }}">{{ iconVoltage }}</li>
   {% endif %}
-
   {% if iconWifi %}
-  <span class="showcase-spec-bar__badge showcase-spec-bar__badge--wifi" title="Wi-Fi">
-    <svg class="showcase-spec-bar__icon" viewBox="0 0 20 14" aria-hidden="true"><path d="M2 8q8-6 16 0M5 10q5-4 10 0M8 12q2-1 4 0" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><circle cx="10" cy="13" r="1" fill="currentColor"/></svg>
-    <span class="showcase-spec-bar__label">Wi-Fi</span>
-  </span>
+  <li class="showcase-spec-bar__tag" title="Wi-Fi">Wi-Fi</li>
   {% endif %}
-</div>
+</ul>
 {% endif %}

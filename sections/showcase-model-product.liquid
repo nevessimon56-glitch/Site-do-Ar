@@ -1,6 +1,8 @@
 {% comment %}
   ARQUIVO: showcase-model-product.liquid
-  No editor WDNA: abra o arquivo que ja existe com este nome e substitua TODO o conteudo.
+  No editor WDNA: substitua TODO o conteudo deste arquivo.
+  Os icones de spec ficam APENAS em showcase-spec-wrap (abaixo do titulo).
+  Nao coloque {% render 'sections/product-spec-icons' %} dentro da imagem.
 {% endcomment %}
 {% assign maximumProducts = 60 %}
 {% assign products = showcaseSection.products %}
@@ -68,9 +70,6 @@
                     {% endif %}
                 </a>
             </div>
-            <div class="showcase-spec-wrap">
-                {% render 'sections/product-spec-icons', product: product %}
-            </div>
             <div class="card-header">
                 <h3>
                     {% assign productTitle = product.title %}
@@ -85,6 +84,9 @@
                         {{ productTitle }}
                     </a>
                 </h3>
+            </div>
+            <div class="showcase-spec-wrap">
+                {% render 'sections/product-spec-icons', product: product %}
             </div>
             <div class="card-footer">
                 {% if product.price.showPrice == false and themeConfig.buyAction.type != 'hide' %}
