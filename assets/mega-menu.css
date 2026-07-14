@@ -578,57 +578,92 @@
 
 /* Faixa de especificações nos cards — Estilo 3 */
 
+.showcase-spec-wrap {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .showcase-spec-bar {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px 14px;
+  gap: 6px;
   margin: 0;
-  padding: 8px 10px;
-  background: #f3f6f9;
+  padding: 7px 8px;
+  background: #f5f7fa;
   border-top: 1px solid #e8edf2;
-  min-height: 36px;
+  border-bottom: 1px solid #e8edf2;
+  min-height: 32px;
   box-sizing: border-box;
 }
 
-.showcase-spec-bar__item {
+.showcase-spec-bar__badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 3px;
   flex: 0 0 auto;
-  line-height: 0;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 4px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
-.showcase-spec-bar__svg {
+.showcase-spec-bar__badge--procel {
+  min-width: 22px;
+  padding: 0;
+  background: #8bc53f;
+  color: #fff;
+}
+
+.showcase-spec-bar__badge--cycle {
+  padding: 0 6px;
+  background: #eef5fb;
+  color: #4b96d4;
+}
+
+.showcase-spec-bar__badge--cycle .showcase-spec-bar__icon--sun {
+  color: #f5a623;
+}
+
+.showcase-spec-bar__badge--cobre {
+  background: #fff8e6;
+  color: #b8860b;
+}
+
+.showcase-spec-bar__badge--voltage {
+  background: #eef5fb;
+  color: #2c77bb;
+}
+
+.showcase-spec-bar__badge--wifi {
+  background: #edf6f8;
+  color: #5a9aaa;
+}
+
+.showcase-spec-bar__icon {
   display: block;
-  height: 18px;
-  width: auto;
-  max-width: 56px;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
 }
 
-.showcase-spec-bar__svg--cobre {
-  width: 52px;
-  height: 16px;
+.showcase-spec-bar__label {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
 }
 
-.showcase-spec-bar__svg--voltage {
-  width: 44px;
-  height: 16px;
-}
-
-.showcase-spec-bar__svg--cycle {
-  width: 32px;
-  height: 20px;
-}
-
-.showcase-product_image .showcase-spec-bar {
-  position: relative;
-  z-index: 2;
-}
-
-.showcase-product_image .showcase-offer,
-.showcase-product_image .showcase-tag {
-  z-index: 5;
+.showcase-product_image .showcase-spec-bar,
+.showcase-product_image .showcase-spec-wrap {
+  display: none !important;
 }
