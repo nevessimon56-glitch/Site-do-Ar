@@ -298,17 +298,12 @@
 
   function normalizeImg(link) {
     var alt = link.querySelector('.product-hover-img--alt');
-    var img = link.querySelector('.product-hover-swap, .product-hover-img--main, img');
+    var img = link.querySelector('.product-hover-img--main, .product-hover-swap, .product-hover-wrap img:not(.product-hover-img--hover), img');
     if (!img) return null;
     if (alt && alt !== img) {
       var hoverFromAlt = alt.getAttribute('data-hover-src') || alt.getAttribute('data-src') || alt.getAttribute('src');
       if (hoverFromAlt && !img.getAttribute('data-hover-src')) img.setAttribute('data-hover-src', hoverFromAlt);
       alt.parentNode.removeChild(alt);
-    }
-    var wrap = link.querySelector('.product-hover-wrap');
-    if (wrap && wrap.parentNode === link) {
-      while (wrap.firstChild) link.insertBefore(wrap.firstChild, wrap);
-      wrap.parentNode.removeChild(wrap);
     }
     img.classList.add('product-hover-swap');
     return img;
@@ -331,17 +326,42 @@
     img.classList.add('product-hover-img--main');
     if (img.classList.contains('lazy')) img.classList.add('loaded');
 
-    var hoverImg = link.querySelector('.product-hover-img--hover');
+    var wrap = link.querySelector('.product-hover-wrap');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.className = 'product-hover-wrap';
+      link.insertBefore(wrap, img);
+      wrap.appendChild(img);
+    } else if (img.parentNode !== wrap) {
+      wrap.appendChild(img);
+    }
+
+    var hoverImg = wrap.querySelector('.product-hover-img--hover');
     if (!hoverImg) {
       hoverImg = document.createElement('img');
-      hoverImg.className = 'product-hover-img--hover lazy loaded';
+      hoverImg.className = 'product-hover-img--hover';
       hoverImg.alt = img.alt || '';
-      hoverImg.setAttribute('src', hoverSrc);
-      link.appendChild(hoverImg);
-    } else if (!hoverImg.getAttribute('src')) {
-      hoverImg.setAttribute('src', hoverSrc);
+      hoverImg.setAttribute('data-src', hoverSrc);
+      wrap.appendChild(hoverImg);
+    } else if (!hoverImg.getAttribute('data-src')) {
+      hoverImg.setAttribute('data-src', hoverSrc);
     }
-    hoverImg.classList.add('loaded');
+  }
+
+  function showHoverImage(link, hoverSrc) {
+    var hoverImg = link.querySelector('.product-hover-img--hover');
+    if (!hoverImg) return;
+    if (!hoverImg.getAttribute('src')) {
+      hoverImg.setAttribute(
+        'src',
+        hoverImg.getAttribute('data-src') || hoverSrc || ''
+      );
+    }
+    link.classList.add('is-hovering');
+  }
+
+  function hideHoverImage(link) {
+    link.classList.remove('is-hovering');
   }
 
   function bindLink(link) {
@@ -359,20 +379,20 @@
 
       link.addEventListener('mouseenter', function () {
         if (isTouchOnly()) return;
-        link.classList.add('is-hovering');
+        showHoverImage(link, hoverSrc);
         showingHover = true;
       });
       link.addEventListener('mouseleave', function () {
         if (isTouchOnly()) return;
-        link.classList.remove('is-hovering');
+        hideHoverImage(link);
         showingHover = false;
       });
       link.addEventListener('touchend', function (e) {
         if (!isTouchOnly()) return;
         if (!showingHover) {
           e.preventDefault();
+          showHoverImage(link, hoverSrc);
           showingHover = true;
-          link.classList.add('is-hovering');
         }
       }, { passive: false });
     }
