@@ -1,14 +1,10 @@
 /**
- * Mega Menu — Ar Condicionado (Site do Ar)
+ * Mega Menu — Modelos (Site do Ar)
  * ARQUIVO: assets/mega-menu.css — ESTILOS (nao colar no .js)
  * Layout em flexbox (compativel com editor WDNA)
  */
 
 @media (min-width: 992px) {
-  .nav-main_item--legacy-ac {
-    display: none !important;
-  }
-
   .nav-content {
     position: relative;
   }
@@ -49,6 +45,40 @@
     padding: 28px 32px;
   }
 
+  .mega-menu-ar__layout {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .mega-menu-ar__section--modelos {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .mega-menu-ar__section--produtos {
+    flex: 0 0 290px;
+    width: 290px;
+    padding-left: 24px;
+    border-left: 1px solid #e8edf2;
+  }
+
+  .mega-menu-ar__section-title {
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin: 0 0 16px;
+  }
+
+  .mega-menu-ar__section-title--hot {
+    color: #2c77bb;
+  }
+
   .mega-menu-ar__grid {
     display: flex;
     flex-direction: row;
@@ -64,10 +94,13 @@
     box-sizing: border-box;
   }
 
-  .mega-menu-ar__col.mega-menu-ar__banner {
-    flex: 0 0 220px;
-    width: 220px;
-    padding-right: 0;
+  .mega-menu-ar__produtos {
+    display: block;
+  }
+
+  .mega-menu-ar__section--produtos .mega-menu-ar__banner {
+    width: 100%;
+    max-width: 290px;
   }
 
   .mega-menu-ar__col-title {
@@ -131,23 +164,105 @@
   }
 
   .mega-menu-ar__banner {
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
-    min-height: 280px;
-    background: #fff;
-    border: 1px solid #e8edf2;
+    min-height: 340px;
+    background: linear-gradient(160deg, #f0f7fc 0%, #ffffff 55%, #e8f4fd 100%);
+    border: 2px solid #4b96d4;
+    box-shadow: 0 10px 28px rgba(44, 119, 187, 0.18);
     position: relative;
   }
 
   .mega-menu-ar__banner-carousel {
     position: relative;
-    min-height: 280px;
+    min-height: 340px;
     height: 100%;
   }
 
   .mega-menu-ar__slides {
     position: relative;
-    min-height: 280px;
+    min-height: 340px;
+  }
+
+  .mega-menu-ar__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 6;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #2c77bb;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(44, 119, 187, 0.35);
+  }
+
+  .mega-menu-ar__badge--hot {
+    background: #e67e22;
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.35);
+  }
+
+  .mega-menu-ar__badge--offer {
+    background: #16a34a;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+  }
+
+  .mega-menu-ar__banner-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 175px;
+    z-index: 8;
+    pointer-events: none;
+  }
+
+  .mega-menu-ar__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    width: 26px;
+    height: 26px;
+    margin-top: -13px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    color: #2c77bb;
+    font-size: 18px;
+    line-height: 1;
+    font-weight: 700;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  }
+
+  .mega-menu-ar__arrow:hover {
+    background: #2c77bb;
+    color: #fff;
+    transform: scale(1.08);
+  }
+
+  .mega-menu-ar__arrow--prev {
+    left: 4px;
+  }
+
+  .mega-menu-ar__arrow--next {
+    right: 4px;
+  }
+
+  .mega-menu-ar__banner-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 14px 16px 32px;
+    background: #fff;
+    position: relative;
+    z-index: 3;
   }
 
   .mega-menu-ar__slide {
@@ -199,14 +314,14 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 280px;
+    min-height: 340px;
     color: #313131;
     text-decoration: none;
-    transition: box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
   .mega-menu-ar__banner-link:hover {
-    box-shadow: 0 8px 24px rgba(44, 119, 187, 0.12);
+    transform: translateY(-2px);
   }
 
   .mega-menu-ar__banner-img-wrap {
@@ -214,10 +329,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 160px;
-    min-height: 160px;
-    padding: 12px 10px;
-    background: #f0f7fc;
+    height: 175px;
+    min-height: 175px;
+    padding: 16px 12px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(240, 247, 252, 0.9) 100%);
     overflow: hidden;
   }
 
@@ -226,10 +341,16 @@
     width: auto;
     max-width: 100%;
     height: auto;
-    max-height: 140px;
+    max-height: 155px;
     margin: 0 auto;
     object-fit: contain;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .mega-menu-ar__slide:hover .mega-menu-ar__banner-img--main,
+  .mega-menu-ar__slide.is-img-hover .mega-menu-ar__banner-img--main {
+    opacity: 0;
+    transform: scale(1.03);
   }
 
   .mega-menu-ar__banner-img--main {
@@ -245,24 +366,12 @@
     z-index: 2;
     opacity: 0;
     transform: translate(-50%, -50%);
-  }
-
-  .mega-menu-ar__slide:hover .mega-menu-ar__banner-img--main,
-  .mega-menu-ar__slide.is-img-hover .mega-menu-ar__banner-img--main {
-    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
   .mega-menu-ar__slide:hover .mega-menu-ar__banner-img--hover,
   .mega-menu-ar__slide.is-img-hover .mega-menu-ar__banner-img--hover {
     opacity: 1;
-  }
-
-  .mega-menu-ar__banner-body {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding: 12px 16px 28px;
-    border-top: 1px solid #eef2f6;
   }
 
   .mega-menu-ar__banner-kicker {
@@ -271,37 +380,83 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: #4b96d4;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .mega-menu-ar__banner-title {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     line-height: 1.35;
-    margin: 0 0 12px;
-    color: #2c77bb;
+    margin: 0 0 8px;
+    color: #1e293b;
     text-transform: uppercase;
+  }
+
+  .mega-menu-ar__banner-price {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #2c77bb;
+  }
+
+  .mega-menu-ar__banner-price b {
+    font-weight: 800;
+  }
+
+  .mega-menu-ar__banner-pix {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #ecfdf5;
+    color: #15803d;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
   }
 
   .mega-menu-ar__banner-cta {
-    display: inline-block;
+    display: block;
+    width: 100%;
     margin-top: auto;
-    padding: 8px 14px;
+    padding: 11px 14px;
     border-radius: 8px;
-    background: #4b96d4;
+    background: linear-gradient(135deg, #4b96d4 0%, #2c77bb 100%);
     color: #fff;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 14px rgba(44, 119, 187, 0.35);
+    animation: megaMenuCtaPulse 2.5s ease-in-out infinite;
+  }
+
+  .mega-menu-ar__banner-cta::after {
+    content: " →";
   }
 
   .mega-menu-ar__banner-link:hover .mega-menu-ar__banner-cta {
-    background: #2c77bb;
+    background: linear-gradient(135deg, #2c77bb 0%, #1a5a94 100%);
+    animation: none;
+  }
+
+  @keyframes megaMenuCtaPulse {
+    0%, 100% {
+      box-shadow: 0 4px 14px rgba(44, 119, 187, 0.35);
+    }
+    50% {
+      box-shadow: 0 4px 20px rgba(44, 119, 187, 0.55);
+    }
   }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
+  .mega-menu-ar__layout {
+    flex-wrap: wrap;
+  }
+
   .mega-menu-ar__grid {
     flex-wrap: wrap;
   }
@@ -313,9 +468,17 @@
     margin-bottom: 20px;
   }
 
-  .mega-menu-ar__col.mega-menu-ar__banner {
-    flex: 0 0 33.333%;
-    width: 33.333%;
+  .mega-menu-ar__section--produtos {
+    flex: 0 0 100%;
+    width: 100%;
+    padding-left: 0;
+    border-left: 0;
+    padding-top: 20px;
+    border-top: 1px solid #e8edf2;
+  }
+
+  .mega-menu-ar__section--produtos .mega-menu-ar__banner {
+    max-width: 300px;
   }
 }
 
@@ -323,4 +486,92 @@
   #mega-menu-ar-template {
     display: none !important;
   }
+}
+
+/* Hover de imagem nos cards de produto — wrap isolado, 2a imagem só no hover */
+
+.showcase-product_image.card-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase-product_image .showcase-offer,
+.showcase-product_image .showcase-tag {
+  z-index: 5;
+}
+
+.showcase-product_link.showcase-product_link__image,
+.showcase-product_link.showcase-product_link__image:hover,
+.showcase-product_link.showcase-product_link__image:focus,
+.showcase-product_link.showcase-product_link__image.is-hovering {
+  opacity: 1 !important;
+}
+
+.showcase-product_link__image {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  z-index: 1;
+}
+
+.product-hover-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.product-hover-wrap img.product-hover-img--main,
+.product-hover-wrap img.product-hover-swap:not(.product-hover-img--hover) {
+  display: block !important;
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 0 auto;
+  z-index: 1;
+  opacity: 1 !important;
+  visibility: visible !important;
+  object-fit: contain;
+  transition: opacity 0.2s ease;
+}
+
+.product-hover-wrap img.product-hover-img--hover {
+  display: none !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  margin: 0 auto;
+  object-fit: contain;
+  z-index: 2;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none;
+}
+
+.showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--hover,
+.showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--hover {
+  display: block !important;
+}
+
+.showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--main,
+.showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--main {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.showcase-product_link__image img.product-hover-img--main.lazy.loaded,
+.showcase-product_link__image img.product-hover-swap.lazy.loaded:not(.product-hover-img--hover) {
+  opacity: 1 !important;
+  visibility: visible !important;
 }
