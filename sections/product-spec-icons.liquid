@@ -1,0 +1,147 @@
+{% comment %}
+  Ícones de especificação — Estilo 3 (compacto)
+  Uso: {% render 'sections/product-spec-icons', product: product %}
+{% endcomment %}
+
+{% assign specBlob = product.title | downcase %}
+
+{% if product.attributes and product.attributes.size > 0 %}
+  {% for attr in product.attributes %}
+    {% assign attrName = attr.name | default: attr.nome | default: '' | downcase %}
+    {% assign attrVal = '' %}
+    {% if attr.values and attr.values.size > 0 %}
+      {% assign attrVal = attr.values[0].name | default: attr.values[0].value | default: '' | downcase %}
+    {% elsif attr.valores and attr.valores.size > 0 %}
+      {% assign attrVal = attr.valores[0].nome | default: '' | downcase %}
+    {% elsif attr.value %}
+      {% assign attrVal = attr.value | downcase %}
+    {% endif %}
+    {% assign specBlob = specBlob | append: ' | ' | append: attrName | append: ':' | append: attrVal %}
+  {% endfor %}
+{% endif %}
+
+{% if product.properties and product.properties.size > 0 %}
+  {% for prop in product.properties %}
+    {% assign propName = prop.name | default: prop.nome | default: '' | downcase %}
+    {% assign propVal = prop.value | default: prop.valor | default: '' | downcase %}
+    {% assign specBlob = specBlob | append: ' | ' | append: propName | append: ':' | append: propVal %}
+  {% endfor %}
+{% endif %}
+
+{% if product.description %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.description | downcase %}
+{% endif %}
+
+{% assign iconProcelA = false %}
+{% assign iconQuenteFrio = false %}
+{% assign iconFrio = false %}
+{% assign iconCobre = false %}
+{% assign iconWifi = false %}
+{% assign iconVoltage = '' %}
+
+{% if specBlob contains 'procel' or specBlob contains 'classificação a' or specBlob contains 'classificacao a' or specBlob contains 'classificação energética a' or specBlob contains 'classificacao energetica a' or specBlob contains 'selo a' %}
+  {% assign iconProcelA = true %}
+{% endif %}
+
+{% if specBlob contains 'quente/frio' or specBlob contains 'quente-frio' or specBlob contains 'quente e frio' or specBlob contains 'ciclo reverso' or specBlob contains ' q/f' or specBlob contains ' q-f' %}
+  {% assign iconQuenteFrio = true %}
+{% elsif specBlob contains 'só frio' or specBlob contains 'so frio' or specBlob contains 'somente frio' %}
+  {% assign iconFrio = true %}
+{% elsif specBlob contains 'frio' %}
+  {% unless specBlob contains 'quente' %}
+    {% assign iconFrio = true %}
+  {% endunless %}
+{% endif %}
+
+{% if specBlob contains 'cobre' %}
+  {% assign iconCobre = true %}
+{% endif %}
+
+{% if specBlob contains 'wi-fi' or specBlob contains 'wifi' or specBlob contains 'wi fi' %}
+  {% assign iconWifi = true %}
+{% endif %}
+
+{% if specBlob contains '220v' %}
+  {% assign iconVoltage = '220V' %}
+{% elsif specBlob contains '127v' %}
+  {% assign iconVoltage = '127V' %}
+{% elsif specBlob contains '380v' %}
+  {% assign iconVoltage = '380V' %}
+{% endif %}
+
+{% assign hasSpecIcons = false %}
+{% if iconProcelA or iconQuenteFrio or iconFrio or iconCobre or iconWifi or iconVoltage != '' %}
+  {% assign hasSpecIcons = true %}
+{% endif %}
+
+{% if hasSpecIcons %}
+<div class="showcase-spec-bar" aria-label="Características do produto">
+  {% if iconProcelA %}
+  <span class="showcase-spec-bar__item showcase-spec-bar__item--procel" title="Classificação A — Procel">
+    <svg class="showcase-spec-bar__svg" viewBox="0 0 28 20" aria-hidden="true">
+      <rect x="1" y="1" width="26" height="18" rx="2" fill="#8BC53F"/>
+      <text x="14" y="14" text-anchor="middle" fill="#fff" font-size="11" font-weight="800" font-family="Arial,sans-serif">A</text>
+    </svg>
+  </span>
+  {% endif %}
+
+  {% if iconQuenteFrio %}
+  <span class="showcase-spec-bar__item showcase-spec-bar__item--cycle" title="Quente e Frio">
+    <svg class="showcase-spec-bar__svg showcase-spec-bar__svg--cycle" viewBox="0 0 32 20" aria-hidden="true">
+      <g transform="translate(0,2)">
+        <path d="M8 2v12M8 2l-3 3M8 2l3 3M8 14l-3-3M8 14l3-3" stroke="#4b96d4" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <circle cx="8" cy="8" r="1.2" fill="#4b96d4"/>
+      </g>
+      <g transform="translate(16,0)">
+        <circle cx="8" cy="8" r="5" fill="#F5A623"/>
+        <g stroke="#F5A623" stroke-width="1.5" stroke-linecap="round">
+          <line x1="8" y1="0" x2="8" y2="2"/><line x1="8" y1="14" x2="8" y2="16"/>
+          <line x1="0" y1="8" x2="2" y2="8"/><line x1="14" y1="8" x2="16" y2="8"/>
+          <line x1="2.5" y1="2.5" x2="4" y2="4"/><line x1="12" y1="12" x2="13.5" y2="13.5"/>
+          <line x1="13.5" y1="2.5" x2="12" y2="4"/><line x1="4" y1="12" x2="2.5" y2="13.5"/>
+        </g>
+      </g>
+    </svg>
+  </span>
+  {% endif %}
+
+  {% if iconFrio and iconQuenteFrio == false %}
+  <span class="showcase-spec-bar__item showcase-spec-bar__item--cycle" title="Frio">
+    <svg class="showcase-spec-bar__svg" viewBox="0 0 16 20" aria-hidden="true">
+      <path d="M8 2v14M8 2l-3 3M8 2l3 3M8 16l-3-3M8 16l3-3" stroke="#4b96d4" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <circle cx="8" cy="9" r="1.2" fill="#4b96d4"/>
+    </svg>
+  </span>
+  {% endif %}
+
+  {% if iconCobre %}
+  <span class="showcase-spec-bar__item showcase-spec-bar__item--cobre" title="Serpentina de Cobre">
+    <svg class="showcase-spec-bar__svg showcase-spec-bar__svg--cobre" viewBox="0 0 52 16" aria-hidden="true">
+      <path d="M2 12 L6 4 L10 12 L14 4 L18 12" stroke="#C9A227" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="24" y="12" fill="#C9A227" font-size="9" font-weight="800" font-family="Arial,sans-serif">COBRE</text>
+    </svg>
+  </span>
+  {% endif %}
+
+  {% if iconVoltage != '' %}
+  <span class="showcase-spec-bar__item showcase-spec-bar__item--voltage" title="{{ iconVoltage }}">
+    <svg class="showcase-spec-bar__svg showcase-spec-bar__svg--voltage" viewBox="0 0 44 16" aria-hidden="true">
+      <path d="M4 2 L10 14 L13 8 L18 14" stroke="#2c77bb" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="22" y="12" fill="#2c77bb" font-size="9" font-weight="800" font-family="Arial,sans-serif">{{ iconVoltage }}</text>
+    </svg>
+  </span>
+  {% endif %}
+
+  {% if iconWifi %}
+  <span class="showcase-spec-bar__item showcase-spec-bar__item--wifi" title="Wi-Fi">
+    <svg class="showcase-spec-bar__svg" viewBox="0 0 28 20" aria-hidden="true">
+      <rect x="8" y="12" width="12" height="6" rx="1" fill="#5a9aaa"/>
+      <text x="14" y="16.5" text-anchor="middle" fill="#fff" font-size="4.5" font-weight="700" font-family="Arial,sans-serif">WI FI</text>
+      <path d="M6 10 Q14 4 22 10" stroke="#5a9aaa" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M9 12 Q14 8 19 12" stroke="#5a9aaa" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <circle cx="14" cy="13" r="1" fill="#5a9aaa"/>
+    </svg>
+  </span>
+  {% endif %}
+</div>
+{% endif %}

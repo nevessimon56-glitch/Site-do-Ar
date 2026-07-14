@@ -575,3 +575,60 @@
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+/* Faixa de especificações nos cards — Estilo 3 */
+
+.showcase-spec-bar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 14px;
+  margin: 0;
+  padding: 8px 10px;
+  background: #f3f6f9;
+  border-top: 1px solid #e8edf2;
+  min-height: 36px;
+  box-sizing: border-box;
+}
+
+.showcase-spec-bar__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+
+.showcase-spec-bar__svg {
+  display: block;
+  height: 18px;
+  width: auto;
+  max-width: 56px;
+}
+
+.showcase-spec-bar__svg--cobre {
+  width: 52px;
+  height: 16px;
+}
+
+.showcase-spec-bar__svg--voltage {
+  width: 44px;
+  height: 16px;
+}
+
+.showcase-spec-bar__svg--cycle {
+  width: 32px;
+  height: 20px;
+}
+
+.showcase-product_image .showcase-spec-bar {
+  position: relative;
+  z-index: 2;
+}
+
+.showcase-product_image .showcase-offer,
+.showcase-product_image .showcase-tag {
+  z-index: 5;
+}
