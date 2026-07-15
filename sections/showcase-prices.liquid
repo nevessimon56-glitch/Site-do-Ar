@@ -1,18 +1,48 @@
 {% comment %}
   Preços do card — Pix + parcelas no cartão (valor cheio)
-  Usa apenas product.price (tabela do site). Não usa primaryPrice (pode ser ML/marketplace).
-  Uso: {% render 'sections/showcase-prices', product: product, productPricePrimary: productPricePrimary, productPriceSecond: productPriceSecond %}
+  SITE-PRICE-RESOLVE-v1: mesmo preco para visitante e logado
+  Uso: {% render 'sections/showcase-prices', product: product %}
 {% endcomment %}
 
-{% assign listPriceCard = product.price.price %}
-{% assign pixPriceCard = product.price.price %}
+{% assign sitePrice = product.price %}
+{% if customer and product.prices.size > 0 %}
+  {% assign sitePriceCandidate = nil %}
+  {% assign sitePriceCandidateIsMl = true %}
+  {% for pg in product.prices %}
+    {% if pg.price > 0 %}
+      {% assign pgNameLower = pg.priceGroupName | downcase | strip %}
+      {% assign pgIsMl = false %}
+      {% if pgNameLower contains 'mercado' or pgNameLower contains 'marketplace' or pgNameLower contains 'meli' %}
+        {% assign pgIsMl = true %}
+      {% endif %}
+      {% if pg.promotionMargin > 0 and pg.promotionPrice != null and pg.promotionPrice > 0 %}
+        {% if sitePriceCandidate == nil %}
+          {% assign sitePriceCandidate = pg %}
+          {% assign sitePriceCandidateIsMl = pgIsMl %}
+        {% elsif pgIsMl == false and sitePriceCandidateIsMl %}
+          {% assign sitePriceCandidate = pg %}
+          {% assign sitePriceCandidateIsMl = false %}
+        {% endif %}
+      {% elsif pgIsMl == false and sitePriceCandidate == nil %}
+        {% assign sitePriceCandidate = pg %}
+        {% assign sitePriceCandidateIsMl = false %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+  {% if sitePriceCandidate %}
+    {% assign sitePrice = sitePriceCandidate %}
+  {% endif %}
+{% endif %}
+
+{% assign listPriceCard = sitePrice.price %}
+{% assign pixPriceCard = sitePrice.price %}
 {% assign hasPixPromoCard = 0 %}
 {% assign pixPercentCard = 5 %}
 
-{% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+{% if sitePrice.promotionMargin > 0 and sitePrice.promotionPrice != null %}
   {% assign hasPixPromoCard = 1 %}
-  {% assign pixPriceCard = product.price.promotionPrice %}
-  {% assign pixPercentCard = product.price.promotionMargin | round %}
+  {% assign pixPriceCard = sitePrice.promotionPrice %}
+  {% assign pixPercentCard = sitePrice.promotionMargin | round %}
 {% endif %}
 
 {% if hasPixPromoCard == 1 %}
@@ -22,7 +52,7 @@
   <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b></p>
   <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% off no Pix</p>
 {% else %}
-  <p class="showcase-prices_price"><b>{{ product.price.price | money }}</b></p>
+  <p class="showcase-prices_price"><b>{{ sitePrice.price | money }}</b></p>
 {% endif %}
 
 {% if product.secondaryPrice %}

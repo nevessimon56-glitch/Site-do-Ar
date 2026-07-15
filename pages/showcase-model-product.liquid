@@ -1,6 +1,6 @@
 {% comment %}
   ARQUIVO: showcase-model-product.liquid
-  VERSAO: 2026-07-15-v4  (nao usa primaryPrice / tabela Mercado Livre)
+  VERSAO: 2026-07-15-v5  (site-price-resolve: mesmo preco logado/deslogado)
   No editor WDNA: substitua TODO o conteudo deste arquivo.
   Preco Pix + parcelas estao INLINE neste arquivo (nao depende de outro).
   Os icones de spec ficam APENAS em showcase-spec-wrap (abaixo do titulo).
@@ -24,22 +24,52 @@
         {% endif %}
     {% endif %}
 
-    {% assign productPricePrimary = product.price %}
+    {% comment %} SITE-PRICE-RESOLVE-v1 {% endcomment %}
+    {% assign sitePrice = product.price %}
+    {% if customer and product.prices.size > 0 %}
+        {% assign sitePriceCandidate = nil %}
+        {% assign sitePriceCandidateIsMl = true %}
+        {% for pg in product.prices %}
+            {% if pg.price > 0 %}
+                {% assign pgNameLower = pg.priceGroupName | downcase | strip %}
+                {% assign pgIsMl = false %}
+                {% if pgNameLower contains 'mercado' or pgNameLower contains 'marketplace' or pgNameLower contains 'meli' %}
+                    {% assign pgIsMl = true %}
+                {% endif %}
+                {% if pg.promotionMargin > 0 and pg.promotionPrice != null and pg.promotionPrice > 0 %}
+                    {% if sitePriceCandidate == nil %}
+                        {% assign sitePriceCandidate = pg %}
+                        {% assign sitePriceCandidateIsMl = pgIsMl %}
+                    {% elsif pgIsMl == false and sitePriceCandidateIsMl %}
+                        {% assign sitePriceCandidate = pg %}
+                        {% assign sitePriceCandidateIsMl = false %}
+                    {% endif %}
+                {% elsif pgIsMl == false and sitePriceCandidate == nil %}
+                    {% assign sitePriceCandidate = pg %}
+                    {% assign sitePriceCandidateIsMl = false %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        {% if sitePriceCandidate %}
+            {% assign sitePrice = sitePriceCandidate %}
+        {% endif %}
+    {% endif %}
+    {% assign productPricePrimary = sitePrice %}
 
-    {% assign listPriceCard = product.price.price %}
-    {% assign pixPriceCard = product.price.price %}
+    {% assign listPriceCard = sitePrice.price %}
+    {% assign pixPriceCard = sitePrice.price %}
     {% assign hasPixPromoCard = 0 %}
     {% assign pixPercentCard = 5 %}
     {% assign offerPercentCard = 5 %}
 
-    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+    {% if sitePrice.promotionMargin > 0 and sitePrice.promotionPrice != null %}
         {% assign hasPixPromoCard = 1 %}
-        {% assign pixPriceCard = product.price.promotionPrice %}
-        {% assign pixPercentCard = product.price.promotionMargin | round %}
+        {% assign pixPriceCard = sitePrice.promotionPrice %}
+        {% assign pixPercentCard = sitePrice.promotionMargin | round %}
         {% assign offerPercentCard = pixPercentCard %}
     {% endif %}
 
-    <li class="showcase-item" data-showcase-tpl="v3-site-price">
+    <li class="showcase-item" data-showcase-tpl="v3-site-price" data-site-price-lock="1" data-site-list="{{ listPriceCard }}" data-site-pix="{{ pixPriceCard }}" data-site-pix-pct="{{ pixPercentCard }}">
         <div class="showcase-product card">
             {% if themeConfig.price.type != 'hide' %}
                 {% if product.promotion %}

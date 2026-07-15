@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-mobile-nav-v3
+ * VERSAO: 2026-07-15-js-price-lock-v1
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -333,9 +333,62 @@
     }, delay || 300);
   }
 
+  function lockSitePriceCards(root) {
+    var scope = root || document;
+    var items = scope.querySelectorAll('[data-site-price-lock="1"]');
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var list = parseFloat(item.getAttribute('data-site-list') || '');
+      var pix = parseFloat(item.getAttribute('data-site-pix') || '');
+      var pct = parseInt(item.getAttribute('data-site-pix-pct') || '0', 10);
+      if (!pix || isNaN(pix)) continue;
+
+      var pricesBox = item.querySelector('.showcase-prices--card, .showcase-prices');
+      if (!pricesBox) continue;
+
+      var strike = pricesBox.querySelector('.showcase-prices_strike');
+      var priceEl = pricesBox.querySelector('.showcase-prices_price');
+      var pixEl = pricesBox.querySelector('.showcase-prices_pix');
+      var hasPromo = list > pix;
+
+      if (hasPromo) {
+        if (!strike) {
+          strike = document.createElement('del');
+          strike.className = 'showcase-prices_strike';
+          strike.innerHTML = '<s></s>';
+          pricesBox.insertBefore(strike, pricesBox.firstChild);
+        }
+        var strikeInner = strike.querySelector('s') || strike;
+        strikeInner.textContent = formatMoneyBRL(list);
+        strike.style.display = '';
+      } else if (strike) {
+        strike.style.display = 'none';
+      }
+
+      if (priceEl) {
+        var priceBold = priceEl.querySelector('b') || priceEl;
+        priceBold.textContent = formatMoneyBRL(pix);
+      }
+
+      if (hasPromo) {
+        if (!pixEl) {
+          pixEl = document.createElement('p');
+          pixEl.className = 'showcase-prices_pix';
+          pricesBox.appendChild(pixEl);
+        }
+        var pctText = pct > 0 ? pct : 5;
+        pixEl.innerHTML = '<span>' + pctText + '</span>% off no Pix';
+        pixEl.style.display = '';
+      } else if (pixEl) {
+        pixEl.style.display = 'none';
+      }
+    }
+  }
+
   function refreshShowcaseCards(root) {
     var scope = root || document;
     scan(scope);
+    lockSitePriceCards(scope);
     fixCardInstallments(scope);
     fixWrongWifiTags(scope);
   }

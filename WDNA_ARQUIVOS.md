@@ -22,16 +22,16 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 ## Como validar se colou certo
 
 ### showcase-model-product.liquid
-- Deve ter: `VERSAO: 2026-07-15-v4`
-- Deve ter: `data-showcase-tpl="v3-site-price"` nos `<li>`
+- Deve ter: `VERSAO: 2026-07-15-v5` + `SITE-PRICE-RESOLVE-v1`
+- Deve ter: `data-showcase-tpl="v3-site-price"` e `data-site-price-lock="1"` nos `<li>`
 - **NÃO** deve ter: `product.primaryPrice`
 
 ### product-content.liquid  ← ESTE ERA O ARQUIVO QUE FALTAVA
-- Deve ter: `VERSAO: 2026-07-15-product-v1`
+- Deve ter: `VERSAO: 2026-07-15-product-v2` + `SITE-PRICE-RESOLVE-v1`
 - **NÃO** deve ter: `{% assign productPricePrimary = product.primaryPrice %}`
 
 ### mega-menu.js
-- Deve ter: `VERSAO: 2026-07-15-js-mobile-nav-v3` no topo
+- Deve ter: `VERSAO: 2026-07-15-js-price-lock-v1` no topo (inclui dock mobile + trava de preco)
 - Chips discretos em páginas internas (não home, não catálogo)
 - Catálogo mobile em grade 2 colunas (`showcase-search_grid--mobile-2col`)
 - **Dock inferior fixo** (`mobile-catalog-dock`) — Início | Catálogo | Categorias/Filtros
@@ -81,6 +81,23 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 ### No site (F12 → Inspecionar card)
 - `<li class="showcase-item" data-showcase-tpl="v3-site-price">` = vitrine atualizada
 - Sem esse atributo = arquivo antigo ainda no WDNA
+
+### showcase-model-product.liquid
+- Versão: `2026-07-15-v5` + `SITE-PRICE-RESOLVE-v1`
+- `data-site-price-lock="1"` nos cards (trava preco no JS apos login)
+- Logado usa mesma tabela do site (nao troca para ML do painel)
+
+### product-content.liquid
+- Versão: `2026-07-15-product-v2` + `SITE-PRICE-RESOLVE-v1`
+- Pagina do produto: mesmo preco Pix logado/deslogado
+
+### mega-menu.js
+- Versão: `2026-07-15-js-price-lock-v1`
+- `lockSitePriceCards()` reaplica preco dos `data-site-*` apos login
+
+### Painel WDNA (recomendado)
+Em **Configurações > Produto > Preço**, alinhar:
+- Lista para **usuario logado** = mesma do **visitante** (ou tabela do site, nao ML)
 
 ## Por que puxava Mercado Livre?
 
