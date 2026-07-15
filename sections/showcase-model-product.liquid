@@ -1,6 +1,6 @@
 {% comment %}
   ARQUIVO: showcase-model-product.liquid
-  VERSAO: 2026-07-15-v3  (nao usa primaryPrice / tabela Mercado Livre)
+  VERSAO: 2026-07-15-v4  (nao usa primaryPrice / tabela Mercado Livre)
   No editor WDNA: substitua TODO o conteudo deste arquivo.
   Preco Pix + parcelas estao INLINE neste arquivo (nao depende de outro).
   Os icones de spec ficam APENAS em showcase-spec-wrap (abaixo do titulo).
@@ -39,7 +39,7 @@
         {% assign offerPercentCard = pixPercentCard %}
     {% endif %}
 
-    <li class="showcase-item">
+    <li class="showcase-item" data-showcase-tpl="v3-site-price">
         <div class="showcase-product card">
             {% if themeConfig.price.type != 'hide' %}
                 {% if product.promotion %}
