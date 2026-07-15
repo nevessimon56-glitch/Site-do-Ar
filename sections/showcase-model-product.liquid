@@ -1,8 +1,10 @@
 {% comment %}
   ARQUIVO: showcase-model-product.liquid
+  VERSAO: 2026-07-15-v3  (nao usa primaryPrice / tabela Mercado Livre)
   No editor WDNA: substitua TODO o conteudo deste arquivo.
   Preco Pix + parcelas estao INLINE neste arquivo (nao depende de outro).
   Os icones de spec ficam APENAS em showcase-spec-wrap (abaixo do titulo).
+  VALIDAR: deve existir "productPricePrimary = product.price" e NAO deve existir "product.primaryPrice"
 {% endcomment %}
 {% assign maximumProducts = 60 %}
 {% assign products = showcaseSection.products %}
