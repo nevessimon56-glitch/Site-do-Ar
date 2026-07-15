@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-showcase-guest-restore-v2
+ * VERSAO: 2026-07-15-js-showcase-guest-restore-v3
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1429,6 +1429,16 @@
         count: 0
       });
     }
+    if (isCatalogPage()) {
+      var pagScr = extractGuestSearchPagination(document.documentElement.innerHTML);
+      if (pagScr) {
+        payload.push({
+          key: 'catalog-pagination',
+          pagination: pagScr,
+          count: 0
+        });
+      }
+    }
     if (!payload.length) return;
     try {
       sessionStorage.setItem(getCacheKey(), JSON.stringify(payload));
@@ -1474,6 +1484,7 @@
       var current = countItems(searchList);
       var cached = getCachedGuestCount();
       if (cached > current) return true;
+      if (catalogPaginationMismatch()) return true;
       var hasFilters = (location.search || '').length > 1;
       if (!hasFilters && current > 0 && current < 20) return true;
     }
@@ -1509,6 +1520,101 @@
     if (guestEl) syncCatalogCount(guestEl.innerHTML);
   }
 
+  function getCatalogTotalFromHeader() {
+    var el = document.querySelector('.search-right p, .search-header .search-right p');
+    if (!el) return 0;
+    var m = (el.textContent || '').match(/(\d+)/);
+    return m ? parseInt(m[1], 10) : 0;
+  }
+
+  function getCatalogPerPage() {
+    var q = (location.search || '').match(/[?&]qtdPag=(\d+)/);
+    if (q) return parseInt(q[1], 10);
+    var dd = document.querySelector('.search-options .dropdown-toggle, .search-options-header .dropdown-toggle');
+    if (dd) {
+      var n = (dd.textContent || '').match(/(\d+)/);
+      if (n) return parseInt(n[1], 10);
+    }
+    return 12;
+  }
+
+  function extractGuestSearchPagination(html) {
+    var m = (html || '').match(/pagination\s*:\s*\{\s*"total"\s*:\s*(\d+)\s*,\s*"current"\s*:\s*(\d+)\s*,\s*"pages"\s*:\s*(\d+)\s*\}/);
+    if (!m) return null;
+    return {
+      total: parseInt(m[1], 10),
+      current: parseInt(m[2], 10),
+      pages: parseInt(m[3], 10)
+    };
+  }
+
+  function getAlpineSearchComponent() {
+    var main = document.querySelector('main.search-main');
+    if (!main) return null;
+    if (typeof Alpine !== 'undefined' && typeof Alpine.$data === 'function') {
+      try {
+        return Alpine.$data(main);
+      } catch (e) {}
+    }
+    if (main._x_dataStack && main._x_dataStack[0]) return main._x_dataStack[0];
+    if (main.__x && main.__x.$data) return main.__x.$data;
+    return null;
+  }
+
+  function catalogPaginationMismatch() {
+    if (!isCatalogPage()) return false;
+    var total = getCatalogTotalFromHeader();
+    var perPage = getCatalogPerPage();
+    if (total <= perPage) return false;
+    var expectedPages = Math.ceil(total / perPage);
+    if (expectedPages <= 1) return false;
+
+    var comp = getAlpineSearchComponent();
+    if (comp && comp.state && comp.state.searchPagination) {
+      var pages = comp.state.searchPagination.pages || [];
+      if (pages.length >= expectedPages) return false;
+    }
+
+    var activePageLinks = document.querySelectorAll(
+      '.search-options-pagination_list .page-item:not(.page-item_temp):not(.d-hide) .search-options-pagination_link'
+    );
+    if (activePageLinks.length < expectedPages) return true;
+
+    return true;
+  }
+
+  function syncCatalogPagination(pagination) {
+    if (!pagination || !pagination.pages) return false;
+    var comp = getAlpineSearchComponent();
+    if (!comp || !comp.state || !comp.state.search) return false;
+
+    comp.state.search.pagination = {
+      total: pagination.total,
+      current: pagination.current,
+      pages: pagination.pages
+    };
+
+    if (typeof StoreSDK !== 'undefined' && StoreSDK.utils && StoreSDK.utils.initSearchPagination) {
+      comp.state.searchPagination = StoreSDK.utils.initSearchPagination(
+        comp.state.search,
+        comp.state.currentPagePath || location.pathname
+      );
+    }
+
+    if (typeof comp.initSearch === 'function') {
+      try {
+        comp.initSearch();
+      } catch (e) {}
+    }
+    return true;
+  }
+
+  function syncCatalogPaginationFromHtml(html) {
+    var pagination = extractGuestSearchPagination(html);
+    if (!pagination) return false;
+    return syncCatalogPagination(pagination);
+  }
+
   function applyPayload(payload, lists) {
     var restored = false;
     for (var p = 0; p < payload.length; p++) {
@@ -1516,6 +1622,10 @@
       if (entry.key === 'catalog-count') {
         syncCatalogCount(entry.html);
         restored = true;
+        continue;
+      }
+      if (entry.key === 'catalog-pagination' && entry.pagination) {
+        if (syncCatalogPagination(entry.pagination)) restored = true;
         continue;
       }
       var list = findListForEntry(entry, lists);
@@ -1561,6 +1671,14 @@
         count: 0
       });
     }
+    var guestPag = extractGuestSearchPagination(doc.documentElement.innerHTML);
+    if (guestPag) {
+      payload.push({
+        key: 'catalog-pagination',
+        pagination: guestPag,
+        count: 0
+      });
+    }
     return payload;
   }
 
@@ -1590,14 +1708,39 @@
     if (typeof window.initCatalogMobileGrid === 'function') window.initCatalogMobileGrid();
   }
 
+  function finishCatalogRestore(html, restored) {
+    if (isCatalogPage() && html) {
+      if (syncCatalogPaginationFromHtml(html)) restored = true;
+    }
+    if (restored) {
+      restoreDone = true;
+      afterShowcaseRestore();
+    }
+    return restored;
+  }
+
+  function runCatalogPaginationFix() {
+    if (!isLoggedIn() || !isCatalogPage() || !catalogPaginationMismatch()) return;
+    fetchGuestPageHtml()
+      .then(function (html) {
+        syncCatalogPaginationFromHtml(html);
+      })
+      .catch(function () {});
+  }
+
   function restoreShowcasesFromGuest() {
     if (restoreInFlight || restoreDone || !pageNeedsRestore()) return;
     restoreInFlight = true;
 
     if (restoreFromCache()) {
-      restoreDone = true;
       restoreInFlight = false;
-      afterShowcaseRestore();
+      setTimeout(function () {
+        if (isCatalogPage() && catalogPaginationMismatch()) {
+          runCatalogPaginationFix();
+        }
+        afterShowcaseRestore();
+      }, 100);
+      restoreDone = true;
       return;
     }
 
@@ -1609,14 +1752,14 @@
           var anyMore = false;
           var lists = getShowcaseLists();
           for (var g = 0; g < guestPayload.length; g++) {
-            if (guestPayload[g].key === 'catalog-count') continue;
+            if (guestPayload[g].key === 'catalog-count' || guestPayload[g].key === 'catalog-pagination') continue;
             var gl = findListForEntry(guestPayload[g], lists);
             if (gl && guestPayload[g].count > countItems(gl)) anyMore = true;
           }
-          if (!anyMore) return false;
+          if (!anyMore) return { html: html, restored: false };
         }
         var payload = buildPayloadFromDoc(doc);
-        if (!payload.length) return false;
+        if (!payload.length) return { html: html, restored: false };
         var restored = applyPayload(payload, getShowcaseLists());
         if (!restored && isCatalogPage() && guestHasMoreCatalogItems(doc)) {
           var guestList = getCatalogList(doc);
@@ -1627,17 +1770,23 @@
             restored = true;
           }
         }
+        if (isCatalogPage()) {
+          if (syncCatalogPaginationFromHtml(html)) restored = true;
+        }
         if (restored) {
           try {
             sessionStorage.setItem(getCacheKey(), JSON.stringify(payload));
           } catch (e) {}
         }
-        return restored;
+        return { html: html, restored: restored };
       })
-      .then(function (restored) {
-        if (restored) {
+      .then(function (result) {
+        if (!result) return;
+        if (result.restored) {
           restoreDone = true;
           afterShowcaseRestore();
+        } else if (isCatalogPage() && result.html) {
+          finishCatalogRestore(result.html, syncCatalogPaginationFromHtml(result.html));
         }
       })
       .catch(function () {})
@@ -1652,6 +1801,8 @@
       return;
     }
     restoreShowcasesFromGuest();
+    setTimeout(runCatalogPaginationFix, 350);
+    setTimeout(runCatalogPaginationFix, 1200);
   }
 
   window.cacheGuestShowcases = cacheGuestShowcases;
