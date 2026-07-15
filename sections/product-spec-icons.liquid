@@ -124,19 +124,19 @@
   <li class="showcase-spec-bar__tag showcase-spec-bar__tag--procel" title="Classificação A — Procel">A</li>
   {% endif %}
   {% if iconQuenteFrio %}
-  <li class="showcase-spec-bar__tag" title="Quente e Frio">Q/F</li>
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cycle" title="Quente e Frio">Q/F</li>
   {% endif %}
   {% if iconFrio and iconQuenteFrio == false %}
-  <li class="showcase-spec-bar__tag" title="Frio">Frio</li>
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cycle" title="Frio">Frio</li>
   {% endif %}
   {% if iconCobre %}
-  <li class="showcase-spec-bar__tag" title="Serpentina de Cobre">Cobre</li>
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cobre" title="Serpentina de Cobre">Cobre</li>
   {% endif %}
   {% if iconVoltage != '' %}
-  <li class="showcase-spec-bar__tag" title="{{ iconVoltage }}">{{ iconVoltage }}</li>
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--voltage" title="{{ iconVoltage }}">{{ iconVoltage }}</li>
   {% endif %}
   {% if iconWifi %}
-  <li class="showcase-spec-bar__tag" title="Wi-Fi">Wi-Fi</li>
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--wifi" title="Wi-Fi">Wi-Fi</li>
   {% endif %}
 </ul>
 {% endif %}

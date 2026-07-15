@@ -364,6 +364,125 @@
     link.classList.remove('is-hovering');
   }
 
+  function ensureImgSrc(img) {
+    if (!img) return '';
+    if (!img.getAttribute('src') && img.getAttribute('data-src')) {
+      img.setAttribute('src', img.getAttribute('data-src'));
+      img.classList.add('loaded');
+    }
+    return img.getAttribute('src') || img.getAttribute('data-src') || '';
+  }
+
+  function setupMobileCarousel(link, img, hoverSrc) {
+    rememberMain(img);
+    ensureImgSrc(img);
+    link.classList.add('has-mobile-carousel');
+    link.classList.remove('is-hovering');
+    link.setAttribute(PROCESSED, '1');
+
+    if (link.querySelector('.product-mobile-carousel')) return;
+
+    var carousel = document.createElement('div');
+    carousel.className = 'product-mobile-carousel';
+    carousel.setAttribute('data-mobile-carousel', '1');
+
+    var track = document.createElement('div');
+    track.className = 'product-mobile-carousel__track';
+
+    var slideMain = document.createElement('div');
+    slideMain.className = 'product-mobile-carousel__slide';
+    slideMain.appendChild(img);
+
+    var slideAlt = document.createElement('div');
+    slideAlt.className = 'product-mobile-carousel__slide';
+    var altImg = document.createElement('img');
+    altImg.className = 'product-mobile-carousel__img';
+    altImg.alt = img.alt || '';
+    altImg.src = hoverSrc;
+    slideAlt.appendChild(altImg);
+
+    track.appendChild(slideMain);
+    track.appendChild(slideAlt);
+    carousel.appendChild(track);
+
+    var dots = document.createElement('div');
+    dots.className = 'product-mobile-carousel__dots';
+    dots.setAttribute('aria-hidden', 'true');
+    dots.innerHTML = '<span class="is-active"></span><span></span>';
+    carousel.appendChild(dots);
+
+    var hint = document.createElement('span');
+    hint.className = 'product-mobile-carousel__hint';
+    hint.textContent = 'Deslize →';
+    carousel.appendChild(hint);
+
+    link.appendChild(carousel);
+    bindMobileSwipe(link, track, dots, hint);
+  }
+
+  function bindMobileSwipe(link, track, dots, hint) {
+    var index = 0;
+    var startX = 0;
+    var startY = 0;
+    var deltaX = 0;
+    var swiping = false;
+
+    function goTo(nextIndex) {
+      index = nextIndex < 0 ? 0 : (nextIndex > 1 ? 1 : nextIndex);
+      track.style.transform = 'translateX(-' + (index * 50) + '%)';
+      var dotEls = dots.querySelectorAll('span');
+      for (var i = 0; i < dotEls.length; i++) {
+        if (i === index) dotEls[i].classList.add('is-active');
+        else dotEls[i].classList.remove('is-active');
+      }
+      if (hint && hint.parentNode) hint.parentNode.removeChild(hint);
+    }
+
+    track.addEventListener('touchstart', function (e) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      deltaX = 0;
+      swiping = false;
+    }, { passive: true });
+
+    track.addEventListener('touchmove', function (e) {
+      var dx = e.touches[0].clientX - startX;
+      var dy = e.touches[0].clientY - startY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 8) {
+        swiping = true;
+        deltaX = dx;
+      }
+    }, { passive: true });
+
+    track.addEventListener('touchend', function (e) {
+      if (!swiping) return;
+      if (deltaX < -35) goTo(index + 1);
+      else if (deltaX > 35) goTo(index - 1);
+      link.setAttribute('data-swiped', '1');
+      setTimeout(function () {
+        link.removeAttribute('data-swiped');
+      }, 400);
+      e.preventDefault();
+      e.stopPropagation();
+    }, { passive: false });
+
+    link.addEventListener('click', function (e) {
+      if (link.getAttribute('data-swiped') === '1') {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
+    dots.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var spans = dots.querySelectorAll('span');
+      for (var i = 0; i < spans.length; i++) {
+        if (e.target === spans[i]) goTo(i);
+      }
+    });
+  }
+
   function bindLink(link) {
     if (link.getAttribute(PROCESSED) === '1') return;
     var img = normalizeImg(link);
@@ -373,7 +492,10 @@
 
     if (isTouchOnly()) {
       link.classList.remove('is-hovering');
-      link.setAttribute(PROCESSED, '1');
+      urlOk(hoverSrc, function (ok) {
+        if (ok) setupMobileCarousel(link, img, hoverSrc);
+        else link.setAttribute(PROCESSED, '1');
+      });
       return;
     }
 
