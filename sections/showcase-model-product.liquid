@@ -26,10 +26,6 @@
     {% if product.primaryPrice %}
         {% assign productPricePrimary = product.primaryPrice %}
     {% endif %}
-    {% assign productPriceSecond = false %}
-    {% if product.secondaryPrice %}
-        {% assign productPriceSecond = product.secondaryPrice %}
-    {% endif %}
     <li class="showcase-item">
         <div class="showcase-product card">
             {% if themeConfig.price.type != 'hide' %}
@@ -103,31 +99,33 @@
                             {% assign classShowcaseLoginPrice = ' login-btn_logged d-hide' %}
                         {% endif %}
                         <div class="showcase-prices showcase-prices--card{{ classShowcaseLoginPrice }}">
-                            {% assign _pixPrice = product.price.price %}
-                            {% assign _listPrice = product.price.price %}
-                            {% assign _hasPixPromo = false %}
+                            {% assign pixPriceCard = product.price.price %}
+                            {% assign listPriceCard = product.price.price %}
+                            {% assign hasPixPromoCard = 0 %}
                             {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
-                                {% assign _hasPixPromo = true %}
-                                {% assign _pixPrice = product.price.promotionPrice %}
+                                {% assign hasPixPromoCard = 1 %}
+                                {% assign pixPriceCard = product.price.promotionPrice %}
                             {% endif %}
-                            {% if _hasPixPromo %}
-                                {% if _listPrice > _pixPrice %}
-                                    <del class="showcase-prices_strike"><s>{{ _listPrice | money }}</s></del>
+                            {% if hasPixPromoCard == 1 %}
+                                {% if listPriceCard > pixPriceCard %}
+                                    <del class="showcase-prices_strike"><s>{{ listPriceCard | money }}</s></del>
                                 {% endif %}
-                                <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ _pixPrice | money }}</b></p>
-                                {% assign _pixPercent = 5 %}
-                                {% if product.price.promotionMargin and product.price.promotionMargin > 0 %}
-                                    {% assign _pixPercent = product.price.promotionMargin | round %}
+                                <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b></p>
+                                {% assign pixPercentCard = 5 %}
+                                {% if product.price.promotionMargin > 0 %}
+                                    {% assign pixPercentCard = product.price.promotionMargin | round %}
                                 {% endif %}
-                                <p class="showcase-prices_pix">{{ _pixPercent }}% off no Pix</p>
+                                <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% off no Pix</p>
                             {% else %}
                                 <p class="showcase-prices_price"><b>{{ productPricePrimary.price | money }}</b></p>
                             {% endif %}
-                            {% if productPriceSecond and productPriceSecond.installment > 1 %}
+                            {% if product.secondaryPrice %}
+                                {% if product.secondaryPrice.installment > 1 %}
                                 <p class="showcase-prices_installment">
                                     <span class="showcase-prices_installment-prefix">ou</span>
-                                    <span class="showcase-prices_installment-text">em até <b>{{ productPriceSecond.installment }}x</b> de <b>{{ productPriceSecond.installmentValue | money }}</b> sem juros</span>
+                                    <span class="showcase-prices_installment-text">em até <b>{{ product.secondaryPrice.installment }}x</b> de <b>{{ product.secondaryPrice.installmentValue | money }}</b> sem juros</span>
                                 </p>
+                                {% endif %}
                             {% endif %}
                         </div>
                     {% endif %}
