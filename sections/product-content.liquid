@@ -421,7 +421,7 @@
                                         <div class="product-content_box product-box_qtd col-12">
                                             <div class="product-qtd input-group_qtd input-group">
                                                 <button class="product-qtd_minus btn input-group-btn" @click="handleQuantity('-')">-</button>
-                                                <input class="product-qtd_value form-input" type="number" min="1" x-model="state.quantity" @focusout="handleQuantity('', false)">
+                                                <input class="product-qtd_value form-input" type="number" min="1" inputmode="numeric" autocomplete="off" readonly tabindex="-1" @focus="if ($event.target.hasAttribute('readonly')) { $event.target.removeAttribute('readonly'); $event.target.tabIndex = 0; }" @focusout="handleQuantity('', false)" x-model="state.quantity">
                                                 <button class="product-qtd_plus btn input-group-btn" @click="handleQuantity('+', false)">+</button>
                                             </div>
                                         </div>

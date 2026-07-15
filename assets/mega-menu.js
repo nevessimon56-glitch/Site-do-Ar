@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-perf-v2
+ * VERSAO: 2026-07-15-js-perf-v3
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -821,4 +821,129 @@
 
   document.addEventListener('touchend', resetTouchHoverStates, { passive: true });
   document.addEventListener('touchcancel', resetTouchHoverStates, { passive: true });
+})();
+
+/**
+ * Evita teclado no mobile ao carregar páginas (autofocus em painéis ocultos de login/senha).
+ */
+(function () {
+  'use strict';
+
+  var PANEL_SEL = '.sidenav-overlay, .sidenav-password, .sidenav-forgot-password';
+  var isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+  function isPanelOpen(panel) {
+    if (!panel) return false;
+    var style = window.getComputedStyle(panel);
+    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    if (parseFloat(style.opacity || '1') === 0) return false;
+    var rect = panel.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
+  function stripHiddenAutofocus() {
+    var panels = document.querySelectorAll(PANEL_SEL);
+    for (var i = 0; i < panels.length; i++) {
+      if (isPanelOpen(panels[i])) continue;
+      var inputs = panels[i].querySelectorAll('[autofocus]');
+      for (var j = 0; j < inputs.length; j++) {
+        inputs[j].removeAttribute('autofocus');
+        inputs[j].setAttribute('data-autofocus-on-open', '1');
+      }
+    }
+    blurHiddenField();
+  }
+
+  function blurHiddenField() {
+    var active = document.activeElement;
+    if (!active || !active.closest || !active.matches) return;
+    if (!active.matches('input, textarea, select')) return;
+    var panel = active.closest(PANEL_SEL);
+    if (panel && !isPanelOpen(panel)) {
+      try { active.blur(); } catch (e) {}
+    }
+  }
+
+  function focusFirstField(panel) {
+    if (!panel || !isPanelOpen(panel)) return;
+    if (isTouch) return;
+    var input = panel.querySelector('[data-autofocus-on-open="1"], input[type="email"], input[type="password"]');
+    if (!input) return;
+    setTimeout(function () {
+      if (!isPanelOpen(panel)) return;
+      try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); }
+    }, 100);
+  }
+
+  function patchOverlayOpeners() {
+    if (typeof window.openSideNavOverlay === 'function' && !window.openSideNavOverlay._keyboardGuard) {
+      var originalOpen = window.openSideNavOverlay;
+      window.openSideNavOverlay = function (selector) {
+        var result = originalOpen.apply(this, arguments);
+        if (typeof selector === 'string') {
+          setTimeout(function () {
+            focusFirstField(document.querySelector(selector));
+          }, 150);
+        }
+        return result;
+      };
+      window.openSideNavOverlay._keyboardGuard = true;
+    }
+
+    var openers = [
+      ['openUserPassword', '.sidenav-password'],
+      ['openForgotPassword', '.sidenav-forgot-password']
+    ];
+    for (var i = 0; i < openers.length; i++) {
+      (function (name, selector) {
+        if (typeof window[name] !== 'function' || window[name]._keyboardGuard) return;
+        var original = window[name];
+        window[name] = function () {
+          var result = original.apply(this, arguments);
+          setTimeout(function () {
+            focusFirstField(document.querySelector(selector));
+          }, 150);
+          return result;
+        };
+        window[name]._keyboardGuard = true;
+      })(openers[i][0], openers[i][1]);
+    }
+  }
+
+  function initKeyboardGuard() {
+    if (typeof window.__stripHiddenAutofocus === 'function') {
+      window.__stripHiddenAutofocus();
+    }
+    stripHiddenAutofocus();
+    patchOverlayOpeners();
+
+    if (typeof MutationObserver !== 'undefined' && !document.body._keyboardGuardObserver) {
+      var guardRaf = 0;
+      document.body._keyboardGuardObserver = new MutationObserver(function () {
+        if (guardRaf) return;
+        guardRaf = requestAnimationFrame(function () {
+          guardRaf = 0;
+          stripHiddenAutofocus();
+        });
+      });
+      var panels = document.querySelectorAll(PANEL_SEL);
+      for (var i = 0; i < panels.length; i++) {
+        document.body._keyboardGuardObserver.observe(panels[i], { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'style'] });
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initKeyboardGuard);
+  } else {
+    initKeyboardGuard();
+  }
+  window.addEventListener('load', stripHiddenAutofocus);
+  document.addEventListener('focusin', function (e) {
+    if (!e.target || !e.target.closest) return;
+    var panel = e.target.closest(PANEL_SEL);
+    if (panel && !isPanelOpen(panel)) {
+      e.target.blur();
+    }
+  }, true);
 })();

@@ -27,8 +27,11 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - **NÃO** deve ter: `{% assign productPricePrimary = product.primaryPrice %}`
 
 ### mega-menu.js
-- Deve ter: `VERSAO: 2026-07-15-js-perf-v2` no topo do arquivo
-- Observer só nas vitrines (não no `body` inteiro a cada mutação)
+- Deve ter: `VERSAO: 2026-07-15-js-perf-v3` no topo do arquivo
+- Inclui guarda contra teclado no mobile (painéis de login ocultos)
+
+### theme.liquid
+- Deve ter script `__stripHiddenAutofocus` logo após `<body>` (remove autofocus dos painéis laterais)
 
 ### product-spec-icons.liquid
 - Deve ter: `VERSAO: 2026-07-15-spec-v4`
