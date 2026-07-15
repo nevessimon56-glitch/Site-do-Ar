@@ -675,6 +675,36 @@
     }
   }
 
+  function getShowcaseCards(root) {
+    if (!root) return document.querySelectorAll('.showcase-product');
+    if (root.nodeType === 1 && root.classList && root.classList.contains('showcase-product')) return [root];
+    if (root.querySelectorAll) return root.querySelectorAll('.showcase-product');
+    return [];
+  }
+
+  function fixWrongWifiTags(root) {
+    var cards = getShowcaseCards(root);
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      var titleEl = card.querySelector('.showcase-product_name, .showcase-product_title, .product-name, h2, h3, a[title]');
+      var title = '';
+      if (titleEl) {
+        title = (titleEl.getAttribute('title') || titleEl.textContent || '').toLowerCase();
+      }
+      if (!title) continue;
+
+      var hasWifiInTitle = /\bwi-?fi\b/.test(title);
+      var isMechanical = /\bmec[aâ]nico\b/.test(title);
+      var isWindow = /\bjanela\b/.test(title);
+      if (!isMechanical && !(isWindow && !hasWifiInTitle)) continue;
+
+      var wifiTags = card.querySelectorAll('.showcase-spec-bar__tag--wifi');
+      for (var j = 0; j < wifiTags.length; j++) {
+        if (wifiTags[j].parentNode) wifiTags[j].parentNode.removeChild(wifiTags[j]);
+      }
+    }
+  }
+
   function nodeHasShowcase(node) {
     if (!node || node.nodeType !== 1) return false;
     if (node.classList && (node.classList.contains('showcase-product') || node.classList.contains('showcase-item') || node.classList.contains('showcase-prices_installment'))) {
@@ -698,6 +728,7 @@
       for (var i = 0; i < roots.length; i++) {
         scan(roots[i]);
         fixCardInstallments(roots[i]);
+        fixWrongWifiTags(roots[i]);
       }
       scheduleSliderRefresh(200);
     });
@@ -707,6 +738,7 @@
     resetTouchHoverStates();
     scan(document);
     fixCardInstallments(document);
+    fixWrongWifiTags(document);
 
     if (!hoverInitDone) {
       hoverInitDone = true;
@@ -740,6 +772,7 @@
   }
 
   window.cleanupDuplicateSpecBars = cleanupDuplicateSpecBars;
+  window.fixWrongWifiTags = fixWrongWifiTags;
 
   window.initProductHoverImage = initProductHoverImage;
   window.refreshThemeShowcaseSliders = refreshThemeShowcaseSliders;

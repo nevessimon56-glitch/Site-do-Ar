@@ -26,6 +26,11 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - Deve ter: `VERSAO: 2026-07-15-product-v1`
 - **NÃO** deve ter: `{% assign productPricePrimary = product.primaryPrice %}`
 
+### product-spec-icons.liquid
+- Deve ter: `VERSAO: 2026-07-15-spec-v3`
+- Deve ter: `data-spec-icons="v3"` no `<ul class="showcase-spec-bar">`
+- Janela/mecânico **não** devem mostrar pill Wi-Fi
+
 ### No site (F12 → Inspecionar card)
 - `<li class="showcase-item" data-showcase-tpl="v3-site-price">` = vitrine atualizada
 - Sem esse atributo = arquivo antigo ainda no WDNA

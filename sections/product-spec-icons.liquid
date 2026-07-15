@@ -1,5 +1,6 @@
 {% comment %}
   Ícones de especificação — pills de texto (sem SVG, compatível mobile)
+  VERSAO: 2026-07-15-spec-v3
   Lê a aba Especificações do produto (tabela HTML), atributos e título.
   Uso: {% render 'sections/product-spec-icons', product: product %}
 {% endcomment %}
@@ -9,6 +10,13 @@
 
 {% if product.url and product.url != '' %}
   {% assign specBlob = specBlob | append: ' | ' | append: product.url | downcase %}
+{% endif %}
+
+{% if product.medias[0].path and product.medias[0].path != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.medias[0].path | downcase %}
+{% endif %}
+{% if product.medias[1].path and product.medias[1].path != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.medias[1].path | downcase %}
 {% endif %}
 
 {% if product.tags and product.tags != '' %}
@@ -81,9 +89,7 @@
   {% endfor %}
 {% endif %}
 
-{% if product.description %}
-  {% assign specBlob = specBlob | append: ' | ' | append: product.description | downcase %}
-{% endif %}
+{% comment %} Não usar product.description inteira — polui detecção (ex.: wi-fi em texto genérico) {% endcomment %}
 
 {% assign iconProcelA = false %}
 {% assign iconQuenteFrio = false %}
@@ -117,14 +123,61 @@
   {% endunless %}
 {% endif %}
 
-{% assign iconWifi = false %}
-{% if specBlob contains 'compatibilidade wi-fi: sim' or specBlob contains 'compatibilidade wifi: sim' or specBlob contains 'wi-fi integrado' or specBlob contains 'wifi integrado' or specBlob contains 'wi-fi de fábrica' or specBlob contains 'wi-fi de fabrica' or specBlob contains 'com wi-fi' or specBlob contains 'com wifi' %}
-  {% assign iconWifi = true %}
-{% elsif specBlob contains 'compatibilidade wi-fi: não' or specBlob contains 'compatibilidade wi-fi: nao' or specBlob contains 'compatibilidade wifi: não' or specBlob contains 'compatibilidade wifi: nao' or specBlob contains 'compatibilidade wi-fi não' or specBlob contains 'compatibilidade wi-fi nao' or specBlob contains 'compatibilidade wifi não' or specBlob contains 'compatibilidade wifi nao' %}
-  {% assign iconWifi = false %}
-{% elsif specTitle contains 'wi-fi' or specTitle contains 'wifi' %}
-  {% assign iconWifi = true %}
+{% comment %}
+  Wi-Fi: fonte conservadora (título + tabela de specs + atributos).
+  Não usa tags, SEO, URL nem mídia — costumam marcar Wi-Fi errado em janela/mecânico.
+{% endcomment %}
+{% assign specWifiBlob = specTitle %}
+{% if specHtmlRaw != '' %}
+  {% assign specWifiBlob = specWifiBlob | append: ' | ' | append: specPlain %}
 {% endif %}
+{% if product.attributes and product.attributes.size > 0 %}
+  {% for attr in product.attributes %}
+    {% assign attrName = attr.name | default: attr.nome | default: '' | downcase %}
+    {% assign attrVal = '' %}
+    {% if attr.values and attr.values.size > 0 %}
+      {% assign attrVal = attr.values[0].name | default: attr.values[0].value | default: '' | downcase %}
+    {% elsif attr.valores and attr.valores.size > 0 %}
+      {% assign attrVal = attr.valores[0].nome | default: '' | downcase %}
+    {% elsif attr.value %}
+      {% assign attrVal = attr.value | downcase %}
+    {% endif %}
+    {% assign specWifiBlob = specWifiBlob | append: ' | ' | append: attrName | append: ':' | append: attrVal %}
+  {% endfor %}
+{% endif %}
+{% if product.properties and product.properties.size > 0 %}
+  {% for prop in product.properties %}
+    {% assign propName = prop.name | default: prop.nome | default: '' | downcase %}
+    {% assign propVal = prop.value | default: prop.valor | default: '' | downcase %}
+    {% assign specWifiBlob = specWifiBlob | append: ' | ' | append: propName | append: ':' | append: propVal %}
+  {% endfor %}
+{% endif %}
+
+{% assign iconWifi = false %}
+{% assign wifiBlocked = false %}
+
+{% if specTitle contains 'mecânico' or specTitle contains 'mecanico' or specWifiBlob contains 'operação / controle | mecânico' or specWifiBlob contains 'operacao / controle | mecanico' or specWifiBlob contains 'mecânico (manual' or specWifiBlob contains 'mecanico (manual' or specWifiBlob contains 'botões rotativos' or specWifiBlob contains 'botoes rotativos' or specWifiBlob contains 'controle mecânico' or specWifiBlob contains 'controle mecanico' %}
+  {% assign wifiBlocked = true %}
+  {% assign iconInverter = false %}
+{% endif %}
+
+{% if specTitle contains 'janela' %}
+  {% unless specTitle contains 'wi-fi' or specTitle contains 'wifi' %}
+    {% assign wifiBlocked = true %}
+  {% endunless %}
+{% endif %}
+
+{% if specWifiBlob contains 'compatibilidade wi-fi: não' or specWifiBlob contains 'compatibilidade wi-fi: nao' or specWifiBlob contains 'compatibilidade wifi: não' or specWifiBlob contains 'compatibilidade wifi: nao' or specWifiBlob contains 'sem wi-fi' or specWifiBlob contains 'sem wifi' or specWifiBlob contains 'não possui wi-fi' or specWifiBlob contains 'nao possui wi-fi' or specWifiBlob contains 'não possui wifi' or specWifiBlob contains 'nao possui wifi' %}
+  {% assign wifiBlocked = true %}
+{% endif %}
+
+{% unless wifiBlocked %}
+  {% if specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' or specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' or specWifiBlob contains 'wi-fi de fábrica' or specWifiBlob contains 'wi-fi de fabrica' or specWifiBlob contains 'smart wi-fi' or specWifiBlob contains 'smart wifi' %}
+    {% assign iconWifi = true %}
+  {% elsif specTitle contains ' wi-fi' or specTitle contains '-wi-fi' or specTitle contains 'wifi' %}
+    {% assign iconWifi = true %}
+  {% endif %}
+{% endunless %}
 
 {% if specBlob contains '220v' or specBlob contains '220 v' %}
   {% assign iconVoltage = '220V' %}
@@ -144,7 +197,7 @@
 {% endif %}
 
 {% if hasSpecIcons %}
-<ul class="showcase-spec-bar" aria-label="Características do produto">
+<ul class="showcase-spec-bar" data-spec-icons="v3" aria-label="Características do produto">
   {% if iconProcelA %}
   <li class="showcase-spec-bar__tag showcase-spec-bar__tag--procel" title="Classificação A — Procel">A</li>
   {% endif %}
