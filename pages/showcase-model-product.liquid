@@ -1,6 +1,8 @@
 {% comment %}
   ARQUIVO: showcase-model-product.liquid
-  No editor WDNA: abra o arquivo que ja existe com este nome e substitua TODO o conteudo.
+  No editor WDNA: substitua TODO o conteudo deste arquivo.
+  Os icones de spec ficam APENAS em showcase-spec-wrap (abaixo do titulo).
+  Nao coloque {% render 'sections/product-spec-icons' %} dentro da imagem.
 {% endcomment %}
 {% assign maximumProducts = 60 %}
 {% assign products = showcaseSection.products %}
@@ -24,6 +26,7 @@
     {% if product.primaryPrice %}
         {% assign productPricePrimary = product.primaryPrice %}
     {% endif %}
+    {% assign productPriceSecond = false %}
     {% if product.secondaryPrice %}
         {% assign productPriceSecond = product.secondaryPrice %}
     {% endif %}
@@ -99,8 +102,33 @@
                         {% if themeConfig.price.type == 'show-logged' %}
                             {% assign classShowcaseLoginPrice = ' login-btn_logged d-hide' %}
                         {% endif %}
-                        <div class="showcase-prices{{ classShowcaseLoginPrice }}">
-                            {% render 'sections/showcase-prices', product: product, productPricePrimary: productPricePrimary, productPriceSecond: productPriceSecond %}
+                        <div class="showcase-prices showcase-prices--card{{ classShowcaseLoginPrice }}">
+                            {% assign _pixPrice = product.price.price %}
+                            {% assign _listPrice = product.price.price %}
+                            {% assign _hasPixPromo = false %}
+                            {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                                {% assign _hasPixPromo = true %}
+                                {% assign _pixPrice = product.price.promotionPrice %}
+                            {% endif %}
+                            {% if _hasPixPromo %}
+                                {% if _listPrice > _pixPrice %}
+                                    <del class="showcase-prices_strike"><s>{{ _listPrice | money }}</s></del>
+                                {% endif %}
+                                <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ _pixPrice | money }}</b></p>
+                                {% assign _pixPercent = 5 %}
+                                {% if product.price.promotionMargin and product.price.promotionMargin > 0 %}
+                                    {% assign _pixPercent = product.price.promotionMargin | round %}
+                                {% endif %}
+                                <p class="showcase-prices_pix">{{ _pixPercent }}% off no Pix</p>
+                            {% else %}
+                                <p class="showcase-prices_price"><b>{{ productPricePrimary.price | money }}</b></p>
+                            {% endif %}
+                            {% if productPriceSecond and productPriceSecond.installment > 1 %}
+                                <p class="showcase-prices_installment">
+                                    <span class="showcase-prices_installment-prefix">ou</span>
+                                    <span class="showcase-prices_installment-text">em até <b>{{ productPriceSecond.installment }}x</b> de <b>{{ productPriceSecond.installmentValue | money }}</b> sem juros</span>
+                                </p>
+                            {% endif %}
                         </div>
                     {% endif %}
                     <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
