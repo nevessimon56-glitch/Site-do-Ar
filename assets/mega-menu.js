@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-showcase-guest-restore-v1
+ * VERSAO: 2026-07-15-js-showcase-guest-restore-v2
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1363,9 +1363,26 @@
 (function () {
   'use strict';
 
-  var CACHE_PREFIX = 'site-ar-showcase-guest-v2';
+  var CACHE_PREFIX = 'site-ar-showcase-guest-v3';
   var restoreInFlight = false;
   var restoreDone = false;
+
+  function isCatalogPage() {
+    var p = (location.pathname || '').toLowerCase().replace(/\/+$/, '') || '/';
+    return p === '/todos-os-produtos' || p.indexOf('/busca') === 0 || !!document.querySelector('main.search-main');
+  }
+
+  function getCatalogList(root) {
+    var scope = root || document;
+    return scope.querySelector('.showcase-search .showcase-list, main.search-main .showcase-list');
+  }
+
+  function listKey(list) {
+    if (!list) return '';
+    if (list.closest('.showcase-search') || list.closest('main.search-main')) return 'catalog-search';
+    if (list.closest('.showcase-products_carousel')) return 'carousel:' + (list.className || '');
+    return 'list:' + (list.className || '');
+  }
 
   function isLoggedIn() {
     if (typeof window.__isStoreLoggedIn === 'boolean') return window.__isStoreLoggedIn;
@@ -1397,16 +1414,42 @@
       var count = countItems(lists[i]);
       if (count < 1) continue;
       payload.push({
+        key: listKey(lists[i]),
         i: i,
         cls: lists[i].className,
         html: lists[i].innerHTML,
         count: count
       });
     }
+    var catalogCountEl = document.querySelector('.search-right p, .search-header .search-right p');
+    if (catalogCountEl) {
+      payload.push({
+        key: 'catalog-count',
+        html: catalogCountEl.innerHTML,
+        count: 0
+      });
+    }
     if (!payload.length) return;
     try {
       sessionStorage.setItem(getCacheKey(), JSON.stringify(payload));
     } catch (e) {}
+  }
+
+  function getCachedGuestCount() {
+    try {
+      var raw = sessionStorage.getItem(getCacheKey());
+      if (!raw) return 0;
+      var payload = JSON.parse(raw);
+      var max = 0;
+      for (var i = 0; i < payload.length; i++) {
+        if (payload[i].key === 'catalog-search' && payload[i].count > max) {
+          max = payload[i].count;
+        }
+      }
+      return max;
+    } catch (e) {
+      return 0;
+    }
   }
 
   function listNeedsRestore(list) {
@@ -1424,24 +1467,58 @@
     for (var i = 0; i < lists.length; i++) {
       if (listNeedsRestore(lists[i])) return true;
     }
-    var searchList = document.querySelector('.showcase-search .showcase-list');
-    if (searchList && countItems(searchList) <= 1) return true;
+
+    if (isCatalogPage()) {
+      var searchList = getCatalogList();
+      if (!searchList) return false;
+      var current = countItems(searchList);
+      var cached = getCachedGuestCount();
+      if (cached > current) return true;
+      var hasFilters = (location.search || '').length > 1;
+      if (!hasFilters && current > 0 && current < 20) return true;
+    }
+
     return false;
+  }
+
+  function findListForEntry(entry, lists) {
+    if (entry.key === 'catalog-search') return getCatalogList();
+    if (entry.key && entry.key.indexOf('carousel:') === 0) {
+      for (var i = 0; i < lists.length; i++) {
+        if (listKey(lists[i]) === entry.key) return lists[i];
+      }
+    }
+    var list = lists[entry.i];
+    if (list) return list;
+    for (var j = 0; j < lists.length; j++) {
+      if (lists[j].className === entry.cls) return lists[j];
+    }
+    return null;
+  }
+
+  function syncCatalogCount(html) {
+    if (!html) return;
+    var els = document.querySelectorAll('.search-right p, .search-header .search-right p');
+    for (var i = 0; i < els.length; i++) {
+      els[i].innerHTML = html;
+    }
+  }
+
+  function syncCatalogCountFromDoc(doc) {
+    var guestEl = doc.querySelector('.search-right p, .search-header .search-right p');
+    if (guestEl) syncCatalogCount(guestEl.innerHTML);
   }
 
   function applyPayload(payload, lists) {
     var restored = false;
     for (var p = 0; p < payload.length; p++) {
       var entry = payload[p];
-      var list = lists[entry.i];
-      if (!list) {
-        for (var j = 0; j < lists.length; j++) {
-          if (lists[j].className === entry.cls) {
-            list = lists[j];
-            break;
-          }
-        }
+      if (entry.key === 'catalog-count') {
+        syncCatalogCount(entry.html);
+        restored = true;
+        continue;
       }
+      var list = findListForEntry(entry, lists);
       if (!list) continue;
       var current = countItems(list);
       if (entry.count > current) {
@@ -1469,13 +1546,29 @@
       var count = countItems(guestLists[i]);
       if (count < 1) continue;
       payload.push({
+        key: listKey(guestLists[i]),
         i: i,
         cls: guestLists[i].className,
         html: guestLists[i].innerHTML,
         count: count
       });
     }
+    var guestCountEl = doc.querySelector('.search-right p, .search-header .search-right p');
+    if (guestCountEl) {
+      payload.push({
+        key: 'catalog-count',
+        html: guestCountEl.innerHTML,
+        count: 0
+      });
+    }
     return payload;
+  }
+
+  function guestHasMoreCatalogItems(doc) {
+    var guestList = getCatalogList(doc);
+    var currentList = getCatalogList();
+    if (!guestList || !currentList) return false;
+    return countItems(guestList) > countItems(currentList);
   }
 
   function fetchGuestPageHtml() {
@@ -1511,9 +1604,29 @@
     fetchGuestPageHtml()
       .then(function (html) {
         var doc = new DOMParser().parseFromString(html, 'text/html');
+        if (!guestHasMoreCatalogItems(doc) && !isCatalogPage()) {
+          var guestPayload = buildPayloadFromDoc(doc);
+          var anyMore = false;
+          var lists = getShowcaseLists();
+          for (var g = 0; g < guestPayload.length; g++) {
+            if (guestPayload[g].key === 'catalog-count') continue;
+            var gl = findListForEntry(guestPayload[g], lists);
+            if (gl && guestPayload[g].count > countItems(gl)) anyMore = true;
+          }
+          if (!anyMore) return false;
+        }
         var payload = buildPayloadFromDoc(doc);
         if (!payload.length) return false;
         var restored = applyPayload(payload, getShowcaseLists());
+        if (!restored && isCatalogPage() && guestHasMoreCatalogItems(doc)) {
+          var guestList = getCatalogList(doc);
+          var currentList = getCatalogList();
+          if (guestList && currentList) {
+            currentList.innerHTML = guestList.innerHTML;
+            syncCatalogCountFromDoc(doc);
+            restored = true;
+          }
+        }
         if (restored) {
           try {
             sessionStorage.setItem(getCacheKey(), JSON.stringify(payload));

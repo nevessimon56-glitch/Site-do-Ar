@@ -97,8 +97,8 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - Pagina do produto: mesmo preco Pix logado/deslogado
 
 ### mega-menu.js
-- Versão: `2026-07-15-js-showcase-guest-restore-v1`
-- `restoreShowcasesFromGuest()` reaplica vitrine de visitante quando logado so ve 1 produto
+- Versão: `2026-07-15-js-showcase-guest-restore-v2`
+- Restaura vitrine **e catálogo** (Todos os Produtos) quando logado ve menos itens
 
 ### Painel WDNA (recomendado)
 Em **Configurações > Produto > Preço**, alinhar:
