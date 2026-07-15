@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-price-lock-v1
+ * VERSAO: 2026-07-15-js-showcase-guest-restore-v1
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1354,4 +1354,207 @@
     initCatalogDock();
   }
   window.addEventListener('load', initCatalogDock);
+})();
+
+/**
+ * Logado com tabela errada: WDNA filtra vitrine no servidor (so 1 produto).
+ * Restaura HTML da vitrine de visitante (fetch sem sessao + cache).
+ */
+(function () {
+  'use strict';
+
+  var CACHE_PREFIX = 'site-ar-showcase-guest-v2';
+  var restoreInFlight = false;
+  var restoreDone = false;
+
+  function isLoggedIn() {
+    if (typeof window.__isStoreLoggedIn === 'boolean') return window.__isStoreLoggedIn;
+    try {
+      return !!(window.__storeCustomer || (typeof customer !== 'undefined' && customer));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function getCacheKey() {
+    return CACHE_PREFIX + ':' + (location.pathname || '/') + (location.search || '');
+  }
+
+  function getShowcaseLists(root) {
+    return (root || document).querySelectorAll('.showcase-list');
+  }
+
+  function countItems(list) {
+    return list ? list.querySelectorAll('.showcase-item').length : 0;
+  }
+
+  function cacheGuestShowcases() {
+    if (isLoggedIn()) return;
+    var lists = getShowcaseLists();
+    if (!lists.length) return;
+    var payload = [];
+    for (var i = 0; i < lists.length; i++) {
+      var count = countItems(lists[i]);
+      if (count < 1) continue;
+      payload.push({
+        i: i,
+        cls: lists[i].className,
+        html: lists[i].innerHTML,
+        count: count
+      });
+    }
+    if (!payload.length) return;
+    try {
+      sessionStorage.setItem(getCacheKey(), JSON.stringify(payload));
+    } catch (e) {}
+  }
+
+  function listNeedsRestore(list) {
+    var count = countItems(list);
+    if (count <= 1) {
+      var carousel = list.closest('.showcase-products_carousel, .showcase-products-list_carousel, .showcase-section, section.showcase');
+      if (carousel || /showcase-list-\d/.test(list.className || '')) return true;
+    }
+    return false;
+  }
+
+  function pageNeedsRestore() {
+    if (!isLoggedIn()) return false;
+    var lists = getShowcaseLists();
+    for (var i = 0; i < lists.length; i++) {
+      if (listNeedsRestore(lists[i])) return true;
+    }
+    var searchList = document.querySelector('.showcase-search .showcase-list');
+    if (searchList && countItems(searchList) <= 1) return true;
+    return false;
+  }
+
+  function applyPayload(payload, lists) {
+    var restored = false;
+    for (var p = 0; p < payload.length; p++) {
+      var entry = payload[p];
+      var list = lists[entry.i];
+      if (!list) {
+        for (var j = 0; j < lists.length; j++) {
+          if (lists[j].className === entry.cls) {
+            list = lists[j];
+            break;
+          }
+        }
+      }
+      if (!list) continue;
+      var current = countItems(list);
+      if (entry.count > current) {
+        list.innerHTML = entry.html;
+        restored = true;
+      }
+    }
+    return restored;
+  }
+
+  function restoreFromCache() {
+    try {
+      var raw = sessionStorage.getItem(getCacheKey());
+      if (!raw) return false;
+      return applyPayload(JSON.parse(raw), getShowcaseLists());
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function buildPayloadFromDoc(doc) {
+    var guestLists = getShowcaseLists(doc);
+    var payload = [];
+    for (var i = 0; i < guestLists.length; i++) {
+      var count = countItems(guestLists[i]);
+      if (count < 1) continue;
+      payload.push({
+        i: i,
+        cls: guestLists[i].className,
+        html: guestLists[i].innerHTML,
+        count: count
+      });
+    }
+    return payload;
+  }
+
+  function fetchGuestPageHtml() {
+    var url = location.pathname + location.search;
+    return fetch(url, {
+      credentials: 'omit',
+      cache: 'no-store',
+      headers: { Accept: 'text/html' }
+    }).then(function (res) {
+      if (!res.ok) throw new Error('guest-fetch-failed');
+      return res.text();
+    });
+  }
+
+  function afterShowcaseRestore() {
+    if (typeof window.initProductHoverImage === 'function') window.initProductHoverImage();
+    if (typeof window.refreshThemeShowcaseSliders === 'function') window.refreshThemeShowcaseSliders(true);
+    if (typeof window.cleanupDuplicateSpecBars === 'function') window.cleanupDuplicateSpecBars();
+    if (typeof window.initCatalogMobileGrid === 'function') window.initCatalogMobileGrid();
+  }
+
+  function restoreShowcasesFromGuest() {
+    if (restoreInFlight || restoreDone || !pageNeedsRestore()) return;
+    restoreInFlight = true;
+
+    if (restoreFromCache()) {
+      restoreDone = true;
+      restoreInFlight = false;
+      afterShowcaseRestore();
+      return;
+    }
+
+    fetchGuestPageHtml()
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var payload = buildPayloadFromDoc(doc);
+        if (!payload.length) return false;
+        var restored = applyPayload(payload, getShowcaseLists());
+        if (restored) {
+          try {
+            sessionStorage.setItem(getCacheKey(), JSON.stringify(payload));
+          } catch (e) {}
+        }
+        return restored;
+      })
+      .then(function (restored) {
+        if (restored) {
+          restoreDone = true;
+          afterShowcaseRestore();
+        }
+      })
+      .catch(function () {})
+      .then(function () {
+        restoreInFlight = false;
+      });
+  }
+
+  function initShowcaseGuestRestore() {
+    if (!isLoggedIn()) {
+      cacheGuestShowcases();
+      return;
+    }
+    restoreShowcasesFromGuest();
+  }
+
+  window.cacheGuestShowcases = cacheGuestShowcases;
+  window.restoreShowcasesFromGuest = restoreShowcasesFromGuest;
+
+  document.addEventListener('click', function (e) {
+    if (isLoggedIn() || !e.target || !e.target.closest) return;
+    if (e.target.closest('.btn-login, .sidenav-overlay_account, [aria-label="Entrar"]')) {
+      cacheGuestShowcases();
+    }
+  }, true);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initShowcaseGuestRestore);
+  } else {
+    initShowcaseGuestRestore();
+  }
+  window.addEventListener('load', initShowcaseGuestRestore);
 })();

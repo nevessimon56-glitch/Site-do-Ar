@@ -31,7 +31,12 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - **NÃO** deve ter: `{% assign productPricePrimary = product.primaryPrice %}`
 
 ### mega-menu.js
-- Deve ter: `VERSAO: 2026-07-15-js-price-lock-v1` no topo (inclui dock mobile + trava de preco)
+- Deve ter: `VERSAO: 2026-07-15-js-showcase-guest-restore-v1` no topo
+- `lockSitePriceCards()` — trava preco Pix nos cards
+- `restoreShowcasesFromGuest()` — logado com 1 produto: restaura vitrine de visitante
+
+### theme.liquid
+- Deve ter: `window.__isStoreLoggedIn` e `window.__storeCustomer` (detecta login no JS)
 - Chips discretos em páginas internas (não home, não catálogo)
 - Catálogo mobile em grade 2 colunas (`showcase-search_grid--mobile-2col`)
 - **Dock inferior fixo** (`mobile-catalog-dock`) — Início | Catálogo | Categorias/Filtros
@@ -92,8 +97,8 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - Pagina do produto: mesmo preco Pix logado/deslogado
 
 ### mega-menu.js
-- Versão: `2026-07-15-js-price-lock-v1`
-- `lockSitePriceCards()` reaplica preco dos `data-site-*` apos login
+- Versão: `2026-07-15-js-showcase-guest-restore-v1`
+- `restoreShowcasesFromGuest()` reaplica vitrine de visitante quando logado so ve 1 produto
 
 ### Painel WDNA (recomendado)
 Em **Configurações > Produto > Preço**, alinhar:

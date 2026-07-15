@@ -247,6 +247,8 @@
         }
     }
     const customer = {{ customer | json }};
+    window.__storeCustomer = customer || null;
+    window.__isStoreLoggedIn = {% if customer %}true{% else %}false{% endif %};
     if (typeof mb_track !== 'undefined') {
         mb_track('setRecoveryUrl', 'https://{{ store.url }}/checkout');
     }
