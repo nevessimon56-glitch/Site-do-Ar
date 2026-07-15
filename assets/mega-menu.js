@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-showcase-guest-restore-v4
+ * VERSAO: 2026-07-15-js-showcase-guest-restore-v5
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1363,13 +1363,42 @@
 (function () {
   'use strict';
 
-  var CACHE_PREFIX = 'site-ar-showcase-guest-v4';
+  var CACHE_PREFIX = 'site-ar-showcase-guest-v5';
+  var catalogPageLoadInFlight = false;
   var restoreInFlight = false;
   var restoreDone = false;
 
   function isCatalogPage() {
     var p = (location.pathname || '').toLowerCase().replace(/\/+$/, '') || '/';
-    return p === '/todos-os-produtos' || p.indexOf('/busca') === 0 || !!document.querySelector('main.search-main');
+    if (p === '/todos-os-produtos' || p.indexOf('/busca') === 0) return true;
+    return !!document.querySelector('main.search-main');
+  }
+
+  function isCatalogUrl() {
+    var p = (location.pathname || '').toLowerCase().replace(/\/+$/, '') || '/';
+    return p === '/todos-os-produtos';
+  }
+
+  function isCatalogBrokenPage() {
+    if (!isCatalogUrl()) return false;
+    if (document.querySelector('main.notfound-main')) return true;
+    var notfound = document.querySelector('.notfound-text p');
+    if (notfound && /não retornou nenhum resultado/i.test(notfound.textContent || '')) return true;
+    return false;
+  }
+
+  function normalizeCatalogGuestUrl(url) {
+    var u;
+    try {
+      u = new URL(url || (location.pathname + location.search), location.origin);
+    } catch (e) {
+      u = new URL('/todos-os-produtos', location.origin);
+    }
+    var pag = u.searchParams.get('pag') || '1';
+    var qtdPag = u.searchParams.get('qtdPag') || String(getCatalogPerPage());
+    var ordem = u.searchParams.get('ordem') || 'score';
+    return '/todos-os-produtos?categorias=todos-os-produtos&ordem=' +
+      encodeURIComponent(ordem) + '&pag=' + pag + '&qtdPag=' + qtdPag;
   }
 
   function getCatalogList(root) {
@@ -1460,11 +1489,16 @@
       });
     }
     if (isCatalogPage()) {
-      var pagScr = extractGuestSearchPagination(document.documentElement.innerHTML);
+      var pagScr = extractGuestSearchState(document.documentElement.innerHTML);
       if (pagScr) {
         payload.push({
+          key: 'catalog-search-state',
+          searchState: pagScr,
+          count: 0
+        });
+        payload.push({
           key: 'catalog-pagination',
-          pagination: pagScr,
+          pagination: pagScr.pagination,
           count: 0
         });
       }
@@ -1504,13 +1538,16 @@
       if (listNeedsRestore(lists[i])) return true;
     }
 
-    if (isCatalogPage()) {
+    if (isCatalogPage() || isCatalogUrl()) {
+      if (isCatalogBrokenPage()) return true;
       var searchList = getCatalogList();
-      if (!searchList) return false;
+      if (!searchList) return isCatalogUrl();
       var current = countItems(searchList);
       var cached = getCachedGuestCount();
       if (cached > current) return true;
       if (catalogPaginationMismatch()) return true;
+      var pagMatch = (location.search || '').match(/[?&]pag=(\d+)/);
+      if (pagMatch && parseInt(pagMatch[1], 10) > 1 && current < getCatalogPerPage()) return true;
       var hasFilters = (location.search || '').length > 1;
       if (!hasFilters && current > 0 && current < 20) return true;
     }
@@ -1586,6 +1623,29 @@
     };
   }
 
+  function extractGuestSearchState(html) {
+    var pagination = extractGuestSearchPagination(html);
+    if (!pagination) return null;
+    var pathMatch = (html || '').match(/currentPagePath\s*:\s*'([^']+)'/);
+    var query = {
+      pag: 1,
+      qtdPag: 12,
+      ordem: 'score',
+      categorias: ['todos-os-produtos']
+    };
+    var pagM = (html || '').match(/"pag"\s*:\s*(\d+)/);
+    var qtdM = (html || '').match(/"qtdPag"\s*:\s*(\d+)/);
+    var ordemM = (html || '').match(/"ordem"\s*:\s*"([^"]+)"/);
+    if (pagM) query.pag = parseInt(pagM[1], 10);
+    if (qtdM) query.qtdPag = parseInt(qtdM[1], 10);
+    if (ordemM) query.ordem = ordemM[1];
+    return {
+      pagination: pagination,
+      query: query,
+      currentPagePath: pathMatch ? pathMatch[1] : '/todos-os-produtos'
+    };
+  }
+
   function getAlpineSearchComponent() {
     var main = document.querySelector('main.search-main');
     if (!main) return null;
@@ -1621,21 +1681,35 @@
     return true;
   }
 
-  function syncCatalogPagination(pagination) {
-    if (!pagination || !pagination.pages) return false;
+  function syncCatalogSearchState(state) {
+    if (!state || !state.pagination) return false;
     var comp = getAlpineSearchComponent();
     if (!comp || !comp.state || !comp.state.search) return false;
 
     comp.state.search.pagination = {
-      total: pagination.total,
-      current: pagination.current,
-      pages: pagination.pages
+      total: state.pagination.total,
+      current: state.pagination.current,
+      pages: state.pagination.pages
     };
+
+    if (state.query) {
+      comp.state.search.query = {
+        qtdPag: state.query.qtdPag || getCatalogPerPage(),
+        pag: state.query.pag || 1,
+        ordem: state.query.ordem || 'score',
+        categorias: state.query.categorias || ['todos-os-produtos']
+      };
+    } else if (!comp.state.search.query || !comp.state.search.query.categorias) {
+      comp.state.search.query = comp.state.search.query || {};
+      comp.state.search.query.categorias = ['todos-os-produtos'];
+    }
+
+    comp.state.currentPagePath = state.currentPagePath || '/todos-os-produtos';
 
     if (typeof StoreSDK !== 'undefined' && StoreSDK.utils && StoreSDK.utils.initSearchPagination) {
       comp.state.searchPagination = StoreSDK.utils.initSearchPagination(
         comp.state.search,
-        comp.state.currentPagePath || location.pathname
+        comp.state.currentPagePath
       );
     }
 
@@ -1647,10 +1721,18 @@
     return true;
   }
 
+  function syncCatalogPagination(pagination) {
+    return syncCatalogSearchState({ pagination: pagination });
+  }
+
+  function syncCatalogSearchStateFromHtml(html) {
+    var state = extractGuestSearchState(html);
+    if (!state) return false;
+    return syncCatalogSearchState(state);
+  }
+
   function syncCatalogPaginationFromHtml(html) {
-    var pagination = extractGuestSearchPagination(html);
-    if (!pagination) return false;
-    return syncCatalogPagination(pagination);
+    return syncCatalogSearchStateFromHtml(html);
   }
 
   function applyPayload(payload, lists) {
@@ -1663,7 +1745,11 @@
         continue;
       }
       if (entry.key === 'catalog-pagination' && entry.pagination) {
-        if (syncCatalogPagination(entry.pagination)) restored = true;
+        if (syncCatalogSearchState(entry)) restored = true;
+        continue;
+      }
+      if (entry.key === 'catalog-search-state' && entry.searchState) {
+        if (syncCatalogSearchState(entry.searchState)) restored = true;
         continue;
       }
       var list = findListForEntry(entry, lists);
@@ -1712,11 +1798,16 @@
         count: 0
       });
     }
-    var guestPag = extractGuestSearchPagination(doc.documentElement.innerHTML);
+    var guestPag = extractGuestSearchState(doc.documentElement.innerHTML);
     if (guestPag) {
       payload.push({
+        key: 'catalog-search-state',
+        searchState: guestPag,
+        count: 0
+      });
+      payload.push({
         key: 'catalog-pagination',
-        pagination: guestPag,
+        pagination: guestPag.pagination,
         count: 0
       });
     }
@@ -1730,15 +1821,106 @@
     return countItems(guestList) > countItems(currentList);
   }
 
-  function fetchGuestPageHtml() {
-    var url = location.pathname + location.search;
-    return fetch(url, {
+  function fetchGuestPageHtml(url) {
+    var target = url || (location.pathname + location.search);
+    if (isCatalogUrl() || /todos-os-produtos/i.test(target)) {
+      target = normalizeCatalogGuestUrl(target);
+    }
+    return fetch(target, {
       credentials: 'omit',
       cache: 'no-store',
       headers: { Accept: 'text/html' }
     }).then(function (res) {
       if (!res.ok) throw new Error('guest-fetch-failed');
       return res.text();
+    });
+  }
+
+  function replaceMainFromGuestDoc(doc) {
+    var guestMain = doc.querySelector('main.search-main');
+    var currentMain = document.querySelector('main');
+    if (!guestMain || !currentMain) return false;
+    currentMain.replaceWith(guestMain.cloneNode(true));
+    if (typeof Alpine !== 'undefined' && typeof Alpine.initTree === 'function') {
+      try {
+        Alpine.initTree(document.querySelector('main.search-main'));
+      } catch (e) {}
+    }
+    return true;
+  }
+
+  function applyGuestCatalogDoc(doc, html) {
+    var restored = false;
+    if (isCatalogBrokenPage() || !document.querySelector('main.search-main')) {
+      restored = replaceMainFromGuestDoc(doc);
+    } else {
+      var guestList = getCatalogList(doc);
+      var currentList = getCatalogList();
+      if (guestList && currentList) {
+        currentList.innerHTML = guestList.innerHTML;
+        restored = countItems(currentList) > 0;
+      }
+      syncCatalogCountFromDoc(doc);
+      if (guestList) restored = true;
+    }
+    if (html && syncCatalogSearchStateFromHtml(html)) restored = true;
+    return restored;
+  }
+
+  function loadGuestCatalogPage(url, pushHistory) {
+    if (catalogPageLoadInFlight) return Promise.resolve(false);
+    catalogPageLoadInFlight = true;
+    var guestUrl = normalizeCatalogGuestUrl(url);
+    return fetchGuestPageHtml(guestUrl)
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var restored = applyGuestCatalogDoc(doc, html);
+        if (pushHistory !== false) {
+          history.pushState({ catalogGuest: true }, '', guestUrl);
+        }
+        if (restored) afterShowcaseRestore();
+        return restored;
+      })
+      .catch(function () {
+        return false;
+      })
+      .then(function (result) {
+        catalogPageLoadInFlight = false;
+        return result;
+      });
+  }
+
+  function recoverBrokenCatalogPage() {
+    if (!isLoggedIn() || !isCatalogUrl() || !isCatalogBrokenPage()) return;
+    loadGuestCatalogPage(location.pathname + location.search, true);
+  }
+
+  function initCatalogGuestPagination() {
+    if (window.__catalogGuestPaginationReady) return;
+    window.__catalogGuestPaginationReady = true;
+
+    document.addEventListener('click', function (e) {
+      if (!isLoggedIn()) return;
+      var link = e.target && e.target.closest ? e.target.closest('.search-options-pagination_link') : null;
+      if (!link || !link.href || link.href.indexOf('javascript:') >= 0) return;
+
+      var path = '';
+      try {
+        path = new URL(link.href, location.origin).pathname.toLowerCase().replace(/\/+$/, '');
+      } catch (err) {
+        return;
+      }
+      if (path !== '/todos-os-produtos') return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      loadGuestCatalogPage(link.href, true);
+    }, true);
+
+    window.addEventListener('popstate', function () {
+      if (!isLoggedIn() || !isCatalogUrl()) return;
+      restoreDone = false;
+      loadGuestCatalogPage(location.pathname + location.search, false);
     });
   }
 
@@ -1806,7 +1988,9 @@
           var anyMore = false;
           var lists = getShowcaseLists();
           for (var g = 0; g < guestPayload.length; g++) {
-            if (guestPayload[g].key === 'catalog-count' || guestPayload[g].key === 'catalog-pagination') continue;
+            if (guestPayload[g].key === 'catalog-count' ||
+                guestPayload[g].key === 'catalog-pagination' ||
+                guestPayload[g].key === 'catalog-search-state') continue;
             var gl = findListForEntry(guestPayload[g], lists);
             if (gl && guestPayload[g].count > countItems(gl)) anyMore = true;
           }
@@ -1852,6 +2036,11 @@
   function initShowcaseGuestRestore() {
     if (!isLoggedIn()) {
       cacheGuestShowcases();
+      return;
+    }
+    initCatalogGuestPagination();
+    if (isCatalogBrokenPage()) {
+      recoverBrokenCatalogPage();
       return;
     }
     restoreShowcasesFromGuest();
