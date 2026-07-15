@@ -26,6 +26,10 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - Deve ter: `VERSAO: 2026-07-15-product-v1`
 - **NÃO** deve ter: `{% assign productPricePrimary = product.primaryPrice %}`
 
+### mega-menu.js
+- Deve ter: `VERSAO: 2026-07-15-js-perf-v2` no topo do arquivo
+- Observer só nas vitrines (não no `body` inteiro a cada mutação)
+
 ### product-spec-icons.liquid
 - Deve ter: `VERSAO: 2026-07-15-spec-v3`
 - Deve ter: `data-spec-icons="v3"` no `<ul class="showcase-spec-bar">`

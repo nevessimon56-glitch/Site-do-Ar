@@ -1,5 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
+ * VERSAO: 2026-07-15-js-perf-v2
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -280,8 +281,18 @@
   var cardObserver = null;
   var sliderRefreshTimer = 0;
   var authChangeTimer = 0;
+  var lastSliderRefresh = 0;
+  var SLIDER_REFRESH_MIN_MS = 4000;
+  var WIFI_FIXED = 'data-wifi-fixed';
+  var showcaseObserver = null;
+  var showcaseRootsSeen = null;
+  var bindObserverRaf = 0;
 
-  function refreshThemeShowcaseSliders() {
+  function refreshThemeShowcaseSliders(force) {
+    var now = Date.now();
+    if (!force && now - lastSliderRefresh < SLIDER_REFRESH_MIN_MS) return;
+    lastSliderRefresh = now;
+
     var lists = document.querySelectorAll('.showcase-list');
     for (var i = 0; i < lists.length; i++) {
       var items = lists[i].querySelectorAll('.showcase-item');
@@ -297,46 +308,44 @@
       jQuery('.showcase-list.slick-initialized').each(function () {
         try {
           jQuery(this).slick('setPosition');
-          jQuery(this).slick('refresh');
         } catch (e) {}
       });
-      jQuery('.showcase-list').not('.slick-initialized').each(function () {
-        var $list = jQuery(this);
-        if ($list.find('.showcase-item').length && typeof $list.slick === 'function') {
-          try { $list.slick(); } catch (e) {}
-        }
-      });
-    }
-
-    var lazyImgs = document.querySelectorAll('.showcase img.lazy:not(.loaded)');
-    for (var k = 0; k < lazyImgs.length; k++) {
-      var ds = lazyImgs[k].getAttribute('data-src');
-      if (ds) {
-        lazyImgs[k].setAttribute('src', ds);
-        lazyImgs[k].classList.add('loaded');
-      }
-    }
-
-    var themeInits = ['initShowcase', 'initShowcaseCarousel', 'initShowcases', 'loadShowcase', 'showcaseSlider'];
-    for (var n = 0; n < themeInits.length; n++) {
-      if (typeof window[themeInits[n]] === 'function') {
-        try { window[themeInits[n]](); } catch (e) {}
+      if (force) {
+        jQuery('.showcase-list.slick-initialized').each(function () {
+          try {
+            jQuery(this).slick('refresh');
+          } catch (e) {}
+        });
+        jQuery('.showcase-list').not('.slick-initialized').each(function () {
+          var $list = jQuery(this);
+          if ($list.find('.showcase-item').length && typeof $list.slick === 'function') {
+            try { $list.slick(); } catch (e) {}
+          }
+        });
       }
     }
   }
 
-  function scheduleSliderRefresh(delay) {
+  function scheduleSliderRefresh(delay, force) {
     clearTimeout(sliderRefreshTimer);
-    sliderRefreshTimer = setTimeout(refreshThemeShowcaseSliders, delay || 200);
+    sliderRefreshTimer = setTimeout(function () {
+      refreshThemeShowcaseSliders(!!force);
+    }, delay || 300);
+  }
+
+  function refreshShowcaseCards(root) {
+    var scope = root || document;
+    scan(scope);
+    fixCardInstallments(scope);
+    fixWrongWifiTags(scope);
   }
 
   function onAuthStateChange() {
     clearTimeout(authChangeTimer);
     authChangeTimer = setTimeout(function () {
-      initProductHoverImage();
-      scheduleSliderRefresh(150);
-      scheduleSliderRefresh(700);
-    }, 80);
+      refreshShowcaseCards(document);
+      scheduleSliderRefresh(500, true);
+    }, 120);
   }
 
   function isTouchOnly() {
@@ -625,7 +634,7 @@
 
   function queueBindLink(link) {
     if (link.getAttribute(PROCESSED) === '1') return;
-    if (isTouchOnly() && typeof IntersectionObserver !== 'undefined') {
+    if (typeof IntersectionObserver !== 'undefined') {
       if (!cardObserver) {
         cardObserver = new IntersectionObserver(function (entries) {
           for (var i = 0; i < entries.length; i++) {
@@ -633,7 +642,7 @@
             cardObserver.unobserve(entries[i].target);
             bindLink(entries[i].target);
           }
-        }, { rootMargin: '120px 0px', threshold: 0.01 });
+        }, { rootMargin: '160px 0px', threshold: 0.01 });
       }
       cardObserver.observe(link);
       return;
@@ -686,7 +695,9 @@
     var cards = getShowcaseCards(root);
     for (var i = 0; i < cards.length; i++) {
       var card = cards[i];
-      var titleEl = card.querySelector('.showcase-product_name, .showcase-product_title, .product-name, h2, h3, a[title]');
+      if (card.getAttribute(WIFI_FIXED) === '1') continue;
+
+      var titleEl = card.querySelector('.showcase-product_name, .showcase-product_title, .product-name, h2, h3');
       var title = '';
       if (titleEl) {
         title = (titleEl.getAttribute('title') || titleEl.textContent || '').toLowerCase();
@@ -696,12 +707,13 @@
       var hasWifiInTitle = /\bwi-?fi\b/.test(title);
       var isMechanical = /\bmec[aâ]nico\b/.test(title);
       var isWindow = /\bjanela\b/.test(title);
-      if (!isMechanical && !(isWindow && !hasWifiInTitle)) continue;
-
-      var wifiTags = card.querySelectorAll('.showcase-spec-bar__tag--wifi');
-      for (var j = 0; j < wifiTags.length; j++) {
-        if (wifiTags[j].parentNode) wifiTags[j].parentNode.removeChild(wifiTags[j]);
+      if (isMechanical || (isWindow && !hasWifiInTitle)) {
+        var wifiTags = card.querySelectorAll('.showcase-spec-bar__tag--wifi');
+        for (var j = 0; j < wifiTags.length; j++) {
+          if (wifiTags[j].parentNode) wifiTags[j].parentNode.removeChild(wifiTags[j]);
+        }
       }
+      card.setAttribute(WIFI_FIXED, '1');
     }
   }
 
@@ -726,30 +738,50 @@
     mutationRaf = requestAnimationFrame(function () {
       mutationRaf = 0;
       for (var i = 0; i < roots.length; i++) {
-        scan(roots[i]);
-        fixCardInstallments(roots[i]);
-        fixWrongWifiTags(roots[i]);
+        refreshShowcaseCards(roots[i]);
       }
-      scheduleSliderRefresh(200);
+    });
+  }
+
+  function findShowcaseObserveTargets() {
+    return document.querySelectorAll('.showcase-list, .showcase-section, section.showcase, .showcase');
+  }
+
+  function bindShowcaseObserver() {
+    if (typeof MutationObserver === 'undefined') return;
+    if (!showcaseObserver) {
+      showcaseRootsSeen = new WeakSet();
+      showcaseObserver = new MutationObserver(scheduleMutationWork);
+    }
+    var targets = findShowcaseObserveTargets();
+    for (var i = 0; i < targets.length; i++) {
+      if (showcaseRootsSeen.has(targets[i])) continue;
+      showcaseRootsSeen.add(targets[i]);
+      showcaseObserver.observe(targets[i], { childList: true, subtree: true });
+    }
+  }
+
+  function scheduleBindShowcaseObserver() {
+    if (bindObserverRaf) return;
+    bindObserverRaf = requestAnimationFrame(function () {
+      bindObserverRaf = 0;
+      bindShowcaseObserver();
     });
   }
 
   function initProductHoverImage() {
     resetTouchHoverStates();
-    scan(document);
-    fixCardInstallments(document);
-    fixWrongWifiTags(document);
+    refreshShowcaseCards(document);
 
     if (!hoverInitDone) {
       hoverInitDone = true;
       cleanupDuplicateSpecBars();
-      if (typeof MutationObserver !== 'undefined' && document.body && !document.body._productHoverObserver) {
-        document.body._productHoverObserver = new MutationObserver(scheduleMutationWork);
-        document.body._productHoverObserver.observe(document.body, { childList: true, subtree: true });
+      bindShowcaseObserver();
+      if (typeof MutationObserver !== 'undefined' && document.body && !document.body._showcaseRootWatcher) {
+        document.body._showcaseRootWatcher = new MutationObserver(scheduleBindShowcaseObserver);
+        document.body._showcaseRootWatcher.observe(document.body, { childList: true, subtree: false });
       }
     }
-
-    scheduleSliderRefresh(250);
   }
 
   function cleanupDuplicateSpecBars() {
