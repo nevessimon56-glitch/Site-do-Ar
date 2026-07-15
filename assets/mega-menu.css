@@ -566,7 +566,7 @@
   visibility: visible !important;
 }
 
-/* Faixa de especificações nos cards — pills de texto, mobile-first */
+/* Faixa de especificações nos cards — pills coloridas por tipo (SPEC-TAGS-COLORS-v1) */
 
 .showcase-spec-wrap {
   width: 100%;
@@ -599,7 +599,7 @@
   padding: 0 7px;
   margin: 0;
   border: 1px solid #c5d3de;
-  border-radius: 3px;
+  border-radius: 4px;
   background: #fff;
   color: #3a5f7d;
   font-family: Arial, Helvetica, sans-serif;
@@ -610,20 +610,51 @@
   text-transform: uppercase;
   white-space: nowrap;
   box-sizing: border-box;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
 }
 
 .showcase-spec-bar__tag--procel {
-  border-color: #8bc53f;
-  background: #8bc53f;
+  border-color: #16a34a;
+  background: #22c55e;
   color: #fff;
   min-width: 20px;
   padding: 0 5px;
 }
 
+.showcase-spec-bar__tag--cycle-qf {
+  border-color: #fb923c;
+  background: #fff1e8;
+  color: #c2410c;
+}
+
+.showcase-spec-bar__tag--cycle-frio {
+  border-color: #38bdf8;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
 .showcase-spec-bar__tag--inverter {
-  border-color: #c4b8e8;
-  background: #f3effc;
-  color: #5b4a9e;
+  border-color: #a78bfa;
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.showcase-spec-bar__tag--cobre {
+  border-color: #d4a574;
+  background: #fef3e2;
+  color: #b45309;
+}
+
+.showcase-spec-bar__tag--voltage {
+  border-color: #60a5fa;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.showcase-spec-bar__tag--wifi {
+  border-color: #2dd4bf;
+  background: #ccfbf1;
+  color: #0f766e;
 }
 
 /* Preços do card — Pix + parcelas (override do tema) */
@@ -961,34 +992,46 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   }
 
-  .showcase-spec-bar__tag--cycle {
-    border-color: #b8d9f2;
-    background: #e8f4fc;
-    color: #2a6fa8;
+  .showcase-spec-bar__tag--cycle-qf {
+    border-color: #fb923c;
+    background: #fff1e8;
+    color: #c2410c;
+  }
+
+  .showcase-spec-bar__tag--cycle-frio {
+    border-color: #38bdf8;
+    background: #e0f2fe;
+    color: #0369a1;
   }
 
   .showcase-spec-bar__tag--cobre {
-    border-color: #e8d49a;
-    background: #fff8e6;
-    color: #9a7209;
+    border-color: #d4a574;
+    background: #fef3e2;
+    color: #b45309;
   }
 
   .showcase-spec-bar__tag--voltage {
-    border-color: #b8d4f0;
-    background: #edf5fc;
-    color: #1f5f99;
+    border-color: #60a5fa;
+    background: #eff6ff;
+    color: #1d4ed8;
   }
 
   .showcase-spec-bar__tag--wifi {
-    border-color: #b8dde5;
-    background: #edf7fa;
-    color: #3d7f8f;
+    border-color: #2dd4bf;
+    background: #ccfbf1;
+    color: #0f766e;
   }
 
   .showcase-spec-bar__tag--inverter {
-    border-color: #c4b8e8;
-    background: #f3effc;
-    color: #5b4a9e;
+    border-color: #a78bfa;
+    background: #ede9fe;
+    color: #6d28d9;
+  }
+
+  .showcase-spec-bar__tag--procel {
+    border-color: #16a34a;
+    background: #22c55e;
+    color: #fff;
   }
 
   .showcase-product .card-header h3 {

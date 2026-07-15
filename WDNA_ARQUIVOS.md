@@ -31,9 +31,13 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - Observer só nas vitrines (não no `body` inteiro a cada mutação)
 
 ### product-spec-icons.liquid
-- Deve ter: `VERSAO: 2026-07-15-spec-v3`
-- Deve ter: `data-spec-icons="v3"` no `<ul class="showcase-spec-bar">`
+- Deve ter: `VERSAO: 2026-07-15-spec-v4`
+- Deve ter: `data-spec-icons="v4"` no `<ul class="showcase-spec-bar">`
+- Pills coloridas: Q/F laranja, Frio azul, Inverter roxo, Cobre dourado, Voltagem azul, Wi-Fi verde-água, Procel verde
 - Janela/mecânico **não** devem mostrar pill Wi-Fi
+
+### mega-menu.css
+- Deve ter comentário `SPEC-TAGS-COLORS-v1` na seção das pills
 
 ### No site (F12 → Inspecionar card)
 - `<li class="showcase-item" data-showcase-tpl="v3-site-price">` = vitrine atualizada

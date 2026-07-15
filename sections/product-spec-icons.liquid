@@ -1,6 +1,6 @@
 {% comment %}
   Ícones de especificação — pills de texto (sem SVG, compatível mobile)
-  VERSAO: 2026-07-15-spec-v3
+  VERSAO: 2026-07-15-spec-v4
   Lê a aba Especificações do produto (tabela HTML), atributos e título.
   Uso: {% render 'sections/product-spec-icons', product: product %}
 {% endcomment %}
@@ -197,15 +197,15 @@
 {% endif %}
 
 {% if hasSpecIcons %}
-<ul class="showcase-spec-bar" data-spec-icons="v3" aria-label="Características do produto">
+<ul class="showcase-spec-bar" data-spec-icons="v4" aria-label="Características do produto">
   {% if iconProcelA %}
   <li class="showcase-spec-bar__tag showcase-spec-bar__tag--procel" title="Classificação A — Procel">A</li>
   {% endif %}
   {% if iconQuenteFrio %}
-  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cycle" title="Quente e Frio">Q/F</li>
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cycle-qf" title="Quente e Frio">Q/F</li>
   {% endif %}
   {% if iconFrio and iconQuenteFrio == false %}
-  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cycle" title="Frio">Frio</li>
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cycle-frio" title="Frio">Frio</li>
   {% endif %}
   {% if iconInverter %}
   <li class="showcase-spec-bar__tag showcase-spec-bar__tag--inverter" title="Tecnologia Inverter">Inverter</li>
