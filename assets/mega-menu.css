@@ -649,6 +649,12 @@
   border: 0 !important;
 }
 
+@keyframes product-carousel-hint {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 @media (max-width: 767px) {
   .showcase-item .showcase-product.card {
     display: flex;
@@ -777,11 +783,6 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     pointer-events: none;
     animation: product-carousel-hint 4s ease forwards;
-  }
-
-  @keyframes product-carousel-hint {
-    0%, 70% { opacity: 1; }
-    100% { opacity: 0; }
   }
 
   .product-hover-wrap {
