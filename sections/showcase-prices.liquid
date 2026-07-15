@@ -1,0 +1,35 @@
+{% comment %}
+  Preços do card — Pix + parcelas no cartão
+  Uso: {% render 'sections/showcase-prices', product: product, productPricePrimary: productPricePrimary, productPriceSecond: productPriceSecond %}
+{% endcomment %}
+
+{% assign _pixPrice = product.price.price %}
+{% assign _listPrice = product.price.price %}
+{% assign _hasPixPromo = false %}
+
+{% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+  {% assign _hasPixPromo = true %}
+  {% assign _pixPrice = product.price.promotionPrice %}
+{% endif %}
+
+{% if _hasPixPromo %}
+  {% if _listPrice > _pixPrice %}
+    <del class="showcase-prices_strike"><s>{{ _listPrice | money }}</s></del>
+  {% endif %}
+  <p class="showcase-prices_price showcase-prices_price--pix">
+    <b>{{ _pixPrice | money }}</b>
+    <span class="showcase-prices_label">no Pix</span>
+  </p>
+{% else %}
+  {% assign _displayPrice = productPricePrimary.price %}
+  <p class="showcase-prices_price">
+    <b>{{ _displayPrice | money }}</b>
+  </p>
+{% endif %}
+
+{% if productPriceSecond and productPriceSecond.installment > 1 %}
+  <p class="showcase-prices_installment">
+    <span class="showcase-prices_installment-prefix">ou</span>
+    <span class="showcase-prices_installment-text">em até <b>{{ productPriceSecond.installment }}x</b> de <b>{{ productPriceSecond.installmentValue | money }}</b> sem juros</span>
+  </p>
+{% endif %}

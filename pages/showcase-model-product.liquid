@@ -100,18 +100,7 @@
                             {% assign classShowcaseLoginPrice = ' login-btn_logged d-hide' %}
                         {% endif %}
                         <div class="showcase-prices{{ classShowcaseLoginPrice }}">
-                            {% assign _hasTablePromo = false %}
-                            {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
-                                {% assign _hasTablePromo = true %}
-                            {% endif %}
-                            {% if _hasTablePromo %}
-                                <del class="showcase-prices_strike"><s>{{ product.price.price | money }}</s></del>
-                                <p class="showcase-prices_price"><b>{{ product.price.promotionPrice | money }}</b></p>
-                                <p class="showcase-prices_pix">{{ product.price.promotionMargin | round }}% de desconto no Pix</p>
-                            {% else %}
-                                {% assign _displayPrice = productPricePrimary.price %}
-                                <p class="showcase-prices_price"><b>{{ _displayPrice | money }}</b></p>
-                            {% endif %}
+                            {% render 'sections/showcase-prices', product: product, productPricePrimary: productPricePrimary, productPriceSecond: productPriceSecond %}
                         </div>
                     {% endif %}
                     <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">

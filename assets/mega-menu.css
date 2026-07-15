@@ -626,6 +626,58 @@
   color: #5b4a9e;
 }
 
+/* Preços do card — Pix + parcelas */
+
+.showcase-prices {
+  text-align: center;
+  line-height: 1.3;
+}
+
+.showcase-prices_strike {
+  display: block;
+  font-size: 11px;
+  color: #9aa8b5;
+  margin-bottom: 2px;
+}
+
+.showcase-prices_price {
+  margin: 0 0 4px;
+  font-size: 17px;
+  line-height: 1.2;
+  color: #1a6eb5;
+}
+
+.showcase-prices_price b {
+  font-weight: 800;
+}
+
+.showcase-prices_price--pix .showcase-prices_label {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2d8a47;
+  text-transform: lowercase;
+}
+
+.showcase-prices_installment {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #5a6f82;
+}
+
+.showcase-prices_installment-prefix {
+  margin-right: 4px;
+  color: #8a9aab;
+  text-transform: lowercase;
+}
+
+.showcase-prices_installment-text b {
+  font-weight: 800;
+  color: #3d5a73;
+}
+
 /* Esconde duplicatas (versão antiga dentro da imagem) */
 .showcase-product_image .showcase-spec-bar,
 .showcase-product_image .showcase-spec-wrap,
@@ -901,16 +953,14 @@
     color: #1a6eb5;
   }
 
-  .showcase-product .showcase-prices_pix {
-    display: inline-block;
+  .showcase-product .showcase-prices_price--pix .showcase-prices_label {
+    font-size: 11px;
+  }
+
+  .showcase-product .showcase-prices_installment {
     font-size: 10px;
-    line-height: 1.2;
-    margin-top: 4px;
-    padding: 3px 8px;
-    border-radius: 999px;
-    background: #e8f7ec;
-    color: #2d8a47;
-    font-weight: 700;
+    line-height: 1.3;
+    padding: 0 4px;
   }
 
   .showcase-product .showcase-product_buy {
