@@ -1,0 +1,39 @@
+{% comment %}
+  Preços do card — Pix + parcelas no cartão (valor cheio)
+  Usa apenas product.price (tabela do site). Não usa primaryPrice (pode ser ML/marketplace).
+  Uso: {% render 'sections/showcase-prices', product: product, productPricePrimary: productPricePrimary, productPriceSecond: productPriceSecond %}
+{% endcomment %}
+
+{% assign listPriceCard = product.price.price %}
+{% assign pixPriceCard = product.price.price %}
+{% assign hasPixPromoCard = 0 %}
+{% assign pixPercentCard = 5 %}
+
+{% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+  {% assign hasPixPromoCard = 1 %}
+  {% assign pixPriceCard = product.price.promotionPrice %}
+  {% assign pixPercentCard = product.price.promotionMargin | round %}
+{% endif %}
+
+{% if hasPixPromoCard == 1 %}
+  {% if listPriceCard > pixPriceCard %}
+    <del class="showcase-prices_strike"><s>{{ listPriceCard | money }}</s></del>
+  {% endif %}
+  <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b></p>
+  <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% off no Pix</p>
+{% else %}
+  <p class="showcase-prices_price"><b>{{ product.price.price | money }}</b></p>
+{% endif %}
+
+{% if product.secondaryPrice %}
+  {% if product.secondaryPrice.installment > 1 %}
+    {% assign plotBasePrice = listPriceCard %}
+    {% if product.secondaryPrice.price and product.secondaryPrice.price > plotBasePrice %}
+      {% assign plotBasePrice = product.secondaryPrice.price %}
+    {% endif %}
+    <p class="showcase-prices_installment" data-plot-base="{{ plotBasePrice }}" data-plot-count="{{ product.secondaryPrice.installment }}">
+      <span class="showcase-prices_installment-prefix">ou</span>
+      <span class="showcase-prices_installment-text">em até <b>{{ product.secondaryPrice.installment }}x</b> de <b class="showcase-prices_installment-value">{{ plotBasePrice | divided_by: product.secondaryPrice.installment | money }}</b> sem juros</span>
+    </p>
+  {% endif %}
+{% endif %}
