@@ -650,8 +650,87 @@
 }
 
 @media (max-width: 767px) {
+  .showcase-item .showcase-product.card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .showcase-product_image.card-image {
+    overflow: hidden;
+    padding: 8px 8px 0;
+    background: #fff;
+    min-height: 0;
+    flex-shrink: 0;
+  }
+
+  .showcase-product_link__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 100%;
+    min-height: 150px;
+    max-height: 190px;
+    background: #f8fafb;
+    border-radius: 6px;
+  }
+
+  .product-hover-wrap {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;
+    min-height: 150px;
+    max-height: 190px;
+    overflow: hidden !important;
+    line-height: normal !important;
+    background: #f8fafb;
+    position: relative !important;
+  }
+
+  .product-hover-wrap img.product-hover-img--main,
+  .product-hover-wrap img.product-hover-swap:not(.product-hover-img--hover),
+  .showcase-product_link__image > img.product-hover-swap,
+  .showcase-product_link__image > img.lazy {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    max-width: 92% !important;
+    max-height: 170px !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    object-fit: contain !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    transform: none !important;
+  }
+
+  .product-hover-wrap img.product-hover-img--hover,
+  .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--hover,
+  .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--hover {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--main,
+  .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--main {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .showcase-product .card-header {
+    padding: 8px 10px 0;
+  }
+
   .showcase-spec-wrap {
-    padding: 0 8px 6px;
+    padding: 0 10px 4px;
   }
 
   .showcase-spec-bar {
@@ -679,7 +758,8 @@
   }
 
   .showcase-product .card-footer {
-    padding-top: 4px;
+    padding: 6px 10px 10px;
+    margin-top: auto;
   }
 
   .showcase-product .showcase-prices_price {

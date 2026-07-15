@@ -371,30 +371,23 @@
     var hoverSrc = getHoverSrc(img);
     if (!hoverSrc) return;
 
+    if (isTouchOnly()) {
+      link.classList.remove('is-hovering');
+      link.setAttribute(PROCESSED, '1');
+      return;
+    }
+
     function attach() {
       if (!link.isConnected || link.getAttribute(PROCESSED) === '1') return;
       setupDualImage(link, img, hoverSrc);
       link.setAttribute(PROCESSED, '1');
-      var showingHover = false;
 
       link.addEventListener('mouseenter', function () {
-        if (isTouchOnly()) return;
         showHoverImage(link, hoverSrc);
-        showingHover = true;
       });
       link.addEventListener('mouseleave', function () {
-        if (isTouchOnly()) return;
         hideHoverImage(link);
-        showingHover = false;
       });
-      link.addEventListener('touchend', function (e) {
-        if (!isTouchOnly()) return;
-        if (!showingHover) {
-          e.preventDefault();
-          showHoverImage(link, hoverSrc);
-          showingHover = true;
-        }
-      }, { passive: false });
     }
 
     if (img.getAttribute('data-hover-src')) {
@@ -414,7 +407,16 @@
     }
   }
 
+  function resetTouchHoverStates() {
+    if (!isTouchOnly()) return;
+    var stuck = document.querySelectorAll('.showcase-product_link__image.is-hovering');
+    for (var i = 0; i < stuck.length; i++) {
+      stuck[i].classList.remove('is-hovering');
+    }
+  }
+
   function initProductHoverImage() {
+    resetTouchHoverStates();
     scan(document);
     if (typeof MutationObserver !== 'undefined' && !document.body._productHoverObserver) {
       document.body._productHoverObserver = new MutationObserver(function () {
@@ -450,4 +452,6 @@
   window.initProductHoverImage = initProductHoverImage;
   document.addEventListener('DOMContentLoaded', initProductHoverImage);
   window.addEventListener('load', initProductHoverImage);
+  document.addEventListener('touchend', resetTouchHoverStates, { passive: true });
+  document.addEventListener('touchcancel', resetTouchHoverStates, { passive: true });
 })();
