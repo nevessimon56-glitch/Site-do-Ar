@@ -1,10 +1,11 @@
 {% comment %}
   Preços do card — Pix + parcelas no cartão (valor cheio)
+  Usa apenas product.price (tabela do site). Não usa primaryPrice (pode ser ML/marketplace).
   Uso: {% render 'sections/showcase-prices', product: product, productPricePrimary: productPricePrimary, productPriceSecond: productPriceSecond %}
 {% endcomment %}
 
 {% assign listPriceCard = product.price.price %}
-{% assign pixPriceCard = productPricePrimary.price %}
+{% assign pixPriceCard = product.price.price %}
 {% assign hasPixPromoCard = 0 %}
 {% assign pixPercentCard = 5 %}
 
@@ -12,17 +13,6 @@
   {% assign hasPixPromoCard = 1 %}
   {% assign pixPriceCard = product.price.promotionPrice %}
   {% assign pixPercentCard = product.price.promotionMargin | round %}
-{% elsif productPricePrimary.promotionPrice and productPricePrimary.promotionPrice > 0 %}
-  {% assign pixPriceCard = productPricePrimary.promotionPrice %}
-  {% if listPriceCard > pixPriceCard %}
-    {% assign hasPixPromoCard = 1 %}
-  {% endif %}
-  {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
-    {% assign pixPercentCard = productPricePrimary.discountPercentage | round %}
-  {% endif %}
-{% elsif product.primaryPrice and listPriceCard > productPricePrimary.price %}
-  {% assign hasPixPromoCard = 1 %}
-  {% assign pixPriceCard = productPricePrimary.price %}
 {% endif %}
 
 {% if hasPixPromoCard == 1 %}
@@ -32,7 +22,7 @@
   <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b></p>
   <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% off no Pix</p>
 {% else %}
-  <p class="showcase-prices_price"><b>{{ productPricePrimary.price | money }}</b></p>
+  <p class="showcase-prices_price"><b>{{ product.price.price | money }}</b></p>
 {% endif %}
 
 {% if product.secondaryPrice %}

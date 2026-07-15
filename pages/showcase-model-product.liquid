@@ -23,12 +23,9 @@
     {% endif %}
 
     {% assign productPricePrimary = product.price %}
-    {% if product.primaryPrice %}
-        {% assign productPricePrimary = product.primaryPrice %}
-    {% endif %}
 
     {% assign listPriceCard = product.price.price %}
-    {% assign pixPriceCard = productPricePrimary.price %}
+    {% assign pixPriceCard = product.price.price %}
     {% assign hasPixPromoCard = 0 %}
     {% assign pixPercentCard = 5 %}
     {% assign offerPercentCard = 5 %}
@@ -38,18 +35,6 @@
         {% assign pixPriceCard = product.price.promotionPrice %}
         {% assign pixPercentCard = product.price.promotionMargin | round %}
         {% assign offerPercentCard = pixPercentCard %}
-    {% elsif productPricePrimary.promotionPrice and productPricePrimary.promotionPrice > 0 %}
-        {% assign pixPriceCard = productPricePrimary.promotionPrice %}
-        {% if listPriceCard > pixPriceCard %}
-            {% assign hasPixPromoCard = 1 %}
-        {% endif %}
-        {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
-            {% assign pixPercentCard = productPricePrimary.discountPercentage | round %}
-        {% endif %}
-        {% assign offerPercentCard = pixPercentCard %}
-    {% elsif product.primaryPrice and listPriceCard > productPricePrimary.price %}
-        {% assign hasPixPromoCard = 1 %}
-        {% assign pixPriceCard = productPricePrimary.price %}
     {% endif %}
 
     <li class="showcase-item">
