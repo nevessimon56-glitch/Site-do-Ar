@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-showcase-guest-restore-v5
+ * VERSAO: 2026-07-15-js-showcase-guest-restore-v6
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -478,6 +478,7 @@
 
   function setupDualImage(link, img, hoverSrc) {
     rememberMain(img);
+    ensureImgSrc(img);
     if (!img.getAttribute('data-hover-src')) img.setAttribute('data-hover-src', hoverSrc);
     img.classList.add('product-hover-img--main');
     if (img.classList.contains('lazy')) img.classList.add('loaded');
@@ -522,11 +523,20 @@
 
   function ensureImgSrc(img) {
     if (!img) return '';
-    if (!img.getAttribute('src') && img.getAttribute('data-src')) {
-      img.setAttribute('src', img.getAttribute('data-src'));
+    var dataSrc = img.getAttribute('data-src') || '';
+    if (dataSrc && (!img.getAttribute('src') || img.getAttribute('src').indexOf('data:') === 0)) {
+      img.setAttribute('src', dataSrc);
       img.classList.add('loaded');
     }
-    return img.getAttribute('src') || img.getAttribute('data-src') || '';
+    return img.getAttribute('src') || dataSrc || '';
+  }
+
+  function hydrateLazyImages(root) {
+    var scope = root || document;
+    var imgs = scope.querySelectorAll('img[data-src]');
+    for (var i = 0; i < imgs.length; i++) {
+      ensureImgSrc(imgs[i]);
+    }
   }
 
   function setupMobileCarousel(link, img, hoverSrc) {
@@ -651,6 +661,7 @@
     if (link.getAttribute(PROCESSED) === '1') return;
     var img = normalizeImg(link);
     if (!img) return;
+    ensureImgSrc(img);
     var hoverSrc = getHoverSrc(img);
     if (!hoverSrc) return;
 
@@ -860,6 +871,7 @@
   window.fixWrongWifiTags = fixWrongWifiTags;
 
   window.initProductHoverImage = initProductHoverImage;
+  window.hydrateLazyImages = hydrateLazyImages;
   window.refreshThemeShowcaseSliders = refreshThemeShowcaseSliders;
   window.onAuthStateChange = onAuthStateChange;
 
@@ -1925,6 +1937,12 @@
   }
 
   function afterShowcaseRestore() {
+    var catalogList = getCatalogList();
+    if (catalogList && typeof window.hydrateLazyImages === 'function') {
+      window.hydrateLazyImages(catalogList);
+    } else if (typeof window.hydrateLazyImages === 'function') {
+      window.hydrateLazyImages();
+    }
     if (typeof window.initProductHoverImage === 'function') window.initProductHoverImage();
     if (typeof window.refreshThemeShowcaseSliders === 'function') window.refreshThemeShowcaseSliders(true);
     if (typeof window.cleanupDuplicateSpecBars === 'function') window.cleanupDuplicateSpecBars();
