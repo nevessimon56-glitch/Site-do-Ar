@@ -7,6 +7,22 @@
 {% assign specTitle = product.title | downcase %}
 {% assign specBlob = specTitle %}
 
+{% if product.url and product.url != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.url | downcase %}
+{% endif %}
+
+{% if product.tags and product.tags != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.tags | downcase %}
+{% endif %}
+
+{% if product.shortDescription and product.shortDescription != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.shortDescription | downcase %}
+{% endif %}
+
+{% if product.seoDescription and product.seoDescription != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.seoDescription | downcase %}
+{% endif %}
+
 {% capture specHtmlRaw %}
 {% if product.specification and product.specification != '' %}{{ product.specification }}{% endif %}
 {% if product.specifications and product.specifications != '' %}{{ product.specifications }}{% endif %}
@@ -74,20 +90,25 @@
 {% assign iconFrio = false %}
 {% assign iconCobre = false %}
 {% assign iconWifi = false %}
+{% assign iconInverter = false %}
 {% assign iconVoltage = '' %}
 
 {% if specBlob contains 'procel' or specBlob contains 'classificação a' or specBlob contains 'classificacao a' or specBlob contains 'classificação energética a' or specBlob contains 'classificacao energetica a' or specBlob contains 'selo a' %}
   {% assign iconProcelA = true %}
 {% endif %}
 
-{% if specBlob contains 'ciclo: quente/frio' or specBlob contains 'ciclo: quente e frio' or specBlob contains 'ciclo quente/frio' or specBlob contains 'ciclo quente e frio' or specBlob contains 'quente/frio' or specBlob contains 'quente-frio' or specBlob contains 'quente e frio' or specBlob contains 'ciclo reverso' or specBlob contains ' q/f' or specBlob contains ' q-f' %}
+{% if specBlob contains 'ciclo: quente/frio' or specBlob contains 'ciclo: quente e frio' or specBlob contains 'ciclo quente/frio' or specBlob contains 'ciclo quente e frio' or specBlob contains 'quente/frio' or specBlob contains 'quente-frio' or specBlob contains 'quente e frio' or specBlob contains 'ciclo reverso' or specBlob contains ' q/f' or specBlob contains ' q-f' or specBlob contains '-quente-frio' or specBlob contains 'quente_frio' %}
   {% assign iconQuenteFrio = true %}
-{% elsif specBlob contains 'ciclo: só frio' or specBlob contains 'ciclo: so frio' or specBlob contains 'ciclo só frio' or specBlob contains 'ciclo so frio' or specBlob contains 'só frio' or specBlob contains 'so frio' or specBlob contains 'somente frio' %}
+{% elsif specBlob contains 'ciclo: só frio' or specBlob contains 'ciclo: so frio' or specBlob contains 'ciclo só frio' or specBlob contains 'ciclo so frio' or specBlob contains 'ciclo: frio' or specBlob contains 'só frio' or specBlob contains 'so frio' or specBlob contains 'somente frio' or specBlob contains '-frio-' or specBlob contains '_frio_' or specBlob contains ' frio ' %}
   {% assign iconFrio = true %}
 {% elsif specBlob contains 'frio' %}
   {% unless specBlob contains 'quente' %}
     {% assign iconFrio = true %}
   {% endunless %}
+{% endif %}
+
+{% if specBlob contains 'inverter' or specBlob contains 'inversor' or specBlob contains 'inversão' or specBlob contains 'inversao' %}
+  {% assign iconInverter = true %}
 {% endif %}
 
 {% if specBlob contains 'cobre' or specBlob contains 'copper' %}
@@ -105,16 +126,20 @@
   {% assign iconWifi = true %}
 {% endif %}
 
-{% if specBlob contains '220v' %}
+{% if specBlob contains '220v' or specBlob contains '220 v' %}
   {% assign iconVoltage = '220V' %}
-{% elsif specBlob contains '127v' %}
+{% elsif specBlob contains '127v' or specBlob contains '127 v' %}
   {% assign iconVoltage = '127V' %}
-{% elsif specBlob contains '380v' %}
+{% elsif specBlob contains '110v' or specBlob contains '110 v' or specBlob contains '115v' or specBlob contains '115 v' %}
+  {% assign iconVoltage = '110V' %}
+{% elsif specBlob contains '380v' or specBlob contains '380 v' %}
   {% assign iconVoltage = '380V' %}
+{% elsif specBlob contains 'bivolt' or specBlob contains 'bi-volt' or specBlob contains 'bi volt' %}
+  {% assign iconVoltage = 'Bivolt' %}
 {% endif %}
 
 {% assign hasSpecIcons = false %}
-{% if iconProcelA or iconQuenteFrio or iconFrio or iconCobre or iconWifi or iconVoltage != '' %}
+{% if iconProcelA or iconQuenteFrio or iconFrio or iconCobre or iconWifi or iconInverter or iconVoltage != '' %}
   {% assign hasSpecIcons = true %}
 {% endif %}
 
@@ -128,6 +153,9 @@
   {% endif %}
   {% if iconFrio and iconQuenteFrio == false %}
   <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cycle" title="Frio">Frio</li>
+  {% endif %}
+  {% if iconInverter %}
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--inverter" title="Tecnologia Inverter">Inverter</li>
   {% endif %}
   {% if iconCobre %}
   <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cobre" title="Serpentina de Cobre">Cobre</li>

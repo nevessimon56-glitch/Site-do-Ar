@@ -620,6 +620,12 @@
   padding: 0 5px;
 }
 
+.showcase-spec-bar__tag--inverter {
+  border-color: #c4b8e8;
+  background: #f3effc;
+  color: #5b4a9e;
+}
+
 /* Esconde duplicatas (versão antiga dentro da imagem) */
 .showcase-product_image .showcase-spec-bar,
 .showcase-product_image .showcase-spec-wrap,
@@ -863,6 +869,12 @@
     border-color: #b8dde5;
     background: #edf7fa;
     color: #3d7f8f;
+  }
+
+  .showcase-spec-bar__tag--inverter {
+    border-color: #c4b8e8;
+    background: #f3effc;
+    color: #5b4a9e;
   }
 
   .showcase-product .card-header h3 {
