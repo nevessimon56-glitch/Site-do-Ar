@@ -1283,3 +1283,184 @@
     top: 30px !important;
   }
 }
+
+/* ========== Dock inferior — catálogo 1 toque (MOBILE-CATALOG-DOCK-v1) ========== */
+
+.mobile-catalog-dock {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  body.has-mobile-catalog-dock {
+    padding-bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+  }
+
+  body.has-mobile-catalog-dock .footer,
+  body.has-mobile-catalog-dock footer.footer {
+    margin-bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .mobile-catalog-dock {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1300;
+    padding: 0 8px calc(6px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+
+  .mobile-catalog-dock__inner {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr 1fr;
+    gap: 6px;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 6px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #d6e6f2;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.14);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    pointer-events: auto;
+  }
+
+  .mobile-catalog-dock__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 46px;
+    padding: 4px 6px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #5a7f9c;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-decoration: none !important;
+    cursor: pointer;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-catalog-dock__btn--primary {
+    background: linear-gradient(135deg, #1a6eb5, #2c8fd6);
+    color: #fff !important;
+    box-shadow: 0 3px 10px rgba(26, 110, 181, 0.28);
+  }
+
+  .mobile-catalog-dock__btn.is-active:not(.mobile-catalog-dock__btn--primary) {
+    color: #1a6eb5;
+    background: #eef5fb;
+  }
+
+  .mobile-catalog-dock__btn--primary.is-active {
+    background: linear-gradient(135deg, #145a96, #1f7ab8);
+  }
+
+  .mobile-catalog-dock__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobile-catalog-dock__icon svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+  }
+
+  .mobile-catalog-dock__label {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-catalog-dock__sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    pointer-events: auto;
+  }
+
+  .mobile-catalog-dock__sheet[hidden] {
+    display: none !important;
+  }
+
+  .mobile-catalog-dock__sheet-backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(15, 23, 42, 0.35);
+    cursor: pointer;
+  }
+
+  .mobile-catalog-dock__sheet-panel {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 14px 12px 12px;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid #d6e6f2;
+    box-shadow: 0 12px 36px rgba(15, 23, 42, 0.18);
+    box-sizing: border-box;
+  }
+
+  .mobile-catalog-dock__sheet-title {
+    margin: 0 0 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a5f8f;
+    text-align: center;
+  }
+
+  .mobile-catalog-dock__sheet-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .mobile-catalog-dock__sheet-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 6px 8px;
+    border: 1px solid #d6e6f2;
+    border-radius: 10px;
+    background: #f8fbfe;
+    color: #1a5f8f !important;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none !important;
+    line-height: 1.2;
+    box-sizing: border-box;
+  }
+
+  body.checkout-main .mobile-catalog-dock,
+  body.checkout-main.has-mobile-catalog-dock {
+    padding-bottom: 0 !important;
+  }
+
+  body.checkout-main .mobile-catalog-dock {
+    display: none !important;
+  }
+}

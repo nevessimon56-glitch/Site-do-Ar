@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-mobile-nav-v2
+ * VERSAO: 2026-07-15-js-mobile-nav-v3
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1083,4 +1083,222 @@
     initCatalogMobileGrid();
   }
   window.addEventListener('load', initCatalogMobileGrid);
+})();
+
+/**
+ * Dock inferior mobile — padrão Mercado Livre / Shopee (catálogo sempre a 1 toque)
+ */
+(function () {
+  'use strict';
+
+  var MOBILE_MQ = '(max-width: 991px)';
+  var DOCK_CATEGORIES = [
+    { href: '/split-inverter', label: 'Split Inverter' },
+    { href: '/Piso-Teto', label: 'Piso Teto' },
+    { href: '/janela', label: 'Janela' },
+    { href: '/frio', label: 'Só Frio' },
+    { href: '/quente-frio', label: 'Quente/Frio' },
+    { href: '/pagina/diagnostico-360', label: 'Qual escolher?' }
+  ];
+
+  var ICON_HOME =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  var ICON_GRID =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z" fill="currentColor"/></svg>';
+  var ICON_FILTER =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16l-6.2 7.2V18l-3.6 2v-6.8L4 6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  var ICON_MENU =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+  function isMobile() {
+    return window.matchMedia(MOBILE_MQ).matches;
+  }
+
+  function normalizePath(path) {
+    return (path || '').toLowerCase().replace(/\/+$/, '') || '/';
+  }
+
+  function isCheckoutPage() {
+    return normalizePath(window.location.pathname).indexOf('/checkout') === 0;
+  }
+
+  function isCatalogPage() {
+    var p = normalizePath(window.location.pathname);
+    return p === '/todos-os-produtos' || p.indexOf('/busca') === 0 || !!document.querySelector('main.search-main');
+  }
+
+  function isTodosProdutosPage() {
+    return normalizePath(window.location.pathname) === '/todos-os-produtos';
+  }
+
+  function isHomePage() {
+    return normalizePath(window.location.pathname) === '/';
+  }
+
+  function openCatalogFilters() {
+    var toolbar = document.querySelector('.search-options_mobile');
+    if (!toolbar) return;
+    var filterToggle = toolbar.querySelector('.search-options-header_item');
+    if (filterToggle) filterToggle.click();
+    var body = toolbar.querySelector('.search-options-body_item');
+    if (body && !body.classList.contains('open') && filterToggle) {
+      filterToggle.click();
+    }
+    try {
+      toolbar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) {
+      toolbar.scrollIntoView(true);
+    }
+  }
+
+  function createDockButton(opts) {
+    var el = opts.tag === 'button' ? document.createElement('button') : document.createElement('a');
+    el.className = 'mobile-catalog-dock__btn' + (opts.modifier ? ' ' + opts.modifier : '');
+    if (opts.active) el.classList.add('is-active');
+    if (el.tagName === 'A') {
+      el.href = opts.href || '#';
+    } else {
+      el.type = 'button';
+    }
+    el.setAttribute('aria-label', opts.label);
+    el.innerHTML =
+      '<span class="mobile-catalog-dock__icon">' + opts.icon + '</span>' +
+      '<span class="mobile-catalog-dock__label">' + opts.label + '</span>';
+    if (opts.onClick) {
+      el.addEventListener('click', opts.onClick);
+    }
+    return el;
+  }
+
+  function mountCategorySheet(dock) {
+    var sheet = document.createElement('div');
+    sheet.className = 'mobile-catalog-dock__sheet';
+    sheet.setAttribute('hidden', 'hidden');
+
+    var backdrop = document.createElement('button');
+    backdrop.type = 'button';
+    backdrop.className = 'mobile-catalog-dock__sheet-backdrop';
+    backdrop.setAttribute('aria-label', 'Fechar categorias');
+
+    var panel = document.createElement('div');
+    panel.className = 'mobile-catalog-dock__sheet-panel';
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-label', 'Categorias');
+
+    var title = document.createElement('p');
+    title.className = 'mobile-catalog-dock__sheet-title';
+    title.textContent = 'Escolha uma categoria';
+    panel.appendChild(title);
+
+    var list = document.createElement('div');
+    list.className = 'mobile-catalog-dock__sheet-list';
+    for (var i = 0; i < DOCK_CATEGORIES.length; i++) {
+      var link = document.createElement('a');
+      link.className = 'mobile-catalog-dock__sheet-link';
+      link.href = DOCK_CATEGORIES[i].href;
+      link.textContent = DOCK_CATEGORIES[i].label;
+      list.appendChild(link);
+    }
+    panel.appendChild(list);
+
+    function closeSheet() {
+      sheet.setAttribute('hidden', 'hidden');
+      dock.classList.remove('is-sheet-open');
+    }
+
+    function openSheet() {
+      sheet.removeAttribute('hidden');
+      dock.classList.add('is-sheet-open');
+    }
+
+    backdrop.addEventListener('click', closeSheet);
+    sheet.appendChild(backdrop);
+    sheet.appendChild(panel);
+    dock.appendChild(sheet);
+
+    return { open: openSheet, close: closeSheet };
+  }
+
+  function mountCatalogDock() {
+    if (!isMobile() || isCheckoutPage() || document.querySelector('.mobile-catalog-dock')) return;
+
+    var dock = document.createElement('nav');
+    dock.className = 'mobile-catalog-dock';
+    dock.setAttribute('aria-label', 'Navegação rápida');
+
+    var inner = document.createElement('div');
+    inner.className = 'mobile-catalog-dock__inner';
+
+    inner.appendChild(
+      createDockButton({
+        tag: 'a',
+        href: '/',
+        label: 'Início',
+        icon: ICON_HOME,
+        active: isHomePage()
+      })
+    );
+
+    inner.appendChild(
+      createDockButton({
+        tag: 'a',
+        href: '/Todos-os-Produtos',
+        label: 'Catálogo',
+        icon: ICON_GRID,
+        modifier: 'mobile-catalog-dock__btn--primary',
+        active: isTodosProdutosPage()
+      })
+    );
+
+    var sheetApi = mountCategorySheet(dock);
+
+    if (isCatalogPage()) {
+      inner.appendChild(
+        createDockButton({
+          tag: 'button',
+          label: 'Filtros',
+          icon: ICON_FILTER,
+          onClick: function (e) {
+            e.preventDefault();
+            openCatalogFilters();
+          }
+        })
+      );
+    } else {
+      inner.appendChild(
+        createDockButton({
+          tag: 'button',
+          label: 'Categorias',
+          icon: ICON_MENU,
+          onClick: function (e) {
+            e.preventDefault();
+            sheetApi.open();
+          }
+        })
+      );
+    }
+
+    dock.appendChild(inner);
+    document.body.appendChild(dock);
+    document.body.classList.add('has-mobile-catalog-dock');
+  }
+
+  function initCatalogDock() {
+    if (!isMobile()) {
+      var existing = document.querySelector('.mobile-catalog-dock');
+      if (existing) existing.parentNode.removeChild(existing);
+      document.body.classList.remove('has-mobile-catalog-dock');
+      return;
+    }
+    mountCatalogDock();
+  }
+
+  window.initCatalogDock = initCatalogDock;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCatalogDock);
+  } else {
+    initCatalogDock();
+  }
+  window.addEventListener('load', initCatalogDock);
 })();

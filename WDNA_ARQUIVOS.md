@@ -31,23 +31,25 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - **NÃO** deve ter: `{% assign productPricePrimary = product.primaryPrice %}`
 
 ### mega-menu.js
-- Deve ter: `VERSAO: 2026-07-15-js-mobile-nav-v2` no topo
+- Deve ter: `VERSAO: 2026-07-15-js-mobile-nav-v3` no topo
 - Chips discretos em páginas internas (não home, não catálogo)
 - Catálogo mobile em grade 2 colunas (`showcase-search_grid--mobile-2col`)
+- **Dock inferior fixo** (`mobile-catalog-dock`) — Início | Catálogo | Categorias/Filtros
 
-### Navegação mobile (MOBILE-NAV-v2)
+### Navegação mobile (MOBILE-NAV-v3)
 
 **O que aparece no celular:**
-1. **Home e catálogo:** sem barra extra abaixo do header
-2. **Outras páginas** (ex.: Split Inverter): só uma fileira de chips roláveis (Todos, Split, Piso Teto, Janela, Diagnóstico)
-3. **Catálogo:** produtos em **grade 2 colunas** (não mais lista horizontal)
-4. **Painel Filtrar:** link discreto "Ver todos os produtos" (só fora de Todos os Produtos)
+1. **Dock fixo embaixo** (estilo Mercado Livre/Shopee): Início, **Catálogo**, Categorias ou Filtros
+2. **Home e catálogo:** sem barra extra no topo
+3. **Outras páginas internas:** chips discretos abaixo do header (opcional)
+4. **Catálogo:** produtos em **grade 2 colunas**
+5. **Categorias:** abre painel compacto com Split, Piso Teto, Janela, etc.
 
 **Arquivos:**
 - `assets/mega-menu.js` + `assets/mega-menu.css`
 - `sections/search-filters.liquid` — versão `2026-07-15-filters-mobile-v4`
 
-**Validar catálogo:** `<section class="showcase-search showcase-search_grid showcase-search_grid--mobile-2col" data-mobile-grid="2col">`
+**Validar:** `<nav class="mobile-catalog-dock">` fixo no rodapé + `body.has-mobile-catalog-dock`
 
 ### search-filters.liquid
 - Versão: `2026-07-15-filters-mobile-v4`
