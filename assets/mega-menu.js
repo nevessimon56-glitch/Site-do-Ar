@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-showcase-guest-restore-v3
+ * VERSAO: 2026-07-15-js-showcase-guest-restore-v4
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1363,7 +1363,7 @@
 (function () {
   'use strict';
 
-  var CACHE_PREFIX = 'site-ar-showcase-guest-v3';
+  var CACHE_PREFIX = 'site-ar-showcase-guest-v4';
   var restoreInFlight = false;
   var restoreDone = false;
 
@@ -1377,11 +1377,33 @@
     return scope.querySelector('.showcase-search .showcase-list, main.search-main .showcase-list');
   }
 
+  function getShowcaseSectionMeta(list) {
+    var section = list && list.closest('section.showcase, .showcase-section');
+    if (!section) return { key: '', title: '' };
+    var idMatch = (section.className || '').match(/\bshowcase-\d+\b/);
+    var titleEl = section.querySelector('.showcase-title, h2.showcase-title');
+    var title = titleEl ? (titleEl.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase() : '';
+    return {
+      key: idMatch ? idMatch[0] : (title ? 'title:' + title : ''),
+      title: title
+    };
+  }
+
+  function isProductShowcaseList(list) {
+    if (!list) return false;
+    if (list.closest('.showcase-search, main.search-main')) return true;
+    if (list.querySelector('.showcase-item, .showcase-slider')) return true;
+    return !!list.closest('.showcase-products, .showcase-products_carousel');
+  }
+
   function listKey(list) {
     if (!list) return '';
+    var meta = getShowcaseSectionMeta(list);
     if (list.closest('.showcase-search') || list.closest('main.search-main')) return 'catalog-search';
-    if (list.closest('.showcase-products_carousel')) return 'carousel:' + (list.className || '');
-    return 'list:' + (list.className || '');
+    if (list.closest('.showcase-products_carousel')) {
+      return 'carousel:' + meta.key + ':' + (list.className || '');
+    }
+    return 'list:' + meta.key + ':' + (list.className || '');
   }
 
   function isLoggedIn() {
@@ -1398,7 +1420,12 @@
   }
 
   function getShowcaseLists(root) {
-    return (root || document).querySelectorAll('.showcase-list');
+    var all = (root || document).querySelectorAll('.showcase-list');
+    var out = [];
+    for (var i = 0; i < all.length; i++) {
+      if (isProductShowcaseList(all[i])) out.push(all[i]);
+    }
+    return out;
   }
 
   function countItems(list) {
@@ -1413,8 +1440,11 @@
     for (var i = 0; i < lists.length; i++) {
       var count = countItems(lists[i]);
       if (count < 1) continue;
+      var meta = getShowcaseSectionMeta(lists[i]);
       payload.push({
         key: listKey(lists[i]),
+        sectionKey: meta.key,
+        title: meta.title,
         i: i,
         cls: lists[i].className,
         html: lists[i].innerHTML,
@@ -1463,12 +1493,8 @@
   }
 
   function listNeedsRestore(list) {
-    var count = countItems(list);
-    if (count <= 1) {
-      var carousel = list.closest('.showcase-products_carousel, .showcase-products-list_carousel, .showcase-section, section.showcase');
-      if (carousel || /showcase-list-\d/.test(list.className || '')) return true;
-    }
-    return false;
+    if (!isProductShowcaseList(list)) return false;
+    return countItems(list) <= 1;
   }
 
   function pageNeedsRestore() {
@@ -1494,15 +1520,27 @@
 
   function findListForEntry(entry, lists) {
     if (entry.key === 'catalog-search') return getCatalogList();
+
+    if (entry.sectionKey || entry.title) {
+      for (var s = 0; s < lists.length; s++) {
+        var meta = getShowcaseSectionMeta(lists[s]);
+        if (entry.sectionKey && meta.key === entry.sectionKey) return lists[s];
+        if (entry.title && meta.title === entry.title) return lists[s];
+      }
+    }
+
     if (entry.key && entry.key.indexOf('carousel:') === 0) {
       for (var i = 0; i < lists.length; i++) {
         if (listKey(lists[i]) === entry.key) return lists[i];
       }
     }
+
     var list = lists[entry.i];
-    if (list) return list;
+    if (list && (!entry.cls || list.className === entry.cls)) return list;
     for (var j = 0; j < lists.length; j++) {
-      if (lists[j].className === entry.cls) return lists[j];
+      if (entry.cls && lists[j].className === entry.cls) {
+        if (!entry.sectionKey && !entry.title) return lists[j];
+      }
     }
     return null;
   }
@@ -1655,8 +1693,11 @@
     for (var i = 0; i < guestLists.length; i++) {
       var count = countItems(guestLists[i]);
       if (count < 1) continue;
+      var meta = getShowcaseSectionMeta(guestLists[i]);
       payload.push({
         key: listKey(guestLists[i]),
+        sectionKey: meta.key,
+        title: meta.title,
         i: i,
         cls: guestLists[i].className,
         html: guestLists[i].innerHTML,
@@ -1734,6 +1775,19 @@
 
     if (restoreFromCache()) {
       restoreInFlight = false;
+      var cachedLists = getShowcaseLists();
+      var stillNeeds = false;
+      for (var r = 0; r < cachedLists.length; r++) {
+        if (listNeedsRestore(cachedLists[r])) {
+          stillNeeds = true;
+          break;
+        }
+      }
+      if (stillNeeds) {
+        restoreDone = false;
+        restoreShowcasesFromGuest();
+        return;
+      }
       setTimeout(function () {
         if (isCatalogPage() && catalogPaginationMismatch()) {
           runCatalogPaginationFix();
