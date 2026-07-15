@@ -9,8 +9,9 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 | `sections/showcase-model-product.liquid` | `sections/showcase-model-product.liquid` | **SIM** | Cards da vitrine (home, categorias) |
 | `sections/product-content.liquid` | `sections/product-content.liquid` | **SIM** | **Página do produto** + preço principal |
 | `sections/product-spec-icons.liquid` | `sections/product-spec-icons.liquid` | Sim | Pills de specs nos cards |
-| `assets/mega-menu.js` | `assets/mega-menu.js` | Sim | Hover, carrossel, fix após login |
-| `assets/mega-menu.css` | `assets/mega-menu.css` | Sim | Estilos dos cards |
+| `sections/search-filters.liquid` | `sections/search-filters.liquid` | **SIM** | Filtros + atalhos mobile no painel Filtrar |
+| `assets/mega-menu.js` | `assets/mega-menu.js` | Sim | Hover, carrossel, barra mobile, teclado |
+| `assets/mega-menu.css` | `assets/mega-menu.css` | Sim | Estilos cards + barra mobile + filtros |
 | `sections/sidenav-overlay-account.liquid` | `sections/sidenav-overlay-account.liquid` | **SIM** | Login lateral — **remover autofocus** |
 | `sections/sidenav-user-password.liquid` | `sections/sidenav-user-password.liquid` | **SIM** | Alterar senha — **remover autofocus** |
 | `sections/sidenav-forgot-password.liquid` | `sections/sidenav-forgot-password.liquid` | **SIM** | Esqueci senha — **remover autofocus** |
@@ -30,8 +31,26 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - **NÃO** deve ter: `{% assign productPricePrimary = product.primaryPrice %}`
 
 ### mega-menu.js
-- Deve ter: `VERSAO: 2026-07-15-js-perf-v4` no topo do arquivo
-- Inclui guarda contra teclado no mobile (painéis de login ocultos)
+- Deve ter: `VERSAO: 2026-07-15-js-mobile-nav-v1` no topo
+- Inclui barra mobile `mobile-discover-bar` + atalho de filtros em páginas de catálogo
+
+### Navegação mobile (MOBILE-NAV-v1)
+
+**O que aparece no celular:**
+1. Barra abaixo do header: **Ver todos os produtos** + chips (Split, Piso Teto, Janela, Diagnóstico)
+2. Em páginas de catálogo: botão **Catálogo completo** + **Filtros** (abre o painel sem procurar)
+3. Dentro do painel Filtrar: atalhos de categoria
+
+**Arquivos:**
+- `assets/mega-menu.js` + `assets/mega-menu.css`
+- `sections/search-filters.liquid` — versão `2026-07-15-filters-mobile-v3`
+
+**Validar:** no mobile, inspecionar deve existir `<nav class="mobile-discover-bar">`
+
+### search-filters.liquid
+- Versão: `2026-07-15-filters-mobile-v3`
+- Botão **Ver catálogo completo** no topo do painel de filtros
+- Chips: Split Inverter, Piso Teto, Janela, Só Frio, Quente/Frio
 
 ### Teclado no mobile (spam ao abrir páginas)
 

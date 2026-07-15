@@ -1,0 +1,18 @@
+/*
+  PATCH — theme-custom.css (filtros de busca)
+  Substitua ou remova os trechos indicados no seu theme-custom.css
+*/
+
+/* REMOVER este bloco (quebra envio dos checkboxes de marca): */
+/*
+.search-filter_brand .form-group {
+  display: contents !important;
+  margin: 0 !important;
+}
+*/
+
+/* MANTER assim (correto): */
+.search-filter_brand .form-group {
+  display: inline-block;
+  margin: 0;
+}

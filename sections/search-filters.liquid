@@ -1,0 +1,621 @@
+<div class="search-filters">
+    {% comment %} VERSAO: 2026-07-15-filters-mobile-v3 — atalhos mobile + fix BTU/preço {% endcomment %}
+    <section class="search-filters-content">
+        {% assign linkSearch = '/busca' %}
+        {% if currentPage.path %}
+            {% assign linkSearch = currentPage.path %}
+        {% endif %}
+
+        {% comment %} Preserva marca e ordem ao trocar BTU/Ciclo (preco não — varia por categoria) {% endcomment %}
+        {% capture filterExtraQuery %}{% if search.query.marcas.size > 0 %}{% for marcaItem in search.query.marcas %}&marcas={{ marcaItem }}{% endfor %}{% endif %}{% if search.query.ordem %}&ordem={{ search.query.ordem }}{% endif %}{% if search.query.qtdPag %}&qtdPag={{ search.query.qtdPag }}{% endif %}{% endcapture %}
+        {% assign filterExtraQuery = filterExtraQuery | strip %}
+
+        {% comment %} WDNA exige preco inteiro (ex: 0,5000) — centavos quebram a URL {% endcomment %}
+        {% assign priceMin = search.facets.priceRange.min | round %}
+        {% assign priceMax = search.facets.priceRange.max | round %}
+        {% assign priceCurrent = priceMin | append: ',' | append: priceMax %}
+        {% if search.query.preco %}
+            {% assign priceCurrent = search.query.preco %}
+        {% endif %}
+
+        <form method="GET" action="{{ linkSearch }}" class="search-filters-form">
+
+            {% comment %} categorias hidden só em Todos os Produtos e /busca {% endcomment %}
+            {% if currentPage.path == '/Todos-os-Produtos' %}
+                <input type="hidden" name="categorias" value="todos-os-produtos">
+            {% elsif linkSearch contains 'busca' %}
+                {% if search.query.categorias.size > 0 %}
+                    {% for cat in search.query.categorias %}
+                        <input type="hidden" name="categorias" value="{{ cat }}">
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+            <input type="hidden" name="ordem" value="{% if search.query.ordem %}{{ search.query.ordem }}{% else %}score{% endif %}">
+            <input type="hidden" name="qtdPag" value="{% if search.query.qtdPag %}{{ search.query.qtdPag }}{% else %}12{% endif %}">
+            <input type="hidden" name="pag" value="1">
+
+            <a href="/Todos-os-Produtos" class="mobile-todos-produtos">
+                Ver catálogo completo
+            </a>
+
+            <div class="mobile-filter-quicklinks" aria-label="Atalhos de categorias">
+                <a href="/split-inverter" class="mobile-filter-quicklinks__chip">Split Inverter</a>
+                <a href="/Piso-Teto" class="mobile-filter-quicklinks__chip">Piso Teto</a>
+                <a href="/janela" class="mobile-filter-quicklinks__chip">Janela</a>
+                <a href="/frio" class="mobile-filter-quicklinks__chip">Só Frio</a>
+                <a href="/quente-frio" class="mobile-filter-quicklinks__chip">Quente/Frio</a>
+            </div>
+
+            {% if search.facets.rangePotency.min and search.facets.rangePotency.max %}
+                {% for page in pages %}
+                    {% for itemPage in page.pages %}
+                        {% if itemPage.url == '/pagina/calculadora-solar' %}
+                            {% if search.query.potencias.size > 0 %}
+                                {%- assign arrayPotencia = search.query.potencias | split: ',' -%}
+                                {% assign minPotencia = arrayPotencia[0] %}
+                                {% assign maxPotencia = arrayPotencia[1] %}
+                            {% endif %}
+                            {% if search.query.minPotencia %}
+                                {% assign minPotencia = search.query.minPotencia %}
+                            {% endif %}
+                            {% if search.query.maxPotencia %}
+                                {% assign maxPotencia = search.query.maxPotencia %}
+                            {% endif %}
+                            <details class="search-filter search-filter_potency" open>
+                                <summary class="search-filter-header">
+                                    <div class="search-filter-title">
+                                        Potência
+                                    </div>
+                                    <div class="search-filter-icon">
+                                        {{ themeConfig.icons.arrow.down }}
+                                    </div>
+                                </summary>
+                                <div class="search-filter-body search-filter-body_potencia">
+                                    <div class="form-group form-group_potencia">
+                                        <input type="number" class="form-input form-input-potency form-input-min-potency" min="{{ search.facets.rangePotency.min }}" max="{{ search.facets.rangePotency.max }}" step="0.01" placeholder="Min: {{ search.facets.rangePotency.min | replace: '.' , ',' }}"{% if minPotencia and minPotencia > 0 %} value="{{ minPotencia }}"{% endif %}>
+                                        <input type="hidden" class="form-input-potency-hidden form-input-min-potency-hidden"{% if minPotencia %} value="{{ minPotencia }}" name="minPotencia"{% endif %} data-min="{{ search.facets.rangePotency.min }}">
+                                        <input type="number" class="form-input form-input-potency form-input-max-potency" min="{% if minPotencia and minPotencia > 0 %}{{ minPotencia }}{% else %}{{ search.facets.rangePotency.min }}{% endif %}" max="{{ search.facets.rangePotency.max }}" step="0.01" placeholder="Max: {{ search.facets.rangePotency.max | replace: '.' , ',' }}"{% if maxPotencia and maxPotencia > 0 %} value="{{ maxPotencia }}"{% endif %}>
+                                        <input type="hidden" class="form-input-potency-hidden form-input-max-potency-hidden"{% if maxPotencia and maxPotencia > 0 %} value="{{ maxPotencia }}" name="maxPotencia"{% endif %}>
+                                        <button class="btn">
+                                            {{ themeConfig.icons.search }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </details>
+                        {% if search.query.potencias.size > 0 %}
+                            <script>
+                                loadPotencyValues();
+                                function loadPotencyValues(){
+                                    var inputsMinPotencyLoad = document.querySelectorAll('.form-input-min-potency');
+                                    for (var x = 0; x < inputsMinPotencyLoad.length; x++) {
+                                        inputsMinPotencyLoad[x].value = '{{ minPotencia }}';
+                                    }
+                                    var inputsMinPotencyHiddenLoad = document.querySelectorAll('.form-input-min-potency-hidden');
+                                    for (var x = 0; x < inputsMinPotencyHiddenLoad.length; x++) {
+                                        inputsMinPotencyHiddenLoad[x].value = '{{ minPotencia }}';
+                                    }
+
+                                    var inputsMaxPotencyLoad = document.querySelectorAll('.form-input-max-potency');
+                                    for (var x = 0; x < inputsMaxPotencyLoad.length; x++) {
+                                        inputsMaxPotencyLoad[x].value = '{{ maxPotencia }}';
+                                    }
+                                    var inputsMaxPotencyHiddenLoad = document.querySelectorAll('.form-input-max-potency-hidden');
+                                    for (var x = 0; x < inputsMaxPotencyHiddenLoad.length; x++) {
+                                        inputsMaxPotencyHiddenLoad[x].value = '{{ maxPotencia }}';
+                                    }
+                                }
+                            </script>
+                        {% endif %}
+
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+
+            {% if search.facets.categories.length > 0 %}
+                <details class="search-filter search-filter_category" open>
+                    <summary class="search-filter-header">
+                        <div class="search-filter-title">
+                            Categorias
+                        </div>
+                        <div class="search-filter-icon">
+                            {{ themeConfig.icons.arrow.down }}
+                        </div>
+                    </summary>
+                    <div class="search-filter-body">
+                        {% for category in search.facets.categories %}
+                            {% assign isFilterSearch = linkSearch | filterString: 'busca' %}
+                            <div class="form-group form-group_category">
+                                {% assign categorySlug = '/' | append: category.slug %}
+                                {% assign isCategoryDefault = false %}
+                                {%- assign listTermCategories = search.termCategory.slug | split: '/' -%}
+                                {% for termCategorie in listTermCategories %}
+                                    {% assign newCategorySlug = categorySlug | replace: '/','' %}
+                                    {% if termCategorie == newCategorySlug %}
+                                        {% assign isCategoryDefault = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if isFilterSearch == false %}
+                                    {% assign classActiveCategory = '' %}
+                                    {% for categorie in search.query.categorias %}
+                                        {% if categorie == category.slug %}
+                                            {% assign classActiveCategory = ' active' %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% assign categoryHref = '/' | append: category.slug %}
+                                    {% if filterExtraQuery != blank %}
+                                        {% assign categoryHref = categoryHref | append: '?' | append: filterExtraQuery | remove_first: '&' %}
+                                    {% endif %}
+                                    <a href="{{ categoryHref }}" class="search-filter-link_category{{ classActiveCategory }}" title="{{ category.name }}">
+                                        <label class="form-radio">
+                                            <i class="form-icon"></i>
+                                            <div class="form-text">{{ category.name }}</div>
+                                        </label>
+                                    </a>
+                                    {% for categoryChildren1 in category.categories %}
+                                        {% assign classActiveCategoryChildren1 = '' %}
+                                        {% for categorie in search.query.categorias %}
+                                            {% if categorie == categoryChildren1.slug %}
+                                                {% assign classActiveCategoryChildren1 = ' active' %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {%- assign queryCategorieArray = search.query.categorias | split: '/' -%}
+                                        {% assign isVisibleCategoryChildren1 = categoryChildren1.slug | filterString: queryCategorieArray[1] %}
+                                        {% if isVisibleCategoryChildren1 %}
+                                            {% assign categoryChildHref = '/' | append: categoryChildren1.slug %}
+                                            {% if filterExtraQuery != blank %}
+                                                {% assign categoryChildHref = categoryChildHref | append: '?' | append: filterExtraQuery | remove_first: '&' %}
+                                            {% endif %}
+                                            <a href="{{ categoryChildHref }}" class="search-filter-link_category search-filter-link_category__child{{ classActiveCategoryChildren1 }}" title="{{ categoryChildren1.name }}">
+                                                <label class="form-radio">
+                                                    <i class="form-icon"></i>
+                                                    <div class="form-text">{{ categoryChildren1.name }}</div>
+                                                </label>
+                                            </a>
+                                            {% for categoryChildren2 in categoryChildren1.categories %}
+                                                {% assign classActiveCategoryChildren2 = '' %}
+                                                {% for categorie in search.query.categorias %}
+                                                    {% if categorie == categoryChildren2.slug %}
+                                                        {% assign classActiveCategoryChildren2 = ' active' %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% assign isVisibleCategoryChildren2 = categoryChildren2.slug | filterString: queryCategorieArray[2] %}
+                                                {% if isVisibleCategoryChildren2 %}
+                                                    {% assign categoryChild2Href = '/' | append: categoryChildren2.slug %}
+                                                    {% if filterExtraQuery != blank %}
+                                                        {% assign categoryChild2Href = categoryChild2Href | append: '?' | append: filterExtraQuery | remove_first: '&' %}
+                                                    {% endif %}
+                                                    <a href="{{ categoryChild2Href }}" class="search-filter-link_category search-filter-link_category__child2{{ classActiveCategoryChildren2 }}" title="{{ categoryChildren2.name }}">
+                                                        <label class="form-radio">
+                                                            <i class="form-icon"></i>
+                                                            <div class="form-text">{{ categoryChildren2.name }}</div>
+                                                        </label>
+                                                    </a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    {% assign classActiveCategory = '' %}
+                                    {% assign hasCheckCategory = false %}
+                                    {% for categorie in search.query.categorias %}
+                                        {% if categorie == category.slug %}
+                                            {% assign classActiveCategory = ' active' %}
+                                            {% assign hasCheckCategory = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <div class="form-group search-filter-link_category">
+                                        <label class="form-checkbox form-inline">
+                                            <input type="checkbox" name="categorias" value="{{ category.slug }}"{% if hasCheckCategory %} checked="true"{% endif %}/>
+                                            <i class="form-icon"></i>
+                                            <div class="form-text">{{ category.name }}</div>
+                                        </label>
+                                    </div>
+                                    {% for categoryChildren1 in category.categories %}
+                                        {% assign hasCheckCategoryChildren1 = false %}
+                                        {% for categorie in search.query.categorias %}
+                                            {% if categorie == categoryChildren1.slug %}
+                                                {% assign hasCheckCategoryChildren1 = true %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        <div class="form-group search-filter-link_category search-filter-link_category__child">
+                                            <label class="form-checkbox form-inline">
+                                                <input type="checkbox" name="categorias" value="{{ categoryChildren1.slug }}"{% if hasCheckCategoryChildren1 %} checked="true"{% endif %}/>
+                                                <i class="form-icon"></i>
+                                                <div class="form-text">{{ categoryChildren1.name }}</div>
+                                            </label>
+                                        </div>
+                                        {% for categoryChildren2 in categoryChildren1.categories %}
+                                            {% assign hasCheckCategoryChildren2 = false %}
+                                            {% for categorie in search.query.categorias %}
+                                                {% if categorie == categoryChildren2.slug %}
+                                                    {% assign hasCheckCategoryChildren2 = true %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            <div class="form-group search-filter-link_category search-filter-link_category__child2">
+                                                <label class="form-checkbox form-inline">
+                                                    <input type="checkbox" name="categorias" value="{{ categoryChildren2.slug }}"{% if hasCheckCategoryChildren2 %} checked="true"{% endif %}/>
+                                                    <i class="form-icon"></i>
+                                                    <div class="form-text">{{ categoryChildren2.name }}</div>
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </details>
+            {% endif %}
+
+            {% comment %}
+              BTU: lista manual — só inclua slugs com produtos ativos na loja.
+              Teste: abrir /{slug} no site e ver se lista produtos.
+              55000 btus e 58000 btus: categoria existe no menu, mas sem produtos na busca.
+            {% endcomment %}
+            {% assign btuSlugs = '9000 btus,12000 btus,18000 btus,24000 btus,30000 btus,36000 btus,46000 btus,48000 btus,56000 btus' | split: ',' %}
+            <details class="search-filter search-filter_btu" open>
+                <summary class="search-filter-header">
+                    <div class="search-filter-title">
+                        Capacidade de refrigeração
+                    </div>
+                    <div class="search-filter-icon">
+                        {{ themeConfig.icons.arrow.down }}
+                    </div>
+                </summary>
+                <div class="search-filter-body search-filter-body_btu">
+                    {% for btuSlug in btuSlugs %}
+                        {% assign classActive = '' %}
+                        {% if search.termCategory.slug == btuSlug %}
+                            {% assign classActive = ' active' %}
+                        {% endif %}
+                        {% if classActive == '' %}
+                            {% for categorie in search.query.categorias %}
+                                {% if categorie == btuSlug %}
+                                    {% assign classActive = ' active' %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if classActive == '' and search.termCategory.slug %}
+                            {% assign slugPartsCheck = search.termCategory.slug | split: '/' %}
+                            {% for part in slugPartsCheck %}
+                                {% if part == btuSlug %}
+                                    {% assign classActive = ' active' %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% assign btuHref = '/' | append: btuSlug %}
+                        {% if filterExtraQuery != blank %}
+                            {% assign btuHref = btuHref | append: '?' | append: filterExtraQuery | remove_first: '&' %}
+                        {% endif %}
+                        <a href="{{ btuHref }}" class="btu-filter-btn{{ classActive }}">
+                            {{ btuSlug }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </details>
+
+            {% assign cicloSlugs = 'frio,quente-frio' | split: ',' %}
+            {% assign cicloLabels = 'Frio,Quente/Frio' | split: ',' %}
+
+            <details class="search-filter search-filter_ciclo" open>
+                <summary class="search-filter-header">
+                    <div class="search-filter-title">Ciclo</div>
+                    <div class="search-filter-icon">{{ themeConfig.icons.arrow.down }}</div>
+                </summary>
+                <div class="search-filter-body search-filter-body_btu">
+                    {% for i in (0..1) %}
+                        {% assign cicloSlug = cicloSlugs[i] %}
+                        {% assign cicloLabel = cicloLabels[i] %}
+
+                        {% assign classActive = '' %}
+                        {% if search.termCategory.slug == cicloSlug %}
+                            {% assign classActive = ' active' %}
+                        {% endif %}
+                        {% if classActive == '' %}
+                            {% for categorie in search.query.categorias %}
+                                {% if categorie == cicloSlug %}
+                                    {% assign classActive = ' active' %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if classActive == '' and search.termCategory.slug %}
+                            {% assign slugPartsCiclo = search.termCategory.slug | split: '/' %}
+                            {% for part in slugPartsCiclo %}
+                                {% if part == cicloSlug %}
+                                    {% assign classActive = ' active' %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+
+                        {% assign cicloHref = '/' | append: cicloSlug %}
+                        {% if filterExtraQuery != blank %}
+                            {% assign cicloHref = cicloHref | append: '?' | append: filterExtraQuery | remove_first: '&' %}
+                        {% endif %}
+                        <a href="{{ cicloHref }}" class="btu-filter-btn{{ classActive }}">
+                            {{ cicloLabel }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </details>
+
+            {% assign isSolarCalculator = false %}
+            {% for page in pages %}
+                {% for itemPage in page.pages %}
+                    {% if itemPage.url == '/pagina/calculadora-solar' %}
+                        {% assign isSolarCalculator = true %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            {% if isSolarCalculator %}
+                {% for attribute in search.facets.attributes %}
+                    <details class="search-filter search-filter_attribute d-hide" open>
+                        <summary class="search-filter-header">
+                            <div class="search-filter-title">
+                                {{ attribute.title }}
+                            </div>
+                            <div class="search-filter-icon">
+                                {{ themeConfig.icons.arrow.down }}
+                            </div>
+                        </summary>
+                        <div class="search-filter-body">
+                            {% for attributeValue in attribute.values %}
+                                {% assign hasCheckAttribute = false %}
+                                {% for attribute in search.query[attribute.name] %}
+                                    {% if attribute == attributeValue %}
+                                        {% assign hasCheckAttribute = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="form-group">
+                                    <label class="form-checkbox form-inline">
+                                        <input type="checkbox" name="{{ attribute.nameQuery | downcase }}" value="{{ attributeValue | downcase }}"{% if hasCheckAttribute %} checked="true"{% endif %}/>
+                                        <i class="form-icon"></i>
+                                        <div class="form-text">{{ attributeValue }} kwp</div>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </details>
+                {% endfor %}
+            {% endif %}
+
+            {% for gridOption in search.facets.grids %}
+                {% assign gridNameLower = gridOption.name | downcase %}
+                {% assign isCapacidade = gridNameLower | contains: 'capacidade' %}
+                {% unless isCapacidade %}
+                    {% assign displayType = gridOption.displayType %}
+                    {% if gridOption.displayType == 'thumbnail' %}
+                        {% assign displayType = 'button' %}
+                    {% endif %}
+                    <details class="search-filter search-filter_variation search-filter_variation__{{ displayType }}" open>
+                        <summary class="search-filter-header">
+                            <div class="search-filter-title">
+                                {{ gridOption.name }}
+                            </div>
+                            <div class="search-filter-icon">
+                                {{ themeConfig.icons.arrow.down }}
+                            </div>
+                        </summary>
+                        <div class="search-filter-body">
+                            {% if gridOption.displayType == 'button' or gridOption.displayType == 'thumbnail' %}
+                                <ul class="search-filter-variation_list search-filter-variation_list__{{ displayType }}">
+                                    {% for variation in gridOption.values %}
+                                        <li class="search-filter-variation_item">
+                                            <label class="form-radio">
+                                                {% assign hasCheck = false %}
+                                                {% assign indexGrid = gridOption.name | downcase %}
+                                                {% assign nameVariation = variation.name | downcase %}
+                                                {% for itensGrade in search.query[indexGrid] %}
+                                                    {% if itensGrade == nameVariation %}
+                                                        {% assign hasCheck = true %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% assign styleColors = '' %}
+                                                {% if gridOption.name == 'Cor' %}
+                                                    {% if variation.display != blank %}
+                                                        {% assign textVariation = '' %}
+                                                        {% assign variationDisplayArray = variation.display | split: '||' %}
+                                                        {% assign startBorderColor = 'border-color: ' | append: variation.display %}
+                                                        {% if variationDisplayArray.size > 1 %}
+                                                            {% assign styleColors = 'style="background: linear-gradient(135deg, #color1# 50%, #color2# 50%); border-width: 0px;"' %}
+                                                            {% assign styleColors = styleColors | replace: '#color1#', variationDisplayArray[0] | replace: '#color2#', variationDisplayArray[1] %}
+                                                        {% else %}
+                                                            {% assign startBackgroundColor = 'background-color: ' | append: variation.display %}
+                                                            {% assign backgroundColor = ';' | prepend: startBackgroundColor %}
+                                                            {% assign startStyleColors = ' style="' | append: backgroundColor %}
+                                                            {% assign borderColor = startBorderColor | prepend: startStyleColors %}
+                                                            {% assign styleColors = ';"' | prepend: borderColor %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                                <input name="{{ gridOption.name | downcase }}" type="checkbox" value="{{ variation.name | downcase }}"{% if hasCheck %} checked="true" {% endif %}/>
+                                                <a class="search-filter-variation_link search-filter-variation_link__{{ gridOption.name | downcase }}"{{ styleColors }}>
+                                                    {{ variation.name }}
+                                                </a>
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                {% for variation in gridOption.values %}
+                                    <div class="form-group">
+                                        {% assign hasCheck = false %}
+                                        {% assign indexGrid = gridOption.name | downcase %}
+                                        {% assign nameVariation = variation.name | downcase %}
+                                        {% for itensGrade in search.query[indexGrid] %}
+                                            {% if itensGrade == nameVariation %}
+                                                {% assign hasCheck = true %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        <label class="form-checkbox form-inline">
+                                            <input type="checkbox" name="{{ gridOption.name | downcase }}" value="{{ variation.name | downcase }}"{% if hasCheck %} checked="true"{% endif %}/>
+                                            <i class="form-icon"></i>
+                                            <div class="form-text">{{ variation.name }}</div>
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </details>
+                {% endunless %}
+            {% endfor %}
+
+            {% if search.facets.brands.length > 0 %}
+                <details class="search-filter search-filter_brand" open>
+                    <summary class="search-filter-header">
+                        <div class="search-filter-title">
+                            Marcas
+                        </div>
+                        <div class="search-filter-icon">
+                            {{ themeConfig.icons.arrow.down }}
+                        </div>
+                    </summary>
+                    <div class="search-filter-body">
+                        {% for brand in search.facets.brands %}
+                            <div class="form-group">
+                                {% assign brandFacet = brand.name | lowercase %}
+                                {% assign hasCheck = false %}
+                                {% for marca in search.query.marcas %}
+                                    {% assign qyeryBrand = marca | lowercase %}
+                                    {% if qyeryBrand == brandFacet %}
+                                        {% assign hasCheck = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                <label class="form-checkbox form-inline{% if hasCheck %} brand-checked{% endif %}">
+                                    <input type="checkbox" name="marcas" value="{{ brand.name }}"{% if hasCheck %} checked="checked"{% endif %}/>
+                                    <div class="form-text">{{ brand.name }}</div>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </details>
+            {% endif %}
+
+            {% if search.facets.priceRange.min < search.facets.priceRange.max %}
+                <details class="search-filter search-filter_price" open>
+                    <summary class="search-filter-header">
+                        <div class="search-filter-title">
+                            Preço
+                        </div>
+                        <div class="search-filter-icon">
+                            {{ themeConfig.icons.arrow.down }}
+                        </div>
+                    </summary>
+                    <div class="search-filter-body">
+                        <div class="search-filter-price">
+                            <div class="search-filter-price_values">
+                                <span class="search-filter-price_lower">
+                                    {{ search.facets.priceRange.min | money }}
+                                </span>
+                                <span class="search-filter-price_upper">
+                                    {{ search.facets.priceRange.max | money }}
+                                </span>
+                            </div>
+                            <div class="search-filter-price_slider"></div>
+                            <input type="hidden" name="preco" class="priceBySearch" value="{{ priceCurrent }}"/>
+                            <div class="priceBySearchTemp d-hide" data-prices="{{ priceCurrent }}" data-pricesTemp="{{ priceCurrent }}"></div>
+                        </div>
+                    </div>
+                </details>
+            {% endif %}
+
+            <input class="btn search-filters-btn search-filters-btn_finish" type="submit" value="Filtrar"/>
+        </form>
+    </section>
+</div>
+
+<script>
+(function () {
+  var rangeMin = Number('{{ priceMin }}');
+  var rangeMax = Number('{{ priceMax }}');
+
+  function normalizePrecoString(precoStr) {
+    if (!precoStr) return '';
+    var parts = String(precoStr).split(',');
+    if (parts.length < 2) return '';
+    var min = Math.round(parseFloat(parts[0]) || 0);
+    var max = Math.round(parseFloat(parts[1]) || 0);
+    return min + ',' + max;
+  }
+
+  function buildPrecoParam(minVal, maxVal) {
+    var minRounded = Math.round(minVal);
+    var maxRounded = Math.round(maxVal);
+    if (minRounded <= rangeMin && maxRounded >= rangeMax) return '';
+    return (minRounded <= rangeMin ? '0' : String(minRounded)) + ',' + String(maxRounded);
+  }
+
+  document.querySelectorAll('.priceBySearchTemp').forEach(function (el) {
+    var normalized = normalizePrecoString(el.getAttribute('data-prices'));
+    if (normalized) {
+      el.setAttribute('data-prices', normalized);
+      el.setAttribute('data-pricesTemp', normalized);
+    }
+  });
+
+  document.querySelectorAll('input.priceBySearch').forEach(function (input) {
+    var normalized = normalizePrecoString(input.value);
+    if (normalized) input.value = normalized;
+  });
+
+  function syncPriceInput(form) {
+    if (!(rangeMin < rangeMax)) return;
+
+    var forms = document.querySelectorAll('.search-filters-form');
+    var formIndex = Array.prototype.indexOf.call(forms, form);
+    if (formIndex < 0) return;
+
+    var sliders = document.getElementsByClassName('search-filter-price_slider');
+    var slider = sliders[formIndex];
+    if (!slider || !slider.noUiSlider) return;
+
+    var values = slider.noUiSlider.get().map(function (v) { return parseFloat(v); });
+    var minVal = values[0];
+    var maxVal = values[1];
+    var input = form.querySelector('input.priceBySearch');
+    var precoStr = buildPrecoParam(minVal, maxVal);
+
+    if (!precoStr) {
+      if (input) input.remove();
+      return;
+    }
+
+    if (!input) {
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'preco';
+      input.className = 'priceBySearch';
+      var priceBox = form.querySelector('.search-filter-price');
+      if (priceBox) priceBox.appendChild(input);
+      else form.appendChild(input);
+    }
+
+    input.value = precoStr;
+  }
+
+  document.querySelectorAll('.search-filters-form').forEach(function (form) {
+    form.addEventListener('submit', function () {
+      syncPriceInput(form);
+    });
+  });
+
+  document.querySelectorAll('.search-filter_brand .form-checkbox').forEach(function (label) {
+    var checkbox = label.querySelector('input[type="checkbox"]');
+    if (!checkbox) return;
+
+    function syncBrandChecked() {
+      if (checkbox.checked) {
+        label.classList.add('brand-checked');
+      } else {
+        label.classList.remove('brand-checked');
+      }
+    }
+
+    checkbox.addEventListener('change', syncBrandChecked);
+    label.addEventListener('click', function () {
+      setTimeout(syncBrandChecked, 0);
+    });
+    syncBrandChecked();
+  });
+})();
+</script>
