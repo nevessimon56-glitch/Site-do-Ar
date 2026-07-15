@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-mobile-nav-v1
+ * VERSAO: 2026-07-15-js-mobile-nav-v2
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -949,13 +949,14 @@
 })();
 
 /**
- * Barra de atalhos mobile — ajuda a achar Todos os Produtos e categorias
+ * Barra de atalhos mobile — chips discretos (sem botão grande)
  */
 (function () {
   'use strict';
 
   var MOBILE_MQ = '(max-width: 991px)';
   var DISCOVER_CHIPS = [
+    { href: '/Todos-os-Produtos', label: 'Todos', match: '/todos-os-produtos' },
     { href: '/split-inverter', label: 'Split Inverter', match: '/split-inverter' },
     { href: '/Piso-Teto', label: 'Piso Teto', match: '/piso-teto' },
     { href: '/janela', label: 'Janela', match: '/janela' },
@@ -975,6 +976,11 @@
     return p.indexOf('/checkout') === 0;
   }
 
+  function isHomePage() {
+    var p = normalizePath(window.location.pathname);
+    return p === '/';
+  }
+
   function isCatalogPage() {
     var p = normalizePath(window.location.pathname);
     return p === '/todos-os-produtos' || p.indexOf('/busca') === 0 || !!document.querySelector('main.search-main');
@@ -989,27 +995,14 @@
     return p.indexOf(target) === 0;
   }
 
-  function getResultCountText() {
-    var el = document.querySelector('.search-right p, .search-header .search-right p');
-    if (!el) return '';
-    var m = (el.textContent || '').match(/(\d+)/);
-    return m ? m[1] : '';
-  }
-
   function mountDiscoverBar() {
-    if (!isMobile() || isCheckoutPage() || document.querySelector('.mobile-discover-bar')) return;
+    if (!isMobile() || isCheckoutPage() || isHomePage() || isCatalogPage()) return;
+    if (document.querySelector('.mobile-discover-bar')) return;
 
     var header = document.querySelector('.header, header.header, .header-main');
     var nav = document.createElement('nav');
     nav.className = 'mobile-discover-bar';
     nav.setAttribute('aria-label', 'Navegação rápida');
-
-    var primary = document.createElement('a');
-    primary.className = 'mobile-discover-bar__primary' + (pathMatches('/Todos-os-Produtos') ? ' is-active' : '');
-    primary.href = '/Todos-os-Produtos';
-    primary.title = 'Ver todos os produtos';
-    primary.textContent = 'Ver todos os produtos';
-    nav.appendChild(primary);
 
     var chips = document.createElement('div');
     chips.className = 'mobile-discover-bar__chips';
@@ -1035,56 +1028,9 @@
     }
   }
 
-  function mountSearchShortcut() {
-    if (!isMobile() || !isCatalogPage() || document.querySelector('.mobile-search-shortcut')) return;
-
-    var anchor = document.querySelector('.search-options_mobile, .search-header, main.search-main .search-container');
-    if (!anchor || !anchor.parentNode) return;
-
-    var wrap = document.createElement('div');
-    wrap.className = 'mobile-search-shortcut';
-
-    var count = getResultCountText();
-    var allLink = document.createElement('a');
-    allLink.className = 'mobile-search-shortcut__all';
-    allLink.href = '/Todos-os-Produtos';
-    allLink.title = 'Ver catálogo completo';
-    allLink.textContent = count ? ('Catálogo completo (' + count + ' produtos)') : 'Ver catálogo completo';
-
-    var filterBtn = document.createElement('button');
-    filterBtn.type = 'button';
-    filterBtn.className = 'mobile-search-shortcut__filter';
-    filterBtn.textContent = 'Filtros';
-    filterBtn.addEventListener('click', function () {
-      var toolbar = document.querySelector('.search-options_mobile');
-      if (!toolbar) return;
-      var filterToggle = toolbar.querySelector('.search-options-header_item');
-      if (filterToggle) filterToggle.click();
-      var body = toolbar.querySelector('.search-options-body_item');
-      if (body && !body.classList.contains('open') && filterToggle) {
-        filterToggle.click();
-      }
-      try {
-        toolbar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } catch (e) {
-        toolbar.scrollIntoView(true);
-      }
-    });
-
-    wrap.appendChild(allLink);
-    wrap.appendChild(filterBtn);
-
-    if (anchor.classList && anchor.classList.contains('search-options_mobile')) {
-      anchor.parentNode.insertBefore(wrap, anchor);
-    } else {
-      anchor.parentNode.insertBefore(wrap, anchor.nextSibling);
-    }
-  }
-
   function initMobileDiscoverNav() {
     if (!isMobile()) return;
     mountDiscoverBar();
-    mountSearchShortcut();
   }
 
   window.initMobileDiscoverNav = initMobileDiscoverNav;
@@ -1095,4 +1041,46 @@
     initMobileDiscoverNav();
   }
   window.addEventListener('load', initMobileDiscoverNav);
+})();
+
+/**
+ * Catálogo mobile — grade 2 colunas em vez de lista horizontal
+ */
+(function () {
+  'use strict';
+
+  var MOBILE_MQ = '(max-width: 991px)';
+  var GRID_CLASS = 'showcase-search_grid--mobile-2col';
+
+  function isMobile() {
+    return window.matchMedia(MOBILE_MQ).matches;
+  }
+
+  function isCatalogPage() {
+    var p = (window.location.pathname || '').toLowerCase().replace(/\/+$/, '') || '/';
+    return p === '/todos-os-produtos' || p.indexOf('/busca') === 0 || !!document.querySelector('main.search-main');
+  }
+
+  function applyCatalogGrid(root) {
+    var section = root || document.querySelector('.showcase-search.showcase-search_list');
+    if (!section) return;
+
+    section.classList.remove('showcase-search_list');
+    section.classList.add('showcase-search_grid', GRID_CLASS);
+    section.setAttribute('data-mobile-grid', '2col');
+  }
+
+  function initCatalogMobileGrid() {
+    if (!isMobile() || !isCatalogPage()) return;
+    applyCatalogGrid();
+  }
+
+  window.initCatalogMobileGrid = initCatalogMobileGrid;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCatalogMobileGrid);
+  } else {
+    initCatalogMobileGrid();
+  }
+  window.addEventListener('load', initCatalogMobileGrid);
 })();

@@ -31,26 +31,27 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - **NÃO** deve ter: `{% assign productPricePrimary = product.primaryPrice %}`
 
 ### mega-menu.js
-- Deve ter: `VERSAO: 2026-07-15-js-mobile-nav-v1` no topo
-- Inclui barra mobile `mobile-discover-bar` + atalho de filtros em páginas de catálogo
+- Deve ter: `VERSAO: 2026-07-15-js-mobile-nav-v2` no topo
+- Chips discretos em páginas internas (não home, não catálogo)
+- Catálogo mobile em grade 2 colunas (`showcase-search_grid--mobile-2col`)
 
-### Navegação mobile (MOBILE-NAV-v1)
+### Navegação mobile (MOBILE-NAV-v2)
 
 **O que aparece no celular:**
-1. Barra abaixo do header: **Ver todos os produtos** + chips (Split, Piso Teto, Janela, Diagnóstico)
-2. Em páginas de catálogo: botão **Catálogo completo** + **Filtros** (abre o painel sem procurar)
-3. Dentro do painel Filtrar: atalhos de categoria
+1. **Home e catálogo:** sem barra extra abaixo do header
+2. **Outras páginas** (ex.: Split Inverter): só uma fileira de chips roláveis (Todos, Split, Piso Teto, Janela, Diagnóstico)
+3. **Catálogo:** produtos em **grade 2 colunas** (não mais lista horizontal)
+4. **Painel Filtrar:** link discreto "Ver todos os produtos" (só fora de Todos os Produtos)
 
 **Arquivos:**
 - `assets/mega-menu.js` + `assets/mega-menu.css`
-- `sections/search-filters.liquid` — versão `2026-07-15-filters-mobile-v3`
+- `sections/search-filters.liquid` — versão `2026-07-15-filters-mobile-v4`
 
-**Validar:** no mobile, inspecionar deve existir `<nav class="mobile-discover-bar">`
+**Validar catálogo:** `<section class="showcase-search showcase-search_grid showcase-search_grid--mobile-2col" data-mobile-grid="2col">`
 
 ### search-filters.liquid
-- Versão: `2026-07-15-filters-mobile-v3`
-- Botão **Ver catálogo completo** no topo do painel de filtros
-- Chips: Split Inverter, Piso Teto, Janela, Só Frio, Quente/Frio
+- Versão: `2026-07-15-filters-mobile-v4`
+- Link discreto **Ver todos os produtos** (oculto em Todos os Produtos)
 
 ### Teclado no mobile (spam ao abrir páginas)
 

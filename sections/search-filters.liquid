@@ -1,5 +1,5 @@
 <div class="search-filters">
-    {% comment %} VERSAO: 2026-07-15-filters-mobile-v3 — atalhos mobile + fix BTU/preço {% endcomment %}
+    {% comment %} VERSAO: 2026-07-15-filters-mobile-v4 — atalhos discretos + fix BTU/preço {% endcomment %}
     <section class="search-filters-content">
         {% assign linkSearch = '/busca' %}
         {% if currentPage.path %}
@@ -34,17 +34,13 @@
             <input type="hidden" name="qtdPag" value="{% if search.query.qtdPag %}{{ search.query.qtdPag }}{% else %}12{% endif %}">
             <input type="hidden" name="pag" value="1">
 
-            <a href="/Todos-os-Produtos" class="mobile-todos-produtos">
-                Ver catálogo completo
-            </a>
-
-            <div class="mobile-filter-quicklinks" aria-label="Atalhos de categorias">
-                <a href="/split-inverter" class="mobile-filter-quicklinks__chip">Split Inverter</a>
-                <a href="/Piso-Teto" class="mobile-filter-quicklinks__chip">Piso Teto</a>
-                <a href="/janela" class="mobile-filter-quicklinks__chip">Janela</a>
-                <a href="/frio" class="mobile-filter-quicklinks__chip">Só Frio</a>
-                <a href="/quente-frio" class="mobile-filter-quicklinks__chip">Quente/Frio</a>
-            </div>
+            {% unless currentPage.path == '/Todos-os-Produtos' %}
+                <p class="mobile-catalog-link-wrap">
+                    <a href="/Todos-os-Produtos" class="mobile-catalog-link">
+                        Ver todos os produtos
+                    </a>
+                </p>
+            {% endunless %}
 
             {% if search.facets.rangePotency.min and search.facets.rangePotency.max %}
                 {% for page in pages %}
