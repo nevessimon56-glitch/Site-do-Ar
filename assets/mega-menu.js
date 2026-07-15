@@ -247,7 +247,11 @@
 
   window.initMegaMenuAr = initMegaMenuAr;
 
+  var megaMenuBooted = false;
+
   function bootMegaMenu() {
+    if (megaMenuBooted) return;
+    megaMenuBooted = true;
     try {
       initMegaMenuAr();
     } catch (err) {
@@ -256,7 +260,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', bootMegaMenu);
-  window.addEventListener('load', bootMegaMenu);
 })();
 
 /**
@@ -266,10 +269,21 @@
   'use strict';
 
   var PROCESSED = 'data-hover-swap-ready';
+  var PLOT_FIXED = 'data-plot-fixed';
   var cache = {};
+  var touchOnlyCached = null;
+  var hoverInitDone = false;
+  var mutationRaf = 0;
+  var probeQueue = [];
+  var probeActive = 0;
+  var PROBE_MAX = 3;
+  var cardObserver = null;
 
   function isTouchOnly() {
-    return window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    if (touchOnlyCached === null) {
+      touchOnlyCached = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    }
+    return touchOnlyCached;
   }
 
   function currentMainSrc(img) {
@@ -290,10 +304,30 @@
     if (!url) { cb(false); return; }
     if (cache[url] === true) { cb(true); return; }
     if (cache[url] === false) { cb(false); return; }
-    var probe = new Image();
-    probe.onload = function () { cache[url] = true; cb(true); };
-    probe.onerror = function () { cache[url] = false; cb(false); };
-    probe.src = url;
+    probeQueue.push({ url: url, cb: cb });
+    drainProbeQueue();
+  }
+
+  function drainProbeQueue() {
+    while (probeActive < PROBE_MAX && probeQueue.length) {
+      (function (job) {
+        probeActive++;
+        var probe = new Image();
+        probe.onload = function () {
+          cache[job.url] = true;
+          probeActive--;
+          job.cb(true);
+          drainProbeQueue();
+        };
+        probe.onerror = function () {
+          cache[job.url] = false;
+          probeActive--;
+          job.cb(false);
+          drainProbeQueue();
+        };
+        probe.src = job.url;
+      })(probeQueue.shift());
+    }
   }
 
   function normalizeImg(link) {
@@ -529,11 +563,29 @@
     });
   }
 
+  function queueBindLink(link) {
+    if (link.getAttribute(PROCESSED) === '1') return;
+    if (isTouchOnly() && typeof IntersectionObserver !== 'undefined') {
+      if (!cardObserver) {
+        cardObserver = new IntersectionObserver(function (entries) {
+          for (var i = 0; i < entries.length; i++) {
+            if (!entries[i].isIntersecting) continue;
+            cardObserver.unobserve(entries[i].target);
+            bindLink(entries[i].target);
+          }
+        }, { rootMargin: '120px 0px', threshold: 0.01 });
+      }
+      cardObserver.observe(link);
+      return;
+    }
+    bindLink(link);
+  }
+
   function scan(root) {
     var links = (root || document).querySelectorAll('.showcase-product_link__image:not([' + PROCESSED + '="1"])');
     for (var i = 0; i < links.length; i++) {
       if (links[i].closest('.mega-menu-ar')) continue;
-      bindLink(links[i]);
+      queueBindLink(links[i]);
     }
   }
 
@@ -551,7 +603,7 @@
   }
 
   function fixCardInstallments(root) {
-    var nodes = (root || document).querySelectorAll('.showcase-prices_installment[data-plot-base][data-plot-count]');
+    var nodes = (root || document).querySelectorAll('.showcase-prices_installment[data-plot-base][data-plot-count]:not([' + PLOT_FIXED + '="1"])');
     for (var i = 0; i < nodes.length; i++) {
       var base = parseFloat(nodes[i].getAttribute('data-plot-base'));
       var count = parseInt(nodes[i].getAttribute('data-plot-count'), 10);
@@ -559,23 +611,50 @@
       var each = Math.round((base / count) * 100) / 100;
       var valEl = nodes[i].querySelector('.showcase-prices_installment-value');
       if (valEl) valEl.textContent = formatMoneyBRL(each);
+      nodes[i].setAttribute(PLOT_FIXED, '1');
     }
+  }
+
+  function nodeHasShowcase(node) {
+    if (!node || node.nodeType !== 1) return false;
+    if (node.classList && (node.classList.contains('showcase-product') || node.classList.contains('showcase-item') || node.classList.contains('showcase-prices_installment'))) {
+      return true;
+    }
+    return !!(node.querySelector && node.querySelector('.showcase-product_link__image, .showcase-prices_installment'));
+  }
+
+  function scheduleMutationWork(mutations) {
+    if (mutationRaf) return;
+    var roots = [];
+    for (var m = 0; m < mutations.length; m++) {
+      var added = mutations[m].addedNodes;
+      for (var a = 0; a < added.length; a++) {
+        if (nodeHasShowcase(added[a])) roots.push(added[a]);
+      }
+    }
+    if (!roots.length) return;
+    mutationRaf = requestAnimationFrame(function () {
+      mutationRaf = 0;
+      for (var i = 0; i < roots.length; i++) {
+        scan(roots[i]);
+        fixCardInstallments(roots[i]);
+      }
+    });
   }
 
   function initProductHoverImage() {
     resetTouchHoverStates();
     scan(document);
     fixCardInstallments(document);
-    if (typeof MutationObserver !== 'undefined' && !document.body._productHoverObserver) {
-      document.body._productHoverObserver = new MutationObserver(function () {
-        scan(document);
-        cleanupDuplicateSpecBars();
-        fixCardInstallments(document);
-      });
-      document.body._productHoverObserver.observe(document.body, { childList: true, subtree: true });
+
+    if (!hoverInitDone) {
+      hoverInitDone = true;
+      cleanupDuplicateSpecBars();
+      if (typeof MutationObserver !== 'undefined' && document.body && !document.body._productHoverObserver) {
+        document.body._productHoverObserver = new MutationObserver(scheduleMutationWork);
+        document.body._productHoverObserver.observe(document.body, { childList: true, subtree: true });
+      }
     }
-    cleanupDuplicateSpecBars();
-    fixCardInstallments(document);
   }
 
   function cleanupDuplicateSpecBars() {
@@ -600,8 +679,11 @@
   window.cleanupDuplicateSpecBars = cleanupDuplicateSpecBars;
 
   window.initProductHoverImage = initProductHoverImage;
-  document.addEventListener('DOMContentLoaded', initProductHoverImage);
-  window.addEventListener('load', initProductHoverImage);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProductHoverImage);
+  } else {
+    initProductHoverImage();
+  }
   document.addEventListener('touchend', resetTouchHoverStates, { passive: true });
   document.addEventListener('touchcancel', resetTouchHoverStates, { passive: true });
 })();
