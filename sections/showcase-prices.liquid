@@ -18,8 +18,12 @@
   {% endif %}
   <p class="showcase-prices_price showcase-prices_price--pix">
     <b>{{ _pixPrice | money }}</b>
-    <span class="showcase-prices_label">no Pix</span>
   </p>
+  {% assign _pixPercent = 5 %}
+  {% if product.price.promotionMargin and product.price.promotionMargin > 0 %}
+    {% assign _pixPercent = product.price.promotionMargin | round %}
+  {% endif %}
+  <p class="showcase-prices_pix">{{ _pixPercent }}% off no Pix</p>
 {% else %}
   {% assign _displayPrice = productPricePrimary.price %}
   <p class="showcase-prices_price">
