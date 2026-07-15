@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-perf-v3
+ * VERSAO: 2026-07-15-js-perf-v4
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -834,11 +834,11 @@
 
   function isPanelOpen(panel) {
     if (!panel) return false;
+    if (panel.classList && !panel.classList.contains('open')) return false;
     var style = window.getComputedStyle(panel);
     if (style.display === 'none' || style.visibility === 'hidden') return false;
     if (parseFloat(style.opacity || '1') === 0) return false;
-    var rect = panel.getBoundingClientRect();
-    return rect.width > 0 && rect.height > 0;
+    return true;
   }
 
   function stripHiddenAutofocus() {

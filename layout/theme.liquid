@@ -103,45 +103,44 @@
         {{ script.code }}
     {%- endfor -%}
     {% block head %}{% endblock %}
+    <script>
+    (function () {
+      var PANEL_SEL = '.sidenav-overlay, .sidenav-password, .sidenav-forgot-password';
+      function panelIsOpen(panel) {
+        return !!(panel && panel.classList && panel.classList.contains('open'));
+      }
+      document.addEventListener('focusin', function (e) {
+        var target = e.target;
+        if (!target || !target.closest || !target.matches('input, textarea, select')) return;
+        var panel = target.closest(PANEL_SEL);
+        if (panel && !panelIsOpen(panel)) {
+          try { target.blur(); } catch (err) {}
+        }
+      }, true);
+      function stripAutofocus() {
+        var panels = document.querySelectorAll(PANEL_SEL);
+        for (var i = 0; i < panels.length; i++) {
+          if (panelIsOpen(panels[i])) continue;
+          var inputs = panels[i].querySelectorAll('[autofocus]');
+          for (var j = 0; j < inputs.length; j++) {
+            inputs[j].removeAttribute('autofocus');
+            inputs[j].setAttribute('data-autofocus-on-open', '1');
+          }
+        }
+      }
+      window.__stripHiddenAutofocus = stripAutofocus;
+      document.addEventListener('DOMContentLoaded', stripAutofocus);
+      if (typeof MutationObserver !== 'undefined') {
+        var raf = 0;
+        new MutationObserver(function () {
+          if (raf) return;
+          raf = requestAnimationFrame(function () { raf = 0; stripAutofocus(); });
+        }).observe(document.documentElement, { childList: true, subtree: true });
+      }
+    })();
+    </script>
 </head>
 <body x-data="setupStore()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
-<script>
-(function () {
-  var PANEL_SEL = '.sidenav-overlay, .sidenav-password, .sidenav-forgot-password';
-  function isPanelOpen(panel) {
-    if (!panel) return false;
-    var style = window.getComputedStyle(panel);
-    if (style.display === 'none' || style.visibility === 'hidden') return false;
-    if (parseFloat(style.opacity || '1') === 0) return false;
-    var rect = panel.getBoundingClientRect();
-    return rect.width > 0 || rect.height > 0;
-  }
-  function stripHiddenAutofocus() {
-    var panels = document.querySelectorAll(PANEL_SEL);
-    for (var i = 0; i < panels.length; i++) {
-      if (isPanelOpen(panels[i])) continue;
-      var inputs = panels[i].querySelectorAll('[autofocus]');
-      for (var j = 0; j < inputs.length; j++) {
-        inputs[j].removeAttribute('autofocus');
-        inputs[j].setAttribute('data-autofocus-on-open', '1');
-      }
-    }
-    var active = document.activeElement;
-    if (active && active.closest && active.matches && active.matches('input, textarea, select')) {
-      var parent = active.closest(PANEL_SEL);
-      if (parent && !isPanelOpen(parent)) {
-        try { active.blur(); } catch (e) {}
-      }
-    }
-  }
-  window.__stripHiddenAutofocus = stripHiddenAutofocus;
-  if (document.body) {
-    stripHiddenAutofocus();
-  } else {
-    document.addEventListener('DOMContentLoaded', stripHiddenAutofocus);
-  }
-})();
-</script>
 {%- for script in scripts.content -%}
     {{ script.code }}
 {%- endfor -%}

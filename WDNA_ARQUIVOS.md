@@ -11,7 +11,10 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 | `sections/product-spec-icons.liquid` | `sections/product-spec-icons.liquid` | Sim | Pills de specs nos cards |
 | `assets/mega-menu.js` | `assets/mega-menu.js` | Sim | Hover, carrossel, fix após login |
 | `assets/mega-menu.css` | `assets/mega-menu.css` | Sim | Estilos dos cards |
-| `layout/theme.liquid` | `layout/theme.liquid` | Recomendado | Login + carrega JS |
+| `sections/sidenav-overlay-account.liquid` | `sections/sidenav-overlay-account.liquid` | **SIM** | Login lateral — **remover autofocus** |
+| `sections/sidenav-user-password.liquid` | `sections/sidenav-user-password.liquid` | **SIM** | Alterar senha — **remover autofocus** |
+| `sections/sidenav-forgot-password.liquid` | `sections/sidenav-forgot-password.liquid` | **SIM** | Esqueci senha — **remover autofocus** |
+| `layout/theme.liquid` | `layout/theme.liquid` | Recomendado | Login + script anti-teclado no `<head>` |
 | `sections/mega-menu-ar.liquid` | `sections/mega-menu-ar.liquid` | Se usar mega menu | Menu Modelos |
 | `pages/showcase-model-product.liquid` | `pages/showcase-model-product.liquid` | **NÃO** | Só cópia para referência — **o WDNA usa `sections/`** |
 
@@ -27,8 +30,19 @@ Este repositório GitHub é **parcial**. O WDNA também usa arquivos que **não 
 - **NÃO** deve ter: `{% assign productPricePrimary = product.primaryPrice %}`
 
 ### mega-menu.js
-- Deve ter: `VERSAO: 2026-07-15-js-perf-v3` no topo do arquivo
+- Deve ter: `VERSAO: 2026-07-15-js-perf-v4` no topo do arquivo
 - Inclui guarda contra teclado no mobile (painéis de login ocultos)
+
+### Teclado no mobile (spam ao abrir páginas)
+
+**Causa:** `autofocus` nos campos de login/senha dos painéis laterais (`sidenav-overlay-account`, etc.).
+
+**Correção na origem** — colar estes 3 arquivos (versão `2026-07-15-no-autofocus`):
+- `sections/sidenav-overlay-account.liquid`
+- `sections/sidenav-user-password.liquid`
+- `sections/sidenav-forgot-password.liquid`
+
+**Rede de segurança** — `layout/theme.liquid` deve ter script no `<head>` com `__stripHiddenAutofocus` + `assets/mega-menu.js` perf-v3.
 
 ### theme.liquid
 - Deve ter script `__stripHiddenAutofocus` logo após `<body>` (remove autofocus dos painéis laterais)
