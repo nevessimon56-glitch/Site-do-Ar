@@ -278,6 +278,66 @@
   var probeActive = 0;
   var PROBE_MAX = 3;
   var cardObserver = null;
+  var sliderRefreshTimer = 0;
+  var authChangeTimer = 0;
+
+  function refreshThemeShowcaseSliders() {
+    var lists = document.querySelectorAll('.showcase-list');
+    for (var i = 0; i < lists.length; i++) {
+      var items = lists[i].querySelectorAll('.showcase-item');
+      for (var j = 0; j < items.length; j++) {
+        items[j].style.removeProperty('display');
+        items[j].style.removeProperty('width');
+        items[j].style.removeProperty('opacity');
+        items[j].style.removeProperty('visibility');
+      }
+    }
+
+    if (typeof jQuery !== 'undefined' && jQuery.fn && jQuery.fn.slick) {
+      jQuery('.showcase-list.slick-initialized').each(function () {
+        try {
+          jQuery(this).slick('setPosition');
+          jQuery(this).slick('refresh');
+        } catch (e) {}
+      });
+      jQuery('.showcase-list').not('.slick-initialized').each(function () {
+        var $list = jQuery(this);
+        if ($list.find('.showcase-item').length && typeof $list.slick === 'function') {
+          try { $list.slick(); } catch (e) {}
+        }
+      });
+    }
+
+    var lazyImgs = document.querySelectorAll('.showcase img.lazy:not(.loaded)');
+    for (var k = 0; k < lazyImgs.length; k++) {
+      var ds = lazyImgs[k].getAttribute('data-src');
+      if (ds) {
+        lazyImgs[k].setAttribute('src', ds);
+        lazyImgs[k].classList.add('loaded');
+      }
+    }
+
+    var themeInits = ['initShowcase', 'initShowcaseCarousel', 'initShowcases', 'loadShowcase', 'showcaseSlider'];
+    for (var n = 0; n < themeInits.length; n++) {
+      if (typeof window[themeInits[n]] === 'function') {
+        try { window[themeInits[n]](); } catch (e) {}
+      }
+    }
+  }
+
+  function scheduleSliderRefresh(delay) {
+    clearTimeout(sliderRefreshTimer);
+    sliderRefreshTimer = setTimeout(refreshThemeShowcaseSliders, delay || 200);
+  }
+
+  function onAuthStateChange() {
+    clearTimeout(authChangeTimer);
+    authChangeTimer = setTimeout(function () {
+      initProductHoverImage();
+      scheduleSliderRefresh(150);
+      scheduleSliderRefresh(700);
+    }, 80);
+  }
 
   function isTouchOnly() {
     if (touchOnlyCached === null) {
@@ -639,6 +699,7 @@
         scan(roots[i]);
         fixCardInstallments(roots[i]);
       }
+      scheduleSliderRefresh(200);
     });
   }
 
@@ -655,6 +716,8 @@
         document.body._productHoverObserver.observe(document.body, { childList: true, subtree: true });
       }
     }
+
+    scheduleSliderRefresh(250);
   }
 
   function cleanupDuplicateSpecBars() {
@@ -679,11 +742,18 @@
   window.cleanupDuplicateSpecBars = cleanupDuplicateSpecBars;
 
   window.initProductHoverImage = initProductHoverImage;
+  window.refreshThemeShowcaseSliders = refreshThemeShowcaseSliders;
+  window.onAuthStateChange = onAuthStateChange;
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initProductHoverImage);
   } else {
     initProductHoverImage();
   }
+
+  window.addEventListener('change-customer-login', onAuthStateChange);
+  window.addEventListener('check-login-logged', onAuthStateChange);
+
   document.addEventListener('touchend', resetTouchHoverStates, { passive: true });
   document.addEventListener('touchcancel', resetTouchHoverStates, { passive: true });
 })();

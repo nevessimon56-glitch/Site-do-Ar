@@ -225,6 +225,9 @@
                 }
             });
         }
+        document.addEventListener('DOMContentLoaded', function () {
+            window.dispatchEvent(new CustomEvent('change-customer-login', { detail: { customer: customer } }));
+        });
     }
 </script>
 {% block script_footer %}{% endblock %}
