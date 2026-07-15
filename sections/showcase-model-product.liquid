@@ -26,6 +26,32 @@
     {% if product.primaryPrice %}
         {% assign productPricePrimary = product.primaryPrice %}
     {% endif %}
+
+    {% assign listPriceCard = product.price.price %}
+    {% assign pixPriceCard = productPricePrimary.price %}
+    {% assign hasPixPromoCard = 0 %}
+    {% assign pixPercentCard = 5 %}
+    {% assign offerPercentCard = 5 %}
+
+    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+        {% assign hasPixPromoCard = 1 %}
+        {% assign pixPriceCard = product.price.promotionPrice %}
+        {% assign pixPercentCard = product.price.promotionMargin | round %}
+        {% assign offerPercentCard = pixPercentCard %}
+    {% elsif productPricePrimary.promotionPrice and productPricePrimary.promotionPrice > 0 %}
+        {% assign pixPriceCard = productPricePrimary.promotionPrice %}
+        {% if listPriceCard > pixPriceCard %}
+            {% assign hasPixPromoCard = 1 %}
+        {% endif %}
+        {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
+            {% assign pixPercentCard = productPricePrimary.discountPercentage | round %}
+        {% endif %}
+        {% assign offerPercentCard = pixPercentCard %}
+    {% elsif product.primaryPrice and listPriceCard > productPricePrimary.price %}
+        {% assign hasPixPromoCard = 1 %}
+        {% assign pixPriceCard = productPricePrimary.price %}
+    {% endif %}
+
     <li class="showcase-item">
         <div class="showcase-product card">
             {% if themeConfig.price.type != 'hide' %}
@@ -42,14 +68,14 @@
             {% endif %}
             <div class="showcase-product_image card-image">
                 {% if themeConfig.price.type != 'hide' %}
-                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                    {% if hasPixPromoCard == 1 %}
                         {% assign classBtnBuy = '' %}
                         {% if themeConfig.price.type == 'show-logged' %}
                             {% assign classBtnBuy = ' login-btn_logged d-hide' %}
                         {% endif %}
                         <div class="showcase-offer{{ classBtnBuy }}">
                             <div class="showcase-offer_text">
-                                <span>{{ product.price.promotionMargin | round }}%</span>
+                                <span>{{ offerPercentCard }}%</span>
                                 <span>OFF</span>
                             </div>
                         </div>
@@ -99,22 +125,11 @@
                             {% assign classShowcaseLoginPrice = ' login-btn_logged d-hide' %}
                         {% endif %}
                         <div class="showcase-prices showcase-prices--card{{ classShowcaseLoginPrice }}">
-                            {% assign pixPriceCard = product.price.price %}
-                            {% assign listPriceCard = product.price.price %}
-                            {% assign hasPixPromoCard = 0 %}
-                            {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
-                                {% assign hasPixPromoCard = 1 %}
-                                {% assign pixPriceCard = product.price.promotionPrice %}
-                            {% endif %}
                             {% if hasPixPromoCard == 1 %}
                                 {% if listPriceCard > pixPriceCard %}
                                     <del class="showcase-prices_strike"><s>{{ listPriceCard | money }}</s></del>
                                 {% endif %}
                                 <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b></p>
-                                {% assign pixPercentCard = 5 %}
-                                {% if product.price.promotionMargin > 0 %}
-                                    {% assign pixPercentCard = product.price.promotionMargin | round %}
-                                {% endif %}
                                 <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% off no Pix</p>
                             {% else %}
                                 <p class="showcase-prices_price"><b>{{ productPricePrimary.price | money }}</b></p>
