@@ -121,9 +121,13 @@
                             {% endif %}
                             {% if product.secondaryPrice %}
                                 {% if product.secondaryPrice.installment > 1 %}
-                                <p class="showcase-prices_installment">
+                                {% assign plotBasePrice = listPriceCard %}
+                                {% if product.secondaryPrice.price and product.secondaryPrice.price > plotBasePrice %}
+                                    {% assign plotBasePrice = product.secondaryPrice.price %}
+                                {% endif %}
+                                <p class="showcase-prices_installment" data-plot-base="{{ plotBasePrice }}" data-plot-count="{{ product.secondaryPrice.installment }}">
                                     <span class="showcase-prices_installment-prefix">ou</span>
-                                    <span class="showcase-prices_installment-text">em até <b>{{ product.secondaryPrice.installment }}x</b> de <b>{{ product.secondaryPrice.installmentValue | money }}</b> sem juros</span>
+                                    <span class="showcase-prices_installment-text">em até <b>{{ product.secondaryPrice.installment }}x</b> de <b class="showcase-prices_installment-value">{{ plotBasePrice | divided_by: product.secondaryPrice.installment | money }}</b> sem juros</span>
                                 </p>
                                 {% endif %}
                             {% endif %}

@@ -545,17 +545,37 @@
     }
   }
 
+  function formatMoneyBRL(num) {
+    if (isNaN(num)) return '';
+    return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function fixCardInstallments(root) {
+    var nodes = (root || document).querySelectorAll('.showcase-prices_installment[data-plot-base][data-plot-count]');
+    for (var i = 0; i < nodes.length; i++) {
+      var base = parseFloat(nodes[i].getAttribute('data-plot-base'));
+      var count = parseInt(nodes[i].getAttribute('data-plot-count'), 10);
+      if (!base || !count || count < 2) continue;
+      var each = Math.round((base / count) * 100) / 100;
+      var valEl = nodes[i].querySelector('.showcase-prices_installment-value');
+      if (valEl) valEl.textContent = formatMoneyBRL(each);
+    }
+  }
+
   function initProductHoverImage() {
     resetTouchHoverStates();
     scan(document);
+    fixCardInstallments(document);
     if (typeof MutationObserver !== 'undefined' && !document.body._productHoverObserver) {
       document.body._productHoverObserver = new MutationObserver(function () {
         scan(document);
         cleanupDuplicateSpecBars();
+        fixCardInstallments(document);
       });
       document.body._productHoverObserver.observe(document.body, { childList: true, subtree: true });
     }
     cleanupDuplicateSpecBars();
+    fixCardInstallments(document);
   }
 
   function cleanupDuplicateSpecBars() {
