@@ -430,7 +430,6 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     box-shadow: 0 4px 14px rgba(44, 119, 187, 0.35);
-    animation: megaMenuCtaPulse 2.5s ease-in-out infinite;
   }
 
   .mega-menu-ar__banner-cta::after {
@@ -439,16 +438,7 @@
 
   .mega-menu-ar__banner-link:hover .mega-menu-ar__banner-cta {
     background: linear-gradient(135deg, #2c77bb 0%, #1a5a94 100%);
-    animation: none;
-  }
-
-  @keyframes megaMenuCtaPulse {
-    0%, 100% {
-      box-shadow: 0 4px 14px rgba(44, 119, 187, 0.35);
-    }
-    50% {
-      box-shadow: 0 4px 20px rgba(44, 119, 187, 0.55);
-    }
+    box-shadow: 0 6px 18px rgba(44, 119, 187, 0.45);
   }
 }
 
@@ -649,12 +639,6 @@
   border: 0 !important;
 }
 
-@keyframes product-carousel-hint {
-  0% { opacity: 1; }
-  70% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
 @media (max-width: 767px) {
   .showcase-item .showcase-product.card {
     display: flex;
@@ -782,7 +766,8 @@
     letter-spacing: 0.02em;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     pointer-events: none;
-    animation: product-carousel-hint 4s ease forwards;
+    opacity: 0.95;
+    transition: opacity 0.6s ease;
   }
 
   .product-hover-wrap {

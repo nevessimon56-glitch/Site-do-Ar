@@ -418,6 +418,14 @@
 
     link.appendChild(carousel);
     bindMobileSwipe(link, track, dots, hint);
+    if (hint) {
+      setTimeout(function () {
+        hint.style.opacity = '0';
+        setTimeout(function () {
+          if (hint.parentNode) hint.parentNode.removeChild(hint);
+        }, 650);
+      }, 3500);
+    }
   }
 
   function bindMobileSwipe(link, track, dots, hint) {
