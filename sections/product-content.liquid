@@ -1,5 +1,5 @@
 {% if product %}
-{% comment %} VERSAO: 2026-07-15-product-v2 — site-price-resolve (mesmo preco logado/deslogado) {% endcomment %}
+{% comment %} VERSAO: 2026-07-20-product-v1-revert — mainPrice original (product.price) {% endcomment %}
     <div
         x-on:cart-change-quantity.window="changeProductDefault($event.detail.quantity)"
         x-on:change-product-kit.window="handleProductKit($event.detail)"
@@ -11,43 +11,12 @@
         {% assign buyButtonText = 'Comprar' %}
 
         <!-- TODO: Não alterar mainPrice. Se caso alterar, vai afetar no calculo de pagamento-->
-        {% comment %} SITE-PRICE-RESOLVE-v1 {% endcomment %}
-        {% assign sitePrice = product.price %}
-        {% if customer and product.prices.size > 0 %}
-            {% assign sitePriceCandidate = nil %}
-            {% assign sitePriceCandidateIsMl = true %}
-            {% for pg in product.prices %}
-                {% if pg.price > 0 %}
-                    {% assign pgNameLower = pg.priceGroupName | downcase | strip %}
-                    {% assign pgIsMl = false %}
-                    {% if pgNameLower contains 'mercado' or pgNameLower contains 'marketplace' or pgNameLower contains 'meli' %}
-                        {% assign pgIsMl = true %}
-                    {% endif %}
-                    {% if pg.promotionMargin > 0 and pg.promotionPrice != null and pg.promotionPrice > 0 %}
-                        {% if sitePriceCandidate == nil %}
-                            {% assign sitePriceCandidate = pg %}
-                            {% assign sitePriceCandidateIsMl = pgIsMl %}
-                        {% elsif pgIsMl == false and sitePriceCandidateIsMl %}
-                            {% assign sitePriceCandidate = pg %}
-                            {% assign sitePriceCandidateIsMl = false %}
-                        {% endif %}
-                    {% elsif pgIsMl == false and sitePriceCandidate == nil %}
-                        {% assign sitePriceCandidate = pg %}
-                        {% assign sitePriceCandidateIsMl = false %}
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-            {% if sitePriceCandidate %}
-                {% assign sitePrice = sitePriceCandidate %}
-            {% endif %}
+        {% assign mainPrice = product.price.price %}
+        {% if product.price.promotionPrice > 0 %}
+            {% assign mainPrice = product.price.promotionPrice %}
         {% endif %}
 
-        {% assign mainPrice = sitePrice.price %}
-        {% if sitePrice.promotionPrice > 0 %}
-            {% assign mainPrice = sitePrice.promotionPrice %}
-        {% endif %}
-
-        {% assign productPricePrimary = sitePrice %}
+        {% assign productPricePrimary = product.price %}
         {% if product.secondaryPrice %}
             {% assign productPriceSecond = product.secondaryPrice %}
         {% endif %}
@@ -407,26 +376,24 @@
                                 </div>
                                 {% endif %}
                                 {% if product.typeId != 2 or product.gridOptions.size > 0 %}
-                                    {% assign _pixPrice = productPricePrimary.price %}
-                                    {% if productPricePrimary.promotionMargin > 0 and productPricePrimary.promotionPrice != null %}
-                                        {% assign _pixPrice = productPricePrimary.promotionPrice %}
+                                    {% assign _pixPrice = product.price.price %}
+                                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                                        {% assign _pixPrice = product.price.promotionPrice %}
                                     {% elsif productPricePrimary.promotionPrice > 0 %}
                                         {% assign _pixPrice = productPricePrimary.promotionPrice %}
                                     {% endif %}
                                     {% assign _hasPixDiscount = false %}
-                                    {% if productPricePrimary.promotionMargin > 0 and productPricePrimary.promotionPrice != null and productPricePrimary.price > _pixPrice %}
+                                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null and product.price.price > _pixPrice %}
                                         {% assign _hasPixDiscount = true %}
                                     {% endif %}
-                                    <div class="product-prices" data-site-price-lock="1">
+                                    <div class="product-prices">
                                         <div class="product-content_box product-box_prices col-12">
                                             {% if _hasPixDiscount %}
-                                                <del class="product-prices_strike"><s>{{ productPricePrimary.price | money }}</s></del>
+                                                <del class="product-prices_strike"><s>{{ product.price.price | money }}</s></del>
                                                 <p class="product-prices_price">{{ _pixPrice | money }}</p>
                                                 <p class="product-prices_pix">
                                                     {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
                                                         {{ productPricePrimary.discountPercentage | round }}% de desconto no Pix
-                                                    {% elsif productPricePrimary.promotionMargin > 0 %}
-                                                        {{ productPricePrimary.promotionMargin | round }}% de desconto no Pix
                                                     {% else %}
                                                         5% de desconto no Pix
                                                     {% endif %}
@@ -621,7 +588,7 @@
                 product: {
                     categories: {% if product.categories %}{{ product.categories | json }}{% else %}{}{% endif %},
                     grids: {% if product.grids %}{{ product.grids | json }}{% else %}{}{% endif %},
-                    price: {% if sitePrice %}{{ sitePrice | json }}{% elsif product.price %}{{ product.price | json }}{% else %}{}{% endif %},
+                    price: {% if product.price %}{{ product.price | json }}{% else %}{}{% endif %},
                     sku: {% if product.sku %}"{{ product.sku | escape }}"{% else %}null{% endif %},
                     title: {% if product.title %}"{{ product.title | escape }}"{% else %}null{% endif %},
                     url: {% if product.url %}"{{ product.url }}"{% else %}null{% endif %},
@@ -798,6 +765,9 @@
                     const variationsMailbiz = product.variations.map((variation) => {
                         let priceVariationsMailbiz = 0;
                         priceVariationsMailbiz = variation?.price?.promotionPrice > 0 ? variation.price.promotionPrice : variation.price.price;
+                        if (variation?.primaryPrice?.price) {
+                            priceVariationsMailbiz = variation?.primaryPrice?.promotionPrice > 0 ? variation.primaryPrice.promotionPrice : variation.primaryPrice.price;
+                        }
 
                         return {
                             sku: variation.sku || variation.id,
