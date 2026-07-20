@@ -113,6 +113,8 @@ Ordem sugerida:
 5. **A lista de preço do usuário logado no painel ainda está como Mercado Livre?**
 6. **Você quer priorizar:** (a) site funcionando para todos, ou (b) login com preço certo primeiro?
 
+**Atualização 2026-07-20:** `theme.liquid` restaurado pelo usuário. Site voltou; logado mostra poucos produtos na vitrine. Próximo passo: **Passo 1 do painel WDNA** (sem arquivo). Ver [`ORDEM_ARQUIVOS.md`](ORDEM_ARQUIVOS.md).
+
 ---
 
 ## 7. O que NÃO fazer mais

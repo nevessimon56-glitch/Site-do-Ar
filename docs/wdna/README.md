@@ -14,3 +14,4 @@ Esta pasta guarda a **estrutura real do tema** no painel WDNA.
 3. Arquivos como `theme.js`, `theme-defer.js` ficam na WDNA — **não estão no GitHub** (só referência).
 4. Correção de preço logado / carrinho: priorizar **Configurações → Produto → Preço** no painel WDNA.
 5. Catálogo com erro 500: ver [`RECUPERACAO_URGENTE.md`](RECUPERACAO_URGENTE.md).
+6. Ordem de aplicação (um arquivo por vez): [`ORDEM_ARQUIVOS.md`](ORDEM_ARQUIVOS.md).
