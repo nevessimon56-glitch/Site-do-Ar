@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-20-js-showcase-guest-restore-v10
+ * VERSAO: 2026-07-20-js-showcase-guest-restore-v11
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1673,6 +1673,18 @@
     return false;
   }
 
+  function isZeroPriceText(text) {
+    var txt = (text || '').replace(/\s/g, '');
+    return !txt || /R\$0[,.]00/.test(txt) || txt === 'R$0,00' || txt === 'R$0.00';
+  }
+
+  function isProductPriceBrokenPage() {
+    if (!isLoggedIn() || !isProductPage() || isProductBrokenPage()) return false;
+    var priceEl = document.querySelector('.product-prices_price');
+    if (!priceEl) return false;
+    return isZeroPriceText(priceEl.textContent);
+  }
+
   function showcaseHasBrokenPrices() {
     var lists = getShowcaseLists();
     for (var i = 0; i < lists.length; i++) {
@@ -1682,8 +1694,8 @@
   }
 
   function pageNeedsRestore() {
-    if (!isLoggedIn()) return false;
-    if (isSearchListingBrokenPage()) return true;
+    if (!isLoggedIn() || isGuestRestoreExcludedPath()) return false;
+    if (isSearchListingBrokenPage() || isProductPriceBrokenPage()) return true;
     if (showcaseHasBrokenPrices()) return true;
     var lists = getShowcaseLists();
     for (var i = 0; i < lists.length; i++) {
@@ -1703,6 +1715,8 @@
       var hasFilters = (location.search || '').length > 1;
       if (!hasFilters && current > 0 && current < 20) return true;
     }
+
+    if (lists.length > 0) return true;
 
     return false;
   }
@@ -1907,7 +1921,7 @@
       var list = findListForEntry(entry, lists);
       if (!list) continue;
       var current = countItems(list);
-      if (entry.count > current || listHasBrokenPrices(list)) {
+      if (entry.count > current || listHasBrokenPrices(list) || (isLoggedIn() && entry.count > 0)) {
         list.innerHTML = entry.html;
         restored = true;
       }
@@ -2149,19 +2163,6 @@
     fetchGuestPageHtml()
       .then(function (html) {
         var doc = new DOMParser().parseFromString(html, 'text/html');
-        if (!guestHasMoreCatalogItems(doc) && !isCatalogPage()) {
-          var guestPayload = buildPayloadFromDoc(doc);
-          var anyMore = false;
-          var lists = getShowcaseLists();
-          for (var g = 0; g < guestPayload.length; g++) {
-            if (guestPayload[g].key === 'catalog-count' ||
-                guestPayload[g].key === 'catalog-pagination' ||
-                guestPayload[g].key === 'catalog-search-state') continue;
-            var gl = findListForEntry(guestPayload[g], lists);
-            if (gl && (guestPayload[g].count > countItems(gl) || listHasBrokenPrices(gl))) anyMore = true;
-          }
-          if (!anyMore) return { html: html, restored: false };
-        }
         var payload = buildPayloadFromDoc(doc);
         if (!payload.length) return { html: html, restored: false };
         var restored = applyPayload(payload, getShowcaseLists());
@@ -2218,6 +2219,16 @@
       });
       return;
     }
+    if (isProductPriceBrokenPage()) {
+      fetchGuestPageHtml(location.pathname + location.search)
+        .then(function (html) {
+          if (!guestHtmlHasProductMain(html)) return;
+          applyGuestProductHtml(html);
+          restoreDone = false;
+          restoreShowcasesFromGuest();
+        })
+        .catch(function () {});
+    }
     if (isSearchListingBrokenPage()) {
       recoverBrokenSearchListingPage().then(function (ok) {
         if (ok) {
@@ -2261,8 +2272,8 @@
 })();
 
 /**
- * Logado: WDNA tenta usar tabela ML no carrinho.
- * Antes de adicionar, troca para a tabela do site via API WDNA.
+ * Logado: WDNA usa tabela ML no carrinho.
+ * Intercepta cart-add e troca para tabela do site antes de adicionar.
  */
 (function () {
   'use strict';
@@ -2275,6 +2286,13 @@
     return false;
   }
 
+  function getSitePriceGroupIdDefault() {
+    if (typeof window.__siteArPriceGroupId === 'number' && window.__siteArPriceGroupId > 0) {
+      return window.__siteArPriceGroupId;
+    }
+    return 1;
+  }
+
   function getSitePriceGroupId(productId, state) {
     if (state) {
       if (state.priceGroupId) return Number(state.priceGroupId);
@@ -2285,7 +2303,7 @@
       var gid = item.getAttribute('data-site-price-group-id');
       if (gid) return parseInt(gid, 10);
     }
-    return null;
+    return getSitePriceGroupIdDefault();
   }
 
   function switchToSitePriceGroup(productId, groupId) {
@@ -2298,8 +2316,25 @@
       .then(function () {
         window.dispatchEvent(new CustomEvent('update-cart-plugins', { detail: [groupId] }));
       })
-      .catch(function () {});
+      .catch(function () {})
+      .then(function () {
+        return groupId;
+      });
     return switchCache[key];
+  }
+
+  function ensureSitePriceGroupThenRun(productId, state, run) {
+    var groupId = getSitePriceGroupId(String(productId), state);
+    if (typeof openLoadingMain === 'function') openLoadingMain();
+    return switchToSitePriceGroup(productId, groupId)
+      .then(function () {
+        if (typeof closeLoadingMain === 'function') closeLoadingMain();
+        run();
+      })
+      .catch(function () {
+        if (typeof closeLoadingMain === 'function') closeLoadingMain();
+        run();
+      });
   }
 
   function patchHandleAddToCart() {
@@ -2315,29 +2350,46 @@
       if (!isStoreLoggedIn()) {
         return original.apply(this, arguments);
       }
-      var groupId = getSitePriceGroupId(String(id), state);
-      if (!groupId) {
-        return original.apply(this, arguments);
-      }
       var args = arguments;
       var self = this;
-      if (typeof openLoadingMain === 'function') openLoadingMain();
-      switchToSitePriceGroup(id, groupId).then(function () {
-        if (typeof closeLoadingMain === 'function') closeLoadingMain();
+      ensureSitePriceGroupThenRun(id, state, function () {
         original.apply(self, args);
       });
     };
   }
 
+  function patchCartAddEvent() {
+    if (window.__siteCartAddPatchReady) return;
+    window.__siteCartAddPatchReady = true;
+    document.addEventListener('cart-add', function (e) {
+      if (!isStoreLoggedIn() || e.__siteArCartPatched) return;
+      var detail = e.detail;
+      if (!detail || !detail.length || !detail[0] || !detail[0].id) return;
+      e.stopImmediatePropagation();
+      var productId = detail[0].id;
+      ensureSitePriceGroupThenRun(productId, null, function () {
+        var ev = new CustomEvent('cart-add', { detail: detail });
+        ev.__siteArCartPatched = true;
+        window.dispatchEvent(ev);
+      });
+    }, true);
+  }
+
   document.addEventListener('change-customer-login', function () {
     switchCache = {};
     patchHandleAddToCart();
+    patchCartAddEvent();
   });
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', patchHandleAddToCart);
-  } else {
+  function initCartPatch() {
     patchHandleAddToCart();
+    patchCartAddEvent();
   }
-  window.addEventListener('load', patchHandleAddToCart);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCartPatch);
+  } else {
+    initCartPatch();
+  }
+  window.addEventListener('load', initCartPatch);
 })();
