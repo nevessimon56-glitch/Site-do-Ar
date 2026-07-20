@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-20-js-showcase-guest-restore-v7
+ * VERSAO: 2026-07-20-js-showcase-guest-restore-v8
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1375,7 +1375,7 @@
 (function () {
   'use strict';
 
-  var CACHE_PREFIX = 'site-ar-showcase-guest-v6';
+  var CACHE_PREFIX = 'site-ar-showcase-guest-v7';
   var PRODUCT_CACHE_PREFIX = 'site-ar-product-guest-v1';
   var catalogPageLoadInFlight = false;
   var productPageLoadInFlight = false;
@@ -1394,12 +1394,30 @@
     return p === '/todos-os-produtos';
   }
 
-  function isCatalogBrokenPage() {
-    if (!isCatalogUrl()) return false;
+  function isGuestRestoreExcludedPath(pathname) {
+    var p = (pathname || location.pathname || '').toLowerCase().replace(/\/+$/, '') || '/';
+    if (!p || p === '/') return true;
+    if (p.indexOf('/checkout') === 0) return true;
+    if (p.indexOf('/conta') === 0 || p.indexOf('/login') === 0) return true;
+    if (/-p\d+\/?$/.test(p)) return true;
+    return false;
+  }
+
+  function isSearchListingBrokenPage() {
+    if (!isLoggedIn() || isGuestRestoreExcludedPath()) return false;
+    if (document.querySelector('main.search-main')) return false;
     if (document.querySelector('main.notfound-main')) return true;
     var notfound = document.querySelector('.notfound-text p');
     if (notfound && /não retornou nenhum resultado/i.test(notfound.textContent || '')) return true;
     return false;
+  }
+
+  function guestHtmlHasSearchMain(html) {
+    return /class="search-main"/.test(html || '') || /class='search-main'/.test(html || '');
+  }
+
+  function isCatalogBrokenPage() {
+    return isSearchListingBrokenPage();
   }
 
   function isProductUrl() {
@@ -1478,6 +1496,20 @@
         productPageLoadInFlight = false;
         return result;
       });
+  }
+
+  function normalizeGuestSearchUrl(url) {
+    var u;
+    try {
+      u = new URL(url || (location.pathname + location.search), location.origin);
+    } catch (e) {
+      return location.pathname + location.search;
+    }
+    var path = u.pathname.toLowerCase().replace(/\/+$/, '') || '/';
+    if (path === '/todos-os-produtos') {
+      return normalizeCatalogGuestUrl(url);
+    }
+    return u.pathname + u.search;
   }
 
   function normalizeCatalogGuestUrl(url) {
@@ -1626,15 +1658,16 @@
 
   function pageNeedsRestore() {
     if (!isLoggedIn()) return false;
+    if (isSearchListingBrokenPage()) return true;
     var lists = getShowcaseLists();
     for (var i = 0; i < lists.length; i++) {
       if (listNeedsRestore(lists[i])) return true;
     }
 
     if (isCatalogPage() || isCatalogUrl()) {
-      if (isCatalogBrokenPage()) return true;
+      if (isSearchListingBrokenPage()) return true;
       var searchList = getCatalogList();
-      if (!searchList) return isCatalogUrl();
+      if (!searchList) return !isGuestRestoreExcludedPath();
       var current = countItems(searchList);
       var cached = getCachedGuestCount();
       if (cached > current) return true;
@@ -1729,13 +1762,16 @@
     var pagM = (html || '').match(/"pag"\s*:\s*(\d+)/);
     var qtdM = (html || '').match(/"qtdPag"\s*:\s*(\d+)/);
     var ordemM = (html || '').match(/"ordem"\s*:\s*"([^"]+)"/);
+    var catM = (html || '').match(/"categorias"\s*:\s*\[\s*"([^"]+)"\s*\]/);
     if (pagM) query.pag = parseInt(pagM[1], 10);
     if (qtdM) query.qtdPag = parseInt(qtdM[1], 10);
     if (ordemM) query.ordem = ordemM[1];
+    if (catM) query.categorias = [catM[1]];
+    else query.categorias = [];
     return {
       pagination: pagination,
       query: query,
-      currentPagePath: pathMatch ? pathMatch[1] : '/todos-os-produtos'
+      currentPagePath: pathMatch ? pathMatch[1] : (location.pathname || '/todos-os-produtos')
     };
   }
 
@@ -1790,14 +1826,11 @@
         qtdPag: state.query.qtdPag || getCatalogPerPage(),
         pag: state.query.pag || 1,
         ordem: state.query.ordem || 'score',
-        categorias: state.query.categorias || ['todos-os-produtos']
+        categorias: state.query.categorias || []
       };
-    } else if (!comp.state.search.query || !comp.state.search.query.categorias) {
-      comp.state.search.query = comp.state.search.query || {};
-      comp.state.search.query.categorias = ['todos-os-produtos'];
     }
 
-    comp.state.currentPagePath = state.currentPagePath || '/todos-os-produtos';
+    comp.state.currentPagePath = state.currentPagePath || location.pathname || '/todos-os-produtos';
 
     if (typeof StoreSDK !== 'undefined' && StoreSDK.utils && StoreSDK.utils.initSearchPagination) {
       comp.state.searchPagination = StoreSDK.utils.initSearchPagination(
@@ -1915,10 +1948,7 @@
   }
 
   function fetchGuestPageHtml(url) {
-    var target = url || (location.pathname + location.search);
-    if (isCatalogUrl() || /todos-os-produtos/i.test(target)) {
-      target = normalizeCatalogGuestUrl(target);
-    }
+    var target = normalizeGuestSearchUrl(url || (location.pathname + location.search));
     return fetch(target, {
       credentials: 'omit',
       cache: 'no-store',
@@ -1944,7 +1974,7 @@
 
   function applyGuestCatalogDoc(doc, html) {
     var restored = false;
-    if (isCatalogBrokenPage() || !document.querySelector('main.search-main')) {
+    if (isSearchListingBrokenPage() || !document.querySelector('main.search-main')) {
       restored = replaceMainFromGuestDoc(doc);
     } else {
       var guestList = getCatalogList(doc);
@@ -1960,12 +1990,13 @@
     return restored;
   }
 
-  function loadGuestCatalogPage(url, pushHistory) {
+  function loadGuestSearchPage(url, pushHistory) {
     if (catalogPageLoadInFlight) return Promise.resolve(false);
     catalogPageLoadInFlight = true;
-    var guestUrl = normalizeCatalogGuestUrl(url);
+    var guestUrl = normalizeGuestSearchUrl(url);
     return fetchGuestPageHtml(guestUrl)
       .then(function (html) {
+        if (!guestHtmlHasSearchMain(html)) return false;
         var doc = new DOMParser().parseFromString(html, 'text/html');
         var restored = applyGuestCatalogDoc(doc, html);
         if (pushHistory !== false) {
@@ -1983,9 +2014,17 @@
       });
   }
 
+  function recoverBrokenSearchListingPage() {
+    if (!isLoggedIn() || !isSearchListingBrokenPage()) return Promise.resolve(false);
+    return loadGuestSearchPage(location.pathname + location.search, true);
+  }
+
   function recoverBrokenCatalogPage() {
-    if (!isLoggedIn() || !isCatalogUrl() || !isCatalogBrokenPage()) return;
-    loadGuestCatalogPage(location.pathname + location.search, true);
+    return recoverBrokenSearchListingPage();
+  }
+
+  function loadGuestCatalogPage(url, pushHistory) {
+    return loadGuestSearchPage(url, pushHistory);
   }
 
   function initCatalogGuestPagination() {
@@ -2003,17 +2042,19 @@
       } catch (err) {
         return;
       }
-      if (path !== '/todos-os-produtos') return;
+      if (isGuestRestoreExcludedPath(path)) return;
+      if (!link.closest('.search-options-pagination, .search-main')) return;
 
       e.preventDefault();
       e.stopPropagation();
-      loadGuestCatalogPage(link.href, true);
+      loadGuestSearchPage(link.href, true);
     }, true);
 
     window.addEventListener('popstate', function () {
-      if (!isLoggedIn() || !isCatalogUrl()) return;
+      if (!isLoggedIn() || isGuestRestoreExcludedPath()) return;
+      if (!document.querySelector('main.search-main') && !isSearchListingBrokenPage()) return;
       restoreDone = false;
-      loadGuestCatalogPage(location.pathname + location.search, false);
+      loadGuestSearchPage(location.pathname + location.search, false);
     });
   }
 
@@ -2144,6 +2185,15 @@
 
     if (isProductBrokenPage()) {
       recoverBrokenProductPage().then(function (ok) {
+        if (ok) {
+          restoreDone = false;
+          restoreShowcasesFromGuest();
+        }
+      });
+      return;
+    }
+    if (isSearchListingBrokenPage()) {
+      recoverBrokenSearchListingPage().then(function (ok) {
         if (ok) {
           restoreDone = false;
           restoreShowcasesFromGuest();
