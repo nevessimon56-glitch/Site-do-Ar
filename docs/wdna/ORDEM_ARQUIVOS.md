@@ -2,6 +2,8 @@
 
 **Regra:** colar → publicar → testar → só então próximo arquivo.
 
+**Restaurar visual completo:** ver [`RESTAURAR_VISUAL.md`](RESTAURAR_VISUAL.md) e [`THEME_LIQUID_TRECHOS.md`](THEME_LIQUID_TRECHOS.md).
+
 ---
 
 ## Status atual (2026-07-20)
@@ -10,8 +12,9 @@
 |------|--------|
 | `layout/theme.liquid` restaurado | Feito por você |
 | Home deslogado | Vitrine Promoção com produtos |
-| Home logado | Poucos produtos (tabela ML no painel) |
-| Catálogo `/Todos-os-Produtos` | Verificar no seu navegador |
+| Home logado (conta Cliente) | Ok |
+| Compra / Mercado Pago | Ok |
+| Visual custom (mega menu, hover) | Pendente — seguir RESTAURAR_VISUAL.md |
 
 ---
 
