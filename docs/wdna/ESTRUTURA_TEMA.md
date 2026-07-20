@@ -151,6 +151,14 @@ Atualizado conforme informado pelo dono da loja.
 
 ## Painel WDNA — configuração crítica (não é arquivo de tema)
 
+### Ordem de prioridade (logado)
+
+1. **Tabela vinculada no cadastro do cliente** ← costuma ser a causa quando o tema já está certo
+2. **Canal de venda → Padrões → Tabela de preço** (multi tabela / ordem das tabelas)
+3. **Configurações → Produto → Preço** (tema)
+
+### 1 — Tema
+
 **Configurações → Produto → Preço**
 
 | Campo | Valor correto |
@@ -158,4 +166,22 @@ Atualizado conforme informado pelo dono da loja.
 | Lista de preço — usuário **logado** | **Site do Ar** |
 | Lista de preço — usuário **não logado** | **Site do Ar** |
 
-Pedidos com tabela **Mercado Livre** no canal Site Do Ar = configuração errada no painel.
+### 2 — Cadastro do cliente
+
+**Clientes → editar o usuário que faz login**
+
+| Campo | Valor correto |
+|-------|---------------|
+| Tabela de preço no cadastro | **Site do Ar** (ou vazio / nenhuma — usa a do canal) |
+| **Não** deixar | **Mercado Livre** vinculada ao cliente |
+
+Documentação WDNA: *"Caso o cadastro tenha uma tabela vinculada, quando o usuário logar vai ser exibido o preço dessa tabela para ele."*
+
+### 3 — Canal de venda
+
+**Canais → Site Do Ar → Padrões do canal → Tabela de preço**
+
+- Preferir **apenas** Site do Ar no canal da loja.
+- Se houver multi tabela, a **primeira** da lista é o padrão para quem não escolheu.
+
+Pedidos com tabela **Mercado Livre** no canal Site Do Ar = configuração errada no painel (cliente ou canal), não código do tema.

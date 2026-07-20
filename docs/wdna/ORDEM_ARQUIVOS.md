@@ -17,12 +17,36 @@
 
 ## Passo 1 — Painel WDNA (sem arquivo)
 
+### 1A — Tema (você já fez)
+
 **Onde:** Configurações → Produto → Preço
 
 | Campo | Colocar |
 |-------|---------|
 | Lista de preço — usuário **logado** | **Site do Ar** |
 | Lista de preço — usuário **não logado** | **Site do Ar** |
+
+### 1B — Cadastro do cliente (prioridade maior que o tema)
+
+No WDNA, **se o cliente logado tiver tabela vinculada no cadastro, ela vence** a configuração do tema.
+
+**Onde:** Clientes (ou Usuários) → abra **o seu cadastro** (e-mail com que você testa login)
+
+| Campo / aba | O que fazer |
+|-------------|-------------|
+| **Tabela de preço** (no cadastro do cliente) | Remover **Mercado Livre** ou trocar para **Site do Ar** |
+| Se houver várias tabelas | Deixar só **Site do Ar**, ou **Site do Ar** como primeira |
+
+Salve o cadastro, **saia da conta no site** (logout), entre de novo e teste.
+
+### 1C — Canal de venda (se ainda puxar ML)
+
+**Onde:** Canais de venda → **Site Do Ar** (sua loja) → **Padrões do canal** → **Tabela de preço**
+
+| Situação | O que fazer |
+|----------|-------------|
+| Várias tabelas marcadas (multi tabela) | Deixar só **Site do Ar**, ou **Site do Ar** como **primeira** da lista |
+| Mercado Livre ainda na lista | Tirar do canal da loja (ML é marketplace, não vitrine do site) |
 
 **Testar depois:**
 - [ ] Home logado mostra vários produtos na Promoção
