@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-20-js-showcase-guest-restore-v8
+ * VERSAO: 2026-07-20-js-showcase-guest-restore-v9
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -2226,4 +2226,86 @@
   } else {
     initShowcaseGuestRestore();
   }
+})();
+
+/**
+ * Logado: WDNA tenta usar tabela ML no carrinho.
+ * Antes de adicionar, troca para a tabela do site via API WDNA.
+ */
+(function () {
+  'use strict';
+
+  var switchCache = {};
+  var patchTries = 0;
+
+  function isStoreLoggedIn() {
+    if (typeof window.__isStoreLoggedIn === 'boolean') return window.__isStoreLoggedIn;
+    return false;
+  }
+
+  function getSitePriceGroupId(productId, state) {
+    if (state) {
+      if (state.priceGroupId) return Number(state.priceGroupId);
+      if (state.product && state.product.priceGroupId) return Number(state.product.priceGroupId);
+    }
+    var item = document.querySelector('.showcase-item[data-product-id="' + productId + '"]');
+    if (item) {
+      var gid = item.getAttribute('data-site-price-group-id');
+      if (gid) return parseInt(gid, 10);
+    }
+    return null;
+  }
+
+  function switchToSitePriceGroup(productId, groupId) {
+    if (!groupId || typeof StoreSDK === 'undefined' || !StoreSDK.request) {
+      return Promise.resolve();
+    }
+    var key = productId + ':' + groupId;
+    if (switchCache[key]) return switchCache[key];
+    switchCache[key] = StoreSDK.request.get('/ajax/product/' + productId + '/price-group/' + groupId)
+      .then(function () {
+        window.dispatchEvent(new CustomEvent('update-cart-plugins', { detail: [groupId] }));
+      })
+      .catch(function () {});
+    return switchCache[key];
+  }
+
+  function patchHandleAddToCart() {
+    if (window.__siteCartPatchReady) return;
+    if (typeof window.handleAddToCart !== 'function') {
+      patchTries++;
+      if (patchTries < 40) setTimeout(patchHandleAddToCart, 250);
+      return;
+    }
+    window.__siteCartPatchReady = true;
+    var original = window.handleAddToCart;
+    window.handleAddToCart = function (id, quantity, state, sku, title, price) {
+      if (!isStoreLoggedIn()) {
+        return original.apply(this, arguments);
+      }
+      var groupId = getSitePriceGroupId(String(id), state);
+      if (!groupId) {
+        return original.apply(this, arguments);
+      }
+      var args = arguments;
+      var self = this;
+      if (typeof openLoadingMain === 'function') openLoadingMain();
+      switchToSitePriceGroup(id, groupId).then(function () {
+        if (typeof closeLoadingMain === 'function') closeLoadingMain();
+        original.apply(self, args);
+      });
+    };
+  }
+
+  document.addEventListener('change-customer-login', function () {
+    switchCache = {};
+    patchHandleAddToCart();
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', patchHandleAddToCart);
+  } else {
+    patchHandleAddToCart();
+  }
+  window.addEventListener('load', patchHandleAddToCart);
 })();

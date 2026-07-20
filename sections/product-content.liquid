@@ -3,12 +3,6 @@
     {% assign sitePrice = nil %}
     {% render 'sections/site-price-resolve', product: product %}
 
-    {% assign currentPriceIsMl = false %}
-    {% assign currentNameLower = product.price.priceGroupName | downcase | strip %}
-    {% if currentNameLower contains 'mercado' or currentNameLower contains 'marketplace' or currentNameLower contains 'meli' %}
-        {% assign currentPriceIsMl = true %}
-    {% endif %}
-
     {% assign sitePriceGroupCount = 0 %}
     {% for pg in product.prices %}
         {% assign pgNameLower = pg.priceGroupName | downcase | strip %}
@@ -714,12 +708,6 @@
                 this.getProductReviews(this.state.product);
                 checkGtagViewItem(this.state.product);
                 viewItemMailbiz(this.state.product);
-                {% if currentPriceIsMl and sitePrice.priceGroupId %}
-                var siteGroupId = {{ sitePrice.priceGroupId }};
-                if (siteGroupId && Number(this.state.priceGroupId) !== Number(siteGroupId)) {
-                    handlePriceGroup.call(this, siteGroupId);
-                }
-                {% endif %}
             }
 
             function checkGtagViewItem(product) {

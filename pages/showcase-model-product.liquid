@@ -41,7 +41,7 @@
         {% assign offerPercentCard = pixPercentCard %}
     {% endif %}
 
-    <li class="showcase-item" data-showcase-tpl="v3-site-price" data-site-price-lock="1" data-site-list="{{ listPriceCard }}" data-site-pix="{{ pixPriceCard }}" data-site-pix-pct="{{ pixPercentCard }}">
+    <li class="showcase-item" data-showcase-tpl="v3-site-price" data-site-price-lock="1" data-product-id="{{ product.id }}" data-site-price-group-id="{{ sitePrice.priceGroupId }}" data-site-list="{{ listPriceCard }}" data-site-pix="{{ pixPriceCard }}" data-site-pix-pct="{{ pixPercentCard }}">
         <div class="showcase-product card">
             {% if themeConfig.price.type != 'hide' %}
                 {% if product.promotion %}
