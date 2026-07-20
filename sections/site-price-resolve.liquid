@@ -1,0 +1,51 @@
+{% comment %}
+  SITE-PRICE-RESOLVE-v3
+  Nunca usa tabela Mercado Livre / marketplace no site.
+  Se product.price for ML ou zero, busca tabela do site em product.prices.
+  Uso:
+    {% assign sitePrice = nil %}
+    {% render 'sections/site-price-resolve', product: product %}
+  Saida: sitePrice (tabela do site, nunca ML)
+{% endcomment %}
+
+{% assign sitePrice = product.price %}
+{% assign currentPriceIsMl = false %}
+{% assign currentNameLower = product.price.priceGroupName | downcase | strip %}
+{% if currentNameLower contains 'mercado' or currentNameLower contains 'marketplace' or currentNameLower contains 'meli' %}
+  {% assign currentPriceIsMl = true %}
+{% endif %}
+
+{% assign needsResolve = false %}
+{% if currentPriceIsMl or sitePrice.price == 0 or sitePrice.price == null %}
+  {% assign needsResolve = true %}
+{% endif %}
+
+{% if needsResolve and product.prices.size > 0 %}
+  {% assign sitePrice = nil %}
+  {% for pg in product.prices %}
+    {% if pg.price > 0 %}
+      {% assign pgNameLower = pg.priceGroupName | downcase | strip %}
+      {% assign pgIsMl = false %}
+      {% if pgNameLower contains 'mercado' or pgNameLower contains 'marketplace' or pgNameLower contains 'meli' %}
+        {% assign pgIsMl = true %}
+      {% endif %}
+      {% if pgIsMl == false %}
+        {% if sitePrice == nil %}
+          {% assign sitePrice = pg %}
+        {% elsif pg.promotionMargin > 0 and pg.promotionPrice != null and pg.promotionPrice > 0 %}
+          {% if sitePrice.promotionMargin == 0 or sitePrice.promotionPrice == null or sitePrice.promotionPrice == 0 %}
+            {% assign sitePrice = pg %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if sitePrice == nil or sitePrice.price == 0 or sitePrice.price == null %}
+  {% unless currentPriceIsMl %}
+    {% if product.price.price > 0 %}
+      {% assign sitePrice = product.price %}
+    {% endif %}
+  {% endunless %}
+{% endif %}
