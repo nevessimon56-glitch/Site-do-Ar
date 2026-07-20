@@ -67,7 +67,7 @@ Atualizado conforme informado pelo dono da loja.
 | `product-last-viewed.liquid` |
 | `product-related.liquid` |
 | `product-schema.liquid` |
-| `search-filter.liquid` |
+| `search-filter.liquid` | Filtros do catálogo/busca — **nome singular no WDNA** |
 | `search-order.liquid` |
 | `showcase-model-1.liquid` |
 | `showcase-model-10-script.liquid` |
