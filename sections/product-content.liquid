@@ -1,5 +1,26 @@
 {% if product %}
-{% comment %} VERSAO: 2026-07-20-product-v1-revert — mainPrice original (product.price) {% endcomment %}
+{% comment %} VERSAO: 2026-07-20-product-v2 — SITE-PRICE-RESOLVE-v2 (nunca tabela ML) {% endcomment %}
+    {% assign sitePrice = nil %}
+    {% render 'sections/site-price-resolve', product: product %}
+
+    {% assign currentPriceIsMl = false %}
+    {% assign currentNameLower = product.price.priceGroupName | downcase | strip %}
+    {% if currentNameLower contains 'mercado' or currentNameLower contains 'marketplace' or currentNameLower contains 'meli' %}
+        {% assign currentPriceIsMl = true %}
+    {% endif %}
+
+    {% assign sitePriceGroupCount = 0 %}
+    {% for pg in product.prices %}
+        {% assign pgNameLower = pg.priceGroupName | downcase | strip %}
+        {% assign pgIsMl = false %}
+        {% if pgNameLower contains 'mercado' or pgNameLower contains 'marketplace' or pgNameLower contains 'meli' %}
+            {% assign pgIsMl = true %}
+        {% endif %}
+        {% if pgIsMl == false and pg.price > 0 %}
+            {% assign sitePriceGroupCount = sitePriceGroupCount | plus: 1 %}
+        {% endif %}
+    {% endfor %}
+
     <div
         x-on:cart-change-quantity.window="changeProductDefault($event.detail.quantity)"
         x-on:change-product-kit.window="handleProductKit($event.detail)"
@@ -10,13 +31,13 @@
 
         {% assign buyButtonText = 'Comprar' %}
 
-        <!-- TODO: Não alterar mainPrice. Se caso alterar, vai afetar no calculo de pagamento-->
-        {% assign mainPrice = product.price.price %}
-        {% if product.price.promotionPrice > 0 %}
-            {% assign mainPrice = product.price.promotionPrice %}
+        {% assign mainPrice = sitePrice.price %}
+        {% if sitePrice.promotionPrice > 0 %}
+            {% assign mainPrice = sitePrice.promotionPrice %}
         {% endif %}
+        {% assign mainPricePrimary = mainPrice %}
 
-        {% assign productPricePrimary = product.price %}
+        {% assign productPricePrimary = sitePrice %}
         {% if product.secondaryPrice %}
             {% assign productPriceSecond = product.secondaryPrice %}
         {% endif %}
@@ -240,21 +261,30 @@
                                         </div>
                                     </div>
                                 </template>
-                                {% if product.prices.length > 1 %}
+                                {% if sitePriceGroupCount > 1 %}
                                     <div class="product-price-group">
                                         <div class="form-group">
                                             <label class="form-label">
                                                 Selecione o modelo de compra abaixo:
                                             </label>
-                                            <template x-for="(priceGroupItem, indexPriceGroup, collection) in state.product.prices" :key="indexPriceGroup">
-                                                <label class="form-radio">
-                                                    <input type="radio" name="priceGroup" :disabled="!priceGroupItem.status" :value="priceGroupItem.priceGroupId" :checked="Number('{{ product.price.priceGroupId }}') === Number(priceGroupItem.priceGroupId)" @click="handlePriceGroup(priceGroupItem.priceGroupId)">
-                                                    <i class="form-icon"></i>
-                                                    <div x-show="priceGroupItem?.priceGroupName?.length">
-                                                        <span x-text="priceGroupItem.priceGroupName"></span>
+                                            {% for pg in product.prices %}
+                                                {% assign pgNameLower = pg.priceGroupName | downcase | strip %}
+                                                {% assign pgIsMl = false %}
+                                                {% if pgNameLower contains 'mercado' or pgNameLower contains 'marketplace' or pgNameLower contains 'meli' %}
+                                                    {% assign pgIsMl = true %}
+                                                {% endif %}
+                                                {% if pgIsMl == false and pg.price > 0 %}
+                                            <label class="form-radio">
+                                                <input type="radio" name="priceGroup" {% unless pg.status %}disabled{% endunless %} value="{{ pg.priceGroupId }}" {% if sitePrice.priceGroupId == pg.priceGroupId %}checked{% endif %} @click="handlePriceGroup({{ pg.priceGroupId }})">
+                                                <i class="form-icon"></i>
+                                                {% if pg.priceGroupName %}
+                                                    <div>
+                                                        <span>{{ pg.priceGroupName }}</span>
                                                     </div>
-                                                </label>
-                                            </template>
+                                                {% endif %}
+                                            </label>
+                                                {% endif %}
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 {% endif %}
@@ -376,20 +406,18 @@
                                 </div>
                                 {% endif %}
                                 {% if product.typeId != 2 or product.gridOptions.size > 0 %}
-                                    {% assign _pixPrice = product.price.price %}
-                                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
-                                        {% assign _pixPrice = product.price.promotionPrice %}
-                                    {% elsif productPricePrimary.promotionPrice > 0 %}
-                                        {% assign _pixPrice = productPricePrimary.promotionPrice %}
+                                    {% assign _pixPrice = sitePrice.price %}
+                                    {% if sitePrice.promotionMargin > 0 and sitePrice.promotionPrice != null %}
+                                        {% assign _pixPrice = sitePrice.promotionPrice %}
                                     {% endif %}
                                     {% assign _hasPixDiscount = false %}
-                                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null and product.price.price > _pixPrice %}
+                                    {% if sitePrice.promotionMargin > 0 and sitePrice.promotionPrice != null and sitePrice.price > _pixPrice %}
                                         {% assign _hasPixDiscount = true %}
                                     {% endif %}
                                     <div class="product-prices">
                                         <div class="product-content_box product-box_prices col-12">
                                             {% if _hasPixDiscount %}
-                                                <del class="product-prices_strike"><s>{{ product.price.price | money }}</s></del>
+                                                <del class="product-prices_strike"><s>{{ sitePrice.price | money }}</s></del>
                                                 <p class="product-prices_price">{{ _pixPrice | money }}</p>
                                                 <p class="product-prices_pix">
                                                     {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
@@ -408,7 +436,7 @@
                                                 {% assign _mainPriceSecond = productPriceSecond.price %}
                                                 {% if productPriceSecond.promotionPrice > 0 %}{% assign _mainPriceSecond = productPriceSecond.promotionPrice %}{% endif %}
                                                 {% if productPriceSecond.installment > 1 %}
-                                                    {% assign _plotBaseSecond = product.price.price %}
+                                                    {% assign _plotBaseSecond = sitePrice.price %}
                                                     {% if productPriceSecond.price and productPriceSecond.price > _plotBaseSecond %}
                                                         {% assign _plotBaseSecond = productPriceSecond.price %}
                                                     {% endif %}
@@ -432,7 +460,7 @@
                                     <div class="columns">
                                         <div class="column col-12 col-sm-12">
                                             <div class="product-buy">
-                                                <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" title="Comprar" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ product.price.price }}')">Comprar</a>
+                                                <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" title="Comprar" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ sitePrice.price }}')">Comprar</a>
                                             </div>
                                         </div>
                                         {% if product.physicalProduct == true %}
@@ -579,7 +607,7 @@
             const state = {
                 store,
                 quantity: 1,
-                price: {% if product.price.basePrice %}{{ product.price.basePrice }}{% else %}{% if mainPrice %}{{ mainPrice }}{% else %}null{% endif %}{% endif %},
+                price: {% if sitePrice.basePrice %}{{ sitePrice.basePrice }}{% else %}{% if mainPrice %}{{ mainPrice }}{% else %}null{% endif %}{% endif %},
                 productId: {{ product.id }},
                 themeConfig: {
                     buyActionPlugin: '{{ themeConfig.buyAction.plugin }}',
@@ -588,13 +616,26 @@
                 product: {
                     categories: {% if product.categories %}{{ product.categories | json }}{% else %}{}{% endif %},
                     grids: {% if product.grids %}{{ product.grids | json }}{% else %}{}{% endif %},
-                    price: {% if product.price %}{{ product.price | json }}{% else %}{}{% endif %},
+                    price: {% if sitePrice %}{{ sitePrice | json }}{% else %}{}{% endif %},
                     sku: {% if product.sku %}"{{ product.sku | escape }}"{% else %}null{% endif %},
                     title: {% if product.title %}"{{ product.title | escape }}"{% else %}null{% endif %},
                     url: {% if product.url %}"{{ product.url }}"{% else %}null{% endif %},
                     id: {% if product.id %}{{ product.id }}{% else %}null{% endif %},
-                    prices: {% if product.prices %}{{ product.prices | json }}{% else %}[]{% endif %},
-                    priceGroupId: {% if product.price.priceGroupId %}{{ product.price.priceGroupId }}{% else %}1{% endif %},
+                    prices: [
+                        {% assign firstSitePrice = true %}
+                        {% for pg in product.prices %}
+                            {% assign pgNameLower = pg.priceGroupName | downcase | strip %}
+                            {% assign pgIsMl = false %}
+                            {% if pgNameLower contains 'mercado' or pgNameLower contains 'marketplace' or pgNameLower contains 'meli' %}
+                                {% assign pgIsMl = true %}
+                            {% endif %}
+                            {% if pgIsMl == false and pg.price > 0 %}
+                                {% unless firstSitePrice %},{% endunless %}{{ pg | json }}
+                                {% assign firstSitePrice = false %}
+                            {% endif %}
+                        {% endfor %}
+                    ],
+                    priceGroupId: {% if sitePrice.priceGroupId %}{{ sitePrice.priceGroupId }}{% else %}1{% endif %},
                     typeId: {% if product.typeId %}{{ product.typeId }}{% else %}null{% endif %},
                     variations: [
                         {% for prodVariation in product.variations %}
@@ -673,6 +714,12 @@
                 this.getProductReviews(this.state.product);
                 checkGtagViewItem(this.state.product);
                 viewItemMailbiz(this.state.product);
+                {% if currentPriceIsMl and sitePrice.priceGroupId %}
+                var siteGroupId = {{ sitePrice.priceGroupId }};
+                if (siteGroupId && Number(this.state.priceGroupId) !== Number(siteGroupId)) {
+                    handlePriceGroup.call(this, siteGroupId);
+                }
+                {% endif %}
             }
 
             function checkGtagViewItem(product) {

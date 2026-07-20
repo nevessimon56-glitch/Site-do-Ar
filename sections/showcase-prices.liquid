@@ -1,38 +1,11 @@
 {% comment %}
   Preços do card — Pix + parcelas no cartão (valor cheio)
-  SITE-PRICE-RESOLVE-v1: mesmo preco para visitante e logado
+  SITE-PRICE-RESOLVE-v2: mesmo preco para visitante e logado (nunca ML)
   Uso: {% render 'sections/showcase-prices', product: product %}
 {% endcomment %}
 
-{% assign sitePrice = product.price %}
-{% if customer and product.prices.size > 0 %}
-  {% assign sitePriceCandidate = nil %}
-  {% assign sitePriceCandidateIsMl = true %}
-  {% for pg in product.prices %}
-    {% if pg.price > 0 %}
-      {% assign pgNameLower = pg.priceGroupName | downcase | strip %}
-      {% assign pgIsMl = false %}
-      {% if pgNameLower contains 'mercado' or pgNameLower contains 'marketplace' or pgNameLower contains 'meli' %}
-        {% assign pgIsMl = true %}
-      {% endif %}
-      {% if pg.promotionMargin > 0 and pg.promotionPrice != null and pg.promotionPrice > 0 %}
-        {% if sitePriceCandidate == nil %}
-          {% assign sitePriceCandidate = pg %}
-          {% assign sitePriceCandidateIsMl = pgIsMl %}
-        {% elsif pgIsMl == false and sitePriceCandidateIsMl %}
-          {% assign sitePriceCandidate = pg %}
-          {% assign sitePriceCandidateIsMl = false %}
-        {% endif %}
-      {% elsif pgIsMl == false and sitePriceCandidate == nil %}
-        {% assign sitePriceCandidate = pg %}
-        {% assign sitePriceCandidateIsMl = false %}
-      {% endif %}
-    {% endif %}
-  {% endfor %}
-  {% if sitePriceCandidate %}
-    {% assign sitePrice = sitePriceCandidate %}
-  {% endif %}
-{% endif %}
+{% assign sitePrice = nil %}
+{% render 'sections/site-price-resolve', product: product %}
 
 {% assign listPriceCard = sitePrice.price %}
 {% assign pixPriceCard = sitePrice.price %}

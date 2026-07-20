@@ -1,6 +1,6 @@
 {% comment %}
   ARQUIVO: showcase-model-product.liquid
-  VERSAO: 2026-07-15-v5  (site-price-resolve: mesmo preco logado/deslogado)
+  VERSAO: 2026-07-20-v6  (site-price-resolve v2: nunca tabela ML)
   No editor WDNA: substitua TODO o conteudo deste arquivo.
   Preco Pix + parcelas estao INLINE neste arquivo (nao depende de outro).
   Os icones de spec ficam APENAS em showcase-spec-wrap (abaixo do titulo).
@@ -24,36 +24,8 @@
         {% endif %}
     {% endif %}
 
-    {% comment %} SITE-PRICE-RESOLVE-v1 {% endcomment %}
-    {% assign sitePrice = product.price %}
-    {% if customer and product.prices.size > 0 %}
-        {% assign sitePriceCandidate = nil %}
-        {% assign sitePriceCandidateIsMl = true %}
-        {% for pg in product.prices %}
-            {% if pg.price > 0 %}
-                {% assign pgNameLower = pg.priceGroupName | downcase | strip %}
-                {% assign pgIsMl = false %}
-                {% if pgNameLower contains 'mercado' or pgNameLower contains 'marketplace' or pgNameLower contains 'meli' %}
-                    {% assign pgIsMl = true %}
-                {% endif %}
-                {% if pg.promotionMargin > 0 and pg.promotionPrice != null and pg.promotionPrice > 0 %}
-                    {% if sitePriceCandidate == nil %}
-                        {% assign sitePriceCandidate = pg %}
-                        {% assign sitePriceCandidateIsMl = pgIsMl %}
-                    {% elsif pgIsMl == false and sitePriceCandidateIsMl %}
-                        {% assign sitePriceCandidate = pg %}
-                        {% assign sitePriceCandidateIsMl = false %}
-                    {% endif %}
-                {% elsif pgIsMl == false and sitePriceCandidate == nil %}
-                    {% assign sitePriceCandidate = pg %}
-                    {% assign sitePriceCandidateIsMl = false %}
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-        {% if sitePriceCandidate %}
-            {% assign sitePrice = sitePriceCandidate %}
-        {% endif %}
-    {% endif %}
+    {% assign sitePrice = nil %}
+    {% render 'sections/site-price-resolve', product: product %}
     {% assign productPricePrimary = sitePrice %}
 
     {% assign listPriceCard = sitePrice.price %}
