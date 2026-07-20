@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-showcase-guest-restore-v6
+ * VERSAO: 2026-07-20-js-showcase-guest-restore-v7
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1375,10 +1375,13 @@
 (function () {
   'use strict';
 
-  var CACHE_PREFIX = 'site-ar-showcase-guest-v5';
+  var CACHE_PREFIX = 'site-ar-showcase-guest-v6';
+  var PRODUCT_CACHE_PREFIX = 'site-ar-product-guest-v1';
   var catalogPageLoadInFlight = false;
+  var productPageLoadInFlight = false;
   var restoreInFlight = false;
   var restoreDone = false;
+  var guestRestoreBooted = false;
 
   function isCatalogPage() {
     var p = (location.pathname || '').toLowerCase().replace(/\/+$/, '') || '/';
@@ -1397,6 +1400,84 @@
     var notfound = document.querySelector('.notfound-text p');
     if (notfound && /não retornou nenhum resultado/i.test(notfound.textContent || '')) return true;
     return false;
+  }
+
+  function isProductUrl() {
+    var p = (location.pathname || '').toLowerCase();
+    return /-p\d+\/?$/.test(p);
+  }
+
+  function isProductPage() {
+    if (document.querySelector('main.product-main')) return true;
+    return isProductUrl();
+  }
+
+  function isProductBrokenPage() {
+    if (!isProductUrl()) return false;
+    if (document.querySelector('main.product-main')) return false;
+    if (document.querySelector('main.notfound-main')) return true;
+    var notfound = document.querySelector('.notfound-text p');
+    if (notfound && /este produto não retornou/i.test(notfound.textContent || '')) return true;
+    return false;
+  }
+
+  function getProductCacheKey() {
+    return PRODUCT_CACHE_PREFIX + ':' + (location.pathname || '/');
+  }
+
+  function guestHtmlHasProductMain(html) {
+    return /class="product-main"/.test(html || '') || /class='product-main'/.test(html || '');
+  }
+
+  function applyGuestProductHtml(html) {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var guestMain = doc.querySelector('main.product-main');
+    var currentMain = document.querySelector('main');
+    if (!guestMain || !currentMain) return false;
+
+    currentMain.replaceWith(guestMain.cloneNode(true));
+    var newMain = document.querySelector('main.product-main');
+    if (newMain && typeof Alpine !== 'undefined' && typeof Alpine.initTree === 'function') {
+      try {
+        Alpine.initTree(newMain);
+      } catch (e) {}
+    }
+    afterShowcaseRestore();
+    return true;
+  }
+
+  function recoverBrokenProductPage() {
+    if (!isLoggedIn() || !isProductBrokenPage()) return Promise.resolve(false);
+    if (productPageLoadInFlight) return Promise.resolve(false);
+    productPageLoadInFlight = true;
+
+    var cacheKey = getProductCacheKey();
+    try {
+      var cached = sessionStorage.getItem(cacheKey);
+      if (cached && guestHtmlHasProductMain(cached) && applyGuestProductHtml(cached)) {
+        productPageLoadInFlight = false;
+        return Promise.resolve(true);
+      }
+    } catch (e) {}
+
+    return fetchGuestPageHtml(location.pathname + location.search)
+      .then(function (html) {
+        if (!guestHtmlHasProductMain(html)) return false;
+        var restored = applyGuestProductHtml(html);
+        if (restored) {
+          try {
+            sessionStorage.setItem(cacheKey, html);
+          } catch (e) {}
+        }
+        return restored;
+      })
+      .catch(function () {
+        return false;
+      })
+      .then(function (result) {
+        productPageLoadInFlight = false;
+        return result;
+      });
   }
 
   function normalizeCatalogGuestUrl(url) {
@@ -2056,14 +2137,28 @@
       cacheGuestShowcases();
       return;
     }
+    if (guestRestoreBooted) return;
+    guestRestoreBooted = true;
+
     initCatalogGuestPagination();
+
+    if (isProductBrokenPage()) {
+      recoverBrokenProductPage().then(function (ok) {
+        if (ok) {
+          restoreDone = false;
+          restoreShowcasesFromGuest();
+        }
+      });
+      return;
+    }
     if (isCatalogBrokenPage()) {
       recoverBrokenCatalogPage();
       return;
     }
     restoreShowcasesFromGuest();
-    setTimeout(runCatalogPaginationFix, 350);
-    setTimeout(runCatalogPaginationFix, 1200);
+    if (isCatalogPage() || isCatalogUrl()) {
+      setTimeout(runCatalogPaginationFix, 400);
+    }
   }
 
   window.cacheGuestShowcases = cacheGuestShowcases;
@@ -2081,5 +2176,4 @@
   } else {
     initShowcaseGuestRestore();
   }
-  window.addEventListener('load', initShowcaseGuestRestore);
 })();
