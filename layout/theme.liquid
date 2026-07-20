@@ -79,7 +79,6 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
-    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-semibold.woff2" type="font/woff2" crossorigin="anonymous">
@@ -104,6 +103,42 @@
         {{ script.code }}
     {%- endfor -%}
     {% block head %}{% endblock %}
+    <script>
+    (function () {
+      var PANEL_SEL = '.sidenav-overlay, .sidenav-password, .sidenav-forgot-password';
+      function panelIsOpen(panel) {
+        return !!(panel && panel.classList && panel.classList.contains('open'));
+      }
+      document.addEventListener('focusin', function (e) {
+        var target = e.target;
+        if (!target || !target.closest || !target.matches('input, textarea, select')) return;
+        var panel = target.closest(PANEL_SEL);
+        if (panel && !panelIsOpen(panel)) {
+          try { target.blur(); } catch (err) {}
+        }
+      }, true);
+      function stripAutofocus() {
+        var panels = document.querySelectorAll(PANEL_SEL);
+        for (var i = 0; i < panels.length; i++) {
+          if (panelIsOpen(panels[i])) continue;
+          var inputs = panels[i].querySelectorAll('[autofocus]');
+          for (var j = 0; j < inputs.length; j++) {
+            inputs[j].removeAttribute('autofocus');
+            inputs[j].setAttribute('data-autofocus-on-open', '1');
+          }
+        }
+      }
+      window.__stripHiddenAutofocus = stripAutofocus;
+      document.addEventListener('DOMContentLoaded', stripAutofocus);
+      if (typeof MutationObserver !== 'undefined') {
+        var raf = 0;
+        new MutationObserver(function () {
+          if (raf) return;
+          raf = requestAnimationFrame(function () { raf = 0; stripAutofocus(); });
+        }).observe(document.documentElement, { childList: true, subtree: true });
+      }
+    })();
+    </script>
 </head>
 <body x-data="setupStore()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
 {%- for script in scripts.content -%}
@@ -156,7 +191,6 @@
 </script>
 <script src="{{ scripts.main.src }}"></script>
 <script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
-<script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
 <script>
   window.addEventListener('load', function () {
     if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
@@ -227,6 +261,9 @@
                 }
             });
         }
+        document.addEventListener('DOMContentLoaded', function () {
+            window.dispatchEvent(new CustomEvent('change-customer-login', { detail: { customer: customer } }));
+        });
     }
 </script>
 {% block script_footer %}{% endblock %}

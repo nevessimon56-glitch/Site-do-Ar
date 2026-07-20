@@ -1,18 +1,26 @@
 /**
  * ARQUIVO: assets/product-hover-image.js
- * Hover de imagem estilo Nike em todos os cards .showcase-product (site inteiro).
- * Mobile: toque na imagem alterna entre foto 1 e 2.
+ * Troca o src da imagem no hover — funciona com lazy load do tema WDNA.
  */
 (function () {
   'use strict';
 
-  var HOVER_CLASS = 'has-hover-image';
-  var TOUCH_CLASS = 'is-img-hover';
-  var PROCESSED = 'data-hover-ready';
+  var PROCESSED = 'data-hover-swap-ready';
   var cache = {};
 
-  function imgSrc(img) {
-    return img.getAttribute('src') || img.getAttribute('data-src') || '';
+  function isTouchOnly() {
+    return window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  }
+
+  function currentMainSrc(img) {
+    if (img.getAttribute('data-main-src')) {
+      return img.getAttribute('data-main-src');
+    }
+    var src = img.getAttribute('src') || '';
+    if (src && src.indexOf('data:') !== 0) {
+      return src;
+    }
+    return img.getAttribute('data-src') || '';
   }
 
   function guessHoverUrl(mainUrl) {
@@ -26,7 +34,11 @@
     return '';
   }
 
-  function urlExists(url, cb) {
+  function urlOk(url, cb) {
+    if (!url) {
+      cb(false);
+      return;
+    }
     if (cache[url] === true) {
       cb(true);
       return;
@@ -47,91 +59,127 @@
     probe.src = url;
   }
 
-  function buildHoverWrap(mainImg, altSrc) {
-    var wrap = document.createElement('span');
-    wrap.className = 'product-hover-wrap';
+  function normalizeImg(link) {
+    var alt = link.querySelector('.product-hover-img--alt, img[data-hover-src]:not(.product-hover-swap)');
+    var img = link.querySelector('.product-hover-swap, .product-hover-img--main, img');
 
-    var main = mainImg.cloneNode(true);
-    main.classList.add('product-hover-img', 'product-hover-img--main');
-    wrap.appendChild(main);
+    if (!img) return null;
 
-    var alt = document.createElement('img');
-    alt.className = 'lazy product-hover-img product-hover-img--alt';
-    alt.alt = mainImg.alt || '';
-    alt.loading = 'lazy';
-    alt.setAttribute('data-src', altSrc);
-    if (mainImg.src && mainImg.src.indexOf('data:') !== 0) {
-      alt.src = altSrc;
+    if (alt && alt !== img) {
+      var hoverFromAlt = alt.getAttribute('data-hover-src') || alt.getAttribute('data-src') || alt.getAttribute('src');
+      if (hoverFromAlt && !img.getAttribute('data-hover-src')) {
+        img.setAttribute('data-hover-src', hoverFromAlt);
+      }
+      alt.parentNode.removeChild(alt);
     }
-    wrap.appendChild(alt);
 
-    return wrap;
+    var wrap = link.querySelector('.product-hover-wrap');
+    if (wrap && wrap.parentNode === link) {
+      while (wrap.firstChild) {
+        link.insertBefore(wrap.firstChild, wrap);
+      }
+      wrap.parentNode.removeChild(wrap);
+    }
+
+    img.classList.add('product-hover-swap');
+    return img;
   }
 
-  function enhanceCard(card) {
-    if (card.getAttribute(PROCESSED) === '1') return;
-    if (card.closest('.mega-menu-ar')) return;
+  function getHoverSrc(img) {
+    return img.getAttribute('data-hover-src') || guessHoverUrl(currentMainSrc(img)) || '';
+  }
 
-    var link = card.querySelector('.showcase-product_link__image');
-    if (!link) return;
+  function rememberMain(img) {
+    if (!img.getAttribute('data-main-src')) {
+      var main = currentMainSrc(img);
+      if (main) img.setAttribute('data-main-src', main);
+    }
+  }
 
-    var existingAlt = link.querySelector('.product-hover-img--alt');
-    if (existingAlt) {
-      card.classList.add(HOVER_CLASS);
-      card.setAttribute(PROCESSED, '1');
-      bindTouch(card, link);
+  function showHover(img) {
+    var hoverSrc = getHoverSrc(img);
+    if (!hoverSrc) return;
+
+    rememberMain(img);
+    img.setAttribute('src', hoverSrc);
+    if (img.classList.contains('lazy')) {
+      img.classList.add('loaded');
+    }
+  }
+
+  function showMain(img) {
+    var mainSrc = img.getAttribute('data-main-src') || img.getAttribute('data-src');
+    if (!mainSrc) return;
+    img.setAttribute('src', mainSrc);
+  }
+
+  function bindLink(link) {
+    if (link.getAttribute(PROCESSED) === '1') return;
+
+    var img = normalizeImg(link);
+    if (!img) return;
+
+    var hoverSrc = getHoverSrc(img);
+    if (!hoverSrc) return;
+
+    function attach() {
+      if (!link.isConnected) return;
+      if (link.getAttribute(PROCESSED) === '1') return;
+
+      if (!img.getAttribute('data-hover-src')) {
+        img.setAttribute('data-hover-src', hoverSrc);
+      }
+
+      rememberMain(img);
+      link.setAttribute(PROCESSED, '1');
+      var showingHover = false;
+
+      link.addEventListener('mouseenter', function () {
+        if (isTouchOnly()) return;
+        link.classList.add('is-hovering');
+        showHover(img);
+        showingHover = true;
+      });
+
+      link.addEventListener('mouseleave', function () {
+        if (isTouchOnly()) return;
+        link.classList.remove('is-hovering');
+        showMain(img);
+        showingHover = false;
+      });
+
+      link.addEventListener(
+        'touchend',
+        function (e) {
+          if (!isTouchOnly()) return;
+          if (!showingHover) {
+            e.preventDefault();
+            showHover(img);
+            showingHover = true;
+            link.classList.add('is-hovering');
+          }
+        },
+        { passive: false }
+      );
+    }
+
+    if (img.getAttribute('data-hover-src')) {
+      attach();
       return;
     }
 
-    var mainImg = link.querySelector('img:not(.product-hover-img--alt)');
-    if (!mainImg) return;
-
-    if (link.querySelector('.product-hover-wrap')) {
-      card.setAttribute(PROCESSED, '1');
-      return;
-    }
-
-    var mainUrl = imgSrc(mainImg);
-    var hoverUrl = guessHoverUrl(mainUrl);
-    if (!hoverUrl || hoverUrl === mainUrl) {
-      card.setAttribute(PROCESSED, '1');
-      return;
-    }
-
-    urlExists(hoverUrl, function (ok) {
-      if (!ok || !card.isConnected) return;
-
-      var wrap = buildHoverWrap(mainImg, hoverUrl);
-      mainImg.parentNode.replaceChild(wrap, mainImg);
-      card.classList.add(HOVER_CLASS);
-      card.setAttribute(PROCESSED, '1');
-      bindTouch(card, link);
+    urlOk(hoverSrc, function (ok) {
+      if (!ok) return;
+      attach();
     });
-  }
-
-  function bindTouch(card, link) {
-    if (link.getAttribute('data-hover-touch') === '1') return;
-    link.setAttribute('data-hover-touch', '1');
-
-    link.addEventListener(
-      'touchend',
-      function (e) {
-        if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
-        if (!card.classList.contains(HOVER_CLASS)) return;
-        if (!card.classList.contains(TOUCH_CLASS)) {
-          e.preventDefault();
-          card.classList.add(TOUCH_CLASS);
-        }
-      },
-      { passive: false }
-    );
   }
 
   function scan(root) {
     var scope = root || document;
-    var cards = scope.querySelectorAll('.showcase-product.card:not([' + PROCESSED + '="1"])');
-    for (var i = 0; i < cards.length; i++) {
-      enhanceCard(cards[i]);
+    var links = scope.querySelectorAll('.showcase-product_link__image:not([' + PROCESSED + '="1"])');
+    for (var i = 0; i < links.length; i++) {
+      if (links[i].closest('.mega-menu-ar')) continue;
+      bindLink(links[i]);
     }
   }
 
@@ -139,19 +187,8 @@
     scan(document);
 
     if (typeof MutationObserver !== 'undefined') {
-      var observer = new MutationObserver(function (mutations) {
-        for (var i = 0; i < mutations.length; i++) {
-          var nodes = mutations[i].addedNodes;
-          for (var j = 0; j < nodes.length; j++) {
-            var node = nodes[j];
-            if (node.nodeType !== 1) continue;
-            if (node.classList && node.classList.contains('showcase-product')) {
-              enhanceCard(node);
-            } else if (node.querySelectorAll) {
-              scan(node);
-            }
-          }
-        }
+      var observer = new MutationObserver(function () {
+        scan(document);
       });
       observer.observe(document.body, { childList: true, subtree: true });
     }
@@ -162,6 +199,8 @@
   } else {
     init();
   }
+
+  window.addEventListener('load', init);
 
   window.initProductHoverImage = init;
 })();
