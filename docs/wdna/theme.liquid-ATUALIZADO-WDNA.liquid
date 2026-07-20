@@ -1,0 +1,286 @@
+{% assign seoTitle = '' %}
+{% if product.seoTitle %}
+    {% assign seoTitle = product.seoTitle %}
+{% elsif search.results[0].categories[0].title %}
+    {% assign seoTitle = search.results[0].categories[0].title %}
+{% elsif seo.title %}
+    {% assign seoTitle = seo.title %}
+{% else %}
+    {% assign seoTitle = store.name %}
+{% endif %}
+
+{% assign seoDescription = '' %}
+{% if product.seoDescription %}
+    {% assign seoDescription = product.seoDescription %}
+{% elsif search.results[0].categories[0].description %}
+    {% assign seoDescription = search.results[0].categories[0].description %}
+{% elsif seo.description %}
+    {% assign seoDescription = seo.description %}
+{% elsif store.description %}
+    {% assign seoDescription = store.description %}
+{% endif %}
+
+{% assign seoKeywords = '' %}
+{% if product.tags %}
+    {% assign seoKeywords = product.tags %}
+{% elsif search.results[0].categories[0].tags %}
+    {% assign seoKeywords = search.results[0].categories[0].tags %}
+{% elsif seo.keywords %}
+    {% assign seoKeywords = seo.keywords %}
+{% elsif store.keywords %}
+    {% assign seoKeywords = store.keywords %}
+{% endif %}
+
+{% assign seoImage = '' %}
+{% assign seoImageType = '' %}
+{% assign seoImageWidth = '' %}
+{% assign seoImageHeight = '' %}
+{% if product.medias[0].path %}
+    {% assign seoImage = product.medias[0].path | imgUrl: 200 %}
+    {% if product.medias[0].mimeType %}
+        {% assign seoImageType = product.medias[0].mimeType %}
+    {% endif %}
+    {% if product.medias[0].width %}
+        {% assign seoImageWidth = product.medias[0].width %}
+    {% endif %}
+    {% if product.medias[0].height %}
+        {% assign seoImageHeight = product.medias[0].height %}
+    {% endif %}
+{% elsif theme.logo.path %}
+    {% assign seoImage = theme.logo.path | imgUrl %}
+    {% if theme.logo.file.mimeType %}
+        {% assign seoImageType = theme.logo.file.mimeType %}
+    {% endif %}
+    {% if theme.logo.width %}
+        {% assign seoImageWidth = theme.logo.width %}
+    {% endif %}
+    {% if theme.logo.height %}
+        {% assign seoImageHeight = theme.logo.height %}
+    {% endif %}
+{%endif%}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <!-- Title -->
+    <title>
+        {{ seoTitle }}
+    </title>
+
+    <!-- Language -->
+    <meta http-equiv="Content-Language" content="pt-br">
+
+    <!-- SEO -->
+    <meta name="description" content="{{ seoDescription }}">
+    <meta name="keywords" content="{{ seoKeywords }}">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="{{ themeConfig.color }}"/>
+
+    <!-- Favicon -->
+    <link rel="icon" href="{{ theme.favicon.path | imgUrl: 16 }}" sizes="16x16" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{{ theme.favicon.path | imgUrl: 16 }}">
+
+    <!-- Preconnect - Domain -->
+    <link rel="preconnect" href="https://salescdn.net" crossorigin>
+
+    <!-- Scripts -->
+    <link rel="preload" href="{{ 'assets/theme.js' | themeAssetUrl }}" as="script">
+    <script src="{{ 'assets/theme.js' | themeAssetUrl }}"></script>
+
+    <!-- Styles -->
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-plugins.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
+
+    <!-- Preconnect - Fonts -->
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-semibold.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-black.woff2" type="font/woff2" crossorigin="anonymous">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="{{ seoTitle }}"/>
+    <meta name="twitter:image" content="{{ seoImage }}"/>
+    <meta name="twitter:url" content="{{ store.url }}"/>
+    <meta name="twitter:description" content="{{ seoDescription }}">
+
+    <!-- Open Graph -->
+    <meta property="og:locale" content="pt-BR"/>
+    <meta property="og:title" content="{{ seoTitle }}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="{{ store.url }}"/>
+    <meta property="og:image" content="{{ seoImage }}"/>
+    <meta property="og:image:width" contet="{{ seoImageWidth }}"/>
+    <meta property="og:image:height" content="{{ seoImageHeight }}"/>
+    {% if seoImageType != '' %}<meta property="og:image:type" content="{{ seoImageType }}"/>{% endif %}
+    <meta property="og:site_name" content="{{ seoTitle }}"/>
+    <meta property="og:description" content="{{ seoDescription }}"/>
+
+
+    <meta name="csrf-token" content="{{ csrfToken }}">
+    {%- for script in scripts.header -%}
+        {{ script.code }}
+    {%- endfor -%}
+    {% block head %}{% endblock %}
+</head>
+<body x-data="setupStore()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
+{%- for script in scripts.content -%}
+    {{ script.code }}
+{%- endfor -%}
+<span class="sidenav-overlay_background" onclick="changeSidenavOverlayBackground()"></span>
+<span class="loading-main loading"></span>
+{% render 'sections/check-cookie'%}
+{% render 'sections/sidenav-overlay-cart', cart: cart, store: store, themeConfig: themeConfig %}
+{% render 'sections/mega-menu-ar' %}
+{% block content %}{% endblock %}
+{% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
+<script>
+    /* TODO: window.onunload-> é para não carregar cache do voltar e avançar dos navegadores Fire Fox, Safari e Safari */
+    window.onunload = function(){};
+
+    window.onload = function() {
+        loadFilesJSDefer();
+        loadInputMask();
+    }
+    function loadFilesJSDefer() {
+        var all_defer_script = document.createElement('script');
+        all_defer_script.setAttribute('src', '{{ 'assets/theme-defer.js' | themeAssetUrl }}');
+        document.querySelector('body').appendChild(all_defer_script);
+    }
+
+    captureUrlParameter();
+
+    function captureUrlParameter() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let sellerInit = null;
+        let linkSellerInit = null;
+        let refInit = null;
+
+        urlParams.forEach((value, key) => {
+            if (key.toLowerCase() === 'seller') {
+                sellerInit = value;
+            }
+            if (key.toLowerCase() === 'linkseller') {
+                linkSellerInit = value;
+            }
+            if (key.toLowerCase() === 'ref') {
+                refInit = value;
+            }
+        });
+
+        /* Apenas um: linkSeller > seller > ref */
+        if (linkSellerInit) {
+            localStorage.setItem('linkSeller', linkSellerInit);
+            localStorage.removeItem('seller');
+            localStorage.removeItem('ref');
+        } else if (sellerInit) {
+            localStorage.setItem('seller', sellerInit);
+            localStorage.removeItem('linkSeller');
+            localStorage.removeItem('ref');
+        } else if (refInit) {
+            localStorage.setItem('ref', refInit);
+            localStorage.removeItem('seller');
+            localStorage.removeItem('linkSeller');
+        }
+    }
+
+    window.currencyStore = {% if store.symbolPrice %}"{{ store.symbolPrice }}"{% else %}null{% endif %};
+</script>
+<script src="{{ scripts.main.src }}"></script>
+<script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
+<script>
+  window.addEventListener('load', function () {
+    if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
+      window.initMegaMenuAr();
+    }
+  });
+</script>
+<script>
+    function setupStore() {
+        return {
+            data: {
+                isLogged: null,
+                user: '',
+            },
+            headerLogout: function headerLogout() {
+                StoreSDK.request.post('/ajax/logout').then((res) => {
+                    window.location.href = window.location.href
+                });
+            },
+            changeCustomerLogin: function changeCustomerLogin(customer) {
+                this.data.isLogged = !!customer;
+                if(customer){
+                    this.data.user = customer.name || '';
+                }
+                if (this.data.isLogged) {
+                    var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
+                    for (var i = 0; i < elsShowcaseBtnLoginBuy.length; i++) {
+                        elsShowcaseBtnLoginBuy[i].classList.remove('d-hide');
+                    }
+                } else {
+                    var elsShowcasePriceLogin = document.querySelectorAll('.login-btn_not_logged');
+                    for (var i = 0; i < elsShowcasePriceLogin.length; i++) {
+                        elsShowcasePriceLogin[i].classList.remove('d-hide');
+                    }
+                }
+            },
+            openSideNavOverlayCartB2B: function openSideNavOverlayCartB2B() {
+                if(this.data.isLogged){
+                    openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true});
+                } else {
+                    openSideNavOverlay('.sidenav-overlay_account', true);
+                }
+            },
+            checkLoginLogged: function checkLoginLogged() {
+                if (this.data.isLogged) {
+                    var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
+                    for (var i = 0; i < elsShowcaseBtnLoginBuy.length; i++) {
+                        elsShowcaseBtnLoginBuy[i].classList.remove('d-hide');
+                    }
+                } else {
+                    var elsShowcasePriceLogin = document.querySelectorAll('.login-btn_not_logged');
+                    for (var i = 0; i < elsShowcasePriceLogin.length; i++) {
+                        elsShowcasePriceLogin[i].classList.remove('d-hide');
+                    }
+                }
+            },
+        }
+    }
+    const customer = {{ customer | json }};
+
+    /*** Start - Mailbiz Account Sync Check ***/
+
+
+    if (typeof mb_track !== 'undefined') {
+        mb_track('setRecoveryUrl', 'https://{{ store.url }}/checkout');
+    }
+
+    if (customer) {
+        if (typeof mb_track !== 'undefined') {
+            console.log(typeof mb_track);
+            window.mb_track('accountSync', {
+                user: {
+                    user_id: customer?.customerId,
+                    email: customer?.email,
+                    phone: customer?.cellphone,
+                    name: customer?.name || customer?.fantasyName,
+                }
+            });
+        }
+    }
+
+    /*** End - Mailbiz Account Sync Check ***/
+</script>
+{% block script_footer %}{% endblock %}
+{%- for script in scripts.footer -%}
+    {{ script.code }}
+{%- endfor -%}
+</body>
+</html>
