@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-20-js-showcase-guest-restore-v9
+ * VERSAO: 2026-07-20-js-showcase-guest-restore-v10
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1653,12 +1653,38 @@
 
   function listNeedsRestore(list) {
     if (!isProductShowcaseList(list)) return false;
-    return countItems(list) <= 1;
+    if (countItems(list) <= 1) return true;
+    return listHasBrokenPrices(list);
+  }
+
+  function listHasBrokenPrices(list) {
+    if (!list) return false;
+    var items = list.querySelectorAll('.showcase-item');
+    if (!items.length) return false;
+    for (var i = 0; i < items.length; i++) {
+      var pix = parseFloat(items[i].getAttribute('data-site-pix') || '');
+      var listPrice = parseFloat(items[i].getAttribute('data-site-list') || '');
+      if ((pix > 0 && !isNaN(pix)) || (listPrice > 0 && !isNaN(listPrice))) continue;
+      var priceEl = items[i].querySelector('.showcase-prices_price b, .showcase-prices_price');
+      if (!priceEl) continue;
+      var txt = (priceEl.textContent || '').replace(/\s/g, '');
+      if (!txt || /R\$0[,.]00/.test(txt) || txt === 'R$0,00' || txt === 'R$0.00') return true;
+    }
+    return false;
+  }
+
+  function showcaseHasBrokenPrices() {
+    var lists = getShowcaseLists();
+    for (var i = 0; i < lists.length; i++) {
+      if (listHasBrokenPrices(lists[i])) return true;
+    }
+    return false;
   }
 
   function pageNeedsRestore() {
     if (!isLoggedIn()) return false;
     if (isSearchListingBrokenPage()) return true;
+    if (showcaseHasBrokenPrices()) return true;
     var lists = getShowcaseLists();
     for (var i = 0; i < lists.length; i++) {
       if (listNeedsRestore(lists[i])) return true;
@@ -1881,7 +1907,7 @@
       var list = findListForEntry(entry, lists);
       if (!list) continue;
       var current = countItems(list);
-      if (entry.count > current) {
+      if (entry.count > current || listHasBrokenPrices(list)) {
         list.innerHTML = entry.html;
         restored = true;
       }
@@ -2132,7 +2158,7 @@
                 guestPayload[g].key === 'catalog-pagination' ||
                 guestPayload[g].key === 'catalog-search-state') continue;
             var gl = findListForEntry(guestPayload[g], lists);
-            if (gl && guestPayload[g].count > countItems(gl)) anyMore = true;
+            if (gl && (guestPayload[g].count > countItems(gl) || listHasBrokenPrices(gl))) anyMore = true;
           }
           if (!anyMore) return { html: html, restored: false };
         }
@@ -2220,6 +2246,12 @@
       cacheGuestShowcases();
     }
   }, true);
+
+  document.addEventListener('change-customer-login', function () {
+    if (!isLoggedIn()) return;
+    restoreDone = false;
+    setTimeout(restoreShowcasesFromGuest, 150);
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initShowcaseGuestRestore);

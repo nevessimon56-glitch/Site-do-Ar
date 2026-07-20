@@ -1,6 +1,7 @@
 {% comment %}
-  SITE-PRICE-RESOLVE-v2
+  SITE-PRICE-RESOLVE-v3
   Nunca usa tabela Mercado Livre / marketplace no site.
+  Se product.price for ML ou zero, busca tabela do site em product.prices.
   Uso:
     {% assign sitePrice = nil %}
     {% render 'sections/site-price-resolve', product: product %}
@@ -14,7 +15,12 @@
   {% assign currentPriceIsMl = true %}
 {% endif %}
 
-{% if product.prices.size > 0 %}
+{% assign needsResolve = false %}
+{% if currentPriceIsMl or sitePrice.price == 0 or sitePrice.price == null %}
+  {% assign needsResolve = true %}
+{% endif %}
+
+{% if needsResolve and product.prices.size > 0 %}
   {% assign sitePrice = nil %}
   {% for pg in product.prices %}
     {% if pg.price > 0 %}
@@ -36,10 +42,10 @@
   {% endfor %}
 {% endif %}
 
-{% if sitePrice == nil and currentPriceIsMl == false %}
-  {% assign sitePrice = product.price %}
-{% endif %}
-
-{% if sitePrice == nil %}
-  {% assign sitePrice = product.price %}
+{% if sitePrice == nil or sitePrice.price == 0 or sitePrice.price == null %}
+  {% unless currentPriceIsMl %}
+    {% if product.price.price > 0 %}
+      {% assign sitePrice = product.price %}
+    {% endif %}
+  {% endunless %}
 {% endif %}
