@@ -109,13 +109,19 @@
     transform: translateY(-1px);
   }
 
-  .mega-menu-ar__brand-logo img {
+  .mega-menu-ar__brand-logo img,
+  .mega-menu-ar__brand-logo .mega-menu-ar__brand-svg {
     display: block;
     max-width: 100%;
     max-height: 22px;
     width: auto;
     height: auto;
     object-fit: contain;
+  }
+
+  .mega-menu-ar__brand-logo .mega-menu-ar__brand-svg {
+    height: 22px;
+    width: auto;
   }
 
   .mega-menu-ar__section--produtos.mega-menu-ar__banner-col {
