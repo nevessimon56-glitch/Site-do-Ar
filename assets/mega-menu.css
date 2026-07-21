@@ -1709,3 +1709,54 @@
   font-weight: 800;
   line-height: 1em;
 }
+
+/* --- Footer — formas de pagamento (cartões visíveis) --- */
+
+.footer-payment_list {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 14px 16px;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(8, 15, 23, 0.18);
+}
+
+.footer-payment_item {
+  background-color: #ffffff;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  padding: 10px 14px;
+  min-height: 44px;
+  box-shadow: 0 1px 2px rgba(15, 25, 35, 0.06);
+}
+
+.footer-payment_item:hover {
+  border-color: #b8c9dc;
+  background-color: #ffffff;
+}
+
+.footer-payment_item img,
+.footer-payment_item svg {
+  max-height: 34px;
+  min-height: 28px;
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .footer-payment_list {
+    padding: 12px 14px;
+    gap: 8px;
+  }
+
+  .footer-payment_item {
+    padding: 8px 12px;
+    min-height: 40px;
+  }
+
+  .footer-payment_item img,
+  .footer-payment_item svg {
+    max-height: 30px;
+    min-height: 24px;
+  }
+}
