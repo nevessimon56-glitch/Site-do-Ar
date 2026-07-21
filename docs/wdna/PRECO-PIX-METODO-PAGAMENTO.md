@@ -23,7 +23,7 @@ preço Pix = preço da tabela − 5%
 |---|---------|-----------|
 | 1 | `sections/showcase-model-product.liquid` | Cards da vitrine com Pix |
 | 2 | `sections/product-content.liquid` | Página do produto com Pix |
-| 3 | `assets/mega-menu.css` | Estilos do badge verde Pix |
+| 3 | `assets/mega-menu.css` | Estilos completos dos cards + badge verde Pix (~1500 linhas) |
 
 Links (branch atual):
 

@@ -29,7 +29,9 @@
 
 Substitua **todo** o conteúdo (pills + preço Pix + **estilos mobile**).
 
-https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/7fef7b3/assets/mega-menu.css
+> **IMPORTANTE:** o arquivo completo tem **~1500 linhas**. Versão com ~500 linhas quebra os cards (pills, preço, botão Comprar).
+
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/mobile-restore-ed4c/assets/mega-menu.css
 
 **Validar no código:** comentários `MOBILE-NAV-v2`, `MOBILE-CATALOG-GRID-v1`, `MOBILE-CATALOG-DOCK-v1`.
 

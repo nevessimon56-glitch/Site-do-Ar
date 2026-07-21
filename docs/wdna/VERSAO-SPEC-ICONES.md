@@ -22,9 +22,11 @@ https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/70254aa/section
 
 ### 3 — `assets/mega-menu.css`
 
-Substitua **todo** o conteúdo (tem as cores das pills + preço Pix verde + parcelas).
+Substitua **todo** o conteúdo (tem as cores das pills + preço Pix verde + parcelas + mobile).
 
-https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/70254aa/assets/mega-menu.css
+> **IMPORTANTE:** o arquivo completo tem **~1500 linhas**. Se tiver menos de 1000 linhas, está incompleto e os cards ficam quebrados.
+
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/mobile-restore-ed4c/assets/mega-menu.css
 
 ### 4 — `assets/mega-menu.js`
 
