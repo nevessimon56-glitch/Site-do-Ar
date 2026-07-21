@@ -1485,21 +1485,29 @@
     cursor: pointer;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
   }
 
   .mobile-catalog-dock__btn--primary {
+    font-weight: 800;
+  }
+
+  .mobile-catalog-dock__btn.is-active {
     background: linear-gradient(135deg, #1a6eb5, #2c8fd6);
     color: #fff !important;
-    box-shadow: 0 3px 10px rgba(26, 110, 181, 0.28);
+    box-shadow: 0 3px 12px rgba(26, 110, 181, 0.32);
+    transform: translateY(-1px);
   }
 
-  .mobile-catalog-dock__btn.is-active:not(.mobile-catalog-dock__btn--primary) {
-    color: #1a6eb5;
+  .mobile-catalog-dock__btn.is-active .mobile-catalog-dock__icon svg {
+    color: #fff;
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  .mobile-catalog-dock__btn:not(.is-active):active {
     background: #eef5fb;
-  }
-
-  .mobile-catalog-dock__btn--primary.is-active {
-    background: linear-gradient(135deg, #145a96, #1f7ab8);
+    color: #1a6eb5;
   }
 
   .mobile-catalog-dock__icon {

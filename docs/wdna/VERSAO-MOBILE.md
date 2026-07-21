@@ -92,6 +92,7 @@ https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/7fef7b3/section
 ## Testar no celular (checklist)
 
 - [ ] Dock fixo no rodapé: `<nav class="mobile-catalog-dock">`
+- [ ] Aba ativa muda de cor conforme a página (Início / Catálogo / Categorias)
 - [ ] Botão **Catálogo** abre `/Todos-os-Produtos`
 - [ ] **Categorias** abre painel com Split, Piso Teto, etc.
 - [ ] No catálogo, produtos em **2 colunas**
