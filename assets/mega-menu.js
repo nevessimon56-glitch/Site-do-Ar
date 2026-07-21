@@ -1339,3 +1339,132 @@
   }
   window.addEventListener('load', initCatalogDock);
 })();
+
+/**
+ * WDNA: /split-inverter?marcas=Midea retorna erro.
+ * Redireciona para /Todos-os-Produtos?marcas=Midea em links, forms e URL direta.
+ */
+(function () {
+  'use strict';
+
+  var MIDEA_VALUE = 'Midea';
+  var FIXED_BASE = '/Todos-os-Produtos';
+
+  function hasMideaMarca(search) {
+    if (!search) return false;
+    return /(?:^|[&?])marcas=Midea(?:&|$)/i.test(search);
+  }
+
+  function fixMideaUrl(url) {
+    if (!url) return url;
+
+    var raw = String(url).trim();
+    if (!raw || raw.indexOf('javascript:') === 0) return raw;
+
+    var parsed;
+    try {
+      parsed = new URL(raw, window.location.origin);
+    } catch (e) {
+      return raw;
+    }
+
+    if (!hasMideaMarca(parsed.search)) return raw;
+
+    var path = parsed.pathname.replace(/\/+$/, '').toLowerCase();
+    if (path === '/split-inverter') {
+      parsed.pathname = FIXED_BASE;
+      return parsed.pathname + parsed.search + parsed.hash;
+    }
+
+    return raw;
+  }
+
+  function patchMideaLinks(root) {
+    var scope = root || document;
+    var links = scope.querySelectorAll('a[href*="marcas=Midea"], a[href*="marcas=midea"]');
+    for (var i = 0; i < links.length; i++) {
+      var href = links[i].getAttribute('href');
+      var fixed = fixMideaUrl(href);
+      if (fixed && fixed !== href) {
+        links[i].setAttribute('href', fixed);
+      }
+    }
+  }
+
+  function fixMideaForm(form) {
+    if (!form || form.getAttribute('data-midea-form-fixed') === '1') return;
+    form.setAttribute('data-midea-form-fixed', '1');
+
+    form.addEventListener('submit', function () {
+      var mideaChecked = form.querySelector(
+        'input[name="marcas"][value="' + MIDEA_VALUE + '"]:checked'
+      );
+      if (!mideaChecked) return;
+
+      var action = form.getAttribute('action') || window.location.pathname;
+      if (action.replace(/\/+$/, '').toLowerCase() === '/split-inverter') {
+        form.setAttribute('action', FIXED_BASE);
+      }
+    });
+  }
+
+  function fixMideaForms(root) {
+    var scope = root || document;
+    var forms = scope.querySelectorAll('.search-filters-form');
+    for (var i = 0; i < forms.length; i++) {
+      fixMideaForm(forms[i]);
+    }
+  }
+
+  function redirectBrokenMideaUrl() {
+    var fixed = fixMideaUrl(window.location.pathname + window.location.search + window.location.hash);
+    var current = window.location.pathname + window.location.search + window.location.hash;
+    if (fixed !== current) {
+      window.location.replace(fixed);
+      return true;
+    }
+    return false;
+  }
+
+  function initMideaFilterFix() {
+    if (redirectBrokenMideaUrl()) return;
+
+    patchMideaLinks(document);
+    fixMideaForms(document);
+
+    document.addEventListener(
+      'click',
+      function (e) {
+        var link = e.target.closest('a[href]');
+        if (!link) return;
+        var href = link.getAttribute('href');
+        var fixed = fixMideaUrl(href);
+        if (fixed && fixed !== href) {
+          e.preventDefault();
+          window.location.href = fixed;
+        }
+      },
+      true
+    );
+
+    if (typeof MutationObserver !== 'undefined') {
+      var observer = new MutationObserver(function (mutations) {
+        for (var i = 0; i < mutations.length; i++) {
+          var nodes = mutations[i].addedNodes;
+          for (var j = 0; j < nodes.length; j++) {
+            if (nodes[j].nodeType !== 1) continue;
+            patchMideaLinks(nodes[j]);
+            fixMideaForms(nodes[j]);
+          }
+        }
+      });
+      observer.observe(document.documentElement, { childList: true, subtree: true });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMideaFilterFix);
+  } else {
+    initMideaFilterFix();
+  }
+})();
