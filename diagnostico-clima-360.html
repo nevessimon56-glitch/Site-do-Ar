@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagnostico Clima 360 | Site Do Ar</title>
+  <meta name="description" content="Quiz avancado para diagnosticar o perfil de climatizacao ideal para cada cliente.">
+  <style>
+    :root {
+      --bg: #06162b;
+      --bg-2: #0b2a4f;
+      --blue: #0b84ff;
+      --cyan: #38d8ff;
+      --green: #5be36b;
+      --yellow: #ffd166;
+      --red: #ff6b6b;
+      --purple: #9b7bff;
+      --white: #ffffff;
+      --muted: #9eb3ca;
+      --line: rgba(255, 255, 255, 0.14);
+      --glass: rgba(255, 255, 255, 0.08);
+      --glass-2: rgba(255, 255, 255, 0.13);
+      --shadow: 0 26px 80px rgba(0, 0, 0, 0.34);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 15% 12%, rgba(56, 216, 255, 0.22), transparent 27rem),
+        radial-gradient(circle at 80% 0%, rgba(155, 123, 255, 0.2), transparent 29rem),
+        radial-gradient(circle at 70% 88%, rgba(91, 227, 107, 0.14), transparent 28rem),
+        linear-gradient(135deg, var(--bg), var(--bg-2) 55%, #031020);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 44px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 17px;
+      color: #031020;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      box-shadow: 0 14px 30px rgba(56, 216, 255, 0.24);
+    }
+
+    .top-note {
+      color: var(--muted);
+      text-align: right;
+      font-size: 0.92rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .glass {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .intro {
+      padding: clamp(26px, 5vw, 54px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background: rgba(56, 216, 255, 0.13);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 9px 14px;
+      border: 1px solid rgba(56, 216, 255, 0.36);
+      border-radius: 999px;
+      color: var(--cyan);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(56, 216, 255, 0.1);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin-bottom: 18px;
+      font-size: clamp(2.6rem, 6.4vw, 6.1rem);
+      line-height: 0.88;
+      letter-spacing: -0.08em;
+    }
+
+    .lead {
+      position: relative;
+      z-index: 1;
+      max-width: 650px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.68;
+    }
+
+    .actions {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 999px;
+      color: #031020;
+      font-weight: 900;
+      text-decoration: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--yellow), #fff0a8);
+      box-shadow: 0 16px 28px rgba(255, 209, 102, 0.24);
+    }
+
+    .btn.alt {
+      color: var(--white);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+    }
+
+    .dashboard {
+      min-height: 520px;
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .dashboard-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .status-pill {
+      padding: 10px 13px;
+      border-radius: 999px;
+      color: var(--cyan);
+      font-weight: 900;
+      background: rgba(56, 216, 255, 0.12);
+      border: 1px solid rgba(56, 216, 255, 0.28);
+    }
+
+    .score-orb {
+      display: grid;
+      place-items: center;
+      width: min(330px, 75vw);
+      aspect-ratio: 1;
+      margin: 12px auto;
+      position: relative;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle closest-side, rgba(255, 255, 255, 0.08) 0 59%, transparent 60%),
+        conic-gradient(var(--cyan) 0 16%, var(--green) 16% 34%, var(--yellow) 34% 53%, var(--purple) 53% 72%, var(--blue) 72% 88%, rgba(255, 255, 255, 0.12) 88% 100%);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .score-orb::before {
+      content: "";
+      position: absolute;
+      inset: 28px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
+      border: 1px solid var(--line);
+    }
+
+    .orb-content {
+      position: relative;
+      text-align: center;
+    }
+
+    .orb-content strong {
+      display: block;
+      font-size: clamp(2.3rem, 6vw, 4.2rem);
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .orb-content span {
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .mini {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .mini strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1.2rem;
+    }
+
+    .mini span {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+
+    .quiz-shell {
+      display: grid;
+      grid-template-columns: 0.78fr 1.22fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .profile {
+      padding: 22px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .profile h2 {
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+      letter-spacing: -0.03em;
+    }
+
+    .bars {
+      display: grid;
+      gap: 13px;
+      margin-top: 18px;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 7px;
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .bar {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .bar span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--green));
+      transition: width 0.25s ease;
+    }
+
+    .quiz {
+      padding: clamp(22px, 4vw, 34px);
+    }
+
+    .progress-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .progress {
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      margin-bottom: 26px;
+    }
+
+    .progress span {
+      display: block;
+      width: 12.5%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      transition: width 0.25s ease;
+    }
+
+    .question h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: -0.055em;
+    }
+
+    .question .hint {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .option {
+      min-height: 138px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      color: var(--white);
+      text-align: left;
+      background: rgba(255, 255, 255, 0.07);
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .option:hover,
+    .option.selected {
+      transform: translateY(-3px);
+      border-color: rgba(56, 216, 255, 0.7);
+      background: rgba(56, 216, 255, 0.12);
+    }
+
+    .option.selected {
+      box-shadow: inset 0 0 0 2px rgba(56, 216, 255, 0.18);
+    }
+
+    .option .emoji {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      margin-bottom: 13px;
+      border-radius: 16px;
+      color: #031020;
+      font-size: 1.35rem;
+      background: linear-gradient(135deg, #fff, #dff8ff);
+    }
+
+    .option strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 1.05rem;
+    }
+
+    .option small {
+      color: var(--muted);
+      line-height: 1.42;
+    }
+
+    .history-fact {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid rgba(56, 216, 255, 0.28);
+      border-radius: 22px;
+      background: rgba(56, 216, 255, 0.09);
+    }
+
+    .history-fact-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      color: #031020;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--yellow), #fff0a8);
+    }
+
+    .history-fact strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--cyan);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .history-fact p {
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .quiz-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .result {
+      display: none;
+      margin-top: 24px;
+      padding: clamp(24px, 4vw, 38px);
+      color: #06162b;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.86), transparent 18rem),
+        linear-gradient(135deg, #ffffff, #dff8ff);
+      box-shadow: var(--shadow);
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 0.82fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .result h2 {
+      margin-bottom: 10px;
+      font-size: clamp(2rem, 5vw, 4.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+    }
+
+    .result p {
+      color: #4a637d;
+      line-height: 1.62;
+    }
+
+    .result-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .result-badge {
+      padding: 10px 12px;
+      border-radius: 999px;
+      color: #06162b;
+      font-weight: 900;
+      background: #eaf7ff;
+    }
+
+    .result-card {
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(11, 132, 255, 0.08);
+      border: 1px solid rgba(11, 132, 255, 0.16);
+    }
+
+    .result-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.2rem;
+    }
+
+    .result .btn {
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--bg-2));
+      box-shadow: none;
+    }
+
+    .muted-note {
+      color: #6a8299;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 940px) {
+      .hero,
+      .quiz-shell,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile {
+        position: static;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 20px, 1200px);
+        padding-top: 18px;
+      }
+
+      .topbar,
+      .dashboard-head,
+      .quiz-actions {
+        display: block;
+      }
+
+      .top-note,
+      .status-pill {
+        margin-top: 12px;
+        text-align: left;
+      }
+
+      .mini-stats,
+      .option-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .actions,
+      .quiz-actions {
+        display: grid;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">360</span>
+        <span>Site Do Ar</span>
+      </div>
+      <div class="top-note">Proposta inovadora: quiz consultivo avancado, perfil de compra e recomendacao.</div>
+    </header>
+
+    <section class="hero">
+      <div class="glass intro">
+        <p class="tag">Quiz avancado</p>
+        <h1>Diagnostico Clima 360</h1>
+        <p class="lead">
+          Uma experiencia mais sofisticada para o cliente sentir que recebeu uma consultoria. O quiz cruza rotina, ambiente, prioridades e urgencia para gerar um perfil de climatizacao.
+        </p>
+        <div class="actions">
+          <a class="btn" href="#quiz">Comecar diagnostico</a>
+          <a class="btn alt" href="https://www.sitedoar.com.br/" target="_blank" rel="noopener">Ver loja</a>
+        </div>
+      </div>
+
+      <div class="glass dashboard">
+        <div class="dashboard-head">
+          <strong>Mapa inteligente</strong>
+          <span class="status-pill" id="liveStatus">Coletando sinais</span>
+        </div>
+        <div class="score-orb">
+          <div class="orb-content">
+            <strong id="fitScore">18%</strong>
+            <span>perfil mapeado</span>
+          </div>
+        </div>
+        <div class="mini-stats">
+          <div class="mini"><strong id="miniBtu">--</strong><span>faixa inicial de BTUs</span></div>
+          <div class="mini"><strong id="miniMode">--</strong><span>prioridade dominante</span></div>
+          <div class="mini"><strong id="miniRoute">--</strong><span>rota sugerida</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz" class="quiz-shell">
+      <aside class="glass profile">
+        <p class="tag">Perfil ao vivo</p>
+        <h2>O que o cliente valoriza?</h2>
+        <p class="lead">As barras mudam conforme as respostas. Isso deixa a experiencia com cara de diagnostico real.</p>
+        <div class="bars" id="bars"></div>
+      </aside>
+
+      <div class="glass quiz">
+        <div class="progress-line">
+          <span id="questionCounter">Pergunta 1 de 8</span>
+          <span id="questionType">Escolha unica</span>
+        </div>
+        <div class="progress"><span id="progressBar"></span></div>
+
+        <div class="question">
+          <h2 id="questionTitle"></h2>
+          <p class="hint" id="questionHint"></p>
+          <div class="option-grid" id="options"></div>
+          <div class="history-fact" id="historyFact">
+            <span class="history-fact-icon">?</span>
+            <div>
+              <strong>Voce sabia?</strong>
+              <p id="historyFactText">Escolha uma resposta para desbloquear um fato historico sobre a evolucao do ar-condicionado.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz-actions">
+          <button class="btn alt" id="backButton" type="button">Voltar</button>
+          <button class="btn" id="nextButton" type="button">Proxima</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="result" id="result" aria-live="polite">
+      <div class="result-grid">
+        <div>
+          <p class="tag">Resultado 360</p>
+          <h2 id="resultTitle">Seu perfil esta pronto</h2>
+          <p id="resultText"></p>
+          <div class="result-badges" id="resultBadges"></div>
+          <div class="actions">
+            <a class="btn" id="primaryCta" href="https://www.sitedoar.com.br/" target="_blank" rel="noopener">Ver recomendados</a>
+            <a class="btn alt" id="specialistCta" href="https://wa.me/5519984176960" target="_blank" rel="noopener">Enviar para especialista</a>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <strong id="routeTitle">Rota recomendada</strong>
+          <p id="routeText"></p>
+          <p class="muted-note">BTU e recomendacoes sao aproximados. Para venda final, confirme medidas, voltagem, instalacao e condicoes do ambiente.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const dimensions = {
+      economy: 'Economia',
+      comfort: 'Conforto',
+      speed: 'Rapidez',
+      silence: 'Silencio',
+      tech: 'Tecnologia',
+      power: 'Potencia'
+    };
+
+    const state = {
+      step: 0,
+      answers: {},
+      scores: {
+        economy: 0,
+        comfort: 0,
+        speed: 0,
+        silence: 0,
+        tech: 0,
+        power: 0
+      },
+      btuBase: 9000
+    };
+
+    const questions = [
+      {
+        id: 'environment',
+        type: 'single',
+        title: 'Qual cenario melhor representa o ambiente?',
+        hint: 'Aqui a ideia e entender o uso real, nao apenas o tamanho.',
+        options: [
+          { label: 'Quarto de descanso', desc: 'Sono, silencio e temperatura constante.', emoji: '🌙', scores: { silence: 4, comfort: 3, economy: 2 }, btu: 9000 },
+          { label: 'Sala de familia', desc: 'Uso variado, visitas e rotina diaria.', emoji: '🛋', scores: { comfort: 4, economy: 2, power: 1 }, btu: 12000 },
+          { label: 'Home office', desc: 'Foco, silencio e estabilidade durante o trabalho.', emoji: '💻', scores: { silence: 3, economy: 3, tech: 2 }, btu: 12000 },
+          { label: 'Comercio ou loja', desc: 'Portas abrindo, fluxo e uso prolongado.', emoji: '🏢', scores: { power: 4, speed: 3, comfort: 2 }, btu: 24000 }
+        ]
+      },
+      {
+        id: 'routine',
+        type: 'single',
+        title: 'Como o ar-condicionado sera usado?',
+        hint: 'A rotina ajuda a decidir entre economia, potencia e tecnologia.',
+        options: [
+          { label: 'Todo dia por muitas horas', desc: 'Economia e inverter ganham peso.', emoji: '🔁', scores: { economy: 5, comfort: 2, tech: 1 } },
+          { label: 'Apenas em dias muito quentes', desc: 'Resposta rapida importa mais.', emoji: '🔥', scores: { speed: 4, power: 3 } },
+          { label: 'Noite inteira', desc: 'Silencio e estabilidade sao essenciais.', emoji: '😴', scores: { silence: 5, economy: 2 } },
+          { label: 'Uso imprevisivel', desc: 'Praticidade e controle remoto ajudam.', emoji: '📱', scores: { tech: 4, comfort: 2 } }
+        ]
+      },
+      {
+        id: 'pain',
+        type: 'multi',
+        title: 'Quais problemas voce quer eliminar?',
+        hint: 'Pode escolher mais de um. Essa etapa deixa o quiz mais consultivo.',
+        options: [
+          { label: 'Conta de energia alta', desc: 'Cliente sensivel a consumo.', emoji: '💸', scores: { economy: 5 } },
+          { label: 'Calor demora para baixar', desc: 'Precisa de resposta mais forte.', emoji: '⏱', scores: { speed: 4, power: 2 } },
+          { label: 'Barulho incomoda', desc: 'Foco em linhas silenciosas.', emoji: '🔇', scores: { silence: 5 } },
+          { label: 'Esqueco de ligar/desligar', desc: 'Automacao e Wi-Fi agregam valor.', emoji: '📲', scores: { tech: 5, economy: 1 } }
+        ]
+      },
+      {
+        id: 'sun',
+        type: 'single',
+        title: 'Como e a incidencia de sol?',
+        hint: 'Sol forte muda bastante a recomendacao, principalmente em apartamentos e vitrines.',
+        options: [
+          { label: 'Pouco sol', desc: 'Ambiente protegido ou com boa sombra.', emoji: '🌥', scores: { economy: 2 }, btuAdd: 0 },
+          { label: 'Sol em parte do dia', desc: 'Carga termica moderada.', emoji: '⛅', scores: { comfort: 2, power: 1 }, btuAdd: 3000 },
+          { label: 'Muito sol', desc: 'Janela grande ou sol forte.', emoji: '☀', scores: { power: 4, speed: 2 }, btuAdd: 6000 },
+          { label: 'Nao sei avaliar', desc: 'Melhor deixar margem de seguranca.', emoji: '❔', scores: { comfort: 2, power: 2 }, btuAdd: 3000 }
+        ]
+      },
+      {
+        id: 'people',
+        type: 'single',
+        title: 'Quantas pessoas ficam no ambiente normalmente?',
+        hint: 'Mais pessoas geram mais calor e podem exigir maior capacidade.',
+        options: [
+          { label: '1 pessoa', desc: 'Uso individual.', emoji: '1', scores: { economy: 2 }, btuAdd: 0 },
+          { label: '2 a 3 pessoas', desc: 'Uso residencial comum.', emoji: '2+', scores: { comfort: 2 }, btuAdd: 3000 },
+          { label: '4 a 6 pessoas', desc: 'Sala, reuniao ou familia grande.', emoji: '4+', scores: { power: 3, comfort: 2 }, btuAdd: 6000 },
+          { label: 'Fluxo grande', desc: 'Comercial ou entrada e saida constante.', emoji: '↔', scores: { power: 5, speed: 2 }, btuAdd: 12000 }
+        ]
+      },
+      {
+        id: 'features',
+        type: 'multi',
+        title: 'Quais recursos fariam voce escolher mais rapido?',
+        hint: 'Essa pergunta revela argumentos de venda, nao apenas produto.',
+        options: [
+          { label: 'Inverter', desc: 'Economia e conforto continuo.', emoji: '♻', scores: { economy: 4, comfort: 2 } },
+          { label: 'Wi-Fi', desc: 'Controle pelo celular e rotina.', emoji: '📶', scores: { tech: 5 } },
+          { label: 'Quente/Frio', desc: 'Uso em mais epocas do ano.', emoji: '🌡', scores: { comfort: 4 } },
+          { label: 'Marca reconhecida', desc: 'Seguranca e pos-venda.', emoji: '⭐', scores: { comfort: 2, power: 1 } }
+        ]
+      },
+      {
+        id: 'urgency',
+        type: 'single',
+        title: 'Qual e o nivel de urgencia da compra?',
+        hint: 'Ajuda a direcionar para WhatsApp, vitrine ou comparacao.',
+        options: [
+          { label: 'Estou pesquisando', desc: 'Precisa de conteudo e comparacao.', emoji: '🔎', scores: { tech: 1, economy: 2 } },
+          { label: 'Quero comprar em breve', desc: 'Mostre produtos e beneficios.', emoji: '🛒', scores: { comfort: 2, speed: 2 } },
+          { label: 'Preciso resolver rapido', desc: 'WhatsApp e estoque disponivel.', emoji: '🚨', scores: { speed: 5, power: 2 } },
+          { label: 'E para projeto maior', desc: 'Atendimento consultivo.', emoji: '📐', scores: { power: 4, tech: 2 } }
+        ]
+      },
+      {
+        id: 'budget',
+        type: 'single',
+        title: 'O que pesa mais na decisao final?',
+        hint: 'Fecha o diagnostico com uma recomendacao comercial mais forte.',
+        options: [
+          { label: 'Menor consumo no longo prazo', desc: 'Argumento de economia.', emoji: '📉', scores: { economy: 5 } },
+          { label: 'Menor preco de entrada', desc: 'Mostrar ofertas e promocoes.', emoji: '🏷', scores: { economy: 2, speed: 1 } },
+          { label: 'Melhor experiencia', desc: 'Conforto, silencio e recursos.', emoji: '💎', scores: { comfort: 4, silence: 2, tech: 2 } },
+          { label: 'Garantia de acertar', desc: 'Cliente quer falar com especialista.', emoji: '✅', scores: { comfort: 3, power: 2 } }
+        ]
+      }
+    ];
+
+    const historyFacts = [
+      'Em 1842, o medico John Gorrie projetou uma maquina para produzir gelo e resfriar ambientes hospitalares na Florida.',
+      'Em 1902, Willis Carrier criou um sistema moderno de controle de temperatura e umidade para resolver problemas em uma grafica de Nova York.',
+      'O termo "air conditioning" foi popularizado em 1906 pelo engenheiro Stuart Cramer, que estudava controle de umidade em fabricas texteis.',
+      'Em 1904, visitantes da Feira Mundial de St. Louis conheceram uma das primeiras grandes demonstracoes publicas de resfriamento mecanico.',
+      'Na decada de 1920, cinemas com ar-condicionado viraram atracao nos Estados Unidos e ajudaram a popularizar sessoes no verao.',
+      'Em 1931, H.H. Schultz e J.Q. Sherman patentearam uma versao inicial do ar-condicionado de janela.',
+      'Em 1939, a Packard apresentou um dos primeiros sistemas de ar-condicionado para automoveis de producao.',
+      'Depois da Segunda Guerra Mundial, o ar-condicionado residencial se tornou mais acessivel e mudou o jeito de construir casas e escritorios.',
+      'A tecnologia inverter ganhou espaco por ajustar a velocidade do compressor, ajudando a economizar energia e manter temperatura mais estavel.',
+      'A evolucao dos fluidos refrigerantes foi marcada por mudancas ambientais, especialmente apos o Protocolo de Montreal limitar CFCs.',
+      'O ar-condicionado ajudou no crescimento de regioes muito quentes, tornando casas, comercios e escritorios mais confortaveis.',
+      'Sistemas modernos nao trabalham so com frio: filtragem, umidade, ruido e eficiencia energetica viraram parte importante da climatizacao.'
+    ];
+
+    const bars = document.getElementById('bars');
+    const questionTitle = document.getElementById('questionTitle');
+    const questionHint = document.getElementById('questionHint');
+    const options = document.getElementById('options');
+    const historyFactText = document.getElementById('historyFactText');
+    const questionCounter = document.getElementById('questionCounter');
+    const questionType = document.getElementById('questionType');
+    const progressBar = document.getElementById('progressBar');
+    const fitScore = document.getElementById('fitScore');
+    const liveStatus = document.getElementById('liveStatus');
+    const miniBtu = document.getElementById('miniBtu');
+    const miniMode = document.getElementById('miniMode');
+    const miniRoute = document.getElementById('miniRoute');
+    const backButton = document.getElementById('backButton');
+    const nextButton = document.getElementById('nextButton');
+    const result = document.getElementById('result');
+    let lastHistoryFactIndex = -1;
+
+    function createBars() {
+      bars.innerHTML = Object.entries(dimensions).map(([key, label]) => `
+        <div class="bar-row">
+          <div class="bar-label"><span>${label}</span><strong id="label-${key}">0</strong></div>
+          <div class="bar"><span id="bar-${key}"></span></div>
+        </div>
+      `).join('');
+    }
+
+    function resetScores() {
+      Object.keys(state.scores).forEach((key) => {
+        state.scores[key] = 0;
+      });
+      state.btuBase = 9000;
+    }
+
+    function selectedOptionsFor(question) {
+      const answer = state.answers[question.id];
+      if (answer === undefined || answer === null) return [];
+      return Array.isArray(answer) ? answer : [answer];
+    }
+
+    function recalculate() {
+      resetScores();
+
+      questions.forEach((question) => {
+        selectedOptionsFor(question).forEach((index) => {
+          const option = question.options[index];
+          if (!option) return;
+
+          Object.entries(option.scores || {}).forEach(([key, value]) => {
+            state.scores[key] += value;
+          });
+
+          if (option.btu) {
+            state.btuBase = Math.max(state.btuBase, option.btu);
+          }
+
+          if (option.btuAdd) {
+            state.btuBase += option.btuAdd;
+          }
+        });
+      });
+
+      updateLiveProfile();
+    }
+
+    function getTopDimension() {
+      return Object.entries(state.scores).sort((a, b) => b[1] - a[1])[0];
+    }
+
+    function normalizeBtu(value) {
+      const capacities = [9000, 12000, 18000, 24000, 30000, 36000, 48000, 60000];
+      return capacities.find((capacity) => value <= capacity) || 60000;
+    }
+
+    function showRandomHistoryFact() {
+      let nextIndex = Math.floor(Math.random() * historyFacts.length);
+
+      if (historyFacts.length > 1) {
+        while (nextIndex === lastHistoryFactIndex) {
+          nextIndex = Math.floor(Math.random() * historyFacts.length);
+        }
+      }
+
+      lastHistoryFactIndex = nextIndex;
+      historyFactText.textContent = historyFacts[nextIndex];
+    }
+
+    function updateLiveProfile() {
+      const max = Math.max(10, ...Object.values(state.scores));
+      Object.entries(state.scores).forEach(([key, value]) => {
+        const percent = Math.round((value / max) * 100);
+        document.getElementById(`bar-${key}`).style.width = `${percent}%`;
+        document.getElementById(`label-${key}`).textContent = value;
+      });
+
+      const progress = Math.round(((state.step + 1) / questions.length) * 100);
+      const answered = Object.keys(state.answers).length;
+      const fit = Math.round((answered / questions.length) * 100);
+      const [topKey, topValue] = getTopDimension();
+
+      fitScore.textContent = `${fit}%`;
+      progressBar.style.width = `${progress}%`;
+      liveStatus.textContent = answered < 3 ? 'Coletando sinais' : answered < 7 ? 'Perfil em formacao' : 'Diagnostico quase pronto';
+      miniBtu.textContent = `${normalizeBtu(state.btuBase).toLocaleString('pt-BR')}`;
+      miniMode.textContent = topValue > 0 ? dimensions[topKey] : '--';
+      miniRoute.textContent = topKey === 'tech' ? 'Smart' : topKey === 'economy' ? 'Inverter' : topKey === 'power' ? 'Potencia' : topValue > 0 ? 'Consultiva' : '--';
+    }
+
+    function renderQuestion() {
+      const question = questions[state.step];
+      const selected = selectedOptionsFor(question);
+
+      questionCounter.textContent = `Pergunta ${state.step + 1} de ${questions.length}`;
+      questionType.textContent = question.type === 'multi' ? 'Multipla escolha' : 'Escolha unica';
+      questionTitle.textContent = question.title;
+      questionHint.textContent = question.hint;
+      options.innerHTML = question.options.map((option, index) => `
+        <button class="option ${selected.includes(index) ? 'selected' : ''}" type="button" data-index="${index}">
+          <span class="emoji">${option.emoji}</span>
+          <strong>${option.label}</strong>
+          <small>${option.desc}</small>
+        </button>
+      `).join('');
+
+      backButton.disabled = state.step === 0;
+      backButton.style.opacity = state.step === 0 ? '0.45' : '1';
+      nextButton.textContent = state.step === questions.length - 1 ? 'Gerar diagnostico' : 'Proxima';
+      recalculate();
+    }
+
+    function toggleOption(index) {
+      const question = questions[state.step];
+
+      if (question.type === 'multi') {
+        const current = selectedOptionsFor(question);
+        const next = current.includes(index)
+          ? current.filter((item) => item !== index)
+          : [...current, index];
+        state.answers[question.id] = next;
+      } else {
+        state.answers[question.id] = index;
+      }
+
+      renderQuestion();
+      showRandomHistoryFact();
+    }
+
+    function buildResult() {
+      recalculate();
+      const [topKey] = getTopDimension();
+      const btu = normalizeBtu(state.btuBase);
+      const hasUrgency = state.answers.urgency === 2;
+      const selectedFeatureIndexes = state.answers.features || [];
+      const featureLabels = selectedFeatureIndexes.map((index) => questions.find((q) => q.id === 'features').options[index].label);
+
+      const personas = {
+        economy: {
+          title: 'Perfil Economista Inverter',
+          text: 'O cliente valoriza consumo baixo e bom custo no longo prazo. A recomendacao deve destacar modelos inverter, eficiencia energetica e uso diario.',
+          route: 'Mostre primeiro modelos inverter e explique economia mensal estimada.',
+          link: 'https://www.sitedoar.com.br/split-inverter?pg=1'
+        },
+        comfort: {
+          title: 'Perfil Conforto Completo',
+          text: 'O cliente quer acertar na escolha e ter conforto constante. A abordagem ideal e consultiva, com comparacao de modelos e beneficios.',
+          route: 'Combine capacidade adequada, quente/frio quando fizer sentido e atendimento especializado.',
+          link: 'https://www.sitedoar.com.br/'
+        },
+        speed: {
+          title: 'Perfil Solucao Rapida',
+          text: 'O cliente quer resolver logo. Reduza atrito: mostre produtos disponiveis, capacidade segura e chamada direta para WhatsApp.',
+          route: 'Priorize atendimento rapido e equipamentos com capacidade bem dimensionada.',
+          link: 'https://www.sitedoar.com.br/ar-split/24000-btus?pg=1'
+        },
+        silence: {
+          title: 'Perfil Silencio e Descanso',
+          text: 'O cliente se preocupa com ruido e estabilidade. Destaque linhas silenciosas, inverter e recursos para uso noturno.',
+          route: 'Indique modelos para quarto, home office e ambientes de descanso.',
+          link: 'https://www.sitedoar.com.br/split-inverter?pg=1'
+        },
+        tech: {
+          title: 'Perfil Smart Control',
+          text: 'O cliente valoriza praticidade, Wi-Fi e controle pelo celular. A venda pode focar em rotina, automacao e conveniencia.',
+          route: 'Mostre modelos com Wi-Fi e explique cenarios de uso no dia a dia.',
+          link: 'https://www.sitedoar.com.br/split-inverter?pg=1'
+        },
+        power: {
+          title: 'Perfil Alta Performance',
+          text: 'O ambiente parece exigir mais potencia ou planejamento. A recomendacao deve evitar subdimensionamento e incentivar contato consultivo.',
+          route: 'Leve para WhatsApp ou vitrines de maior capacidade, especialmente em comercio e ambientes com muito sol.',
+          link: 'https://www.sitedoar.com.br/ar-split/36000-btus?pg=1'
+        }
+      };
+
+      const persona = personas[topKey] || personas.comfort;
+      document.getElementById('resultTitle').textContent = persona.title;
+      document.getElementById('resultText').textContent = `${persona.text} Faixa inicial sugerida: aproximadamente ${btu.toLocaleString('pt-BR')} BTUs.`;
+      document.getElementById('routeTitle').textContent = hasUrgency ? 'Rota recomendada: atendimento imediato' : 'Rota recomendada';
+      document.getElementById('routeText').textContent = `${persona.route}${featureLabels.length ? ` Recursos citados: ${featureLabels.join(', ')}.` : ''}`;
+      document.getElementById('primaryCta').href = persona.link;
+      document.getElementById('primaryCta').textContent = 'Ver produtos recomendados';
+      document.getElementById('specialistCta').href = buildSpecialistWhatsappLink(persona.title, btu, dimensions[topKey]);
+      document.getElementById('resultBadges').innerHTML = [
+        `${btu.toLocaleString('pt-BR')} BTUs`,
+        dimensions[topKey],
+        hasUrgency ? 'Alta urgencia' : 'Comparar opcoes',
+        ...featureLabels.slice(0, 2)
+      ].map((label) => `<span class="result-badge">${label}</span>`).join('');
+
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function buildSpecialistWhatsappLink(profile, btu, priority) {
+      const message = [
+        'Olá! Fiz o Diagnóstico Clima 360.',
+        '',
+        `Meu perfil deu: ${profile}`,
+        `Faixa sugerida: ${btu.toLocaleString('pt-BR')} BTUs`,
+        `Prioridade: ${priority}`,
+        '',
+        'Pode me ajudar a escolher o modelo ideal?'
+      ].join('\n');
+
+      return `https://wa.me/5519984176960?text=${encodeURIComponent(message)}`;
+    }
+
+    options.addEventListener('click', (event) => {
+      const option = event.target.closest('.option');
+      if (!option) return;
+      toggleOption(Number(option.dataset.index));
+    });
+
+    backButton.addEventListener('click', () => {
+      if (state.step === 0) return;
+      state.step -= 1;
+      renderQuestion();
+    });
+
+    nextButton.addEventListener('click', () => {
+      const question = questions[state.step];
+      const answer = state.answers[question.id];
+      const hasNoAnswer = answer === undefined || answer === null || (Array.isArray(answer) && answer.length === 0);
+
+      if (hasNoAnswer) {
+        options.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }], { duration: 250 });
+        return;
+      }
+
+      if (state.step < questions.length - 1) {
+        state.step += 1;
+        renderQuestion();
+        return;
+      }
+
+      buildResult();
+    });
+
+    createBars();
+    renderQuestion();
+  </script>
+</body>
+</html>
