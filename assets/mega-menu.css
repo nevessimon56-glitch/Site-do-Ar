@@ -91,37 +91,47 @@
     align-items: center;
     justify-content: center;
     flex: 0 0 calc(25% - 6px);
+    width: calc(25% - 6px);
     min-width: 68px;
     max-width: 90px;
-    height: 38px;
-    padding: 5px 8px;
+    height: 36px;
+    max-height: 36px;
+    padding: 4px 6px;
     border: 1px solid #e2edf5;
     border-radius: 8px;
     background: #fff;
     text-decoration: none !important;
     transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
     box-sizing: border-box;
+    overflow: hidden;
   }
+
+  .mega-menu-ar__brand-logo span {
+    display: block;
+    font-family: Arial Black, Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .mega-menu-ar__brand-logo--elgin span { color: #E31937; }
+  .mega-menu-ar__brand-logo--philco span { color: #003DA5; }
+  .mega-menu-ar__brand-logo--midea span { color: #0099DA; }
+  .mega-menu-ar__brand-logo--tcl span { color: #E30613; font-size: 11px; }
+  .mega-menu-ar__brand-logo--hq span { color: #1A6EB5; font-size: 11px; }
+  .mega-menu-ar__brand-logo--eos span { color: #2C77BB; }
+  .mega-menu-ar__brand-logo--hitachi span { color: #E60027; font-size: 9px; }
 
   .mega-menu-ar__brand-logo:hover {
     border-color: #4b96d4;
     box-shadow: 0 4px 14px rgba(44, 119, 187, 0.14);
     transform: translateY(-1px);
-  }
-
-  .mega-menu-ar__brand-logo img,
-  .mega-menu-ar__brand-logo .mega-menu-ar__brand-svg {
-    display: block;
-    max-width: 100%;
-    max-height: 22px;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-  }
-
-  .mega-menu-ar__brand-logo .mega-menu-ar__brand-svg {
-    height: 22px;
-    width: auto;
   }
 
   .mega-menu-ar__section--produtos.mega-menu-ar__banner-col {
