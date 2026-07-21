@@ -183,7 +183,7 @@
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #2c77bb;
+    color: #b91c1c;
     line-height: 1.2;
   }
 
@@ -194,9 +194,9 @@
     gap: 8px;
     padding: 6px 16px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #e8f4fd 0%, #f0fdf4 100%);
-    border: 1px solid #93c5fd;
-    box-shadow: 0 2px 10px rgba(44, 119, 187, 0.14);
+    background: linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%);
+    border: 1px solid #fca5a5;
+    box-shadow: 0 2px 10px rgba(220, 38, 38, 0.12);
   }
 
   .mega-menu-ar__offers-label span::before {
@@ -205,8 +205,8 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #e67e22;
-    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.22);
+    background: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.22);
     animation: mega-menu-offers-pulse 1.8s ease-in-out infinite;
   }
 
