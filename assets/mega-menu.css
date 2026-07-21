@@ -557,3 +557,70 @@
   margin: 0 auto;
   object-fit: contain;
 }
+
+/* --- Preço Pix (desconto no método de pagamento, não na tabela) --- */
+
+.showcase-prices_strike,
+.product-prices_strike {
+  display: block;
+  font-size: 12px;
+  color: #9aa8b5;
+  margin-bottom: 4px;
+}
+
+.showcase-prices_strike s,
+.product-prices_strike s {
+  color: #94a3b8;
+  font-weight: 600;
+  text-decoration: line-through;
+}
+
+.showcase-prices {
+  text-align: center;
+  line-height: 1.3;
+}
+
+.showcase-prices_price {
+  margin: 0 0 6px;
+  font-size: 22px;
+  line-height: 1.15;
+  color: #1a6eb5;
+}
+
+.showcase-prices_price b {
+  font-weight: 800;
+}
+
+.showcase-prices_pix,
+.product-prices_pix {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e8f7ec;
+  color: #2d8a47;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.showcase-product .card-footer .showcase-prices--card .showcase-prices_pix {
+  display: inline-block !important;
+  margin: 0 0 8px !important;
+  padding: 5px 12px !important;
+}
+
+.product-prices .product-box_prices .product-prices_price {
+  color: #2f5d8c;
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1em;
+}
+
+.showcase-prices_installment {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #5a6f82;
+}

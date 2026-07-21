@@ -1,3 +1,11 @@
+{% comment %}
+  ARQUIVO: showcase-model-product.liquid
+  VERSAO: 2026-07-15-v4  (nao usa primaryPrice / tabela Mercado Livre)
+  No editor WDNA: substitua TODO o conteudo deste arquivo.
+  Preco Pix + parcelas estao INLINE neste arquivo (nao depende de outro).
+  Os icones de spec ficam APENAS em showcase-spec-wrap (abaixo do titulo).
+  VALIDAR: deve existir "productPricePrimary = product.price" e NAO deve existir "product.primaryPrice"
+{% endcomment %}
 {% assign maximumProducts = 60 %}
 {% assign products = showcaseSection.products %}
 {% if sectionConfig.rowQuantity and sectionConfig.columnQuantity %}
@@ -17,14 +25,27 @@
     {% endif %}
 
     {% assign productPricePrimary = product.price %}
-    {% if product.primaryPrice %}
-        {% assign productPricePrimary = product.primaryPrice %}
+
+    {% assign listPriceCard = product.price.price %}
+    {% assign pixPriceCard = product.price.price %}
+    {% assign hasPixPromoCard = 0 %}
+    {% assign pixPercentCard = 5 %}
+    {% assign offerPercentCard = 5 %}
+
+    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+        {% assign hasPixPromoCard = 1 %}
+        {% assign pixPriceCard = product.price.promotionPrice %}
+        {% assign pixPercentCard = product.price.promotionMargin | round %}
+        {% assign offerPercentCard = pixPercentCard %}
+    {% else %}
+        {% comment %} Desconto de 5% no método Pix (painel), não na tabela — evita 10% duplicado {% endcomment %}
+        {% assign hasPixPromoCard = 1 %}
+        {% assign _pixDiscountAmt = listPriceCard | times: pixPercentCard | divided_by: 100 %}
+        {% assign pixPriceCard = listPriceCard | minus: _pixDiscountAmt %}
     {% endif %}
-    {% if product.secondaryPrice %}
-        {% assign productPriceSecond = product.secondaryPrice %}
-    {% endif %}
-    <li class="showcase-item">
-        <div class="showcase-product card{% if product.medias[1].path != blank %} has-hover-image{% endif %}">
+
+    <li class="showcase-item" data-showcase-tpl="v3-site-price">
+        <div class="showcase-product card">
             {% if themeConfig.price.type != 'hide' %}
                 {% if product.promotion %}
                     <div class="showcase-tag">
@@ -39,14 +60,14 @@
             {% endif %}
             <div class="showcase-product_image card-image">
                 {% if themeConfig.price.type != 'hide' %}
-                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                    {% if hasPixPromoCard == 1 %}
                         {% assign classBtnBuy = '' %}
                         {% if themeConfig.price.type == 'show-logged' %}
                             {% assign classBtnBuy = ' login-btn_logged d-hide' %}
                         {% endif %}
                         <div class="showcase-offer{{ classBtnBuy }}">
                             <div class="showcase-offer_text">
-                                <span>{{ product.price.promotionMargin | round }}%</span>
+                                <span>{{ offerPercentCard }}%</span>
                                 <span>OFF</span>
                             </div>
                         </div>
@@ -54,12 +75,11 @@
                 {% endif %}
                 <a class="showcase-product_link showcase-product_link__image" href="{{ product.url }}">
                     {% if product.medias[0].path != blank %}
-                        <span class="product-hover-wrap">
-                            <img class="lazy product-hover-img product-hover-img--main" data-src="{{ product.medias[0].path | imgUrl: 250 }}" alt="{{ product.title }}">
-                            {% if product.medias[1].path != blank %}
-                                <img class="lazy product-hover-img product-hover-img--alt" data-src="{{ product.medias[1].path | imgUrl: 250 }}" alt="{{ product.title }}" loading="lazy">
-                            {% endif %}
-                        </span>
+                        <img
+                            class="lazy product-hover-swap"
+                            data-src="{{ product.medias[0].path | imgUrl: 250 }}"
+                            {% if product.medias[1].path != blank %}data-hover-src="{{ product.medias[1].path | imgUrl: 250 }}"{% endif %}
+                            alt="{{ product.title }}">
                     {% else %}
                         {{ themeConfig.icons.image }}
                     {% endif %}
@@ -80,6 +100,9 @@
                     </a>
                 </h3>
             </div>
+            <div class="showcase-spec-wrap">
+                {% render 'sections/product-spec-icons', product: product %}
+            </div>
             <div class="card-footer">
                 {% if product.price.showPrice == false and themeConfig.buyAction.type != 'hide' %}
                     <div class="showcase-prices"></div>
@@ -93,30 +116,27 @@
                         {% if themeConfig.price.type == 'show-logged' %}
                             {% assign classShowcaseLoginPrice = ' login-btn_logged d-hide' %}
                         {% endif %}
-                        <div class="showcase-prices{{ classShowcaseLoginPrice }}">
-                            {% assign _pixPrice = productPricePrimary.price %}
-                            {% if productPricePrimary.promotionPrice > 0 %}
-                                {% assign _pixPrice = productPricePrimary.promotionPrice %}
-                            {% endif %}
-                            {% assign _hasPixDiscount = false %}
-                            {% if product.primaryPrice and product.price.price > _pixPrice %}
-                                {% assign _hasPixDiscount = true %}
-                            {% endif %}
-                            {% if _hasPixDiscount %}
-                                <del class="showcase-prices_strike"><s>{{ product.price.price | money }}</s></del>
-                                <p class="showcase-prices_price"><b>{{ _pixPrice | money }}</b></p>
-                                <p class="showcase-prices_pix">
-                                    {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
-                                        {{ productPricePrimary.discountPercentage | round }}% de desconto no Pix
-                                    {% else %}
-                                        5% de desconto no Pix
-                                    {% endif %}
-                                </p>
-                            {% elsif product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
-                                <del class="showcase-prices_strike">{{ product.price.price | money }}</del>
-                                <p class="showcase-prices_price"><b>{{ _pixPrice | money }}</b></p>
+                        <div class="showcase-prices showcase-prices--card{{ classShowcaseLoginPrice }}">
+                            {% if hasPixPromoCard == 1 %}
+                                {% if listPriceCard > pixPriceCard %}
+                                    <del class="showcase-prices_strike"><s>{{ listPriceCard | money }}</s></del>
+                                {% endif %}
+                                <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b></p>
+                                <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% off no Pix</p>
                             {% else %}
-                                <p class="showcase-prices_price"><b>{{ _pixPrice | money }}</b></p>
+                                <p class="showcase-prices_price"><b>{{ productPricePrimary.price | money }}</b></p>
+                            {% endif %}
+                            {% if product.secondaryPrice %}
+                                {% if product.secondaryPrice.installment > 1 %}
+                                {% assign plotBasePrice = listPriceCard %}
+                                {% if product.secondaryPrice.price and product.secondaryPrice.price > plotBasePrice %}
+                                    {% assign plotBasePrice = product.secondaryPrice.price %}
+                                {% endif %}
+                                <p class="showcase-prices_installment" data-plot-base="{{ plotBasePrice }}" data-plot-count="{{ product.secondaryPrice.installment }}">
+                                    <span class="showcase-prices_installment-prefix">ou</span>
+                                    <span class="showcase-prices_installment-text">em até <b>{{ product.secondaryPrice.installment }}x</b> de <b class="showcase-prices_installment-value">{{ plotBasePrice | divided_by: product.secondaryPrice.installment | money }}</b> sem juros</span>
+                                </p>
+                                {% endif %}
                             {% endif %}
                         </div>
                     {% endif %}
