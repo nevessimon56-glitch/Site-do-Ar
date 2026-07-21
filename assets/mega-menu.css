@@ -1727,6 +1727,7 @@
   border-radius: 8px;
   padding: 10px 14px;
   min-height: 44px;
+  min-width: 72px;
   box-shadow: 0 1px 2px rgba(15, 25, 35, 0.06);
 }
 
@@ -1735,12 +1736,41 @@
   background-color: #ffffff;
 }
 
+/* Imagens do tema são ~49x38px — escondemos e usamos SVG nítido */
+.footer-payment_item picture,
 .footer-payment_item img,
 .footer-payment_item svg {
-  max-height: 34px;
-  min-height: 28px;
-  width: auto;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.footer-payment_item::after {
+  content: "";
   display: block;
+  width: 56px;
+  height: 36px;
+  background: center / contain no-repeat;
+}
+
+.footer-payment_item__visa::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 64'%3E%3Crect width='96' height='64' rx='6' fill='%23fff'/%3E%3Cpath fill='%231434CB' d='M41.2 42.5h-6.3l3.9-23.8h6.3L41.2 42.5zm25.8-23.2c-1.2-.5-3.2-1-5.8-1-6.4 0-10.9 3.4-10.9 8.2 0 3.6 3.2 5.6 5.7 6.8 2.5 1.2 3.4 2 3.4 3.1 0 1.7-2 2.4-3.9 2.4-2.6 0-4-.4-6.1-1.4l-.8-.4-.9 5.6c1.5.7 4.3 1.3 7.2 1.3 6.8 0 11.2-3.3 11.3-8.5.1-2.8-1.7-5-5.5-6.8-2.3-1.1-3.7-1.9-3.7-3 0-1 .9-2.1 3-2.1 1.7-.1 3 .3 4 .6l.6.3.9-5.3zM70.9 18.7h-4.9c-1.5 0-2.7.4-3.4 2l-9.6 22.8h6.6l1.3-3.6h8.1l.8 3.6h5.8l-5.7-24.8zm-8.2 15.5 3.3-9.1.9 9.1h-4.2zM32.6 18.7 26.5 36l-.7-3.4c-1.3-4.3-5.4-9-10-11.3l5.8 21.5h6.4l9.6-24.1h-5zM15.3 18.7H6.1l-.1.6c7.5 1.8 12.5 6.2 14.6 11.5l-2.1-10.4c-.4-1.3-1.4-1.7-3.2-1.7z'/%3E%3C/svg%3E");
+}
+
+.footer-payment_item__mastercard::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 64'%3E%3Crect width='96' height='64' rx='6' fill='%23fff'/%3E%3Ccircle cx='38' cy='32' r='16' fill='%23EB001B'/%3E%3Ccircle cx='58' cy='32' r='16' fill='%23F79E1B'/%3E%3Cpath fill='%23FF5F00' d='M48 18.8a16 16 0 0 1 0 26.4 16 16 0 0 1 0-26.4z'/%3E%3C/svg%3E");
+}
+
+.footer-payment_item__hipecard::after,
+.footer-payment_item__hipercard::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 64'%3E%3Crect width='96' height='64' rx='6' fill='%23fff'/%3E%3Crect x='8' y='14' width='80' height='36' rx='5' fill='%23B3131B'/%3E%3Ctext x='48' y='38' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='13' font-weight='700' fill='%23fff'%3EHIPERCARD%3C/text%3E%3C/svg%3E");
+}
+
+.footer-payment_item__amex::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 64'%3E%3Crect width='96' height='64' rx='6' fill='%23fff'/%3E%3Crect x='8' y='14' width='80' height='36' rx='5' fill='%23006FCF'/%3E%3Ctext x='48' y='30' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='9.5' font-weight='700' fill='%23fff'%3EAMERICAN%3C/text%3E%3Ctext x='48' y='42' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='9.5' font-weight='700' fill='%23fff'%3EEXPRESS%3C/text%3E%3C/svg%3E");
 }
 
 @media (max-width: 767px) {
@@ -1752,11 +1782,11 @@
   .footer-payment_item {
     padding: 8px 12px;
     min-height: 40px;
+    min-width: 64px;
   }
 
-  .footer-payment_item img,
-  .footer-payment_item svg {
-    max-height: 30px;
-    min-height: 24px;
+  .footer-payment_item::after {
+    width: 50px;
+    height: 32px;
   }
 }
