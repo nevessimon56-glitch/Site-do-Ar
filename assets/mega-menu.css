@@ -65,8 +65,8 @@
   }
 
   .mega-menu-ar__col.mega-menu-ar__banner {
-    flex: 0 0 220px;
-    width: 220px;
+    flex: 0 0 260px;
+    width: 260px;
     padding-right: 0;
   }
 
@@ -133,7 +133,7 @@
   .mega-menu-ar__banner {
     border-radius: 10px;
     overflow: hidden;
-    min-height: 280px;
+    min-height: 380px;
     background: #fff;
     border: 1px solid #e8edf2;
     position: relative;
@@ -141,13 +141,44 @@
 
   .mega-menu-ar__banner-carousel {
     position: relative;
-    min-height: 280px;
+    min-height: 380px;
     height: 100%;
   }
 
   .mega-menu-ar__slides {
     position: relative;
-    min-height: 280px;
+    min-height: 380px;
+  }
+
+  .mega-menu-ar__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 6;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #2c77bb;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(44, 119, 187, 0.35);
+  }
+
+  .mega-menu-ar__badge--hot {
+    background: #e67e22;
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.35);
+  }
+
+  .mega-menu-ar__badge--offer {
+    background: #16a34a;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+  }
+
+  .mega-menu-ar__badge--power {
+    background: #7c3aed;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
   }
 
   .mega-menu-ar__slide {
@@ -199,14 +230,15 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 280px;
+    min-height: 380px;
     color: #313131;
     text-decoration: none;
-    transition: box-shadow 0.2s ease;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
 
   .mega-menu-ar__banner-link:hover {
     box-shadow: 0 8px 24px rgba(44, 119, 187, 0.12);
+    transform: translateY(-2px);
   }
 
   .mega-menu-ar__banner-img-wrap {
@@ -261,7 +293,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: 12px 16px 28px;
+    padding: 12px 14px 30px;
     border-top: 1px solid #eef2f6;
   }
 
@@ -271,33 +303,135 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: #4b96d4;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .mega-menu-ar__banner-title {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     line-height: 1.35;
-    margin: 0 0 12px;
-    color: #2c77bb;
+    margin: 0 0 4px;
+    color: #1e293b;
     text-transform: uppercase;
   }
 
-  .mega-menu-ar__banner-cta {
+  .mega-menu-ar__banner-hook {
+    margin: 0 0 8px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #64748b;
+  }
+
+  .mega-menu-ar__banner-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .mega-menu-ar__feat {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 18px;
+    padding: 0 6px;
+    border: 1px solid #c5d3de;
+    border-radius: 4px;
+    background: #fff;
+    color: #3a5f7d;
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .mega-menu-ar__feat--procel {
+    border-color: #16a34a;
+    background: #22c55e;
+    color: #fff;
+    min-width: 18px;
+    padding: 0 4px;
+  }
+
+  .mega-menu-ar__feat--qf {
+    border-color: #fb923c;
+    background: #fff1e8;
+    color: #c2410c;
+  }
+
+  .mega-menu-ar__feat--frio {
+    border-color: #38bdf8;
+    background: #e0f2fe;
+    color: #0369a1;
+  }
+
+  .mega-menu-ar__feat--inverter {
+    border-color: #a78bfa;
+    background: #ede9fe;
+    color: #6d28d9;
+  }
+
+  .mega-menu-ar__feat--wifi {
+    border-color: #2dd4bf;
+    background: #ccfbf1;
+    color: #0f766e;
+  }
+
+  .mega-menu-ar__feat--voltage {
+    border-color: #60a5fa;
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+
+  .mega-menu-ar__banner-price {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #2c77bb;
+  }
+
+  .mega-menu-ar__banner-price b {
+    font-weight: 800;
+  }
+
+  .mega-menu-ar__banner-pix {
     display: inline-block;
+    align-self: flex-start;
+    margin-bottom: 10px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #ecfdf5;
+    color: #15803d;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .mega-menu-ar__banner-cta {
+    display: block;
+    width: 100%;
     margin-top: auto;
-    padding: 8px 14px;
+    padding: 10px 12px;
     border-radius: 8px;
-    background: #4b96d4;
+    background: linear-gradient(135deg, #4b96d4 0%, #2c77bb 100%);
     color: #fff;
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 800;
+    text-align: center;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
 
+  .mega-menu-ar__banner-cta::after {
+    content: ' →';
+  }
+
   .mega-menu-ar__banner-link:hover .mega-menu-ar__banner-cta {
-    background: #2c77bb;
+    background: linear-gradient(135deg, #2c77bb 0%, #1e5a8a 100%);
   }
 }
 
@@ -322,6 +456,33 @@
 @media (max-width: 991px) {
   #mega-menu-ar-template {
     display: none !important;
+  }
+
+  .mega-menu-ar__panel .mega-menu-ar__banner {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .mega-menu-ar__panel .mega-menu-ar__banner-link {
+    min-height: 360px;
+  }
+
+  .mega-menu-ar__panel .mega-menu-ar__banner-title {
+    font-size: 13px;
+  }
+
+  .mega-menu-ar__panel .mega-menu-ar__banner-hook {
+    font-size: 11px;
+  }
+
+  .mega-menu-ar__panel .mega-menu-ar__banner-price {
+    font-size: 20px;
+  }
+
+  .mega-menu-ar__panel .mega-menu-ar__feat {
+    font-size: 9px;
+    height: 20px;
+    padding: 0 7px;
   }
 }
 
