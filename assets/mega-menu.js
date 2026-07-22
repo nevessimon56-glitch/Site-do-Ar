@@ -1417,13 +1417,39 @@
   }
 
   function redirectBrokenMideaUrl() {
-    var fixed = fixMideaUrl(window.location.pathname + window.location.search + window.location.hash);
-    var current = window.location.pathname + window.location.search + window.location.hash;
+    var search = window.location.search;
+    var path = window.location.pathname.replace(/\/+$/, '').toLowerCase();
+
+    if (hasMideaMarca(search) && path === '/split-inverter') {
+      var quickTarget = FIXED_BASE + search;
+      if (!/(^|[&?])categorias=/.test(quickTarget)) {
+        quickTarget += (search.indexOf('?') >= 0 ? '&' : '?') + 'categorias=todos-os-produtos';
+      }
+      window.location.replace(quickTarget);
+      return true;
+    }
+
+    var fixed = fixMideaUrl(window.location.pathname + search + window.location.hash);
+    var current = window.location.pathname + search + window.location.hash;
     if (fixed !== current) {
       window.location.replace(fixed);
       return true;
     }
+
     return false;
+  }
+
+  function redirectMideaErrorPage() {
+    if (!hasMideaMarca(window.location.search)) return false;
+    var html = document.documentElement && document.documentElement.innerHTML;
+    if (!html || html.indexOf('não retornou nenhum resultado') === -1) return false;
+
+    var target = FIXED_BASE + window.location.search;
+    if (!/(^|[&?])categorias=/.test(target)) {
+      target += (window.location.search.indexOf('?') >= 0 ? '&' : '?') + 'categorias=todos-os-produtos';
+    }
+    window.location.replace(target);
+    return true;
   }
 
   function initMideaFilterFix() {
@@ -1431,6 +1457,16 @@
 
     patchMideaLinks(document);
     fixMideaForms(document);
+
+    function runErrorRedirect() {
+      if (redirectMideaErrorPage()) return;
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', runErrorRedirect);
+    } else {
+      runErrorRedirect();
+    }
 
     document.addEventListener(
       'click',
