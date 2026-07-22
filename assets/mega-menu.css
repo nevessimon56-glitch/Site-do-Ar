@@ -1860,3 +1860,12 @@
     max-height: 28px !important;
   }
 }
+
+/* --- Filtro Midea: link direto (evita URL quebrada do WDNA) --- */
+
+.search-filter_brand .brand-filter-link-midea {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none !important;
+  cursor: pointer;
+}
