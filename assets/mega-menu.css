@@ -62,10 +62,38 @@
 
   .mega-menu-ar__brands-strip {
     margin-top: auto;
-    padding: 16px 8px 4px;
+    padding: 16px 8px 12px;
     border-top: 1px solid #e8edf2;
     background: linear-gradient(180deg, #f8fbfe 0%, #ffffff 100%);
-    border-radius: 0 0 10px 10px;
+    border-radius: 0;
+  }
+
+  .mega-menu-ar__promo-banner {
+    margin: 14px 0 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(44, 119, 187, 0.14);
+    border: 1px solid rgba(44, 119, 187, 0.12);
+  }
+
+  .mega-menu-ar__promo-banner a {
+    display: block;
+    line-height: 0;
+    text-decoration: none !important;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .mega-menu-ar__promo-banner a:hover {
+    opacity: 0.94;
+    transform: translateY(-1px);
+  }
+
+  .mega-menu-ar__promo-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
   }
 
   .mega-menu-ar__brands-strip-kicker {
