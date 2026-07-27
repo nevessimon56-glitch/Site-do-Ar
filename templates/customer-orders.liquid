@@ -84,7 +84,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
-                                                                    <a x-bind:href="`checkout/order/cancel?hash=${order.hash}`"
+                                                                    <a x-bind:href="`/pedidos/cancelamento?id=${order.id}`"
                                                                        title="Solicitar cancelamento">
                                                                         Solicitar cancelamento
                                                                     </a>
@@ -312,7 +312,7 @@
                                                     </a>
                                                 </li>
                                                 <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
-                                                    <a x-bind:href="`checkout/order/cancel?hash=${order.hash}`"
+                                                    <a x-bind:href="`/pedidos/cancelamento?id=${order.id}`"
                                                        title="Solicitar cancelamento">
                                                         Solicitar cancelamento
                                                     </a>
