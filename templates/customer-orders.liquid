@@ -84,10 +84,19 @@
                                                                     </a>
                                                                 </li>
                                                                 <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
-                                                                    <a href="javascript:void(0)"
+                                                                    <a x-show="canCancelOrder(order)"
+                                                                       href="javascript:void(0)"
                                                                        @click="checkCancel(order)"
                                                                        title="Solicitar Cancelamento">
-                                                                        Cancelar Pedido
+                                                                        <span class="menu-item-link_text">Cancelar Pedido</span>
+                                                                    </a>
+                                                                    <a x-show="!canCancelOrder(order)"
+                                                                       href="javascript:void(0)"
+                                                                       class="menu-item-link_disabled"
+                                                                       aria-disabled="true"
+                                                                       title="Solicitar Cancelamento">
+                                                                        <span class="menu-item-link_text">Cancelar Pedido</span>
+                                                                        <div class="menu-item-disabled_icon">{{ themeConfig.icons.close }}</div>
                                                                     </a>
                                                                 </li>
                                                                 <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
@@ -313,10 +322,19 @@
                                                     </a>
                                                 </li>
                                                 <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
-                                                    <a href="javascript:void(0)"
+                                                    <a x-show="canCancelOrder(order)"
+                                                       href="javascript:void(0)"
                                                        @click="checkCancel(order)"
                                                        title="Solicitar Cancelamento">
-                                                        Cancelar Pedido
+                                                        <span class="menu-item-link_text">Cancelar Pedido</span>
+                                                    </a>
+                                                    <a x-show="!canCancelOrder(order)"
+                                                       href="javascript:void(0)"
+                                                       class="menu-item-link_disabled"
+                                                       aria-disabled="true"
+                                                       title="Solicitar Cancelamento">
+                                                        <span class="menu-item-link_text">Cancelar Pedido</span>
+                                                        <div class="menu-item-disabled_icon">{{ themeConfig.icons.close }}</div>
                                                     </a>
                                                 </li>
                                                 <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
@@ -621,6 +639,60 @@
             }).replace(',', ' -');
         }
 
+        const cancelBlockedStatuses = [
+            'em transporte',
+            'em transito',
+            'em trânsito',
+            'enviado',
+            'despachado',
+            'expedido',
+            'em expedição',
+            'em expedicao',
+            'saiu para entrega',
+            'entregue',
+            'finalizado',
+            'concluído',
+            'concluido'
+        ];
+
+        function normalizeStatusName(statusName) {
+            return (statusName || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim();
+        }
+
+        function isOrderInTransit(order) {
+            const statusName = normalizeStatusName(order?.status?.name);
+
+            if (cancelBlockedStatuses.some((blockedStatus) => statusName.includes(blockedStatus))) {
+                return true;
+            }
+
+            if (order?.shippings?.some((shipping) => !!shipping?.trackingCode)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        function canCancelOrder(order) {
+            if (!order) {
+                return false;
+            }
+
+            if (order.canCancel === false) {
+                return false;
+            }
+
+            if (normalizeStatusName(order?.status?.name) === 'cancelado') {
+                return false;
+            }
+
+            return !isOrderInTransit(order);
+        }
+
         function setCancellationMessages(messages) {
             state.cancelOrder.messages = Array.isArray(messages) ? messages : [];
         }
@@ -641,6 +713,10 @@
         }
 
         function checkCancel(order) {
+            if (!canCancelOrder(order)) {
+                return;
+            }
+
             state.cancelOrder.order = order;
             state.cancelOrder.message = '';
             state.cancelOrder.errors = {};
@@ -752,6 +828,7 @@
             renderOrder,
             checkWarranty,
             checkCancel,
+            canCancelOrder,
             sendCancellation,
         }
     }
