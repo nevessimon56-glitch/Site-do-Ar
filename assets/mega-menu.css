@@ -92,9 +92,9 @@
     display: block;
     width: 100%;
     height: auto;
-    min-height: 56px;
-    max-height: 80px;
-    object-fit: cover;
+    aspect-ratio: 1400 / 160;
+    max-height: 160px;
+    object-fit: contain;
     object-position: center;
   }
 
