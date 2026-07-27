@@ -92,6 +92,8 @@
     display: block;
     width: 100%;
     height: auto;
+    min-height: 56px;
+    max-height: 80px;
     object-fit: cover;
     object-position: center;
   }
