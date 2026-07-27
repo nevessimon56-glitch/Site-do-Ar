@@ -1,4 +1,4 @@
-{% comment %} VERSAO: 2026-07-27-pedidos-cancelamento-drawer-v5 {% endcomment %}
+{% comment %} VERSAO: 2026-07-27-pedidos-cancelamento-drawer-v6 {% endcomment %}
 {% layout 'layout/theme' %}
 {% block content %}
 {% render 'sections/header', store: store, pages: pages, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
@@ -548,13 +548,12 @@
                 <p class="order-cancel-status" x-show="state.cancelOrder.statusMessage" x-text="state.cancelOrder.statusMessage"></p>
                 <div class="form-group">
                     <button id="order-cancel-send-btn"
-                            class="btn btn-login btn-block"
+                            class="btn btn-login btn-block btn-order-cancel-send"
                             type="button"
                             @click.prevent="sendCancellation()"
                             :disabled="state.cancelOrder.sending"
-                            aria-label="Enviar">
-                        <span x-text="state.cancelOrder.sending ? 'ENVIANDO...' : 'ENVIAR'"></span>
-                    </button>
+                            x-text="state.cancelOrder.sending ? 'ENVIANDO...' : 'ENVIAR'"
+                            aria-label="Enviar">ENVIAR</button>
                 </div>
             </div>
         </div>
@@ -1094,6 +1093,16 @@
         font-size: 14px;
         line-height: 20px;
         margin-bottom: 12px;
+    }
+
+    .sidenav-overlay.sidenav-order .sidenav-footer .btn-order-cancel-send {
+        color: #fff !important;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1.2;
+        min-height: 48px;
+        text-transform: uppercase;
     }
 
     .sidenav-overlay.sidenav-order .sidenav-footer .btn[disabled] {
