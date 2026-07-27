@@ -84,9 +84,10 @@
                                                                     </a>
                                                                 </li>
                                                                 <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
-                                                                    <a x-bind:href="`/pedidos/cancelamento?id=${order.id}`"
-                                                                       title="Solicitar cancelamento">
-                                                                        Solicitar cancelamento
+                                                                    <a href="javascript:void(0)"
+                                                                       @click="checkCancel(order)"
+                                                                       title="Solicitar Cancelamento">
+                                                                        Cancelar Pedido
                                                                     </a>
                                                                 </li>
                                                                 <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
@@ -312,9 +313,10 @@
                                                     </a>
                                                 </li>
                                                 <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
-                                                    <a x-bind:href="`/pedidos/cancelamento?id=${order.id}`"
-                                                       title="Solicitar cancelamento">
-                                                        Solicitar cancelamento
+                                                    <a href="javascript:void(0)"
+                                                       @click="checkCancel(order)"
+                                                       title="Solicitar Cancelamento">
+                                                        Cancelar Pedido
                                                     </a>
                                                 </li>
                                                 <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
@@ -482,13 +484,82 @@
             </div>
         </div>
     </div>
+
+    <div class="sidenav-overlay sidenav-order">
+        <div class="sidenav-container">
+            <div class="sidenav-header">
+                <a class="btn-sidenav-close float-right" href="javascript:void(0)" aria-label="Fechar" onclick="closeSideNavOverlay()">
+                    <svg class="icon_close" x="0px" y="0px" viewBox="0 0 512.001 512.001">
+                        <path d="M284.286,256.002L506.143,34.144c7.811-7.811,7.811-20.475,0-28.285c-7.811-7.81-20.475-7.811-28.285,0L256,227.717L34.143,5.859c-7.811-7.811-20.475-7.811-28.285,0c-7.81,7.811-7.811,20.475,0,28.285l221.857,221.857L5.858,477.859c-7.811,7.811-7.811,20.475,0,28.285c3.905,3.905,9.024,5.857,14.143,5.857c5.119,0,10.237-1.952,14.143-5.857L256,284.287l221.857,221.857c3.905,3.905,9.024,5.857,14.143,5.857s10.237-1.952,14.143-5.857c7.811-7.811,7.811-20.475,0-28.285L284.286,256.002z"></path>
+                    </svg>
+                </a>
+                <div class="sidenav-title"
+                     x-text="state.cancelOrder.messages.length ? 'Acompanhar pedido' : 'Solicitar Cancelamento do Pedido'"></div>
+            </div>
+            <div class="sidenav-body">
+                <p class="s-subtitle" x-show="!state.cancelOrder.messages.length">Informe o motivo do cancelamento</p>
+                <p class="order-cancel-id" x-show="state.cancelOrder.order">
+                    Pedido ID: <strong x-text="state.cancelOrder.order.id"></strong>
+                </p>
+                <div class="panel" x-show="state.cancelOrder.messages.length">
+                    <template x-for="(message, messageIndex) in state.cancelOrder.messages" :key="messageIndex">
+                        <div class="tile">
+                            <div class="tile-content">
+                                <div class="avatar">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+                                    </svg>
+                                </div>
+                                <div class="tile-body">
+                                    <div class="tile-title">
+                                        Respondido por:
+                                        <span x-text="message.respondedBy || message.userName || message.name || 'Você'"></span>
+                                    </div>
+                                    <div class="tile-subtitle">
+                                        Data da mensagem:
+                                        <span x-text="formatDateTime(message.createdAt || message.date)"></span>
+                                    </div>
+                                    <div class="tile-text" x-text="message.message || message.text || message.reason"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="form-group" :class="{ 'has-error': !!state.cancelOrder.errors.message }">
+                    <label class="form-label" for="order-cancel-reason">Digite o motivo *</label>
+                    <textarea id="order-cancel-reason"
+                              class="form-input"
+                              rows="5"
+                              x-model="state.cancelOrder.message"
+                              @keydown.enter.prevent="sendCancellation()"></textarea>
+                    <p class="form-input-hint" x-text="state.cancelOrder.errors.message"></p>
+                </div>
+            </div>
+            <div class="sidenav-footer">
+                <div class="form-group">
+                    <button class="btn btn-login btn-block"
+                            type="button"
+                            @click="sendCancellation()"
+                            aria-label="Enviar">
+                        ENVIAR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 <script>
     function setupOrders() {
         const state = {
             customer: {{ customer | json }} || {},
-            customerOrders: {{ customerOrders | json }} || {}
+            customerOrders: {{ customerOrders | json }} || {},
+            cancelOrder: {
+                order: null,
+                message: '',
+                messages: [],
+                errors: {}
+            }
         };
 
         function previousPage() {
@@ -530,6 +601,106 @@
             }
             return str.join("&");
         }
+        function formatDateTime(dateValue) {
+            if (!dateValue) {
+                return '';
+            }
+
+            const date = new Date(dateValue);
+            if (Number.isNaN(date.getTime())) {
+                return dateValue;
+            }
+
+            return date.toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }).replace(',', ' -');
+        }
+
+        function setCancellationMessages(messages) {
+            state.cancelOrder.messages = Array.isArray(messages) ? messages : [];
+        }
+
+        function loadCancellationMessages(order) {
+            if (order.cancellationRequest && order.cancellationRequest.length) {
+                setCancellationMessages(order.cancellationRequest);
+            }
+
+            StoreSDK.request.get(`/ajax/customer/order/cancellation/${order.id}`)
+                .then((response) => {
+                    const messages = response?.result || response?.messages || response?.cancellationRequest || response;
+                    if (Array.isArray(messages)) {
+                        setCancellationMessages(messages);
+                    }
+                })
+                .catch(() => {});
+        }
+
+        function checkCancel(order) {
+            state.cancelOrder.order = order;
+            state.cancelOrder.message = '';
+            state.cancelOrder.errors = {};
+            setCancellationMessages(order.cancellationRequest || []);
+            loadCancellationMessages(order);
+            openSideNavOverlay('.sidenav-order', true);
+        }
+
+        function validateCancellation() {
+            const errors = {};
+
+            if (!this.state.cancelOrder.message || !this.state.cancelOrder.message.trim()) {
+                errors.message = 'Por favor, informe o motivo do cancelamento';
+            }
+
+            this.state.cancelOrder.errors = errors;
+            return Object.keys(errors).length === 0;
+        }
+
+        function sendCancellation() {
+            const order = this.state.cancelOrder.order;
+            if (!order || !this.validateCancellation()) {
+                return;
+            }
+
+            const message = this.state.cancelOrder.message.trim();
+            openLoadingSideOverlay('.sidenav-order');
+
+            StoreSDK.request.post('/ajax/customer/order/cancellation', {
+                orderId: order.id,
+                message: message
+            }).then((response) => {
+                const messages = response?.result || response?.messages || response?.cancellationRequest;
+                if (Array.isArray(messages)) {
+                    setCancellationMessages(messages);
+                } else {
+                    state.cancelOrder.messages = [
+                        ...state.cancelOrder.messages,
+                        {
+                            message: message,
+                            createdAt: new Date().toISOString(),
+                            respondedBy: state.customer?.name || 'Você'
+                        }
+                    ];
+                }
+
+                order.cancellationRequest = state.cancelOrder.messages;
+                this.state.cancelOrder.message = '';
+                this.state.cancelOrder.errors = {};
+                closeLoadingSideOverlay('.sidenav-order');
+                notyf.success('Solicitação enviada com sucesso. Agora é só acompanhar o pedido. O pedido será cancelado após a aprovação da loja.');
+            }).catch((error) => {
+                closeLoadingSideOverlay('.sidenav-order');
+                notyf.open({
+                    type: 'warning',
+                    message: error?.data?.message || 'Não foi possível enviar a solicitação de cancelamento.',
+                });
+            });
+        }
+
         function checkWarranty(order) {
             let listProducts = '';
             order.products.forEach((option) => {
@@ -558,17 +729,96 @@
         return {
             state,
             formatDate,
+            formatDateTime,
             formatTotal,
             nextPage,
             previousPage,
             renderOrder,
             checkWarranty,
+            checkCancel,
+            sendCancellation,
         }
     }
 </script>
 <style>
     tr {
         cursor: pointer;
+    }
+
+    .sidenav-overlay.sidenav-order .sidenav-body {
+        padding-top: 30px;
+    }
+
+    .sidenav-overlay.sidenav-order .sidenav-body .s-subtitle {
+        font-size: 22px;
+        line-height: 26px;
+        margin-bottom: 22px;
+    }
+
+    .sidenav-overlay.sidenav-order .order-cancel-id {
+        margin-bottom: 20px;
+    }
+
+    .sidenav-overlay .panel {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .sidenav-overlay .panel .tile {
+        border-bottom: 1px solid #dfe4ea;
+        padding: 12px 0;
+    }
+
+    .sidenav-overlay .panel .tile:last-child {
+        border-bottom: none;
+    }
+
+    .sidenav-overlay .panel .tile-content {
+        display: flex;
+        gap: 12px;
+    }
+
+    .sidenav-overlay .panel .avatar {
+        align-items: center;
+        background: #c8c8c8;
+        border-radius: 50%;
+        color: #fff;
+        display: inline-flex;
+        flex-shrink: 0;
+        height: 28px;
+        justify-content: center;
+        width: 28px;
+    }
+
+    .sidenav-overlay .panel .tile-title {
+        font-weight: 600;
+    }
+
+    .sidenav-overlay .panel .tile-subtitle {
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 6px;
+    }
+
+    .sidenav-overlay .panel .tile-text {
+        font-size: 14px;
+        line-height: 20px;
+        white-space: pre-wrap;
+    }
+
+    .sidenav-overlay .sidenav-container textarea.form-input {
+        min-height: 120px;
+        padding-bottom: 16px;
+        padding-top: 16px;
+        resize: vertical;
+    }
+
+    @media (max-width: 575px) {
+        .sidenav-overlay.sidenav-order .sidenav-body .s-subtitle {
+            font-size: 16px;
+            line-height: 18px;
+            margin-bottom: 20px;
+        }
     }
 </style>
 {% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig, theme: theme %}
