@@ -1937,11 +1937,14 @@
   white-space: normal;
 }
 
-.orders-main .dropdown .menu .menu-item > a[href*="cancel"],
-.orders-main .dropdown .menu .menu-item > a[title*="ancel"],
-.orders-main .dropdown .menu .menu-item > a[title*="Cancel"] {
-  display: block !important;
-  visibility: visible !important;
+.orders-main .dropdown .menu .menu-item > a[href*="/pedidos/cancelamento"] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.orders-main .dropdown .menu .menu-item > a.menu-item-link_disabled {
+  pointer-events: none;
+  opacity: 0.55;
 }
 
 @media (max-width: 991px) {

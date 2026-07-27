@@ -1,4 +1,4 @@
-{% comment %} VERSAO: 2026-07-27-pedidos-cancelamento-drawer-v3 {% endcomment %}
+{% comment %} VERSAO: 2026-07-27-pedidos-cancelamento-drawer-v4 {% endcomment %}
 {% layout 'layout/theme' %}
 {% block content %}
 {% render 'sections/header', store: store, pages: pages, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
@@ -85,19 +85,14 @@
                                                                     </a>
                                                                 </li>
                                                                 <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
-                                                                    <a x-show="canCancelOrder(order)"
-                                                                       href="javascript:void(0)"
-                                                                       @click="checkCancel(order)"
+                                                                    <a href="javascript:void(0)"
+                                                                       class="menu-item_link"
+                                                                       :class="{ 'menu-item-link_disabled': !canCancelOrder(order) }"
+                                                                       :aria-disabled="!canCancelOrder(order) ? 'true' : 'false'"
+                                                                       @click.prevent="canCancelOrder(order) && checkCancel(order)"
                                                                        title="Solicitar Cancelamento">
                                                                         <span class="menu-item-link_text">Cancelar Pedido</span>
-                                                                    </a>
-                                                                    <a x-show="!canCancelOrder(order)"
-                                                                       href="javascript:void(0)"
-                                                                       class="menu-item-link_disabled"
-                                                                       aria-disabled="true"
-                                                                       title="Solicitar Cancelamento">
-                                                                        <span class="menu-item-link_text">Cancelar Pedido</span>
-                                                                        <div class="menu-item-disabled_icon">{{ themeConfig.icons.close }}</div>
+                                                                        <div class="menu-item-disabled_icon" x-show="!canCancelOrder(order)">{{ themeConfig.icons.close }}</div>
                                                                     </a>
                                                                 </li>
                                                                 <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
@@ -323,19 +318,14 @@
                                                     </a>
                                                 </li>
                                                 <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
-                                                    <a x-show="canCancelOrder(order)"
-                                                       href="javascript:void(0)"
-                                                       @click="checkCancel(order)"
+                                                    <a href="javascript:void(0)"
+                                                       class="menu-item_link"
+                                                       :class="{ 'menu-item-link_disabled': !canCancelOrder(order) }"
+                                                       :aria-disabled="!canCancelOrder(order) ? 'true' : 'false'"
+                                                       @click.prevent="canCancelOrder(order) && checkCancel(order)"
                                                        title="Solicitar Cancelamento">
                                                         <span class="menu-item-link_text">Cancelar Pedido</span>
-                                                    </a>
-                                                    <a x-show="!canCancelOrder(order)"
-                                                       href="javascript:void(0)"
-                                                       class="menu-item-link_disabled"
-                                                       aria-disabled="true"
-                                                       title="Solicitar Cancelamento">
-                                                        <span class="menu-item-link_text">Cancelar Pedido</span>
-                                                        <div class="menu-item-disabled_icon">{{ themeConfig.icons.close }}</div>
+                                                        <div class="menu-item-disabled_icon" x-show="!canCancelOrder(order)">{{ themeConfig.icons.close }}</div>
                                                     </a>
                                                 </li>
                                                 <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
@@ -738,59 +728,86 @@
         }
 
         function postCancellationRequest(order, message) {
-            const payload = {
-                orderId: order.id,
-                id: order.id,
-                message: message,
-                reason: message,
-                hash: order.hash
-            };
-
-            return StoreSDK.request.post('/ajax/customer/order/cancellation', payload)
-                .catch((error) => {
-                    return StoreSDK.request.post(`/ajax/customer/order/${order.id}/cancellation`, {
+            const attempts = [
+                function () {
+                    return StoreSDK.request.post('/ajax/customer/order/cancellation', {
+                        orderId: order.id,
+                        message: message,
+                        hash: order.hash
+                    });
+                },
+                function () {
+                    return StoreSDK.request.post('/ajax/customer/order/cancellation', {
+                        id: order.id,
+                        reason: message,
+                        hash: order.hash
+                    });
+                },
+                function () {
+                    return StoreSDK.request.post('/ajax/customer/order/' + order.id + '/cancellation', {
                         message: message,
                         reason: message,
                         hash: order.hash
-                    }).catch(() => Promise.reject(error));
+                    });
+                }
+            ];
+
+            return attempts.reduce(function (promise, attempt) {
+                return promise.catch(function () {
+                    return attempt();
                 });
+            }, Promise.reject(new Error('cancellation-request-failed')));
+        }
+
+        function showCancellationError(message) {
+            state.cancelOrder.errors = { message: message };
+            if (typeof notyf !== 'undefined') {
+                notyf.open({
+                    type: 'warning',
+                    message: message
+                });
+            }
         }
 
         function sendCancellation() {
             const order = state.cancelOrder.order;
-            if (!order || !validateCancellation()) {
+            if (!order) {
+                showCancellationError('Pedido não encontrado. Feche e abra novamente.');
+                return;
+            }
+
+            if (!validateCancellation()) {
                 return;
             }
 
             const message = state.cancelOrder.message.trim();
+            state.cancelOrder.errors = {};
             openLoadingSideOverlay('.sidenav-order');
 
-            postCancellationRequest(order, message).then((response) => {
-                const messages = response?.result || response?.messages || response?.cancellationRequest;
+            postCancellationRequest(order, message).then(function (response) {
+                const messages = (response && (response.result || response.messages || response.cancellationRequest)) || response;
                 if (Array.isArray(messages)) {
                     setCancellationMessages(messages);
                 } else {
-                    state.cancelOrder.messages = [
-                        ...state.cancelOrder.messages,
-                        {
-                            message: message,
-                            createdAt: new Date().toISOString(),
-                            respondedBy: state.customer?.name || 'Você'
-                        }
-                    ];
+                    state.cancelOrder.messages = state.cancelOrder.messages.concat([{
+                        message: message,
+                        createdAt: new Date().toISOString(),
+                        respondedBy: (state.customer && state.customer.name) || 'Você'
+                    }]);
                 }
 
                 order.cancellationRequest = state.cancelOrder.messages;
                 state.cancelOrder.message = '';
                 state.cancelOrder.errors = {};
                 closeLoadingSideOverlay('.sidenav-order');
-                notyf.success('Solicitação enviada com sucesso. Agora é só acompanhar o pedido. O pedido será cancelado após a aprovação da loja.');
-            }).catch((error) => {
+
+                if (typeof notyf !== 'undefined') {
+                    notyf.success('Solicitação enviada com sucesso. Agora é só acompanhar o pedido. O pedido será cancelado após a aprovação da loja.');
+                }
+            }).catch(function (error) {
                 closeLoadingSideOverlay('.sidenav-order');
-                notyf.open({
-                    type: 'warning',
-                    message: error?.data?.message || 'Não foi possível enviar a solicitação de cancelamento.',
-                });
+                const apiMessage = error && error.data && error.data.message;
+                showCancellationError(apiMessage || 'Não foi possível enviar a solicitação de cancelamento.');
             });
         }
 
@@ -915,5 +932,28 @@
         }
     }
 </style>
+<script>
+    (function cleanupLegacyCancelLinks() {
+        if (!/\/pedidos(?:\/\d+)?\/?$/i.test(window.location.pathname)) {
+            return;
+        }
+
+        function run() {
+            document.querySelectorAll('.orders-main a[href*="/pedidos/cancelamento"]').forEach(function (link) {
+                var item = link.closest('.menu-item');
+                if (item) {
+                    item.parentNode.removeChild(item);
+                }
+            });
+        }
+
+        run();
+        document.addEventListener('DOMContentLoaded', run);
+
+        if (typeof MutationObserver !== 'undefined') {
+            new MutationObserver(run).observe(document.documentElement, { childList: true, subtree: true });
+        }
+    })();
+</script>
 {% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig, theme: theme %}
 {% endblock %}
