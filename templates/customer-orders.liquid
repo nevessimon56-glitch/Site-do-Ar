@@ -1,4 +1,4 @@
-{% comment %} VERSAO: 2026-07-27-pedidos-cancelamento-drawer-v6 {% endcomment %}
+{% comment %} VERSAO: 2026-07-27-pedidos-cancelamento-drawer-v8 {% endcomment %}
 {% layout 'layout/theme' %}
 {% block content %}
 {% render 'sections/header', store: store, pages: pages, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
@@ -551,6 +551,7 @@
                             class="btn btn-login btn-block btn-order-cancel-send"
                             type="button"
                             @click.prevent="sendCancellation()"
+                            onclick="return window.sendOrderCancellation(event)"
                             :disabled="state.cancelOrder.sending"
                             x-text="state.cancelOrder.sending ? 'ENVIANDO...' : 'ENVIAR'"
                             aria-label="Enviar">ENVIAR</button>
@@ -731,150 +732,6 @@
             return Object.keys(errors).length === 0;
         }
 
-        function getCsrfToken() {
-            const meta = document.querySelector('meta[name="csrf-token"]');
-            return meta ? meta.getAttribute('content') : '';
-        }
-
-        function parseCancellationResponse(response) {
-            const contentType = response.headers.get('content-type') || '';
-
-            if (contentType.indexOf('application/json') !== -1) {
-                return response.json();
-            }
-
-            if (response.status >= 200 && response.status < 300) {
-                return Promise.resolve({ success: true });
-            }
-
-            return Promise.reject(new Error('invalid-response'));
-        }
-
-        function fetchCancellationRequest(url, options) {
-            const headers = Object.assign({}, options.headers || {});
-            const csrfToken = getCsrfToken();
-
-            if (csrfToken) {
-                headers['csrf-token'] = csrfToken;
-            }
-
-            return fetch(url, Object.assign({}, options, { headers: headers }))
-                .then(function (response) {
-                    if (response.status >= 200 && response.status < 300) {
-                        return parseCancellationResponse(response);
-                    }
-
-                    const error = new Error(response.statusText || 'request-failed');
-
-                    return parseCancellationResponse(response).then(function (data) {
-                        error.data = data;
-                        throw error;
-                    }).catch(function () {
-                        throw error;
-                    });
-                });
-        }
-
-        function postPedidosCancelamento(order, message) {
-            const jsonBody = JSON.stringify({
-                orderId: order.id,
-                id: order.id,
-                message: message,
-                reason: message,
-                hash: order.hash
-            });
-
-            const attempts = [
-                function () {
-                    return fetchCancellationRequest('/pedidos/cancelamento?id=' + encodeURIComponent(order.id), {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: jsonBody
-                    });
-                },
-                function () {
-                    return fetchCancellationRequest('/pedidos/cancelamento', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: jsonBody
-                    });
-                },
-                function () {
-                    const formData = new FormData();
-                    formData.append('orderId', order.id);
-                    formData.append('id', order.id);
-                    formData.append('message', message);
-                    formData.append('reason', message);
-                    formData.append('hash', order.hash);
-                    return fetchCancellationRequest('/pedidos/cancelamento?id=' + encodeURIComponent(order.id), {
-                        method: 'POST',
-                        body: formData
-                    });
-                }
-            ];
-
-            return runCancellationAttempts(attempts);
-        }
-
-        function postAjaxCancellation(order, message) {
-            const attempts = [
-                function () {
-                    return StoreSDK.request.post('/ajax/customer/order/cancellation', {
-                        orderId: order.id,
-                        message: message,
-                        hash: order.hash
-                    });
-                },
-                function () {
-                    return StoreSDK.request.post('/ajax/customer/order/cancellation', {
-                        id: order.id,
-                        reason: message,
-                        hash: order.hash
-                    });
-                },
-                function () {
-                    return StoreSDK.request.post('/ajax/customer/order/' + order.id + '/cancellation', {
-                        message: message,
-                        reason: message,
-                        hash: order.hash
-                    });
-                },
-                function () {
-                    return StoreSDK.request.post('/ajax/customer/order/cancellation/message', {
-                        orderId: order.id,
-                        message: message,
-                        hash: order.hash
-                    });
-                }
-            ];
-
-            return runCancellationAttempts(attempts);
-        }
-
-        function runCancellationAttempts(attempts) {
-            let lastError = null;
-
-            return attempts.reduce(function (promise, attempt) {
-                return promise.catch(function (error) {
-                    lastError = error;
-                    return attempt();
-                });
-            }, Promise.reject(new Error('cancellation-request-start'))).catch(function (error) {
-                if (lastError) {
-                    throw lastError;
-                }
-                throw error;
-            });
-        }
-
-        function postCancellationRequest(order, message) {
-            return postPedidosCancelamento(order, message).catch(function (error) {
-                return postAjaxCancellation(order, message).catch(function () {
-                    throw error;
-                });
-            });
-        }
-
         function showCancellationError(message) {
             state.cancelOrder.statusMessage = message;
             state.cancelOrder.errors = { message: message };
@@ -886,56 +743,95 @@
             }
         }
 
-        function sendCancellation() {
-            const order = state.cancelOrder.order;
-            if (!order) {
-                showCancellationError('Pedido não encontrado. Feche e abra novamente.');
-                return false;
-            }
-
-            if (!validateCancellation()) {
-                return false;
-            }
-
-            if (state.cancelOrder.sending) {
-                return false;
-            }
-
-            const message = state.cancelOrder.message.trim();
-            state.cancelOrder.errors = {};
-            state.cancelOrder.statusMessage = '';
-            state.cancelOrder.sending = true;
-            openLoadingSideOverlay('.sidenav-order');
-
-            postCancellationRequest(order, message).then(function (response) {
-                const messages = (response && (response.result || response.messages || response.cancellationRequest)) || null;
-                if (Array.isArray(messages)) {
-                    setCancellationMessages(messages);
+        function setCancellationLoading(loading) {
+            if (typeof openLoadingSideOverlay === 'function' && typeof closeLoadingSideOverlay === 'function') {
+                if (loading) {
+                    openLoadingSideOverlay('.sidenav-order');
                 } else {
-                    state.cancelOrder.messages = state.cancelOrder.messages.concat([{
-                        message: message,
-                        createdAt: new Date().toISOString(),
-                        respondedBy: (state.customer && state.customer.name) || 'Você'
-                    }]);
+                    closeLoadingSideOverlay('.sidenav-order');
+                }
+            }
+        }
+
+        function finishCancellationRequest() {
+            state.cancelOrder.sending = false;
+            setCancellationLoading(false);
+        }
+
+        function postCancellation(order, message) {
+            const payload = {
+                orderId: order.id,
+                id: order.id,
+                message: message,
+                reason: message,
+                hash: order.hash
+            };
+
+            if (typeof StoreSDK === 'undefined' || !StoreSDK.request || typeof StoreSDK.request.post !== 'function') {
+                return Promise.reject(new Error('StoreSDK indisponível. Recarregue a página e tente novamente.'));
+            }
+
+            return StoreSDK.request.post('/ajax/customer/order/cancellation', payload);
+        }
+
+        function sendCancellation() {
+            try {
+                const order = state.cancelOrder.order;
+                if (!order) {
+                    showCancellationError('Pedido não encontrado. Feche e abra novamente.');
+                    return false;
                 }
 
-                order.cancellationRequest = state.cancelOrder.messages;
-                state.cancelOrder.message = '';
+                if (!validateCancellation()) {
+                    return false;
+                }
+
+                if (state.cancelOrder.sending) {
+                    return false;
+                }
+
+                const message = state.cancelOrder.message.trim();
                 state.cancelOrder.errors = {};
-                state.cancelOrder.sending = false;
-                closeLoadingSideOverlay('.sidenav-order');
+                state.cancelOrder.statusMessage = '';
+                state.cancelOrder.sending = true;
+                setCancellationLoading(true);
 
-                if (typeof notyf !== 'undefined') {
-                    notyf.success('Solicitação enviada com sucesso. Agora é só acompanhar o pedido. O pedido será cancelado após a aprovação da loja.');
-                }
-            }).catch(function (error) {
-                state.cancelOrder.sending = false;
-                closeLoadingSideOverlay('.sidenav-order');
-                const apiMessage = error && error.data && (error.data.message || error.data.error);
-                showCancellationError(apiMessage || 'Não foi possível enviar a solicitação de cancelamento.');
-            });
+                postCancellation(order, message).then(function (response) {
+                    const messages = response && (response.result || response.messages || response.cancellationRequest);
+                    if (Array.isArray(messages)) {
+                        setCancellationMessages(messages);
+                    } else {
+                        state.cancelOrder.messages = state.cancelOrder.messages.concat([{
+                            message: message,
+                            createdAt: new Date().toISOString(),
+                            respondedBy: (state.customer && state.customer.name) || 'Você'
+                        }]);
+                    }
 
-            return true;
+                    order.cancellationRequest = state.cancelOrder.messages;
+                    state.cancelOrder.message = '';
+                    state.cancelOrder.errors = {};
+                    state.cancelOrder.statusMessage = '';
+                    finishCancellationRequest();
+
+                    if (typeof notyf !== 'undefined') {
+                        notyf.success('Solicitação enviada com sucesso. Agora é só acompanhar o pedido. O pedido será cancelado após a aprovação da loja.');
+                    }
+                }).catch(function (error) {
+                    finishCancellationRequest();
+                    const apiMessage = error && (
+                        (error.data && (error.data.message || error.data.error)) ||
+                        error.message
+                    );
+                    showCancellationError(apiMessage || 'Não foi possível enviar a solicitação de cancelamento.');
+                });
+
+                return true;
+            } catch (error) {
+                finishCancellationRequest();
+                showCancellationError((error && error.message) || 'Erro inesperado ao enviar a solicitação.');
+                return false;
+            }
         }
 
         function checkWarranty(order) {
@@ -975,45 +871,27 @@
             checkCancel,
             canCancelOrder,
             sendCancellation,
+            validateCancellation,
         };
     }
 
-    function getOrdersComponent() {
-        const main = document.querySelector('.orders-main');
-        if (!main) {
-            return null;
+    window.sendOrderCancellation = function sendOrderCancellationFromWindow(event) {
+        if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault();
         }
-        if (main.__x && main.__x.$data) {
-            return main.__x.$data;
-        }
-        if (main._x_dataStack && main._x_dataStack[0]) {
-            return main._x_dataStack[0];
-        }
-        return null;
-    }
 
-    window.__arOrdersCancellationApi = {
-        send: function () {
-            const component = getOrdersComponent();
-            if (!component || typeof component.sendCancellation !== 'function') {
-                return false;
-            }
+        const main = document.querySelector('.orders-main');
+        if (!main || typeof main._x_dataStack === 'undefined' || !main._x_dataStack.length) {
+            return false;
+        }
+
+        const component = main._x_dataStack[0];
+        if (component && typeof component.sendCancellation === 'function') {
             return component.sendCancellation();
         }
-    };
 
-    document.addEventListener('click', function (event) {
-        const button = event.target.closest('#order-cancel-send-btn');
-        if (!button || button.disabled) {
-            return;
-        }
-        const component = getOrdersComponent();
-        if (!component || typeof component.sendCancellation !== 'function') {
-            return;
-        }
-        event.preventDefault();
-        component.sendCancellation();
-    }, true);
+        return false;
+    };
 </script>
 <style>
     tr {
