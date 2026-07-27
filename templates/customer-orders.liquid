@@ -1,0 +1,575 @@
+{% layout 'layout/theme' %}
+{% block content %}
+{% render 'sections/header', store: store, pages: pages, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
+<main class="orders-main" x-data="setupOrders()">
+    <div class="orders-content content">
+        <div class="orders-container container">
+            <div class="columns">
+                <div class="column col-3 col-xxl-4 hide-lg col-custom1">
+                    <div class="card card-pages-nav">
+                        <div class="card-header">
+                            Painel do cliente
+                        </div>
+                        <div class="card-body">
+                            {%- render 'sections/customer-account-menu', themeConfig: themeConfig -%}
+                        </div>
+                    </div>
+                </div>
+                <div class="column col-9 col-xxl-8 col-lg-12 hide-lg col-custom2">
+                    <div class="card card-page card-page-table card-page-table_orders">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span>Meus Pedidos</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="page-table">
+                                <div class="page-thead">
+                                    <div class="page-table-list">
+                                        <div class="page-table-item">
+                                            <span class="label">Código</span>
+                                        </div>
+                                        <div class="page-table-item">
+                                            <span class="label">Data</span>
+                                        </div>
+                                        <div class="page-table-item">
+                                            <span class="label">Valor Total</span>
+                                        </div>
+                                        <div class="page-table-item">
+                                            <span class="label">Forma de pagamento</span>
+                                        </div>
+                                        <div class="page-table-item">
+                                            <span class="label">Situação</span>
+                                        </div>
+                                        <div class="page-table-item">
+                                            <span class="label">Ação</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="page-tbody">
+                                    <template x-for="(order, index) in state.customerOrders.result" :key="index">
+                                        <div class="page-table-content">
+                                            <div class="page-table-box page-table-box_main">
+                                                <div class="page-table-list">
+                                                    <div class="page-table-item">
+                                                        <div x-text="order.id"></div>
+                                                    </div>
+                                                    <div class="page-table-item">
+                                                        <div x-text="formatDate(order.createdAt)"></div>
+                                                    </div>
+                                                    <div class="page-table-item">
+                                                        <div x-text="formatTotal(order.total)"></div>
+                                                    </div>
+                                                    <div class="page-table-item">
+                                                        <div x-text="order.payments[0].paymentName"></div>
+                                                    </div>
+                                                    <div class="page-table-item">
+                                                        <div x-text="order.status.name"></div>
+                                                    </div>
+                                                    <div class="page-table-item">
+                                                        <div class="dropdown">
+                                                            <a href="javascript:void(0)" class="btn dropdown-toggle">
+                                                                Selecione ação
+                                                            </a>
+                                                            <ul class="menu">
+                                                                <li x-show="order.payments[0].paymentLink" class="menu-item">
+                                                                    <a :href="order.payments[0].paymentLink"
+                                                                       target="_blank" title="Pagamento">
+                                                                        Pagamento
+                                                                    </a>
+                                                                </li>
+                                                                <li class="menu-item">
+                                                                    <a x-bind:href="`checkout/order/view/${order.hash}`" title="Visualizar Detalhes do Pedido">
+                                                                        Visualizar Pedido
+                                                                    </a>
+                                                                </li>
+                                                                <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
+                                                                    <a x-bind:href="`/pedidos/cancelamento?hash=${order.hash}`"
+                                                                       title="Solicitar cancelamento">
+                                                                        Solicitar cancelamento
+                                                                    </a>
+                                                                </li>
+                                                                <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
+                                                                    <a href="javascript:void(0)"
+                                                                       @click="checkWarranty(order)" title="Solicitar Garantia">
+                                                                        Solicitar Garantia
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <a class="btn-page-open" @click="order.isOpen = !order.isOpen"
+                                                           href="javascript:void(0)" title="Visualizar pedido">
+                                                            {{ themeConfig.icons.arrow.down }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-main-order">
+                                                <div class="page-table-box page-table-box_second" x-show="order.isOpen">
+                                                    <div class="table-products">
+                                                        <div class="table-products-title">
+                                                            Produto(s)
+                                                        </div>
+                                                        <template x-for="product in order.products">
+                                                            <div class="table-product">
+                                                                <div class="table-product-image">
+                                                                    <template x-if="product.image">
+                                                                        <picture>
+                                                                            <img class="lazy" x-bind:data-src="product.image" :alt="product.title">
+                                                                        </picture>
+                                                                    </template>
+                                                                    <template x-if="!product.image">
+                                                                        {{ themeConfig.icons.image }}
+                                                                    </template>
+                                                                </div>
+                                                                <div class="table-product-info">
+                                                                    <div class="table-product-title"
+                                                                         x-text="product.title"></div>
+                                                                    <div class="table-product-text"
+                                                                         x-show="product.sku != null">
+                                                                        <span x-text="`#${product.sku}`"></span>
+                                                                    </div>
+                                                                    <template x-if="product.products">
+                                                                        <div class="table-product-text">
+                                                                            <template x-for="(productKit, index, collection) in product.products" :key="index">
+                                                                                <span x-text="`${[productKit.quantity + 'x '+productKit.title]}${(product.products.length !== index+1) ? ' / ' : ''}`"></span>
+                                                                            </template>
+                                                                        </div>
+                                                                    </template>
+                                                                </div>
+                                                                <div class="table-product-qnt">
+                                                                    <div x-text="`${product.quantity} un`"></div>
+                                                                </div>
+                                                                <div class="table-product-price">
+                                                                    <div x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format( product.price * product.quantity)"></div>
+                                                                </div>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <div class="page-table-box page-table-box_second">
+                                                    <div class="table-products">
+                                                        <div class="table-products-title">
+                                                            Dados de entrega
+                                                        </div>
+                                                        <template x-if="order && order.shippings">
+                                                            <template x-for="orderShipping in order.shippings">
+                                                                <div class="table-product table-product_custom">
+
+                                                                    <div class="col-12">
+                                                                        <div class="columns">
+                                                                            <div class="column col-3">
+                                                                                <p x-text="orderShipping.shippingName"></p>
+                                                                                <p x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format(orderShipping.value)"></p>
+                                                                            </div>
+                                                                            <div class="column col-5">
+                                                                                <template x-if="orderShipping.invoiceUrl || orderShipping.invoiceDanfeUrl">
+                                                                                    <p>
+                                                                                        Nota fiscal
+                                                                                    </p>
+                                                                                    <template x-if="orderShipping.invoiceUrl">
+                                                                                        <p>
+                                                                                            <a :href="orderShipping.invoiceUrl" target="_blank">
+                                                                                                <span title="Nota fiscal">Abrir o <strong>XML</strong> da nota fiscal</span>
+                                                                                            </a>
+                                                                                        </p>
+                                                                                    </template>
+                                                                                    <template x-if="orderShipping.invoiceDanfeUrl">
+                                                                                        <p>
+                                                                                            <a :href="orderShipping.invoiceDanfeUrl" target="_blank">
+                                                                                                <span title="Nota fiscal">Abrir o <strong>DANFE</strong> da nota fiscal</span>
+                                                                                            </a>
+                                                                                        </p>
+                                                                                    </template>
+                                                                                </template>
+                                                                                <template x-if="!orderShipping.invoiceUrl && !orderShipping.invoiceDanfeUrl">
+                                                                                    <p>
+                                                                                        Nota fiscal
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        <span title="Nota fiscal">Não disponível</span>
+                                                                                    </p>
+                                                                                </template>
+                                                                            </div>
+                                                                            <div class="column col-4">
+                                                                                <template x-if="orderShipping?.trackingCode && orderShipping?.trackingUrl">
+                                                                                    <p>
+                                                                                        Código de rastreamento
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        <a :href="orderShipping.trackingUrl" target="_blank">
+                                                                                            <span title="Código de rastreio" x-text="orderShipping?.trackingCode"></span>
+                                                                                        </a>
+                                                                                    </p>
+                                                                                </template>
+                                                                                <template x-if="!orderShipping?.trackingCode && orderShipping?.trackingUrl">
+                                                                                    <p>
+                                                                                        Código de rastreamento
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        <a title="Clique aqui para abrir o url de rastreio" :href="orderShipping.trackingUrl" target="_blank">
+                                                                                            Clique aqui para abrir o url de rastreio
+                                                                                        </a>
+                                                                                    </p>
+                                                                                </template>
+                                                                                <template x-if="orderShipping?.trackingCode && !orderShipping?.trackingUrl">
+                                                                                    <p>
+                                                                                        Código de rastreamento
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        <span title="Código de rastreio" x-text="orderShipping?.trackingCode"></span>
+                                                                                    </p>
+                                                                                </template>
+                                                                                <template x-if="!orderShipping?.trackingCode && !orderShipping?.trackingUrl">
+                                                                                    <p>Código de rastreamento</p>
+                                                                                    <p>Não disponível</p>
+                                                                                </template>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template x-if="state.customerOrders.result.length < 0">
+                                        <div class="page-table-content">
+                                            <div class="page-table-box page-table-box_main">
+                                                <p>Nenhum pedido cadastrado</p>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column col-12 hide-xxl show-lg">
+                    <details class="page-accordion page-accordion_top accordion">
+                        <summary class="accordion-header">
+                            <div class="accordion-title">
+                                <span>
+                                    Painel do cliente
+                                </span>
+                            </div>
+                            {{ themeConfig.icons.arrow.down }}
+                        </summary>
+                        <div class="accordion-body">
+                            {%- render 'sections/customer-account-menu', themeConfig: themeConfig -%}
+                        </div>
+                    </details>
+                    <div class="page-title">Meus Pedidos</div>
+                    <template x-for="(order, index) in state.customerOrders.result" :key="index">
+                        <details class="page-accordion-info page-accordion_orders accordion">
+                            <summary class="accordion-header">
+                                <ul class="accordion-list accordion-header-list">
+                                    <li class="accordion-item accordion-header-item">
+                                        <p class="accordion-title">Código</p>
+                                        <p class="accordion-text" x-text="order.id"></p>
+                                    </li>
+                                    <li class="accordion-item accordion-header-item">
+                                        <p class="accordion-title">Data</p>
+                                        <p class="accordion-text" x-text="formatDate(order.createdAt)"></p>
+                                    </li>
+                                    <li class="accordion-item accordion-header-item">
+                                        <p class="accordion-title">Valor Total</p>
+                                        <p class="accordion-text" x-text="formatTotal(order.total)"></p>
+                                    </li>
+                                </ul>
+                                {{ themeConfig.icons.arrow.down }}
+                            </summary>
+                            <div class="accordion-body">
+                                <ul class="accordion-list accordion-body-list">
+                                    <li class="accordion-item accordion-body-item">
+                                        <div class="accordion-item-box">
+                                            <p class="accordion-title">Pagamento</p>
+                                            <p class="accordion-text" x-text="order.payments[0].paymentName"></p>
+                                        </div>
+                                    </li>
+                                    <li class="accordion-item accordion-body-item">
+                                        <div class="accordion-item-box">
+                                            <p class="accordion-title">Situação</p>
+                                            <p class="accordion-text" x-text="order.status.name"></p>
+                                        </div>
+                                    </li>
+                                    <li class="accordion-item accordion-body-item">
+                                        <div class="dropdown">
+                                            <a href="javascript:void(0)" class="btn dropdown-toggle">
+                                                Selecione ação
+                                            </a>
+                                            <ul class="menu">
+                                                <li x-show="order.payments[0].paymentLink" class="menu-item">
+                                                    <a :href="order.payments[0].paymentLink" target="_blank" title="Pagamento">
+                                                        Pagamento
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a x-bind:href="`checkout/order/view/${order.hash}`" title="Visualizar Detalhes do Pedido">
+                                                        Visualizar Pedido
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
+                                                    <a x-bind:href="`/pedidos/cancelamento?hash=${order.hash}`"
+                                                       title="Solicitar cancelamento">
+                                                        Solicitar cancelamento
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
+                                                    <a href="javascript:void(0)"
+                                                       @click="checkWarranty(order)" title="Solicitar Garantia">
+                                                        Solicitar Garantia
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="table-products">
+                                    <div class="table-products-title">
+                                        Dados de entrega
+                                    </div>
+                                    <template x-if="order && order.shippings">
+                                        <template x-for="orderShipping in order.shippings">
+                                            <div class="table-product table-product_custom">
+                                                <div class="col-12">
+                                                    <div class="columns">
+                                                        <div class="column col-4 col-md-6 col-sm-12">
+                                                            <p class="accordion-title">
+                                                                Frete
+                                                            </p>
+                                                            <p class="accordion-text" x-text="orderShipping.shippingName"></p>
+                                                        </div>
+                                                        <div class="column col-4 col-md-6 col-sm-12">
+                                                            <p class="accordion-title">
+                                                                Custo do frete
+                                                            </p>
+                                                            <p class="accordion-text" x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format(orderShipping.value)"></p>
+                                                        </div>
+                                                        <div class="column col-4 col-md-6 col-sm-12">
+                                                            <template x-if="orderShipping?.trackingCode && orderShipping?.trackingUrl">
+                                                                <p class="accordion-title">
+                                                                    Código de rastreamento
+                                                                </p>
+                                                                <p class="accordion-text">
+                                                                    <a :href="orderShipping.trackingUrl" target="_blank">
+                                                                        <span title="Código de rastreio" x-text="orderShipping?.trackingCode"></span>
+                                                                    </a>
+                                                                </p>
+                                                            </template>
+                                                            <template x-if="!orderShipping?.trackingCode && orderShipping?.trackingUrl">
+                                                                <p class="accordion-title">
+                                                                    Código de rastreamento
+                                                                </p>
+                                                                <p class="accordion-text">
+                                                                    <a title="Clique aqui para abrir o url de rastreio" :href="orderShipping.trackingUrl" target="_blank">
+                                                                        Clique aqui para abrir o url de rastreio
+                                                                    </a>
+                                                                </p>
+                                                            </template>
+                                                            <template x-if="orderShipping?.trackingCode && !orderShipping?.trackingUrl">
+                                                                <p class="accordion-title">
+                                                                    Código de rastreamento
+                                                                </p>
+                                                                <p class="accordion-text">
+                                                                    <span title="Código de rastreio" x-text="orderShipping?.trackingCode"></span>
+                                                                </p>
+                                                            </template>
+                                                            <template x-if="!orderShipping?.trackingCode && !orderShipping?.trackingUrl">
+                                                                <p class="accordion-title">
+                                                                    Código de rastreamento
+                                                                </p>
+                                                                <p class="accordion-text">
+                                                                    Não disponível
+                                                                </p>
+                                                            </template>
+                                                        </div>
+                                                        <div class="column col-12 col-md-6 col-sm-12">
+                                                            <template x-if="orderShipping.invoiceUrl || orderShipping.invoiceDanfeUrl">
+                                                                <p class="accordion-title">
+                                                                    Nota fiscal
+                                                                </p>
+                                                                <template x-if="orderShipping.invoiceUrl">
+                                                                    <p class="accordion-text">
+                                                                        <a :href="orderShipping.invoiceUrl" target="_blank">
+                                                                            <span title="Nota fiscal">Abrir o <strong>XML</strong> da nota fiscal</span>
+                                                                        </a>
+                                                                    </p>
+                                                                    </template>
+                                                                <template x-if="orderShipping.invoiceDanfeUrl">
+                                                                    <p class="accordion-text">
+                                                                        <a :href="orderShipping.invoiceDanfeUrl" target="_blank">
+                                                                            <span title="Nota fiscal">Abrir o <strong>DANFE</strong> da nota fiscal</span>
+                                                                        </a>
+                                                                    </p>
+                                                                </template>
+                                                            </template>
+                                                            <template x-if="!orderShipping.invoiceUrl && !orderShipping.invoiceDanfeUrl">
+                                                                <p class="accordion-title">
+                                                                    Nota fiscal
+                                                                </p>
+                                                                <p class="accordion-text">
+                                                                    <span title="Nota fiscal">Não disponível</span>
+                                                                </p>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                                <div class="table-products">
+                                    <div class="table-products-title">
+                                        Produto(s)
+                                    </div>
+                                    <template x-for="product in order.products">
+                                        <div class="table-product">
+                                            <div class="table-product-image">
+                                                <template x-if="product.image">
+                                                    <picture>
+                                                        <img class="lazy" x-bind:data-src="product.image" :alt="product.title">
+                                                    </picture>
+                                                </template>
+                                                <template x-if="!product.image">
+                                                    {{ themeConfig.icons.image }}
+                                                </template>
+                                            </div>
+                                            <div class="table-product-info">
+                                                <div class="table-product-title" x-text="`${product.title}`"></div>
+                                                <div class="table-product-text" x-text="`${product.quantity} un`"></div>
+                                            </div>
+                                            <div class="table-product-price">
+                                                <div x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format( product.price * product.quantity)"></div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </details>
+                    </template>
+                    <template x-if="state.customerOrders.result.length < 0">
+                        <div class="page-table-box page-table-box_main">
+                            <p>Nenhum pedido cadastrado</p>
+                        </div>
+                    </template>
+                </div>
+                <div class="column col-12">
+                    <div class="page-pagination">
+                        <ul class="pagination_list">
+                            <li class="pagination_item">
+                                <a class="pagination_link__arrow" @click.debounce.500="previousPage()"
+                                   title="Anterior"
+                                   :class="[(state.customerOrders.pagination.current - 1 <= 0 ) ? 'disable' : '']">
+                                    {{ themeConfig.icons.arrow.prev }}
+                                </a>
+                            </li>
+                            <li class="pagination_item">
+                                <a class="pagination_link__arrow" @click.debounce.500="nextPage()"
+                                   title="Seguinte"
+                                   :class="[(state.customerOrders.pagination.pages - state.customerOrders.pagination.current <= 0 ) ? 'disable' : '']">
+                                    {{ themeConfig.icons.arrow.next }}
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="pagination_info">
+                            <div x-text="`Visualizando ${state.customerOrders.pagination.current} / ${state.customerOrders.pagination.pages} de ${state.customerOrders.pagination.total} registros encontrados`"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    function setupOrders() {
+        const state = {
+            customer: {{ customer | json }} || {},
+            customerOrders: {{ customerOrders | json }} || {}
+        };
+
+        function previousPage() {
+            if (this.state.customerOrders.pagination.current - 1 <= 0) {
+                return;
+            } else {
+                const previousPage = this.state.customerOrders.pagination.current - 1;
+                window.location.href = '/pedidos/' + previousPage;
+            }
+        }
+
+        function nextPage() {
+            if ((this.state.customerOrders.pagination.pages - this.state.customerOrders.pagination.current) <= 0) {
+                return;
+            } else {
+                const nextPage = this.state.customerOrders.pagination.current + 1;
+                window.location.href = '/pedidos/' + nextPage;
+            }
+        }
+
+        function formatDate(createdAt) {
+            return StoreSDK.utils.toDateLocale(createdAt);
+        }
+
+        function formatTotal(total) {
+            return StoreSDK.utils.toCurrency(total);
+        }
+        serialize = function(obj, prefix) {
+            var str = [],
+                p;
+            for (p in obj) {
+                if (obj.hasOwnProperty(p)) {
+                    var k = prefix ? prefix + "[" + p + "]" : p,
+                        v = obj[p];
+                    str.push((v !== null && typeof v === "object") ?
+                        serialize(v, k) :
+                        encodeURIComponent(k) + "=" + encodeURIComponent(v));
+                }
+            }
+            return str.join("&");
+        }
+        function checkWarranty(order) {
+            let listProducts = '';
+            order.products.forEach((option) => {
+                const sku = option.sku ? `  - Referência: ${option.sku}\n` : '';
+                listProducts += `${sku}  - Produto Id: ${option.productId}\n  - Nome: ${option.title}\n  - Preço: ${StoreSDK.utils.toCurrency(option.price)}\n  - Quantidade: ${option.quantity}\n\n`
+            });
+            const message = {
+                message: `Pedido: ${order.id}\n\nRelato da Solicitação: \n\nProdutos: \n${listProducts}\n`,
+                subject: `Solicitar garantia pedido ${order.id}`,
+            }
+            window.location.href = `/pagina/fale-conosco?${serialize(message)}`;
+        }
+
+        function handleOrderSelected(orderOption) {
+            this.state.paymentSelected = paymentOption;
+            this.state.order.showAll = orderOption;
+        }
+
+        function renderOrder(order) {
+            StoreSDK.request.get(`/checkout/order/view/${order.hash}`)
+                .then(response => {
+                    window.location.href = response.url;
+                });
+        }
+
+        return {
+            state,
+            formatDate,
+            formatTotal,
+            nextPage,
+            previousPage,
+            renderOrder,
+            checkWarranty,
+        }
+    }
+</script>
+<style>
+    tr {
+        cursor: pointer;
+    }
+</style>
+{% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig, theme: theme %}
+{% endblock %}

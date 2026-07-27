@@ -124,7 +124,7 @@ Atualizado conforme informado pelo dono da loja.
 | `checkout-order.liquid` |
 | `checkout.liquid` |
 | `customer-addresses.liquid` |
-| `customer-orders.liquid` |
+| `customer-orders.liquid` *(customizado no GitHub — cancelamento)* |
 | `home.liquid` |
 | `page.liquid` |
 | `product.liquid` |
