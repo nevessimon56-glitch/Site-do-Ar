@@ -1899,3 +1899,61 @@
   text-decoration: none !important;
   cursor: pointer;
 }
+
+/* ========== Meus Pedidos — menu de ações (cancelamento) ========== */
+/*
+ * Garante que o dropdown "Selecione ação" exiba todas as opções
+ * (Visualizar, Solicitar cancelamento, Solicitar Garantia).
+ * Em mobile o accordion pode cortar o menu por overflow:hidden dos pais.
+ */
+.orders-main .page-accordion-info,
+.orders-main .page-accordion-info .accordion-body,
+.orders-main .page-accordion-info .accordion-body-item,
+.orders-main .page-accordion-info .accordion-body-list,
+.orders-main .page-table-box,
+.orders-main .page-tbody .page-table-content {
+  overflow: visible !important;
+}
+
+.orders-main .dropdown {
+  position: relative;
+  z-index: 30;
+}
+
+.orders-main .dropdown .menu {
+  z-index: 1200;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.orders-main .dropdown .menu .menu-item,
+.orders-main .dropdown .menu .menu-item > a {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  white-space: normal;
+}
+
+.orders-main .dropdown .menu .menu-item > a[href*="cancel"],
+.orders-main .dropdown .menu .menu-item > a[title*="ancel"],
+.orders-main .dropdown .menu .menu-item > a[title*="Cancel"] {
+  display: block !important;
+  visibility: visible !important;
+}
+
+@media (max-width: 991px) {
+  .orders-main .page-accordion-info .dropdown .menu {
+    left: 0;
+    right: auto;
+    min-width: 180px;
+  }
+
+  .orders-main .dropdown.active .menu,
+  .orders-main .dropdown .dropdown-toggle:focus + .menu,
+  .orders-main .dropdown .menu:hover {
+    display: block !important;
+  }
+}
