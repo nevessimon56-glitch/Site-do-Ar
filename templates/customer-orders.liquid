@@ -539,7 +539,7 @@
                 <div class="form-group">
                     <button class="btn btn-login btn-block"
                             type="button"
-                            @click="sendCancellation()"
+                            @click.prevent="sendCancellation()"
                             aria-label="Enviar">
                         ENVIAR
                     </button>
@@ -652,27 +652,43 @@
         function validateCancellation() {
             const errors = {};
 
-            if (!this.state.cancelOrder.message || !this.state.cancelOrder.message.trim()) {
+            if (!state.cancelOrder.message || !state.cancelOrder.message.trim()) {
                 errors.message = 'Por favor, informe o motivo do cancelamento';
             }
 
-            this.state.cancelOrder.errors = errors;
+            state.cancelOrder.errors = errors;
             return Object.keys(errors).length === 0;
         }
 
+        function postCancellationRequest(order, message) {
+            const payload = {
+                orderId: order.id,
+                id: order.id,
+                message: message,
+                reason: message,
+                hash: order.hash
+            };
+
+            return StoreSDK.request.post('/ajax/customer/order/cancellation', payload)
+                .catch((error) => {
+                    return StoreSDK.request.post(`/ajax/customer/order/${order.id}/cancellation`, {
+                        message: message,
+                        reason: message,
+                        hash: order.hash
+                    }).catch(() => Promise.reject(error));
+                });
+        }
+
         function sendCancellation() {
-            const order = this.state.cancelOrder.order;
-            if (!order || !this.validateCancellation()) {
+            const order = state.cancelOrder.order;
+            if (!order || !validateCancellation()) {
                 return;
             }
 
-            const message = this.state.cancelOrder.message.trim();
+            const message = state.cancelOrder.message.trim();
             openLoadingSideOverlay('.sidenav-order');
 
-            StoreSDK.request.post('/ajax/customer/order/cancellation', {
-                orderId: order.id,
-                message: message
-            }).then((response) => {
+            postCancellationRequest(order, message).then((response) => {
                 const messages = response?.result || response?.messages || response?.cancellationRequest;
                 if (Array.isArray(messages)) {
                     setCancellationMessages(messages);
@@ -688,8 +704,8 @@
                 }
 
                 order.cancellationRequest = state.cancelOrder.messages;
-                this.state.cancelOrder.message = '';
-                this.state.cancelOrder.errors = {};
+                state.cancelOrder.message = '';
+                state.cancelOrder.errors = {};
                 closeLoadingSideOverlay('.sidenav-order');
                 notyf.success('Solicitação enviada com sucesso. Agora é só acompanhar o pedido. O pedido será cancelado após a aprovação da loja.');
             }).catch((error) => {
