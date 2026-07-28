@@ -1,11 +1,11 @@
-{% comment %} VERSAO: 2026-07-28-pedidos-sidenav-order-oficial-wdna {% endcomment %}
-<div class="sidenav-overlay sidenav-order"
+{% comment %} VERSAO: 2026-07-28-pedidos-sidenav-order-ui-v1 {% endcomment %}
+<div class="sidenav-overlay sidenav-order sidenav-order_cancel"
      x-data="setupOrderModal()"
      x-on:cancel-order.window="cancelOrder($event.detail)"
 >
     <form class="sidenav-container form-order" x-on:submit.prevent>
-        <div class="sidenav-header">
-            <a class="btn-sidenav-close float-right" href="javascript:void(0)" aria-label="Close" onclick="closeSideNavOverlay()">
+        <div class="sidenav-header sidenav-order_header">
+            <a class="btn-sidenav-close float-right" href="javascript:void(0)" aria-label="Fechar" onclick="closeSideNavOverlay()">
                 {{ themeConfig.icons.close }}
             </a>
             <template x-if="state.cancellationRequest.length > 0">
@@ -19,21 +19,23 @@
                 </div>
             </template>
         </div>
+
         <template x-if="state.cancellationRequest.length > 0">
-            <div class="sidenav-body">
-                <div class="panel">
-                    <div class="panel-header">
-                        <div class="panel-title h6">
-                            Pedido ID:
-                            <span x-text="state.orderId"></span>
+            <div class="sidenav-body sidenav-order_body sidenav-order_body--chat">
+                <div class="order-cancel-panel panel">
+                    <div class="order-cancel-panel__head panel-header">
+                        <div class="order-cancel-panel__badge">
+                            Pedido <strong x-text="state.orderId"></strong>
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class="order-cancel-panel__messages panel-body">
                         <template x-for="(orderCancel, index) in state.cancellationRequest" :key="index">
-                            <div class="tile">
-                                <div class="tile-icon">
+                            <div class="order-cancel-tile tile"
+                                 :class="orderCancel?.metadata?.anser ? 'order-cancel-tile--reply' : 'order-cancel-tile--customer'">
+                                <div class="order-cancel-tile__icon tile-icon">
                                     <template x-if="orderCancel?.metadata?.anser && orderCancel?.metadata?.slug">
-                                        <figure class="avatar" :class="(orderCancel.metadata.slug) === (state.statusCancel.aceito) ? 'avatar_success' : 'avatar_warning'">
+                                        <figure class="avatar order-cancel-avatar"
+                                                :class="(orderCancel.metadata.slug) === (state.statusCancel.aceito) ? 'avatar_success order-cancel-avatar--success' : 'avatar_warning order-cancel-avatar--warning'">
                                             <template x-if="(orderCancel.metadata.slug) === (state.statusCancel.aceito)">
                                                 {{ themeConfig.icons.order.check }}
                                             </template>
@@ -43,7 +45,8 @@
                                         </figure>
                                     </template>
                                     <template x-if="!orderCancel.metadata.anser">
-                                        <figure class="avatar">
+                                        <figure class="avatar order-cancel-avatar"
+                                                :class="(orderCancel?.metadata?.name?.length > 0) && (orderCancel.metadata.name !== state.customerName) ? 'order-cancel-avatar--store' : 'order-cancel-avatar--client'">
                                             <template x-if="orderCancel.metadata.name === state.customerName">
                                                 {{ themeConfig.icons.order.client }}
                                             </template>
@@ -56,42 +59,32 @@
                                         </figure>
                                     </template>
                                 </div>
-                                <div class="tile-content">
+                                <div class="order-cancel-tile__content tile-content">
                                     <template x-if="orderCancel.metadata.name">
-                                        <div class="tile-subtitle">
-                                            <p>
-                                                <b>Respondido por:</b>
-                                                <span x-text="`${orderCancel.metadata.name}`"></span>
-                                            </p>
+                                        <div class="order-cancel-tile__meta tile-subtitle">
+                                            <span class="order-cancel-tile__label">Respondido por</span>
+                                            <span class="order-cancel-tile__value" x-text="orderCancel.metadata.name"></span>
                                         </div>
                                     </template>
                                     <template x-if="orderCancel.metadata.anser">
-                                        <div>
-                                            <div class="tile-subtitle">
-                                                <p>
-                                                    <b>Data da resposta:</b>
-                                                    <span x-text="`${StoreSDK.utils.toDateLocale(orderCancel.createdAt)}`"></span>
-                                                </p>
-                                            </div>
-                                            <template x-if="orderCancel?.metadata?.slug">
-                                                <div class="tile-subtitle">
-                                                    <p>
-                                                        <b>Cancelamento:</b>
-                                                        <span x-text="`${(orderCancel.metadata.slug) === (state.statusCancel.aceito) ? 'Aprovado' : 'Recusado'}`"></span>
-                                                    </p>
-                                                </div>
-                                            </template>
+                                        <div class="order-cancel-tile__meta tile-subtitle">
+                                            <span class="order-cancel-tile__label">Data da resposta</span>
+                                            <span class="order-cancel-tile__value" x-text="StoreSDK.utils.toDateLocale(orderCancel.createdAt)"></span>
                                         </div>
+                                        <template x-if="orderCancel?.metadata?.slug">
+                                            <div class="order-cancel-tile__status"
+                                                 :class="(orderCancel.metadata.slug) === (state.statusCancel.aceito) ? 'order-cancel-tile__status--approved' : 'order-cancel-tile__status--denied'">
+                                                <span x-text="(orderCancel.metadata.slug) === (state.statusCancel.aceito) ? 'Cancelamento aprovado' : 'Cancelamento recusado'"></span>
+                                            </div>
+                                        </template>
                                     </template>
                                     <template x-if="!orderCancel.metadata.anser">
-                                        <div class="tile-subtitle">
-                                            <p>
-                                                <b>Data da mensagem:</b>
-                                                <span x-text="`${StoreSDK.utils.toDateTimeLocale(orderCancel.createdAt)}`"></span>
-                                            </p>
+                                        <div class="order-cancel-tile__meta tile-subtitle">
+                                            <span class="order-cancel-tile__label">Data da mensagem</span>
+                                            <span class="order-cancel-tile__value" x-text="StoreSDK.utils.toDateTimeLocale(orderCancel.createdAt)"></span>
                                         </div>
                                     </template>
-                                    <div class="tile-subtitle pt-1">
+                                    <div class="order-cancel-tile__message">
                                         <p x-text="orderCancel.message"></p>
                                     </div>
                                 </div>
@@ -99,32 +92,53 @@
                         </template>
                     </div>
                     <template x-if="!state.messageClosed">
-                        <div class="panel-footer">
-                            <div class="input-group">
-                                <input id="message" class="form-input" name="message" x-model="state.order.message"/>
-                                <button class="btn input-group-btn" @click="sendOrderCancellation(false)">Enviar</button>
+                        <div class="order-cancel-panel__footer panel-footer">
+                            <div class="order-cancel-compose input-group">
+                                <input id="order-cancel-followup"
+                                       class="form-input order-cancel-compose__input"
+                                       name="message"
+                                       type="text"
+                                       placeholder="Digite sua mensagem..."
+                                       x-model="state.order.message"
+                                       @keydown.enter.prevent="sendOrderCancellation(false)"/>
+                                <button class="btn order-cancel-compose__btn input-group-btn"
+                                        type="button"
+                                        @click="sendOrderCancellation(false)">
+                                    ENVIAR
+                                </button>
                             </div>
                         </div>
                     </template>
                 </div>
             </div>
         </template>
+
         <template x-if="!state.cancellationRequest.length">
-            <div>
-                <div class="sidenav-body">
-                    <p class="s-subtitle">
+            <div class="sidenav-order_request">
+                <div class="sidenav-body sidenav-order_body">
+                    <p class="s-subtitle sidenav-order_intro">
                         Informe o motivo do cancelamento
                     </p>
-                    <div class="form-group" :class="{ 'has-error': state.errors.message }">
-                        <label class="form-label" for="message">Digite o motivo *</label>
-                        <textarea id="message" class="form-input" name="message" rows="4" x-model="state.order.message" :disabled="state.cancellationWasRequested"></textarea>
+                    <div class="form-group order-cancel-form"
+                         :class="{ 'has-error': state.errors.message }">
+                        <label class="form-label" for="order-cancel-reason">Digite o motivo *</label>
+                        <textarea id="order-cancel-reason"
+                                  class="form-input order-cancel-form__textarea"
+                                  name="message"
+                                  rows="5"
+                                  placeholder="Descreva o motivo do cancelamento..."
+                                  x-model="state.order.message"
+                                  :disabled="state.cancellationWasRequested"></textarea>
                         <p class="form-input-hint" x-text="state.errors.message"></p>
                     </div>
                 </div>
-                <div class="sidenav-footer">
+                <div class="sidenav-footer sidenav-order_footer">
                     <div class="form-group">
-                        <button class="btn btn-login btn-block" type="button" aria-label="Enviar" @click="sendOrderCancellation(true)">
-                            <span>Enviar</span>
+                        <button class="btn btn-login btn-block order-cancel-form__submit"
+                                type="button"
+                                aria-label="Enviar solicitação de cancelamento"
+                                @click="sendOrderCancellation(true)">
+                            ENVIAR
                         </button>
                     </div>
                 </div>
@@ -132,6 +146,7 @@
         </template>
     </form>
 </div>
+
 <script>
     function setupOrderModal() {
         const state = {
@@ -241,3 +256,327 @@
         }
     }
 </script>
+
+<style>
+    .sidenav-overlay.sidenav-order_cancel .sidenav-container.form-order {
+        display: flex;
+        flex-direction: column;
+        max-height: 100vh;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .sidenav-order_header {
+        flex-shrink: 0;
+        border-bottom: 1px solid #e8edf2;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .sidenav-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        line-height: 1.3;
+        padding-right: 2.5rem;
+        text-transform: none;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .sidenav-order_body {
+        flex: 1 1 auto;
+        overflow: auto;
+        padding: 1.25rem 1.5rem 1rem;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .sidenav-order_body--chat {
+        padding-bottom: 0.75rem;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .sidenav-order_intro {
+        color: #334155;
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.45;
+        margin-bottom: 1rem;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-panel {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        max-height: calc(100vh - 180px);
+        overflow: hidden;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-panel__head {
+        background: #fff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 0.875rem 1rem;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-panel__badge {
+        color: #475569;
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-panel__badge strong {
+        color: #1e3a5f;
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-panel__messages {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 0.75rem 1rem;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile {
+        background: #fff;
+        border: 1px solid #e8edf2;
+        border-radius: 10px;
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        padding: 0.875rem;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile:last-child {
+        margin-bottom: 0;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile--reply {
+        border-color: #dbeafe;
+        background: #f8fbff;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile__icon {
+        flex-shrink: 0;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-avatar {
+        align-items: center;
+        background: #2c77bb;
+        border-radius: 50%;
+        color: #fff;
+        display: inline-flex;
+        height: 36px;
+        justify-content: center;
+        margin: 0;
+        overflow: hidden;
+        width: 36px;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-avatar svg {
+        height: 18px;
+        width: 18px;
+        fill: currentColor;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-avatar--store {
+        background: #0f766e;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-avatar--success,
+    .sidenav-overlay.sidenav-order_cancel .avatar_success.order-cancel-avatar {
+        background: #16a34a;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-avatar--warning,
+    .sidenav-overlay.sidenav-order_cancel .avatar_warning.order-cancel-avatar {
+        background: #dc2626;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile__content {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile__meta {
+        color: #64748b;
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 0.8125rem;
+        gap: 0.25rem 0.5rem;
+        line-height: 1.4;
+        margin-bottom: 0.35rem;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile__label {
+        color: #94a3b8;
+        font-weight: 500;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile__value {
+        color: #334155;
+        font-weight: 600;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile__status {
+        border-radius: 999px;
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        margin-bottom: 0.5rem;
+        padding: 0.25rem 0.625rem;
+        text-transform: uppercase;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile__status--approved {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile__status--denied {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-tile__message p {
+        color: #0f172a;
+        font-size: 0.9375rem;
+        line-height: 1.55;
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-panel__footer {
+        background: #fff;
+        border-top: 1px solid #e2e8f0;
+        padding: 0.875rem 1rem 1rem;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-compose {
+        align-items: stretch;
+        display: flex;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__input {
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        flex: 1 1 auto;
+        font-size: 0.9375rem;
+        min-height: 44px;
+        padding: 0.625rem 0.875rem;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__input:focus {
+        border-color: #2c77bb;
+        box-shadow: 0 0 0 3px rgba(44, 119, 187, 0.15);
+        outline: none;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn {
+        background: #2c77bb;
+        border: none;
+        border-radius: 8px;
+        color: #fff !important;
+        flex-shrink: 0;
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        min-height: 44px;
+        min-width: 88px;
+        padding: 0 1rem;
+        text-transform: uppercase;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn:hover {
+        background: #1a5a94;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-form__textarea {
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        min-height: 140px;
+        padding: 0.875rem 1rem;
+        resize: vertical;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-form__textarea:focus {
+        border-color: #2c77bb;
+        box-shadow: 0 0 0 3px rgba(44, 119, 187, 0.15);
+        outline: none;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .sidenav-order_footer {
+        border-top: 1px solid #e8edf2;
+        flex-shrink: 0;
+        padding: 1rem 1.5rem 1.25rem;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-form__submit {
+        background: #2c77bb;
+        border: none;
+        border-radius: 8px;
+        color: #fff !important;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        min-height: 48px;
+        text-transform: uppercase;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .order-cancel-form__submit:hover {
+        background: #1a5a94;
+    }
+
+    .sidenav-overlay.sidenav-order_cancel .form-input-hint {
+        color: #dc2626;
+        font-size: 0.8125rem;
+        margin-top: 0.375rem;
+    }
+
+    @media (max-width: 575px) {
+        .sidenav-overlay.sidenav-order_cancel .sidenav-order_body {
+            padding: 1rem;
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .sidenav-order_footer {
+            padding: 0.875rem 1rem 1rem;
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .sidenav-title {
+            font-size: 1rem;
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .order-cancel-panel {
+            max-height: calc(100vh - 150px);
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .order-cancel-compose {
+            flex-direction: column;
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn {
+            min-height: 48px;
+            width: 100%;
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .order-cancel-tile {
+            padding: 0.75rem;
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .order-cancel-avatar {
+            height: 32px;
+            width: 32px;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .sidenav-overlay.sidenav-order_cancel .sidenav-order_body {
+            padding: 1.5rem 1.75rem 1rem;
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .order-cancel-panel__messages {
+            max-height: 420px;
+        }
+    }
+</style>
