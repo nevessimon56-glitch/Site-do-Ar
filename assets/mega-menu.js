@@ -1130,15 +1130,6 @@
     return false;
   }
 
-  function getCustomerFirstName() {
-    if (typeof customer !== 'undefined' && customer && customer.name) {
-      return String(customer.name).split(' ')[0];
-    }
-    var el = document.querySelector('.header-link_text__logged');
-    if (el && el.textContent) return el.textContent.trim().split(' ')[0];
-    return '';
-  }
-
   function buildAccountNavHtml(activeTab) {
     var items = '';
 
