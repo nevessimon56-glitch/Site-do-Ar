@@ -1,4 +1,4 @@
-{% comment %} VERSAO: 2026-07-28-pedidos-cancelamento-sidenav-order-v1 {% endcomment %}
+{% comment %} VERSAO: 2026-07-28-pedidos-cancelamento-sidenav-order-v2 {% endcomment %}
 {% layout 'layout/theme' %}
 {% block content %}
 {% render 'sections/header', store: store, pages: pages, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
@@ -682,34 +682,20 @@
         }
 
         function cancelOrder(orderId) {
-            let orderCancelData = [];
-            if (this.state?.customerOrders?.result?.length > 0) {
-                orderCancelData = this.state.customerOrders.result.find((order) => ((Number(order.id) === Number(orderId)) && (order?.cancellationRequest?.length > 0)));
+            const order = this.state?.customerOrders?.result?.find((item) => Number(item.id) === Number(orderId));
+            const detail = {
+                orderId: orderId,
+                orderHash: order?.hash || null,
+                cancellationWasRequested: !!(order?.cancellationRequest?.length),
+                customerName: this.state.customer?.name || '',
+            };
+
+            if (order?.cancellationRequest?.length) {
+                detail.cancellationRequest = order.cancellationRequest;
             }
-            if (orderCancelData) {
-                openSideNavOverlay('.sidenav-order', false, {isViewCart: false});
-                window.dispatchEvent(
-                    new CustomEvent("cancel-order", {
-                        detail: {
-                            orderId: orderId,
-                            cancellationWasRequested: true,
-                            cancellationRequest: orderCancelData.cancellationRequest,
-                            customerName: this.state.customer?.name || 0,
-                        }
-                    })
-                )
-            } else {
-                openSideNavOverlay('.sidenav-order', false, {isViewCart: false});
-                window.dispatchEvent(
-                    new CustomEvent("cancel-order", {
-                        detail: {
-                            orderId: orderId,
-                            cancellationWasRequested: false,
-                            customerName: this.state.customer?.name || 0,
-                        }
-                    })
-                )
-            }
+
+            openSideNavOverlay('.sidenav-order', false, {isViewCart: false});
+            window.dispatchEvent(new CustomEvent('cancel-order', { detail: detail }));
         }
 
         function handleOrderSelected(orderOption) {
