@@ -1,4 +1,4 @@
-{% comment %} VERSAO: 2026-07-28-pedidos-cancelamento-sidenav-order-v2 {% endcomment %}
+{% comment %} VERSAO: 2026-07-28-pedidos-cancelamento-sidenav-order-v3 {% endcomment %}
 <div class="sidenav-overlay sidenav-order" x-data="setupSidenavOrder()" x-init="init()">
     <div class="sidenav-container">
         <div class="sidenav-header">
@@ -65,7 +65,6 @@
 <script>
     function setupSidenavOrder() {
         const customerOrders = {{ customerOrders | json }} || {};
-        let listenerBound = false;
 
         function getApiErrorMessage(error) {
             if (!error) {
@@ -78,16 +77,72 @@
 
             const data = error.data || error.response || error.body || error;
 
-            if (typeof data === 'string') {
+            if (typeof data === 'string' && data.trim()) {
                 return data;
             }
 
-            return data.message
-                || data.error
-                || data.errors?.message
-                || (Array.isArray(data.errors) ? data.errors[0] : null)
-                || error.message
-                || 'Não foi possível enviar a solicitação de cancelamento.';
+            if (data && typeof data === 'object') {
+                const message = data.message
+                    || data.error
+                    || data.info
+                    || data.errors?.message
+                    || (Array.isArray(data.errors) ? data.errors[0] : null);
+
+                if (message) {
+                    return message;
+                }
+
+                try {
+                    const serialized = JSON.stringify(data);
+                    if (serialized && serialized !== '{}') {
+                        return serialized;
+                    }
+                } catch (serializationError) {}
+            }
+
+            if (error.message && error.message !== 'Error' && error.message !== '') {
+                return error.message;
+            }
+
+            return 'Não foi possível enviar a solicitação de cancelamento.';
+        }
+
+        function bindCancelOrderListener(component) {
+            if (window.__sidenavOrderCancelBound) {
+                return;
+            }
+
+            window.__sidenavOrderCancelBound = true;
+
+            window.addEventListener('cancel-order', (event) => {
+                const detail = event.detail || {};
+
+                component.orderId = detail.orderId;
+                component.orderHash = detail.orderHash || null;
+                component.customerName = detail.customerName || '';
+                component.message = '';
+                component.errors = {};
+                component.sending = false;
+
+                if (!component.orderHash) {
+                    const order = customerOrders?.result?.find((item) => Number(item.id) === Number(detail.orderId));
+                    component.orderHash = order?.hash || null;
+                }
+
+                if (Array.isArray(detail.cancellationRequest) && detail.cancellationRequest.length) {
+                    component.messages = detail.cancellationRequest;
+                    return;
+                }
+
+                const order = customerOrders?.result?.find((item) => Number(item.id) === Number(detail.orderId));
+                if (Array.isArray(order?.cancellationRequest) && order.cancellationRequest.length) {
+                    component.messages = order.cancellationRequest;
+                    return;
+                }
+
+                component.messages = [];
+                component.loadCancellationMessages(detail.orderId);
+            });
         }
 
         return {
@@ -100,41 +155,7 @@
             sending: false,
 
             init() {
-                if (listenerBound) {
-                    return;
-                }
-
-                listenerBound = true;
-
-                window.addEventListener('cancel-order', (event) => {
-                    const detail = event.detail || {};
-
-                    this.orderId = detail.orderId;
-                    this.orderHash = detail.orderHash || null;
-                    this.customerName = detail.customerName || '';
-                    this.message = '';
-                    this.errors = {};
-                    this.sending = false;
-
-                    if (!this.orderHash) {
-                        const order = customerOrders?.result?.find((item) => Number(item.id) === Number(detail.orderId));
-                        this.orderHash = order?.hash || null;
-                    }
-
-                    if (Array.isArray(detail.cancellationRequest) && detail.cancellationRequest.length) {
-                        this.messages = detail.cancellationRequest;
-                        return;
-                    }
-
-                    const order = customerOrders?.result?.find((item) => Number(item.id) === Number(detail.orderId));
-                    if (Array.isArray(order?.cancellationRequest) && order.cancellationRequest.length) {
-                        this.messages = order.cancellationRequest;
-                        return;
-                    }
-
-                    this.messages = [];
-                    this.loadCancellationMessages(detail.orderId);
-                });
+                bindCancelOrderListener(this);
             },
 
             loadCancellationMessages(orderId) {
@@ -200,8 +221,10 @@
                 }
 
                 const payload = {
-                    orderId: this.orderId,
-                    message: message
+                    orderId: Number(this.orderId),
+                    message: message,
+                    reason: message,
+                    customerName: this.customerName || undefined
                 };
 
                 if (this.orderHash) {
@@ -210,6 +233,13 @@
 
                 StoreSDK.request.post('/ajax/customer/order/cancellation', payload)
                     .then((response) => {
+                        if (response && (response.success === false || response.error)) {
+                            return Promise.reject({
+                                data: response,
+                                message: response.message || response.error
+                            });
+                        }
+
                         const responseMessages = response?.result || response?.messages || response?.cancellationRequest;
 
                         if (Array.isArray(responseMessages)) {
@@ -241,6 +271,8 @@
                         }
                     })
                     .catch((error) => {
+                        console.error('[sidenav-order] Falha ao cancelar pedido', error);
+
                         if (typeof closeLoadingSideOverlay === 'function') {
                             closeLoadingSideOverlay('.sidenav-order');
                         }

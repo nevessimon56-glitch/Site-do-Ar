@@ -1,4 +1,4 @@
-{% comment %} VERSAO: 2026-07-28-pedidos-cancelamento-sidenav-order-v2 {% endcomment %}
+{% comment %} VERSAO: 2026-07-28-pedidos-cancelamento-sidenav-order-v3 {% endcomment %}
 {% layout 'layout/theme' %}
 {% block content %}
 {% render 'sections/header', store: store, pages: pages, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
@@ -115,7 +115,7 @@
                                                                 <template x-if="!order.isDraft">
                                                                     <li class="menu-item" x-show="(Number(order.paymentStatusId) !== 6) && (Number(order.paymentStatusId) !== 3) && (order?.status?.name !== 'Finalizado') && (order?.status?.name !== 'Cancelado')">
                                                                         <a href="javascript:void(0)"
-                                                                           @click="cancelOrder(order.id)" title="Solicitar Cancelamento">
+                                                                           @click="cancelOrder(order)" title="Solicitar Cancelamento">
                                                                             Cancelar Pedido
                                                                         </a>
                                                                     </li>
@@ -373,7 +373,7 @@
                                                 </template>
                                                 <li class="menu-item" x-show="(order?.status?.name !== 'Finalizado') && (order?.status?.name !== 'Cancelado')">
                                                     <a href="javascript:void(0)"
-                                                       @click="cancelOrder(order.id)" title="Solicitar Cancelamento">
+                                                       @click="cancelOrder(order)" title="Solicitar Cancelamento">
                                                         Cancelar Pedido
                                                     </a>
                                                 </li>
@@ -681,11 +681,14 @@
             window.location.href = `/pagina/fale-conosco?${serialize(message)}`;
         }
 
-        function cancelOrder(orderId) {
-            const order = this.state?.customerOrders?.result?.find((item) => Number(item.id) === Number(orderId));
+        function cancelOrder(order) {
+            if (!order) {
+                return;
+            }
+
             const detail = {
-                orderId: orderId,
-                orderHash: order?.hash || null,
+                orderId: order.id,
+                orderHash: order.hash || null,
                 cancellationWasRequested: !!(order?.cancellationRequest?.length),
                 customerName: this.state.customer?.name || '',
             };
