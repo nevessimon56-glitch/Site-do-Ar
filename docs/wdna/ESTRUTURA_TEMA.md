@@ -95,6 +95,7 @@ Atualizado conforme informado pelo dono da loja.
 | `showcases-model-3.liquid` |
 | `showcases-model-5.liquid` |
 | `showcases-model-9.liquid` |
+| `sidenav-order.liquid` |
 | `sidenav-forgot-password.liquid` |
 | `sidenav-overlay-account.liquid` |
 | `sidenav-overlay-cart-script.liquid` |

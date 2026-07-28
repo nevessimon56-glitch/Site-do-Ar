@@ -1,0 +1,236 @@
+{% comment %} VERSAO: 2026-07-28-pedidos-cancelamento-sidenav-order-v1 {% endcomment %}
+<div class="sidenav-overlay sidenav-order" x-data="setupSidenavOrder()" x-init="init()">
+    <div class="sidenav-container">
+        <div class="sidenav-header">
+            <a class="btn-sidenav-close float-right" href="javascript:void(0)" aria-label="Fechar" onclick="closeSideNavOverlay()">
+                <svg class="icon_close" x="0px" y="0px" viewBox="0 0 512.001 512.001">
+                    <path d="M284.286,256.002L506.143,34.144c7.811-7.811,7.811-20.475,0-28.285c-7.811-7.81-20.475-7.811-28.285,0L256,227.717L34.143,5.859c-7.811-7.811-20.475-7.811-28.285,0c-7.81,7.811-7.811,20.475,0,28.285l221.857,221.857L5.858,477.859c-7.811,7.811-7.811,20.475,0,28.285c3.905,3.905,9.024,5.857,14.143,5.857c5.119,0,10.237-1.952,14.143-5.857L256,284.287l221.857,221.857c3.905,3.905,9.024,5.857,14.143,5.857s10.237-1.952,14.143-5.857c7.811-7.811,7.811-20.475,0-28.285L284.286,256.002z"></path>
+                </svg>
+            </a>
+            <div class="sidenav-title"
+                 x-text="state.messages.length ? 'Acompanhar pedido' : 'Solicitar Cancelamento do Pedido'"></div>
+        </div>
+        <div class="sidenav-body">
+            <p class="s-subtitle" x-show="!state.messages.length">Informe o motivo do cancelamento</p>
+            <p class="order-cancel-id" x-show="state.orderId">
+                Pedido ID: <strong x-text="state.orderId"></strong>
+            </p>
+            <div class="panel" x-show="state.messages.length">
+                <template x-for="(message, messageIndex) in state.messages" :key="messageIndex">
+                    <div class="tile">
+                        <div class="tile-content">
+                            <div class="avatar">
+                                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+                                </svg>
+                            </div>
+                            <div class="tile-body">
+                                <div class="tile-title">
+                                    Respondido por:
+                                    <span x-text="message.respondedBy || message.userName || message.name || 'Você'"></span>
+                                </div>
+                                <div class="tile-subtitle">
+                                    Data da mensagem:
+                                    <span x-text="formatDateTime(message.createdAt || message.date)"></span>
+                                </div>
+                                <div class="tile-text" x-text="message.message || message.text || message.reason"></div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div class="form-group" :class="{ 'has-error': !!state.errors.message }">
+                <label class="form-label" for="order-cancel-reason">Digite o motivo *</label>
+                <textarea id="order-cancel-reason"
+                          class="form-input"
+                          rows="5"
+                          x-model="state.message"
+                          @keydown.enter.prevent="sendCancellation()"></textarea>
+                <p class="form-input-hint" x-text="state.errors.message"></p>
+            </div>
+        </div>
+        <div class="sidenav-footer">
+            <div class="form-group">
+                <button class="btn btn-login btn-block btn-order-cancel-send"
+                        type="button"
+                        @click.prevent="sendCancellation()"
+                        :disabled="state.sending"
+                        x-text="state.sending ? 'ENVIANDO...' : 'ENVIAR'"
+                        aria-label="Enviar"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setupSidenavOrder() {
+        const customerOrders = {{ customerOrders | json }} || {};
+
+        const state = {
+            orderId: null,
+            orderHash: null,
+            message: '',
+            messages: [],
+            errors: {},
+            customerName: '',
+            sending: false
+        };
+
+        function init() {
+            window.addEventListener('cancel-order', (event) => {
+                const detail = event.detail || {};
+
+                state.orderId = detail.orderId;
+                state.customerName = detail.customerName || '';
+                state.message = '';
+                state.errors = {};
+                state.sending = false;
+
+                const order = customerOrders?.result?.find((item) => Number(item.id) === Number(detail.orderId));
+                state.orderHash = order?.hash || null;
+
+                if (Array.isArray(detail.cancellationRequest) && detail.cancellationRequest.length) {
+                    state.messages = detail.cancellationRequest;
+                    return;
+                }
+
+                if (Array.isArray(order?.cancellationRequest) && order.cancellationRequest.length) {
+                    state.messages = order.cancellationRequest;
+                    return;
+                }
+
+                state.messages = [];
+                loadCancellationMessages(detail.orderId);
+            });
+        }
+
+        function loadCancellationMessages(orderId) {
+            if (!orderId) {
+                return;
+            }
+
+            StoreSDK.request.get(`/ajax/customer/order/cancellation/${orderId}`)
+                .then((response) => {
+                    const messages = response?.result || response?.messages || response?.cancellationRequest;
+                    if (Array.isArray(messages) && messages.length) {
+                        state.messages = messages;
+                    }
+                })
+                .catch(() => {});
+        }
+
+        function formatDateTime(dateValue) {
+            if (!dateValue) {
+                return '';
+            }
+
+            const date = new Date(dateValue);
+            if (Number.isNaN(date.getTime())) {
+                return dateValue;
+            }
+
+            return date.toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }).replace(',', ' -');
+        }
+
+        function validate() {
+            const errors = {};
+
+            if (!state.message || !state.message.trim()) {
+                errors.message = 'Por favor, informe o motivo do cancelamento';
+            }
+
+            state.errors = errors;
+            return Object.keys(errors).length === 0;
+        }
+
+        function sendCancellation() {
+            if (!state.orderId || !validate() || state.sending) {
+                return;
+            }
+
+            state.sending = true;
+
+            if (typeof openLoadingSideOverlay === 'function') {
+                openLoadingSideOverlay('.sidenav-order');
+            }
+
+            const payload = {
+                orderId: state.orderId,
+                id: state.orderId,
+                message: state.message.trim(),
+                reason: state.message.trim()
+            };
+
+            if (state.orderHash) {
+                payload.hash = state.orderHash;
+            }
+
+            StoreSDK.request.post('/ajax/customer/order/cancellation', payload)
+                .then((response) => {
+                    const messages = response?.result || response?.messages || response?.cancellationRequest;
+
+                    if (Array.isArray(messages)) {
+                        state.messages = messages;
+                    } else {
+                        state.messages = state.messages.concat([{
+                            message: state.message.trim(),
+                            createdAt: new Date().toISOString(),
+                            respondedBy: state.customerName || 'Você'
+                        }]);
+                    }
+
+                    const order = customerOrders?.result?.find((item) => Number(item.id) === Number(state.orderId));
+                    if (order) {
+                        order.cancellationRequest = state.messages;
+                    }
+
+                    state.message = '';
+                    state.errors = {};
+
+                    if (typeof closeLoadingSideOverlay === 'function') {
+                        closeLoadingSideOverlay('.sidenav-order');
+                    }
+
+                    state.sending = false;
+
+                    if (typeof notyf !== 'undefined') {
+                        notyf.success('Solicitação enviada com sucesso. Agora é só acompanhar o pedido. O pedido será cancelado após a aprovação da loja.');
+                    }
+                })
+                .catch((error) => {
+                    if (typeof closeLoadingSideOverlay === 'function') {
+                        closeLoadingSideOverlay('.sidenav-order');
+                    }
+
+                    state.sending = false;
+
+                    const apiMessage = error?.data?.message || error?.data?.error || error?.message
+                        || 'Não foi possível enviar a solicitação de cancelamento.';
+
+                    state.errors = { message: apiMessage };
+
+                    if (typeof notyf !== 'undefined') {
+                        notyf.open({
+                            type: 'warning',
+                            message: apiMessage
+                        });
+                    }
+                });
+        }
+
+        return {
+            state,
+            init,
+            validate,
+            sendCancellation,
+            formatDateTime
+        };
+    }
+</script>

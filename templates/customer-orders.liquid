@@ -1,8 +1,8 @@
-{% comment %} VERSAO: 2026-07-27-pedidos-cancelamento-drawer-v8 {% endcomment %}
+{% comment %} VERSAO: 2026-07-28-pedidos-cancelamento-sidenav-order-v1 {% endcomment %}
 {% layout 'layout/theme' %}
 {% block content %}
 {% render 'sections/header', store: store, pages: pages, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
-<main class="orders-main" x-data="setupOrders()">
+<main class="orders-main" x-data="setupOrders()" x-init="init()">
     <div class="orders-content content">
         <div class="orders-container container">
             <div class="columns">
@@ -37,7 +37,10 @@
                                             <span class="label">Valor Total</span>
                                         </div>
                                         <div class="page-table-item">
-                                            <span class="label">Forma de pagamento</span>
+                                            <div class="label">
+                                                <p>Forma de pagamento</p>
+                                                <p>Situação pagamento</p>
+                                            </div>
                                         </div>
                                         <div class="page-table-item">
                                             <span class="label">Situação</span>
@@ -61,11 +64,21 @@
                                                     <div class="page-table-item">
                                                         <div x-text="formatTotal(order.total)"></div>
                                                     </div>
-                                                    <div class="page-table-item">
-                                                        <div x-text="order.payments[0].paymentName"></div>
+                                                    <div class="page-table-item page-table-item_payment">
+                                                        <template x-if="order?.payments?.length > 0">
+                                                            <div x-text="order.payments[0].paymentName"></div>
+                                                            <template x-if="order.paymentStatus">
+                                                                <div x-text="order.paymentStatus" class="statusPayment" :class="{ 'colorStatusPaymentRepayment': order.paymentStatusId === 3 || order.paymentStatusId === 6 }"></div>
+                                                            </template>
+                                                        </template>
                                                     </div>
                                                     <div class="page-table-item">
-                                                        <div x-text="order.status.name"></div>
+                                                        <template x-if="order.isDraft">
+                                                            <div>Orçamento</div>
+                                                        </template>
+                                                        <template x-if="!order.isDraft && order.status">
+                                                            <div x-text="order.status.name"></div>
+                                                        </template>
                                                     </div>
                                                     <div class="page-table-item">
                                                         <div class="dropdown">
@@ -73,10 +86,17 @@
                                                                 Selecione ação
                                                             </a>
                                                             <ul class="menu">
-                                                                <li x-show="order.payments[0].paymentLink" class="menu-item">
-                                                                    <a :href="order.payments[0].paymentLink"
-                                                                       target="_blank" title="Pagamento">
-                                                                        Pagamento
+                                                                <template x-if="order?.payments?.length > 0">
+                                                                    <li x-show="order.payments[0].paymentLink" class="menu-item">
+                                                                        <a :href="order.payments[0].paymentLink"
+                                                                           target="_blank" title="Pagamento">
+                                                                            Pagamento
+                                                                        </a>
+                                                                    </li>
+                                                                </template>
+                                                                <li class="menu-item">
+                                                                    <a x-bind:href="`checkout/order/review/${order.hash}`" title="Avaliação do Pedido">
+                                                                        Avaliação do Pedido
                                                                     </a>
                                                                 </li>
                                                                 <li class="menu-item">
@@ -84,23 +104,22 @@
                                                                         Visualizar Pedido
                                                                     </a>
                                                                 </li>
-                                                                <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
-                                                                    <a href="javascript:void(0)"
-                                                                       class="menu-item_link"
-                                                                       :class="{ 'menu-item-link_disabled': !canCancelOrder(order) }"
-                                                                       :aria-disabled="!canCancelOrder(order) ? 'true' : 'false'"
-                                                                       @click.prevent="canCancelOrder(order) && checkCancel(order)"
-                                                                       title="Solicitar Cancelamento">
-                                                                        <span class="menu-item-link_text">Cancelar Pedido</span>
-                                                                        <div class="menu-item-disabled_icon" x-show="!canCancelOrder(order)">{{ themeConfig.icons.close }}</div>
-                                                                    </a>
-                                                                </li>
-                                                                <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
-                                                                    <a href="javascript:void(0)"
-                                                                       @click="checkWarranty(order)" title="Solicitar Garantia">
-                                                                        Solicitar Garantia
-                                                                    </a>
-                                                                </li>
+                                                                <template x-if="order.status">
+                                                                    <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
+                                                                        <a href="javascript:void(0)"
+                                                                           @click="checkWarranty(order)" title="Solicitar Garantia">
+                                                                            Solicitar Garantia
+                                                                        </a>
+                                                                    </li>
+                                                                </template>
+                                                                <template x-if="!order.isDraft">
+                                                                    <li class="menu-item" x-show="(Number(order.paymentStatusId) !== 6) && (Number(order.paymentStatusId) !== 3) && (order?.status?.name !== 'Finalizado') && (order?.status?.name !== 'Cancelado')">
+                                                                        <a href="javascript:void(0)"
+                                                                           @click="cancelOrder(order.id)" title="Solicitar Cancelamento">
+                                                                            Cancelar Pedido
+                                                                        </a>
+                                                                    </li>
+                                                                </template>
                                                             </ul>
                                                         </div>
                                                         <a class="btn-page-open" @click="order.isOpen = !order.isOpen"
@@ -147,7 +166,7 @@
                                                                     <div x-text="`${product.quantity} un`"></div>
                                                                 </div>
                                                                 <div class="table-product-price">
-                                                                    <div x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format( product.price * product.quantity)"></div>
+                                                                    <div x-text="StoreSDK.utils.toCurrency( product.price * product.quantity)"></div>
                                                                 </div>
                                                             </div>
                                                         </template>
@@ -166,7 +185,7 @@
                                                                         <div class="columns">
                                                                             <div class="column col-3">
                                                                                 <p x-text="orderShipping.shippingName"></p>
-                                                                                <p x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format(orderShipping.value)"></p>
+                                                                                <p x-text="StoreSDK.utils.toCurrency(orderShipping.value)"></p>
                                                                             </div>
                                                                             <div class="column col-5">
                                                                                 <template x-if="orderShipping.invoiceUrl || orderShipping.invoiceDanfeUrl">
@@ -289,27 +308,54 @@
                             </summary>
                             <div class="accordion-body">
                                 <ul class="accordion-list accordion-body-list">
+                                    <template x-if="order?.payments?.length > 0">
+                                        <li class="accordion-item accordion-body-item">
+                                            <div class="accordion-item-box">
+                                                <p class="accordion-title">Pagamento</p>
+                                                <p class="accordion-text" x-text="order.payments[0].paymentName"></p>
+                                            </div>
+                                        </li>
+                                    </template>
+                                    <template x-if="order.paymentStatus && order?.payments?.length > 0">
+                                        <li class="accordion-item accordion-body-item">
+                                            <div class="accordion-item-box">
+                                                <p class="accordion-title">Situação do pagamento</p>
+                                                <p class="accordion-text" x-text="order.paymentStatus" :class="{ 'colorStatusPaymentRepayment': order.paymentStatusId === 3 || order.paymentStatusId === 6 }"></p>
+                                            </div>
+                                        </li>
+                                    </template>
                                     <li class="accordion-item accordion-body-item">
-                                        <div class="accordion-item-box">
-                                            <p class="accordion-title">Pagamento</p>
-                                            <p class="accordion-text" x-text="order.payments[0].paymentName"></p>
-                                        </div>
+                                        <template x-if="order.status">
+                                            <div class="accordion-item-box">
+                                                <p class="accordion-title">Situação</p>
+                                                <p class="accordion-text" x-text="order.status.name"></p>
+                                            </div>
+                                        </template>
                                     </li>
-                                    <li class="accordion-item accordion-body-item">
-                                        <div class="accordion-item-box">
-                                            <p class="accordion-title">Situação</p>
-                                            <p class="accordion-text" x-text="order.status.name"></p>
-                                        </div>
-                                    </li>
+                                    <template x-if="order.isDraft">
+                                        <li class="accordion-item accordion-body-item">
+                                            <div class="accordion-item-box">
+                                                <p class="accordion-title">Situação</p>
+                                                <p class="accordion-text">Orçamento</p>
+                                            </div>
+                                        </li>
+                                    </template>
                                     <li class="accordion-item accordion-body-item">
                                         <div class="dropdown">
                                             <a href="javascript:void(0)" class="btn dropdown-toggle">
                                                 Selecione ação
                                             </a>
                                             <ul class="menu">
-                                                <li x-show="order.payments[0].paymentLink" class="menu-item">
-                                                    <a :href="order.payments[0].paymentLink" target="_blank" title="Pagamento">
-                                                        Pagamento
+                                                <template x-if="order?.payments?.length > 0">
+                                                    <li x-show="order.payments[0].paymentLink" class="menu-item">
+                                                        <a :href="order.payments[0].paymentLink" target="_blank" title="Pagamento">
+                                                            Pagamento
+                                                        </a>
+                                                    </li>
+                                                </template>
+                                                <li class="menu-item">
+                                                    <a x-bind:href="`checkout/order/review/${order.hash}`" title="Avaliação do Pedido">
+                                                        Avaliação do Pedido
                                                     </a>
                                                 </li>
                                                 <li class="menu-item">
@@ -317,21 +363,18 @@
                                                         Visualizar Pedido
                                                     </a>
                                                 </li>
-                                                <li class="menu-item" x-show="order.status.name !== 'Cancelado'">
+                                                <template x-if="order.status">
+                                                    <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
+                                                        <a href="javascript:void(0)"
+                                                           @click="checkWarranty(order)" title="Solicitar Garantia">
+                                                            Solicitar Garantia
+                                                        </a>
+                                                    </li>
+                                                </template>
+                                                <li class="menu-item" x-show="(order?.status?.name !== 'Finalizado') && (order?.status?.name !== 'Cancelado')">
                                                     <a href="javascript:void(0)"
-                                                       class="menu-item_link"
-                                                       :class="{ 'menu-item-link_disabled': !canCancelOrder(order) }"
-                                                       :aria-disabled="!canCancelOrder(order) ? 'true' : 'false'"
-                                                       @click.prevent="canCancelOrder(order) && checkCancel(order)"
-                                                       title="Solicitar Cancelamento">
-                                                        <span class="menu-item-link_text">Cancelar Pedido</span>
-                                                        <div class="menu-item-disabled_icon" x-show="!canCancelOrder(order)">{{ themeConfig.icons.close }}</div>
-                                                    </a>
-                                                </li>
-                                                <li class="menu-item" x-show="(order.status.name !== 'Pendente') && (order.status.name !== 'Cancelado')">
-                                                    <a href="javascript:void(0)"
-                                                       @click="checkWarranty(order)" title="Solicitar Garantia">
-                                                        Solicitar Garantia
+                                                       @click="cancelOrder(order.id)" title="Solicitar Cancelamento">
+                                                        Cancelar Pedido
                                                     </a>
                                                 </li>
                                             </ul>
@@ -357,7 +400,7 @@
                                                             <p class="accordion-title">
                                                                 Custo do frete
                                                             </p>
-                                                            <p class="accordion-text" x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format(orderShipping.value)"></p>
+                                                            <p class="accordion-text" x-text="StoreSDK.utils.toCurrency(orderShipping.value)"></p>
                                                         </div>
                                                         <div class="column col-4 col-md-6 col-sm-12">
                                                             <template x-if="orderShipping?.trackingCode && orderShipping?.trackingUrl">
@@ -453,7 +496,7 @@
                                                 <div class="table-product-text" x-text="`${product.quantity} un`"></div>
                                             </div>
                                             <div class="table-product-price">
-                                                <div x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format( product.price * product.quantity)"></div>
+                                                <div x-text="StoreSDK.utils.toCurrency( product.price * product.quantity)"></div>
                                             </div>
                                         </div>
                                     </template>
@@ -493,88 +536,98 @@
             </div>
         </div>
     </div>
-
-    <div class="sidenav-overlay sidenav-order">
-        <div class="sidenav-container">
-            <div class="sidenav-header">
-                <a class="btn-sidenav-close float-right" href="javascript:void(0)" aria-label="Fechar" onclick="closeSideNavOverlay()">
-                    <svg class="icon_close" x="0px" y="0px" viewBox="0 0 512.001 512.001">
-                        <path d="M284.286,256.002L506.143,34.144c7.811-7.811,7.811-20.475,0-28.285c-7.811-7.81-20.475-7.811-28.285,0L256,227.717L34.143,5.859c-7.811-7.811-20.475-7.811-28.285,0c-7.81,7.811-7.811,20.475,0,28.285l221.857,221.857L5.858,477.859c-7.811,7.811-7.811,20.475,0,28.285c3.905,3.905,9.024,5.857,14.143,5.857c5.119,0,10.237-1.952,14.143-5.857L256,284.287l221.857,221.857c3.905,3.905,9.024,5.857,14.143,5.857s10.237-1.952,14.143-5.857c7.811-7.811,7.811-20.475,0-28.285L284.286,256.002z"></path>
-                    </svg>
-                </a>
-                <div class="sidenav-title"
-                     x-text="state.cancelOrder.messages.length ? 'Acompanhar pedido' : 'Solicitar Cancelamento do Pedido'"></div>
-            </div>
-            <div class="sidenav-body">
-                <p class="s-subtitle" x-show="!state.cancelOrder.messages.length">Informe o motivo do cancelamento</p>
-                <p class="order-cancel-id" x-show="state.cancelOrder.order">
-                    Pedido ID: <strong x-text="state.cancelOrder.order.id"></strong>
-                </p>
-                <div class="panel" x-show="state.cancelOrder.messages.length">
-                    <template x-for="(message, messageIndex) in state.cancelOrder.messages" :key="messageIndex">
-                        <div class="tile">
-                            <div class="tile-content">
-                                <div class="avatar">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
-                                    </svg>
-                                </div>
-                                <div class="tile-body">
-                                    <div class="tile-title">
-                                        Respondido por:
-                                        <span x-text="message.respondedBy || message.userName || message.name || 'Você'"></span>
-                                    </div>
-                                    <div class="tile-subtitle">
-                                        Data da mensagem:
-                                        <span x-text="formatDateTime(message.createdAt || message.date)"></span>
-                                    </div>
-                                    <div class="tile-text" x-text="message.message || message.text || message.reason"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-                <div class="form-group" :class="{ 'has-error': !!state.cancelOrder.errors.message }">
-                    <label class="form-label" for="order-cancel-reason">Digite o motivo *</label>
-                    <textarea id="order-cancel-reason"
-                              class="form-input"
-                              rows="5"
-                              x-model="state.cancelOrder.message"
-                              @keydown.enter.prevent="sendCancellation()"></textarea>
-                    <p class="form-input-hint" x-text="state.cancelOrder.errors.message"></p>
-                </div>
-            </div>
-            <div class="sidenav-footer">
-                <p class="order-cancel-status" x-show="state.cancelOrder.statusMessage" x-text="state.cancelOrder.statusMessage"></p>
-                <div class="form-group">
-                    <button id="order-cancel-send-btn"
-                            class="btn btn-login btn-block btn-order-cancel-send"
-                            type="button"
-                            @click.prevent="sendCancellation()"
-                            onclick="return window.sendOrderCancellation(event)"
-                            :disabled="state.cancelOrder.sending"
-                            x-text="state.cancelOrder.sending ? 'ENVIANDO...' : 'ENVIAR'"
-                            aria-label="Enviar">ENVIAR</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </main>
 
 <script>
     function setupOrders() {
         const state = {
             customer: {{ customer | json }} || {},
-            customerOrders: {{ customerOrders | json }} || {},
-            cancelOrder: {
-                order: null,
-                message: '',
-                messages: [],
-                errors: {},
-                sending: false,
-                statusMessage: ''
-            }
+            customerOrders: {{ customerOrders | json }} || {}
         };
+
+        function init() {
+            if (this.state?.customerOrders?.result.length > 0) {
+                this.state.customerOrders.result = this.state.customerOrders.result.map((order) => {
+                    const orderProducts = order.products.map((product) => {
+                        const reviewProduct = (order.reviews || []).find((review) => (Number(review.productId) === Number(product.productId)));
+                        if (reviewProduct) {
+                            return {
+                                ...product,
+                                review: reviewProduct
+                            }
+                        }
+                        return {
+                            ...product
+                        }
+                    });
+
+                    return {
+                        ...order,
+                        paymentStatus: this.getPaymentStatusName(order),
+                        products: orderProducts
+                    };
+                });
+            }
+        }
+
+        function getPaymentStatusName(order) {
+            let paymentStatus = '';
+            if ((order.paymentStatusId === 1 || !order.paymentStatusId) && !getStatus(6, order)) {
+                paymentStatus = 'Aguardando Pagamento';
+            }
+            if (order.paymentStatusId === 2 && !getStatus(6)) {
+                paymentStatus = 'Pagamento Confirmado';
+            }
+            if (order.paymentStatusId === 3) {
+                paymentStatus = 'Pagamento Reembolsado';
+            }
+            if (order.paymentStatusId === 4 && !getStatus(6)) {
+                paymentStatus = 'Pagamento em Análise';
+            }
+            if (order.paymentStatusId === 6) {
+                paymentStatus = 'Pagamento Reembolsado Parcialmente';
+            }
+            return paymentStatus;
+        }
+
+        function getStatus(statusId = null, order) {
+            if (!statusId) {
+                if (order.paymentStatusId === 2) {
+                    return false;
+                }
+
+                const lastHistory = order.statusHistory[order.statusHistory.length - 1];
+                if (lastHistory?.statusId > 1) {
+                    return false;
+                }
+                return true;
+            }
+
+            if (!order?.statusHistory) {
+                return null;
+            }
+
+            if (statusId === 1) return order.statusHistory[0];
+
+            const lastHistory = order.statusHistory[order.statusHistory.length - 1];
+            if (lastHistory?.statusId < statusId) {
+                return null;
+            }
+
+            const history = order?.statusHistory?.findLast((status) => statusId === status?.statusId);
+            if (!history) {
+                const nextHistory = order.statusHistory.reduce((last, item) => {
+                    if (!last && item?.statusId >= statusId) {
+                        last = item;
+                    }
+
+                    return last;
+                }, null);
+
+                return nextHistory;
+            }
+            return history;
+        }
 
         function previousPage() {
             if (this.state.customerOrders.pagination.current - 1 <= 0) {
@@ -615,225 +668,6 @@
             }
             return str.join("&");
         }
-        function formatDateTime(dateValue) {
-            if (!dateValue) {
-                return '';
-            }
-
-            const date = new Date(dateValue);
-            if (Number.isNaN(date.getTime())) {
-                return dateValue;
-            }
-
-            return date.toLocaleString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            }).replace(',', ' -');
-        }
-
-        const cancelBlockedStatuses = [
-            'em transporte',
-            'em transito',
-            'em trânsito',
-            'enviado',
-            'despachado',
-            'expedido',
-            'em expedição',
-            'em expedicao',
-            'saiu para entrega',
-            'entregue',
-            'finalizado',
-            'concluído',
-            'concluido'
-        ];
-
-        function normalizeStatusName(statusName) {
-            return (statusName || '')
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .trim();
-        }
-
-        function isOrderInTransit(order) {
-            const statusName = normalizeStatusName(order?.status?.name);
-
-            if (cancelBlockedStatuses.some((blockedStatus) => statusName.includes(blockedStatus))) {
-                return true;
-            }
-
-            if (order?.shippings?.some((shipping) => !!shipping?.trackingCode)) {
-                return true;
-            }
-
-            return false;
-        }
-
-        function canCancelOrder(order) {
-            if (!order) {
-                return false;
-            }
-
-            if (order.canCancel === false) {
-                return false;
-            }
-
-            if (normalizeStatusName(order?.status?.name) === 'cancelado') {
-                return false;
-            }
-
-            return !isOrderInTransit(order);
-        }
-
-        function setCancellationMessages(messages) {
-            state.cancelOrder.messages = Array.isArray(messages) ? messages : [];
-        }
-
-        function loadCancellationMessages(order) {
-            if (order.cancellationRequest && order.cancellationRequest.length) {
-                setCancellationMessages(order.cancellationRequest);
-            }
-
-            StoreSDK.request.get(`/ajax/customer/order/cancellation/${order.id}`)
-                .then((response) => {
-                    const messages = response?.result || response?.messages || response?.cancellationRequest || response;
-                    if (Array.isArray(messages)) {
-                        setCancellationMessages(messages);
-                    }
-                })
-                .catch(() => {});
-        }
-
-        function checkCancel(order) {
-            if (!canCancelOrder(order)) {
-                return;
-            }
-
-            state.cancelOrder.order = order;
-            state.cancelOrder.message = '';
-            state.cancelOrder.errors = {};
-            setCancellationMessages(order.cancellationRequest || []);
-            loadCancellationMessages(order);
-            openSideNavOverlay('.sidenav-order', false);
-        }
-
-        function validateCancellation() {
-            const errors = {};
-
-            if (!state.cancelOrder.message || !state.cancelOrder.message.trim()) {
-                errors.message = 'Por favor, informe o motivo do cancelamento';
-            }
-
-            state.cancelOrder.errors = errors;
-            return Object.keys(errors).length === 0;
-        }
-
-        function showCancellationError(message) {
-            state.cancelOrder.statusMessage = message;
-            state.cancelOrder.errors = { message: message };
-            if (typeof notyf !== 'undefined') {
-                notyf.open({
-                    type: 'warning',
-                    message: message
-                });
-            }
-        }
-
-        function setCancellationLoading(loading) {
-            if (typeof openLoadingSideOverlay === 'function' && typeof closeLoadingSideOverlay === 'function') {
-                if (loading) {
-                    openLoadingSideOverlay('.sidenav-order');
-                } else {
-                    closeLoadingSideOverlay('.sidenav-order');
-                }
-            }
-        }
-
-        function finishCancellationRequest() {
-            state.cancelOrder.sending = false;
-            setCancellationLoading(false);
-        }
-
-        function postCancellation(order, message) {
-            const payload = {
-                orderId: order.id,
-                id: order.id,
-                message: message,
-                reason: message,
-                hash: order.hash
-            };
-
-            if (typeof StoreSDK === 'undefined' || !StoreSDK.request || typeof StoreSDK.request.post !== 'function') {
-                return Promise.reject(new Error('StoreSDK indisponível. Recarregue a página e tente novamente.'));
-            }
-
-            return StoreSDK.request.post('/ajax/customer/order/cancellation', payload);
-        }
-
-        function sendCancellation() {
-            try {
-                const order = state.cancelOrder.order;
-                if (!order) {
-                    showCancellationError('Pedido não encontrado. Feche e abra novamente.');
-                    return false;
-                }
-
-                if (!validateCancellation()) {
-                    return false;
-                }
-
-                if (state.cancelOrder.sending) {
-                    return false;
-                }
-
-                const message = state.cancelOrder.message.trim();
-                state.cancelOrder.errors = {};
-                state.cancelOrder.statusMessage = '';
-                state.cancelOrder.sending = true;
-                setCancellationLoading(true);
-
-                postCancellation(order, message).then(function (response) {
-                    const messages = response && (response.result || response.messages || response.cancellationRequest);
-                    if (Array.isArray(messages)) {
-                        setCancellationMessages(messages);
-                    } else {
-                        state.cancelOrder.messages = state.cancelOrder.messages.concat([{
-                            message: message,
-                            createdAt: new Date().toISOString(),
-                            respondedBy: (state.customer && state.customer.name) || 'Você'
-                        }]);
-                    }
-
-                    order.cancellationRequest = state.cancelOrder.messages;
-                    state.cancelOrder.message = '';
-                    state.cancelOrder.errors = {};
-                    state.cancelOrder.statusMessage = '';
-                    finishCancellationRequest();
-
-                    if (typeof notyf !== 'undefined') {
-                        notyf.success('Solicitação enviada com sucesso. Agora é só acompanhar o pedido. O pedido será cancelado após a aprovação da loja.');
-                    }
-                }).catch(function (error) {
-                    finishCancellationRequest();
-                    const apiMessage = error && (
-                        (error.data && (error.data.message || error.data.error)) ||
-                        error.message
-                    );
-                    showCancellationError(apiMessage || 'Não foi possível enviar a solicitação de cancelamento.');
-                });
-
-                return true;
-            } catch (error) {
-                finishCancellationRequest();
-                showCancellationError((error && error.message) || 'Erro inesperado ao enviar a solicitação.');
-                return false;
-            }
-        }
-
         function checkWarranty(order) {
             let listProducts = '';
             order.products.forEach((option) => {
@@ -845,6 +679,37 @@
                 subject: `Solicitar garantia pedido ${order.id}`,
             }
             window.location.href = `/pagina/fale-conosco?${serialize(message)}`;
+        }
+
+        function cancelOrder(orderId) {
+            let orderCancelData = [];
+            if (this.state?.customerOrders?.result?.length > 0) {
+                orderCancelData = this.state.customerOrders.result.find((order) => ((Number(order.id) === Number(orderId)) && (order?.cancellationRequest?.length > 0)));
+            }
+            if (orderCancelData) {
+                openSideNavOverlay('.sidenav-order', false, {isViewCart: false});
+                window.dispatchEvent(
+                    new CustomEvent("cancel-order", {
+                        detail: {
+                            orderId: orderId,
+                            cancellationWasRequested: true,
+                            cancellationRequest: orderCancelData.cancellationRequest,
+                            customerName: this.state.customer?.name || 0,
+                        }
+                    })
+                )
+            } else {
+                openSideNavOverlay('.sidenav-order', false, {isViewCart: false});
+                window.dispatchEvent(
+                    new CustomEvent("cancel-order", {
+                        detail: {
+                            orderId: orderId,
+                            cancellationWasRequested: false,
+                            customerName: this.state.customer?.name || 0,
+                        }
+                    })
+                )
+            }
         }
 
         function handleOrderSelected(orderOption) {
@@ -861,163 +726,24 @@
 
         return {
             state,
+            init,
             formatDate,
-            formatDateTime,
             formatTotal,
             nextPage,
             previousPage,
             renderOrder,
             checkWarranty,
-            checkCancel,
-            canCancelOrder,
-            sendCancellation,
-            validateCancellation,
-        };
+            cancelOrder,
+            getPaymentStatusName,
+            getStatus,
+        }
     }
-
-    window.sendOrderCancellation = function sendOrderCancellationFromWindow(event) {
-        if (event && typeof event.preventDefault === 'function') {
-            event.preventDefault();
-        }
-
-        const main = document.querySelector('.orders-main');
-        if (!main || typeof main._x_dataStack === 'undefined' || !main._x_dataStack.length) {
-            return false;
-        }
-
-        const component = main._x_dataStack[0];
-        if (component && typeof component.sendCancellation === 'function') {
-            return component.sendCancellation();
-        }
-
-        return false;
-    };
 </script>
 <style>
     tr {
         cursor: pointer;
     }
-
-    .sidenav-overlay.sidenav-order .sidenav-body {
-        padding-top: 30px;
-    }
-
-    .sidenav-overlay.sidenav-order .sidenav-body .s-subtitle {
-        font-size: 22px;
-        line-height: 26px;
-        margin-bottom: 22px;
-    }
-
-    .sidenav-overlay.sidenav-order .order-cancel-id {
-        margin-bottom: 20px;
-    }
-
-    .sidenav-overlay .panel {
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-    .sidenav-overlay .panel .tile {
-        border-bottom: 1px solid #dfe4ea;
-        padding: 12px 0;
-    }
-
-    .sidenav-overlay .panel .tile:last-child {
-        border-bottom: none;
-    }
-
-    .sidenav-overlay .panel .tile-content {
-        display: flex;
-        gap: 12px;
-    }
-
-    .sidenav-overlay .panel .avatar {
-        align-items: center;
-        background: #c8c8c8;
-        border-radius: 50%;
-        color: #fff;
-        display: inline-flex;
-        flex-shrink: 0;
-        height: 28px;
-        justify-content: center;
-        width: 28px;
-    }
-
-    .sidenav-overlay .panel .tile-title {
-        font-weight: 600;
-    }
-
-    .sidenav-overlay .panel .tile-subtitle {
-        font-size: 14px;
-        line-height: 20px;
-        margin-bottom: 6px;
-    }
-
-    .sidenav-overlay .panel .tile-text {
-        font-size: 14px;
-        line-height: 20px;
-        white-space: pre-wrap;
-    }
-
-    .sidenav-overlay .sidenav-container textarea.form-input {
-        min-height: 120px;
-        padding-bottom: 16px;
-        padding-top: 16px;
-        resize: vertical;
-    }
-
-    .sidenav-overlay.sidenav-order .order-cancel-status {
-        color: #c62828;
-        font-size: 14px;
-        line-height: 20px;
-        margin-bottom: 12px;
-    }
-
-    .sidenav-overlay.sidenav-order .sidenav-footer .btn-order-cancel-send {
-        color: #fff !important;
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        line-height: 1.2;
-        min-height: 48px;
-        text-transform: uppercase;
-    }
-
-    .sidenav-overlay.sidenav-order .sidenav-footer .btn[disabled] {
-        opacity: 0.7;
-        pointer-events: none;
-    }
-
-    @media (max-width: 575px) {
-        .sidenav-overlay.sidenav-order .sidenav-body .s-subtitle {
-            font-size: 16px;
-            line-height: 18px;
-            margin-bottom: 20px;
-        }
-    }
 </style>
-<script>
-    (function cleanupLegacyCancelLinks() {
-        if (!/\/pedidos(?:\/\d+)?\/?$/i.test(window.location.pathname)) {
-            return;
-        }
-
-        function run() {
-            document.querySelectorAll('.orders-main a[href*="/pedidos/cancelamento"]').forEach(function (link) {
-                var item = link.closest('.menu-item');
-                if (item) {
-                    item.parentNode.removeChild(item);
-                }
-            });
-        }
-
-        run();
-        document.addEventListener('DOMContentLoaded', run);
-
-        if (typeof MutationObserver !== 'undefined') {
-            new MutationObserver(run).observe(document.documentElement, { childList: true, subtree: true });
-        }
-    })();
-</script>
+{% render 'sections/sidenav-order', customer: customer, customerOrders: customerOrders, themeConfig: themeConfig %}
 {% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig, theme: theme %}
 {% endblock %}
