@@ -1961,7 +1961,122 @@
   }
 }
 
-/* ========== Navegação da conta — hub + dock (ACCOUNT-NAV-v1) ========== */
+/* ========== Navegação da conta — hub + dock (ACCOUNT-NAV-v2) ========== */
+
+.account-quick-strip {
+  background: linear-gradient(180deg, #eef7fd 0%, #f8fbfe 100%);
+  border-bottom: 1px solid #cfe3f2;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+}
+
+.account-quick-strip__inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.account-quick-strip__inner::-webkit-scrollbar {
+  display: none;
+}
+
+.account-quick-strip__kicker {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 800;
+  color: #1a6eb5;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.account-quick-strip__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #cfe3f2;
+  color: #2c4f6b !important;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none !important;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.account-quick-strip__link:hover {
+  border-color: #9fc8e8;
+  color: #1a6eb5 !important;
+}
+
+.account-quick-strip__link.is-active {
+  background: linear-gradient(135deg, #1a6eb5, #2c8fd6);
+  border-color: transparent;
+  color: #fff !important;
+  box-shadow: 0 3px 10px rgba(26, 110, 181, 0.24);
+}
+
+.customer-account-hub--injected {
+  margin-bottom: 16px;
+}
+
+.header-link-account_info,
+.header-box-account-info {
+  position: relative;
+}
+
+.header-account-hint {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.header-account-hint a {
+  color: #1a6eb5 !important;
+  text-decoration: none !important;
+}
+
+.header-account-hint a:hover {
+  text-decoration: underline !important;
+}
+
+.header-account-hint span {
+  color: #9bb5c9;
+}
+
+@media (min-width: 992px) {
+  .header-account-hint {
+    font-size: 12px;
+  }
+
+  .account-quick-strip__inner {
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 991px) {
+  .header-box-account-info .header-account-hint {
+    display: none;
+  }
+}
+
+.mobile-account-dock {
+  display: none;
+}
 
 .customer-account-nav__intro {
   margin-bottom: 12px;

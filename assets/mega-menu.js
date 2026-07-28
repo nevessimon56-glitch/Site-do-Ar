@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-28-js-account-nav-v1
+ * VERSAO: 2026-07-28-js-account-nav-v2
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1116,6 +1116,147 @@
   var ICON_ORDERS =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10l1 2h4v2H3V6h4l1-2zm-1 6h12v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V10zm3 2v8h2v-8h-2zm4 0v8h2v-8h-2z" fill="currentColor"/></svg>';
 
+  var ACCOUNT_LINKS = [
+    { id: 'account', href: '/conta', label: 'Dados cadastrais', short: 'Dados' },
+    { id: 'addresses', href: '/enderecos', label: 'Meus endereços', short: 'Endereços' },
+    { id: 'orders', href: '/pedidos', label: 'Meus pedidos', short: 'Pedidos' }
+  ];
+
+  function isLoggedIn() {
+    if (typeof customer !== 'undefined' && customer) {
+      if (customer.customerId || customer.email || customer.name) return true;
+    }
+    if (document.querySelector('.header-link_text__logged, .sidenav-body_logged')) return true;
+    return false;
+  }
+
+  function getCustomerFirstName() {
+    if (typeof customer !== 'undefined' && customer && customer.name) {
+      return String(customer.name).split(' ')[0];
+    }
+    var el = document.querySelector('.header-link_text__logged');
+    if (el && el.textContent) return el.textContent.trim().split(' ')[0];
+    return '';
+  }
+
+  function buildAccountNavHtml(activeTab) {
+    var firstName = getCustomerFirstName();
+    var greeting = firstName ? '<p class="customer-account-nav__greeting">Olá, ' + firstName + '</p>' : '';
+    var items = '';
+
+    for (var i = 0; i < ACCOUNT_LINKS.length; i++) {
+      var link = ACCOUNT_LINKS[i];
+      var isActive = activeTab === link.id;
+      items +=
+        '<li class="customer-account-nav__item-wrap">' +
+          '<a class="customer-account-nav__item' + (isActive ? ' is-active' : '') + '"' +
+            ' href="' + link.href + '"' +
+            ' title="' + link.label + '"' +
+            (isActive ? ' aria-current="page"' : '') + '>' +
+            '<span class="customer-account-nav__icon" aria-hidden="true">' +
+              (link.id === 'account' ? ICON_USER : link.id === 'addresses' ? ICON_PIN : ICON_ORDERS) +
+            '</span>' +
+            '<span class="customer-account-nav__label">' + link.label + '</span>' +
+          '</a>' +
+        '</li>';
+    }
+
+    return (
+      '<nav class="customer-account-nav" aria-label="Painel do cliente">' +
+        '<div class="customer-account-nav__intro">' +
+          '<p class="customer-account-nav__title">Minha conta</p>' +
+          greeting +
+        '</div>' +
+        '<ul class="customer-account-nav__list">' + items + '</ul>' +
+      '</nav>'
+    );
+  }
+
+  function buildAccountQuickStripHtml(activeTab) {
+    var links = '';
+    for (var i = 0; i < ACCOUNT_LINKS.length; i++) {
+      var link = ACCOUNT_LINKS[i];
+      links +=
+        '<a class="account-quick-strip__link' + (activeTab === link.id ? ' is-active' : '') + '"' +
+          ' href="' + link.href + '"' +
+          ' title="' + link.label + '"' +
+          (activeTab === link.id ? ' aria-current="page"' : '') + '>' +
+          link.short +
+        '</a>';
+    }
+
+    return (
+      '<nav class="account-quick-strip" aria-label="Atalhos da minha conta">' +
+        '<div class="account-quick-strip__inner content">' +
+          '<span class="account-quick-strip__kicker">Minha conta</span>' +
+          links +
+        '</div>' +
+      '</nav>'
+    );
+  }
+
+  function removeAccountQuickStrip() {
+    var strip = document.querySelector('.account-quick-strip');
+    if (strip) strip.parentNode.removeChild(strip);
+    document.body.classList.remove('has-account-quick-strip');
+  }
+
+  function mountAccountQuickStrip() {
+    if (!isLoggedIn() || isCheckoutPage() || document.querySelector('.account-quick-strip')) return;
+
+    var header = document.querySelector('header.header, .header');
+    if (!header) return;
+
+    header.insertAdjacentHTML('afterend', buildAccountQuickStripHtml(getAccountDockActiveTab()));
+    document.body.classList.add('has-account-quick-strip');
+  }
+
+  function hideLegacyAccountAccordion() {
+    var accordions = document.querySelectorAll('details.page-accordion_top, details.page-accordion');
+    for (var i = 0; i < accordions.length; i++) {
+      var title = accordions[i].querySelector('.accordion-title');
+      if (title && (title.textContent || '').indexOf('Painel do cliente') !== -1) {
+        accordions[i].style.display = 'none';
+      }
+    }
+  }
+
+  function injectAccountHub() {
+    if (!isLoggedIn() || !isAccountPage() || document.querySelector('.customer-account-nav')) return;
+
+    var target =
+      document.querySelector('main.orders-main .orders-container') ||
+      document.querySelector('main .container .columns') ||
+      document.querySelector('main .container') ||
+      document.querySelector('main');
+
+    if (!target) return;
+
+    var hub = document.createElement('div');
+    hub.className = 'customer-account-hub customer-account-hub--injected';
+    hub.innerHTML = buildAccountNavHtml(getAccountDockActiveTab());
+
+    if (target.firstChild) {
+      target.insertBefore(hub, target.firstChild);
+    } else {
+      target.appendChild(hub);
+    }
+
+    hideLegacyAccountAccordion();
+  }
+
+  function initAccountNavigation() {
+    if (!isLoggedIn()) {
+      removeAccountQuickStrip();
+      return;
+    }
+
+    mountAccountQuickStrip();
+    injectAccountHub();
+    hideLegacyAccountAccordion();
+    enhanceHeaderAccountLink();
+  }
+
   function isMobile() {
     return window.matchMedia(MOBILE_MQ).matches;
   }
@@ -1334,31 +1475,47 @@
   }
 
   function enhanceHeaderAccountLink() {
-    if (!isMobile()) return;
+    var box = document.querySelector('.header-link-account_info, .header-box-account-info');
+    var link = box ? box.querySelector('a[onclick*="sidenav-overlay_account"], a.header-link_icon') : null;
 
-    var selectors = [
-      'a[onclick*="sidenav-overlay_account"]',
-      '.header-user a',
-      '.header-account a',
-      '.header-actions a[title*="conta" i]',
-      '.header-actions a[title*="usu" i]',
-      '.nav-header_user a',
-      '.header .btn-user'
-    ];
-
-    var link = null;
-    for (var i = 0; i < selectors.length; i++) {
-      link = document.querySelector(selectors[i]);
-      if (link) break;
+    if (!link) {
+      var selectors = [
+        'a[onclick*="sidenav-overlay_account"]',
+        '.header-link-account_info a',
+        '.header-link_account a',
+        '.header-user a',
+        '.header-account a'
+      ];
+      for (var i = 0; i < selectors.length; i++) {
+        link = document.querySelector(selectors[i]);
+        if (link) break;
+      }
     }
 
-    if (!link || link.querySelector('.header-account-label')) return;
+    if (!link) return;
+
+    if (!link.getAttribute('title') || link.getAttribute('title') === 'Acesse sua conta') {
+      link.setAttribute('title', 'Minha conta — pedidos, endereços e dados');
+    }
+
+    if (isLoggedIn()) {
+      if (box && !box.querySelector('.header-account-hint')) {
+        var hint = document.createElement('div');
+        hint.className = 'header-account-hint';
+        hint.innerHTML =
+          '<a href="/pedidos">Pedidos</a>' +
+          '<span aria-hidden="true">·</span>' +
+          '<a href="/enderecos">Endereços</a>' +
+          '<span aria-hidden="true">·</span>' +
+          '<a href="/conta">Dados</a>';
+        box.appendChild(hint);
+      }
+      return;
+    }
+
+    if (!isMobile() || link.querySelector('.header-account-label')) return;
 
     link.classList.add('header-account-link--labeled');
-    if (typeof customer !== 'undefined' && customer) {
-      link.classList.add('is-logged');
-    }
-
     var label = document.createElement('span');
     label.className = 'header-account-label';
     label.textContent = 'Minha conta';
@@ -1437,6 +1594,8 @@
   }
 
   function initCatalogDock() {
+    initAccountNavigation();
+
     if (!isMobile()) {
       var existing = document.querySelector('.mobile-catalog-dock');
       if (existing) existing.parentNode.removeChild(existing);
@@ -1450,16 +1609,14 @@
       if (catalogDock) catalogDock.parentNode.removeChild(catalogDock);
       document.body.classList.remove('has-mobile-catalog-dock');
       mountAccountDock();
-      enhanceHeaderAccountLink();
       return;
     }
 
     removeAccountDock();
     mountCatalogDock();
-    enhanceHeaderAccountLink();
   }
 
-  window.initAccountDock = initCatalogDock;
+  window.initAccountNavigation = initAccountNavigation;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCatalogDock);
