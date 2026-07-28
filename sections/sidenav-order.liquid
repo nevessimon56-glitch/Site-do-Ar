@@ -1,6 +1,7 @@
-{% comment %} VERSAO: 2026-07-28-pedidos-sidenav-order-ui-v1 {% endcomment %}
+{% comment %} VERSAO: 2026-07-28-pedidos-sidenav-order-ui-v2-mobile-keyboard {% endcomment %}
 <div class="sidenav-overlay sidenav-order sidenav-order_cancel"
      x-data="setupOrderModal()"
+     x-init="init()"
      x-on:cancel-order.window="cancelOrder($event.detail)"
 >
     <form class="sidenav-container form-order" x-on:submit.prevent>
@@ -100,6 +101,7 @@
                                        type="text"
                                        placeholder="Digite sua mensagem..."
                                        x-model="state.order.message"
+                                       @focus="scrollActiveField($event.target)"
                                        @keydown.enter.prevent="sendOrderCancellation(false)"/>
                                 <button class="btn order-cancel-compose__btn input-group-btn"
                                         type="button"
@@ -128,6 +130,7 @@
                                   rows="5"
                                   placeholder="Descreva o motivo do cancelamento..."
                                   x-model="state.order.message"
+                                  @focus="scrollActiveField($event.target)"
                                   :disabled="state.cancellationWasRequested"></textarea>
                         <p class="form-input-hint" x-text="state.errors.message"></p>
                     </div>
@@ -201,6 +204,80 @@
             this.state.customerName = data?.customerName || '';
         }
 
+        function scrollActiveField(field) {
+            if (!field || window.innerWidth > 767) {
+                return;
+            }
+
+            const scrollField = function () {
+                const viewport = window.visualViewport;
+                if (!viewport) {
+                    field.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                    return;
+                }
+
+                const visibleTop = viewport.offsetTop + 12;
+                const visibleBottom = viewport.offsetTop + viewport.height - 12;
+                const rect = field.getBoundingClientRect();
+                const compose = field.closest('.order-cancel-compose, .order-cancel-form, .order-cancel-panel__footer, .sidenav-order_footer');
+
+                if (rect.bottom > visibleBottom || rect.top < visibleTop) {
+                    if (compose) {
+                        compose.scrollIntoView({ block: 'end', behavior: 'smooth' });
+                    } else {
+                        field.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                    }
+                }
+            };
+
+            setTimeout(scrollField, 80);
+            setTimeout(scrollField, 320);
+        }
+
+        function updateKeyboardInset() {
+            const root = document.querySelector('.sidenav-order_cancel');
+            if (!root || window.innerWidth > 767) {
+                if (root) {
+                    root.style.removeProperty('--order-cancel-keyboard-inset');
+                }
+                return;
+            }
+
+            const viewport = window.visualViewport;
+            if (!viewport) {
+                return;
+            }
+
+            const keyboardInset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+            root.style.setProperty('--order-cancel-keyboard-inset', keyboardInset + 'px');
+
+            if (keyboardInset > 60) {
+                root.classList.add('keyboard-open');
+            } else {
+                root.classList.remove('keyboard-open');
+            }
+        }
+
+        function init() {
+            const root = document.querySelector('.sidenav-order_cancel');
+            if (!root || root.dataset.keyboardInsetBound === '1') {
+                return;
+            }
+
+            root.dataset.keyboardInsetBound = '1';
+
+            const onViewportChange = function () {
+                updateKeyboardInset();
+            };
+
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', onViewportChange);
+                window.visualViewport.addEventListener('scroll', onViewportChange);
+            }
+
+            window.addEventListener('resize', onViewportChange);
+        }
+
         function sendOrderCancellation(isStart) {
             if (this.state.orderId < 0) {
                 return;
@@ -250,18 +327,24 @@
 
         return {
             state,
+            init,
             cancelOrder,
             validate,
+            scrollActiveField,
             sendOrderCancellation
         }
     }
 </script>
 
 <style>
+    .sidenav-overlay.sidenav-order_cancel {
+        --order-cancel-keyboard-inset: 0px;
+    }
+
     .sidenav-overlay.sidenav-order_cancel .sidenav-container.form-order {
         display: flex;
         flex-direction: column;
-        max-height: 100vh;
+        max-height: 100dvh;
     }
 
     .sidenav-overlay.sidenav-order_cancel .sidenav-order_header {
@@ -534,13 +617,26 @@
         margin-top: 0.375rem;
     }
 
-    @media (max-width: 575px) {
+    @media (max-width: 767px) {
+        .sidenav-overlay.sidenav-order_cancel .sidenav-container.form-order {
+            max-height: calc(100dvh - var(--order-cancel-keyboard-inset));
+        }
+
         .sidenav-overlay.sidenav-order_cancel .sidenav-order_body {
             padding: 1rem;
         }
 
+        .sidenav-overlay.sidenav-order_cancel .sidenav-order_body--chat {
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+            padding-bottom: 0;
+        }
+
         .sidenav-overlay.sidenav-order_cancel .sidenav-order_footer {
-            padding: 0.875rem 1rem 1rem;
+            padding: 0.875rem 1rem calc(0.875rem + env(safe-area-inset-bottom, 0px));
         }
 
         .sidenav-overlay.sidenav-order_cancel .sidenav-title {
@@ -548,16 +644,37 @@
         }
 
         .sidenav-overlay.sidenav-order_cancel .order-cancel-panel {
-            max-height: calc(100vh - 150px);
+            flex: 1 1 auto;
+            max-height: none;
+            min-height: 0;
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .order-cancel-panel__messages {
+            max-height: none;
+            min-height: 0;
+        }
+
+        .sidenav-overlay.sidenav-order_cancel.keyboard-open .order-cancel-panel__messages {
+            max-height: min(32dvh, 220px);
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .order-cancel-panel__footer {
+            box-shadow: 0 -6px 20px rgba(15, 23, 42, 0.08);
+            flex-shrink: 0;
+            padding-bottom: calc(0.875rem + env(safe-area-inset-bottom, 0px));
+            position: relative;
+            z-index: 2;
         }
 
         .sidenav-overlay.sidenav-order_cancel .order-cancel-compose {
-            flex-direction: column;
+            align-items: center;
+            flex-direction: row;
         }
 
         .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn {
-            min-height: 48px;
-            width: 100%;
+            min-height: 44px;
+            min-width: 76px;
+            width: auto;
         }
 
         .sidenav-overlay.sidenav-order_cancel .order-cancel-tile {
@@ -567,6 +684,16 @@
         .sidenav-overlay.sidenav-order_cancel .order-cancel-avatar {
             height: 32px;
             width: 32px;
+        }
+
+        .sidenav-overlay.sidenav-order_cancel .order-cancel-form__textarea {
+            min-height: 110px;
+        }
+    }
+
+    @media (max-width: 575px) {
+        .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn {
+            min-height: 44px;
         }
     }
 
