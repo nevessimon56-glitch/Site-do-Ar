@@ -1,4 +1,4 @@
-{% comment %} VERSAO: 2026-07-28-pedidos-sidenav-order-ui-v2-mobile-keyboard {% endcomment %}
+{% comment %} VERSAO: 2026-07-28-pedidos-account-nav-v1 {% endcomment %}
 {% layout 'layout/theme' %}
 {% block content %}
 {% render 'sections/header', store: store, pages: pages, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
@@ -12,7 +12,7 @@
                             Painel do cliente
                         </div>
                         <div class="card-body">
-                            {%- render 'sections/customer-account-menu', themeConfig: themeConfig -%}
+                            {%- render 'sections/customer-account-menu', themeConfig: themeConfig, activePage: 'orders' -%}
                         </div>
                     </div>
                 </div>
@@ -273,19 +273,9 @@
                     </div>
                 </div>
                 <div class="column col-12 hide-xxl show-lg">
-                    <details class="page-accordion page-accordion_top accordion">
-                        <summary class="accordion-header">
-                            <div class="accordion-title">
-                                <span>
-                                    Painel do cliente
-                                </span>
-                            </div>
-                            {{ themeConfig.icons.arrow.down }}
-                        </summary>
-                        <div class="accordion-body">
-                            {%- render 'sections/customer-account-menu', themeConfig: themeConfig -%}
-                        </div>
-                    </details>
+                    <div class="customer-account-hub">
+                        {%- render 'sections/customer-account-menu', themeConfig: themeConfig, activePage: 'orders' -%}
+                    </div>
                     <div class="page-title">Meus Pedidos</div>
                     <template x-for="(order, index) in state.customerOrders.result" :key="index">
                         <details class="page-accordion-info page-accordion_orders accordion">

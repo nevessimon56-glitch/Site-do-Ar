@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-15-js-mobile-nav-v3
+ * VERSAO: 2026-07-28-js-account-nav-v1
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1109,6 +1109,12 @@
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16l-6.2 7.2V18l-3.6 2v-6.8L4 6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
   var ICON_MENU =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  var ICON_USER =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-3.3 0-8 1.7-8 5v1h16v-1c0-3.3-4.7-5-8-5z" fill="currentColor"/></svg>';
+  var ICON_PIN =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a6 6 0 0 0-6 6c0 4.5 6 12 6 12s6-7.5 6-12a6 6 0 0 0-6-6zm0 8a2 2 0 1 1 2-2 2 2 0 0 1-2 2z" fill="currentColor"/></svg>';
+  var ICON_ORDERS =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10l1 2h4v2H3V6h4l1-2zm-1 6h12v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V10zm3 2v8h2v-8h-2zm4 0v8h2v-8h-2z" fill="currentColor"/></svg>';
 
   function isMobile() {
     return window.matchMedia(MOBILE_MQ).matches;
@@ -1120,6 +1126,22 @@
 
   function isCheckoutPage() {
     return normalizePath(window.location.pathname).indexOf('/checkout') === 0;
+  }
+
+  function isAccountPage() {
+    var p = normalizePath(window.location.pathname);
+    if (p === '/conta') return true;
+    if (p === '/enderecos') return true;
+    if (p === '/pedidos' || p.indexOf('/pedidos/') === 0) return true;
+    return false;
+  }
+
+  function getAccountDockActiveTab() {
+    var p = normalizePath(window.location.pathname);
+    if (p === '/conta') return 'account';
+    if (p === '/enderecos') return 'addresses';
+    if (p === '/pedidos' || p.indexOf('/pedidos/') === 0) return 'orders';
+    return '';
   }
 
   function isCatalogPage() {
@@ -1249,6 +1271,100 @@
     return { open: openSheet, close: closeSheet };
   }
 
+  function createAccountDockButton(opts) {
+    var el = document.createElement('a');
+    el.className = 'mobile-account-dock__btn';
+    el.href = opts.href || '#';
+    if (opts.active) {
+      el.classList.add('is-active');
+      el.setAttribute('aria-current', 'page');
+    }
+    el.setAttribute('aria-label', opts.label);
+    el.innerHTML =
+      '<span class="mobile-account-dock__icon">' + opts.icon + '</span>' +
+      '<span class="mobile-account-dock__label">' + opts.label + '</span>';
+    return el;
+  }
+
+  function mountAccountDock() {
+    if (!isMobile() || isCheckoutPage() || document.querySelector('.mobile-account-dock')) return;
+
+    var activeTab = getAccountDockActiveTab();
+    var dock = document.createElement('nav');
+    dock.className = 'mobile-account-dock';
+    dock.setAttribute('aria-label', 'Navegação da conta');
+
+    var inner = document.createElement('div');
+    inner.className = 'mobile-account-dock__inner';
+
+    inner.appendChild(
+      createAccountDockButton({
+        href: '/conta',
+        label: 'Dados',
+        icon: ICON_USER,
+        active: activeTab === 'account'
+      })
+    );
+    inner.appendChild(
+      createAccountDockButton({
+        href: '/enderecos',
+        label: 'Endereços',
+        icon: ICON_PIN,
+        active: activeTab === 'addresses'
+      })
+    );
+    inner.appendChild(
+      createAccountDockButton({
+        href: '/pedidos',
+        label: 'Pedidos',
+        icon: ICON_ORDERS,
+        active: activeTab === 'orders'
+      })
+    );
+
+    dock.appendChild(inner);
+    document.body.appendChild(dock);
+    document.body.classList.add('has-mobile-account-dock');
+  }
+
+  function removeAccountDock() {
+    var existing = document.querySelector('.mobile-account-dock');
+    if (existing) existing.parentNode.removeChild(existing);
+    document.body.classList.remove('has-mobile-account-dock');
+  }
+
+  function enhanceHeaderAccountLink() {
+    if (!isMobile()) return;
+
+    var selectors = [
+      'a[onclick*="sidenav-overlay_account"]',
+      '.header-user a',
+      '.header-account a',
+      '.header-actions a[title*="conta" i]',
+      '.header-actions a[title*="usu" i]',
+      '.nav-header_user a',
+      '.header .btn-user'
+    ];
+
+    var link = null;
+    for (var i = 0; i < selectors.length; i++) {
+      link = document.querySelector(selectors[i]);
+      if (link) break;
+    }
+
+    if (!link || link.querySelector('.header-account-label')) return;
+
+    link.classList.add('header-account-link--labeled');
+    if (typeof customer !== 'undefined' && customer) {
+      link.classList.add('is-logged');
+    }
+
+    var label = document.createElement('span');
+    label.className = 'header-account-label';
+    label.textContent = 'Minha conta';
+    link.appendChild(label);
+  }
+
   function mountCatalogDock() {
     if (!isMobile() || isCheckoutPage() || document.querySelector('.mobile-catalog-dock')) return;
 
@@ -1325,12 +1441,25 @@
       var existing = document.querySelector('.mobile-catalog-dock');
       if (existing) existing.parentNode.removeChild(existing);
       document.body.classList.remove('has-mobile-catalog-dock');
+      removeAccountDock();
       return;
     }
+
+    if (isAccountPage()) {
+      var catalogDock = document.querySelector('.mobile-catalog-dock');
+      if (catalogDock) catalogDock.parentNode.removeChild(catalogDock);
+      document.body.classList.remove('has-mobile-catalog-dock');
+      mountAccountDock();
+      enhanceHeaderAccountLink();
+      return;
+    }
+
+    removeAccountDock();
     mountCatalogDock();
+    enhanceHeaderAccountLink();
   }
 
-  window.initCatalogDock = initCatalogDock;
+  window.initAccountDock = initCatalogDock;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCatalogDock);
