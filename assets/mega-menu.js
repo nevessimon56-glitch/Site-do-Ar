@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-28-js-account-nav-v2
+ * VERSAO: 2026-07-28-js-account-nav-v3
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -1140,8 +1140,6 @@
   }
 
   function buildAccountNavHtml(activeTab) {
-    var firstName = getCustomerFirstName();
-    var greeting = firstName ? '<p class="customer-account-nav__greeting">Olá, ' + firstName + '</p>' : '';
     var items = '';
 
     for (var i = 0; i < ACCOUNT_LINKS.length; i++) {
@@ -1162,53 +1160,10 @@
     }
 
     return (
-      '<nav class="customer-account-nav" aria-label="Painel do cliente">' +
-        '<div class="customer-account-nav__intro">' +
-          '<p class="customer-account-nav__title">Minha conta</p>' +
-          greeting +
-        '</div>' +
+      '<nav class="customer-account-nav customer-account-nav--page" aria-label="Painel do cliente">' +
         '<ul class="customer-account-nav__list">' + items + '</ul>' +
       '</nav>'
     );
-  }
-
-  function buildAccountQuickStripHtml(activeTab) {
-    var links = '';
-    for (var i = 0; i < ACCOUNT_LINKS.length; i++) {
-      var link = ACCOUNT_LINKS[i];
-      links +=
-        '<a class="account-quick-strip__link' + (activeTab === link.id ? ' is-active' : '') + '"' +
-          ' href="' + link.href + '"' +
-          ' title="' + link.label + '"' +
-          (activeTab === link.id ? ' aria-current="page"' : '') + '>' +
-          link.short +
-        '</a>';
-    }
-
-    return (
-      '<nav class="account-quick-strip" aria-label="Atalhos da minha conta">' +
-        '<div class="account-quick-strip__inner content">' +
-          '<span class="account-quick-strip__kicker">Minha conta</span>' +
-          links +
-        '</div>' +
-      '</nav>'
-    );
-  }
-
-  function removeAccountQuickStrip() {
-    var strip = document.querySelector('.account-quick-strip');
-    if (strip) strip.parentNode.removeChild(strip);
-    document.body.classList.remove('has-account-quick-strip');
-  }
-
-  function mountAccountQuickStrip() {
-    if (!isLoggedIn() || isCheckoutPage() || document.querySelector('.account-quick-strip')) return;
-
-    var header = document.querySelector('header.header, .header');
-    if (!header) return;
-
-    header.insertAdjacentHTML('afterend', buildAccountQuickStripHtml(getAccountDockActiveTab()));
-    document.body.classList.add('has-account-quick-strip');
   }
 
   function hideLegacyAccountAccordion() {
@@ -1246,12 +1201,8 @@
   }
 
   function initAccountNavigation() {
-    if (!isLoggedIn()) {
-      removeAccountQuickStrip();
-      return;
-    }
+    if (!isLoggedIn()) return;
 
-    mountAccountQuickStrip();
     injectAccountHub();
     hideLegacyAccountAccordion();
     enhanceHeaderAccountLink();
@@ -1412,6 +1363,60 @@
     return { open: openSheet, close: closeSheet };
   }
 
+  function mountAccountSheet(dock) {
+    var sheet = document.createElement('div');
+    sheet.className = 'mobile-catalog-dock__sheet mobile-catalog-dock__sheet--account';
+    sheet.setAttribute('hidden', 'hidden');
+
+    var backdrop = document.createElement('button');
+    backdrop.type = 'button';
+    backdrop.className = 'mobile-catalog-dock__sheet-backdrop';
+    backdrop.setAttribute('aria-label', 'Fechar minha conta');
+
+    var panel = document.createElement('div');
+    panel.className = 'mobile-catalog-dock__sheet-panel';
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-label', 'Minha conta');
+
+    var title = document.createElement('p');
+    title.className = 'mobile-catalog-dock__sheet-title';
+    title.textContent = 'Minha conta';
+    panel.appendChild(title);
+
+    var list = document.createElement('div');
+    list.className = 'mobile-catalog-dock__sheet-list';
+    var activeTab = getAccountDockActiveTab();
+
+    for (var i = 0; i < ACCOUNT_LINKS.length; i++) {
+      var link = document.createElement('a');
+      link.className = 'mobile-catalog-dock__sheet-link';
+      if (activeTab === ACCOUNT_LINKS[i].id) {
+        link.classList.add('is-active');
+      }
+      link.href = ACCOUNT_LINKS[i].href;
+      link.textContent = ACCOUNT_LINKS[i].label;
+      list.appendChild(link);
+    }
+    panel.appendChild(list);
+
+    function closeSheet() {
+      sheet.setAttribute('hidden', 'hidden');
+      dock.classList.remove('is-sheet-open');
+    }
+
+    function openSheet() {
+      sheet.removeAttribute('hidden');
+      dock.classList.add('is-sheet-open');
+    }
+
+    backdrop.addEventListener('click', closeSheet);
+    sheet.appendChild(backdrop);
+    sheet.appendChild(panel);
+    dock.appendChild(sheet);
+
+    return { open: openSheet, close: closeSheet };
+  }
+
   function createAccountDockButton(opts) {
     var el = document.createElement('a');
     el.className = 'mobile-account-dock__btn';
@@ -1494,32 +1499,25 @@
 
     if (!link) return;
 
-    if (!link.getAttribute('title') || link.getAttribute('title') === 'Acesse sua conta') {
-      link.setAttribute('title', 'Minha conta — pedidos, endereços e dados');
-    }
+    link.setAttribute('title', 'Minha conta — pedidos, endereços e dados');
 
-    if (isLoggedIn()) {
-      if (box && !box.querySelector('.header-account-hint')) {
-        var hint = document.createElement('div');
-        hint.className = 'header-account-hint';
-        hint.innerHTML =
-          '<a href="/pedidos">Pedidos</a>' +
-          '<span aria-hidden="true">·</span>' +
-          '<a href="/enderecos">Endereços</a>' +
-          '<span aria-hidden="true">·</span>' +
-          '<a href="/conta">Dados</a>';
-        box.appendChild(hint);
-      }
+    if (!isLoggedIn()) {
+      if (!isMobile() || link.querySelector('.header-account-label')) return;
+      link.classList.add('header-account-link--labeled');
+      var guestLabel = document.createElement('span');
+      guestLabel.className = 'header-account-label';
+      guestLabel.textContent = 'Minha conta';
+      link.appendChild(guestLabel);
       return;
     }
 
-    if (!isMobile() || link.querySelector('.header-account-label')) return;
-
-    link.classList.add('header-account-link--labeled');
-    var label = document.createElement('span');
-    label.className = 'header-account-label';
-    label.textContent = 'Minha conta';
-    link.appendChild(label);
+    var nameEl = box ? box.querySelector('.header-link_text__logged') : null;
+    if (nameEl && !box.querySelector('.header-account-kicker')) {
+      var kicker = document.createElement('span');
+      kicker.className = 'header-account-kicker';
+      kicker.textContent = 'Minha conta';
+      box.insertBefore(kicker, nameEl);
+    }
   }
 
   function mountCatalogDock() {
@@ -1531,7 +1529,7 @@
     dock.setAttribute('aria-label', 'Navegação rápida');
 
     var inner = document.createElement('div');
-    inner.className = 'mobile-catalog-dock__inner';
+    inner.className = 'mobile-catalog-dock__inner' + (isLoggedIn() ? ' mobile-catalog-dock__inner--quad' : '');
 
     inner.appendChild(
       createDockButton({
@@ -1557,6 +1555,24 @@
     );
 
     var sheetApi = mountCategorySheet(dock);
+    var accountSheetApi = isLoggedIn() ? mountAccountSheet(dock) : null;
+
+    if (isLoggedIn()) {
+      inner.appendChild(
+        createDockButton({
+          tag: 'button',
+          label: 'Conta',
+          icon: ICON_USER,
+          tab: 'account',
+          active: false,
+          onClick: function (e) {
+            e.preventDefault();
+            if (sheetApi) sheetApi.close();
+            if (accountSheetApi) accountSheetApi.open();
+          }
+        })
+      );
+    }
 
     if (isCatalogPage()) {
       inner.appendChild(
@@ -1582,6 +1598,7 @@
           active: activeTab === 'categories',
           onClick: function (e) {
             e.preventDefault();
+            if (accountSheetApi) accountSheetApi.close();
             sheetApi.open();
           }
         })
@@ -1617,6 +1634,14 @@
   }
 
   window.initAccountNavigation = initAccountNavigation;
+  window.initCatalogDock = initCatalogDock;
+
+  function scheduleNavigationRefresh() {
+    setTimeout(initCatalogDock, 120);
+  }
+
+  window.addEventListener('change-customer-login', scheduleNavigationRefresh);
+  window.addEventListener('check-login-logged', scheduleNavigationRefresh);
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCatalogDock);

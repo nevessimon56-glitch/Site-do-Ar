@@ -1961,117 +1961,114 @@
   }
 }
 
-/* ========== Navegação da conta — hub + dock (ACCOUNT-NAV-v2) ========== */
-
-.account-quick-strip {
-  background: linear-gradient(180deg, #eef7fd 0%, #f8fbfe 100%);
-  border-bottom: 1px solid #cfe3f2;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
-}
-
-.account-quick-strip__inner {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.account-quick-strip__inner::-webkit-scrollbar {
-  display: none;
-}
-
-.account-quick-strip__kicker {
-  flex-shrink: 0;
-  font-size: 12px;
-  font-weight: 800;
-  color: #1a6eb5;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-
-.account-quick-strip__link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  min-height: 34px;
-  padding: 0 14px;
-  border-radius: 999px;
-  background: #fff;
-  border: 1px solid #cfe3f2;
-  color: #2c4f6b !important;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1;
-  text-decoration: none !important;
-  white-space: nowrap;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.account-quick-strip__link:hover {
-  border-color: #9fc8e8;
-  color: #1a6eb5 !important;
-}
-
-.account-quick-strip__link.is-active {
-  background: linear-gradient(135deg, #1a6eb5, #2c8fd6);
-  border-color: transparent;
-  color: #fff !important;
-  box-shadow: 0 3px 10px rgba(26, 110, 181, 0.24);
-}
+/* ========== Navegação da conta — hub + dock (ACCOUNT-NAV-v3) ========== */
 
 .customer-account-hub--injected {
   margin-bottom: 16px;
 }
 
+.customer-account-nav--page .customer-account-nav__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #e3edf5;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.customer-account-nav--page .customer-account-nav__item {
+  border-radius: 0;
+  border-bottom: 1px solid #edf3f8;
+  padding: 14px 16px;
+}
+
+.customer-account-nav--page .customer-account-nav__item-wrap:last-child .customer-account-nav__item {
+  border-bottom: 0;
+}
+
+.customer-account-nav--page .customer-account-nav__item.is-active {
+  box-shadow: none;
+  background: #f3f9fe;
+  color: #1a6eb5 !important;
+  font-weight: 700;
+}
+
+.customer-account-nav--page .customer-account-nav__item.is-active .customer-account-nav__icon {
+  background: rgba(26, 110, 181, 0.14);
+}
+
 .header-link-account_info,
 .header-box-account-info {
-  position: relative;
-}
-
-.header-account-hint {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 2px;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1.2;
+  gap: 1px;
 }
 
-.header-account-hint a {
-  color: #1a6eb5 !important;
-  text-decoration: none !important;
-}
-
-.header-account-hint a:hover {
-  text-decoration: underline !important;
-}
-
-.header-account-hint span {
-  color: #9bb5c9;
+.header-account-kicker {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  color: #1a6eb5;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 @media (min-width: 992px) {
-  .header-account-hint {
-    font-size: 12px;
-  }
-
-  .account-quick-strip__inner {
-    justify-content: center;
-    flex-wrap: wrap;
-    overflow: visible;
+  .header-account-kicker {
+    font-size: 10px;
   }
 }
 
-@media (max-width: 991px) {
-  .header-box-account-info .header-account-hint {
-    display: none;
-  }
+.mobile-catalog-dock__inner--quad {
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+
+.mobile-catalog-dock__sheet-link.is-active {
+  background: #f3f9fe;
+  color: #1a6eb5 !important;
+  font-weight: 800;
+}
+
+.sidenav-overlay_account .pages-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidenav-overlay_account .pages-nav .btn-access {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px 14px !important;
+  border: 1px solid #e3edf5 !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: #2c4f6b !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  text-align: left;
+  box-shadow: none !important;
+}
+
+.sidenav-overlay_account .pages-nav .btn-access:hover {
+  border-color: #b9d6ee !important;
+  background: #f7fbfe !important;
+  color: #1a6eb5 !important;
+}
+
+.sidenav-overlay_account .pages-nav .btn-access svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.sidenav-overlay_account .sidenav-title {
+  font-size: 18px !important;
+  font-weight: 800 !important;
 }
 
 .mobile-account-dock {
@@ -2163,59 +2160,27 @@
 
 @media (max-width: 1199px) {
   .customer-account-hub {
-    padding: 14px;
-    border-radius: 14px;
-    background: linear-gradient(180deg, #f8fbfe 0%, #ffffff 100%);
-    border: 1px solid #d6e6f2;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .customer-account-nav__list {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .customer-account-nav__item-wrap--secondary {
-    grid-column: 1 / -1;
-    margin-top: 0;
-    padding-top: 0;
-    border-top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
   }
 
   .customer-account-nav__item {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-height: 88px;
-    padding: 10px 6px;
-    text-align: center;
-    font-size: 11px;
-    font-weight: 700;
-  }
-
-  .customer-account-nav__icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-  }
-
-  .customer-account-nav__icon svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .customer-account-nav__item-wrap--secondary .customer-account-nav__item {
     flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
     min-height: 0;
-    padding: 10px 12px;
+    padding: 14px 16px;
     text-align: left;
-  }
-
-  .customer-account-nav__item-wrap--secondary .customer-account-nav__icon {
-    width: 32px;
-    height: 32px;
+    font-size: 14px;
   }
 }
 

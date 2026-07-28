@@ -1,12 +1,6 @@
-{% comment %} VERSAO: 2026-07-28-customer-account-nav-v1 {% endcomment %}
+{% comment %} VERSAO: 2026-07-28-customer-account-nav-v2 {% endcomment %}
 {%- assign active = activePage | default: '' -%}
-<nav class="customer-account-nav" aria-label="Painel do cliente">
-  <div class="customer-account-nav__intro">
-    <p class="customer-account-nav__title">Minha conta</p>
-    {%- if customer and customer.name -%}
-      <p class="customer-account-nav__greeting">Olá, {{ customer.name | split: ' ' | first }}</p>
-    {%- endif -%}
-  </div>
+<nav class="customer-account-nav customer-account-nav--page" aria-label="Painel do cliente">
   <ul class="customer-account-nav__list">
     <li class="customer-account-nav__item-wrap">
       <a class="customer-account-nav__item{% if active == 'account' %} is-active{% endif %}"
