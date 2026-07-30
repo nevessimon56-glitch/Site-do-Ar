@@ -1,24 +1,70 @@
 {% comment %}
   Dados compactos para comparador (sem script tag — não quebra layout do card)
-  VERSAO: 2026-07-30-compare-v3-perf
+  VERSAO: 2026-07-30-compare-v4-specs
+  Usa a mesma base de detecção de product-spec-icons (ficha, atributos, propriedades).
 {% endcomment %}
 
 {% assign specTitle = product.title | downcase %}
 {% assign specBlob = specTitle %}
 
+{% if product.url and product.url != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.url | downcase %}
+{% endif %}
+
 {% if product.tags and product.tags != '' %}
   {% assign specBlob = specBlob | append: ' | ' | append: product.tags | downcase %}
+{% endif %}
+
+{% if product.shortDescription and product.shortDescription != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.shortDescription | downcase %}
 {% endif %}
 
 {% capture specHtmlRaw %}
 {% if product.specification and product.specification != '' %}{{ product.specification }}{% endif %}
 {% if product.specifications and product.specifications != '' %}{{ product.specifications }}{% endif %}
 {% if product.specificationText and product.specificationText != '' %}{{ product.specificationText }}{% endif %}
+{% if product.especificacao and product.especificacao != '' %}{{ product.especificacao }}{% endif %}
+{% if product.especificacoes and product.especificacoes != '' %}{{ product.especificacoes }}{% endif %}
 {% endcapture %}
 {% assign specHtmlRaw = specHtmlRaw | strip %}
 
+{% assign specPlain = '' %}
+{% if specHtmlRaw != '' %}
+  {% assign specPlain = specHtmlRaw
+    | replace: '<br>', ' | '
+    | replace: '<br/>', ' | '
+    | replace: '<br />', ' | '
+    | replace: '</tr>', ' | '
+    | replace: '</td>', ' '
+    | replace: '<td>', ' '
+    | replace: '</th>', ' '
+    | replace: '<th>', ' '
+    | replace: '<tr>', ' '
+    | replace: '<tbody>', ' '
+    | replace: '</tbody>', ' '
+    | replace: '<table>', ' '
+    | replace: '</table>', ' '
+    | replace: '<p>', ' '
+    | replace: '</p>', ' '
+    | replace: '<strong>', ' '
+    | replace: '</strong>', ' '
+    | replace: '<b>', ' '
+    | replace: '</b>', ' '
+    | downcase
+  %}
+  {% assign specBlob = specBlob | append: ' | ' | append: specPlain %}
+{% endif %}
+
 {% assign cmpArea = '' %}
 {% assign cmpAreaHint = '' %}
+{% assign cmpProcelA = false %}
+{% assign cmpQuenteFrio = false %}
+{% assign cmpFrio = false %}
+{% assign cmpCobre = false %}
+{% assign cmpAluminio = false %}
+{% assign cmpWifi = false %}
+{% assign cmpInverter = false %}
+{% assign cmpVoltage = '' %}
 
 {% if product.attributes and product.attributes.size > 0 %}
   {% for attr in product.attributes %}
@@ -26,9 +72,14 @@
     {% assign attrValCmp = '' %}
     {% if attr.values and attr.values.size > 0 %}
       {% assign attrValCmp = attr.values[0].name | default: attr.values[0].value | default: '' %}
+    {% elsif attr.valores and attr.valores.size > 0 %}
+      {% assign attrValCmp = attr.valores[0].nome | default: '' %}
     {% elsif attr.value %}
       {% assign attrValCmp = attr.value %}
     {% endif %}
+    {% assign attrValLower = attrValCmp | downcase %}
+    {% assign specBlob = specBlob | append: ' | ' | append: attrNameCmp | append: ':' | append: attrValLower %}
+
     {% if cmpArea == '' %}
       {% if attrNameCmp contains 'área' or attrNameCmp contains 'area' or attrNameCmp contains 'ambiente' %}
         {% if attrValCmp != '' %}
@@ -36,60 +87,141 @@
         {% endif %}
       {% endif %}
     {% endif %}
+
+    {% if attrNameCmp contains 'ciclo' %}
+      {% if attrValLower contains 'quente' %}
+        {% assign cmpQuenteFrio = true %}
+      {% elsif attrValLower contains 'frio' %}
+        {% assign cmpFrio = true %}
+      {% endif %}
+    {% endif %}
+
+    {% if cmpVoltage == '' %}
+      {% if attrNameCmp contains 'voltagem' or attrNameCmp contains 'tensão' or attrNameCmp contains 'tensao' or attrNameCmp contains 'alimentação' or attrNameCmp contains 'alimentacao' %}
+        {% if attrValLower contains '220' %}
+          {% assign cmpVoltage = '220V' %}
+        {% elsif attrValLower contains '127' %}
+          {% assign cmpVoltage = '127V' %}
+        {% elsif attrValLower contains '110' or attrValLower contains '115' %}
+          {% assign cmpVoltage = '110V' %}
+        {% elsif attrValLower contains '380' %}
+          {% assign cmpVoltage = '380V' %}
+        {% elsif attrValLower contains 'bivolt' or attrValLower contains 'bi-volt' or attrValLower contains 'bi volt' %}
+          {% assign cmpVoltage = 'Bivolt' %}
+        {% elsif attrValCmp != '' %}
+          {% assign cmpVoltage = attrValCmp %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+
+    {% if attrNameCmp contains 'serpentina' or attrNameCmp contains 'tubulação' or attrNameCmp contains 'tubulacao' or attrNameCmp contains 'material' or attrNameCmp contains 'evaporador' %}
+      {% if attrValLower contains 'cobre' %}
+        {% assign cmpCobre = true %}
+      {% elsif attrValLower contains 'alum' %}
+        {% assign cmpAluminio = true %}
+      {% endif %}
+    {% endif %}
+
+    {% if attrNameCmp contains 'procel' or attrNameCmp contains 'classificação' or attrNameCmp contains 'classificacao' or attrNameCmp contains 'eficiência' or attrNameCmp contains 'eficiencia' or attrNameCmp contains 'selo' %}
+      {% if attrValLower contains 'classe a' or attrValLower == 'a' or attrValLower contains ' procel a' or attrValLower contains 'selo a' %}
+        {% assign cmpProcelA = true %}
+      {% endif %}
+    {% endif %}
   {% endfor %}
 {% endif %}
 
-{% if specHtmlRaw != '' %}
-  {% assign specPlain = specHtmlRaw | strip_html | downcase %}
-  {% if cmpArea == '' %}
-    {% if specPlain contains 'm²' or specPlain contains 'm2' %}
-      {% assign cmpAreaHint = specPlain | truncate: 160, '' %}
-    {% endif %}
+{% if product.properties and product.properties.size > 0 %}
+  {% for prop in product.properties %}
+    {% assign propName = prop.name | default: prop.nome | default: '' | downcase %}
+    {% assign propVal = prop.value | default: prop.valor | default: '' | downcase %}
+    {% assign specBlob = specBlob | append: ' | ' | append: propName | append: ':' | append: propVal %}
+  {% endfor %}
+{% endif %}
+
+{% if cmpArea == '' and specPlain != '' %}
+  {% if specPlain contains 'm²' or specPlain contains 'm2' %}
+    {% assign cmpAreaHint = specPlain | truncate: 160, '' %}
   {% endif %}
 {% endif %}
 
-{% assign cmpProcelA = false %}
-{% assign cmpQuenteFrio = false %}
-{% assign cmpFrio = false %}
-{% assign cmpCobre = false %}
-{% assign cmpWifi = false %}
-{% assign cmpInverter = false %}
-{% assign cmpVoltage = '' %}
-
-{% if specBlob contains 'procel' or specBlob contains 'classificação a' or specBlob contains 'classificacao a' %}
+{% if specBlob contains 'procel' or specBlob contains 'classificação a' or specBlob contains 'classificacao a' or specBlob contains 'classificação energética a' or specBlob contains 'classificacao energetica a' or specBlob contains 'selo a' or specBlob contains 'classe a' or specBlob contains 'eficiência energética: a' or specBlob contains 'eficiencia energetica: a' %}
   {% assign cmpProcelA = true %}
 {% endif %}
-{% if specBlob contains 'quente/frio' or specBlob contains 'quente-frio' or specBlob contains 'quente e frio' %}
+
+{% if specBlob contains 'ciclo: quente/frio' or specBlob contains 'ciclo: quente e frio' or specBlob contains 'ciclo quente/frio' or specBlob contains 'ciclo quente e frio' or specBlob contains 'quente/frio' or specBlob contains 'quente-frio' or specBlob contains 'quente e frio' or specBlob contains 'ciclo reverso' or specBlob contains ' q/f' or specBlob contains ' q-f' or specBlob contains '-quente-frio' or specBlob contains 'quente_frio' %}
   {% assign cmpQuenteFrio = true %}
-{% elsif specBlob contains 'só frio' or specBlob contains 'so frio' or specBlob contains 'somente frio' %}
+{% elsif specBlob contains 'ciclo: só frio' or specBlob contains 'ciclo: so frio' or specBlob contains 'ciclo só frio' or specBlob contains 'ciclo so frio' or specBlob contains 'ciclo: frio' or specBlob contains 'só frio' or specBlob contains 'so frio' or specBlob contains 'somente frio' or specBlob contains '-frio-' or specBlob contains '_frio_' or specBlob contains ' frio ' %}
   {% assign cmpFrio = true %}
+{% elsif specBlob contains 'frio' %}
+  {% unless specBlob contains 'quente' %}
+    {% assign cmpFrio = true %}
+  {% endunless %}
 {% endif %}
-{% if specBlob contains 'inverter' or specBlob contains 'inversor' %}
+
+{% if specBlob contains 'inverter' or specBlob contains 'inversor' or specBlob contains 'inversão' or specBlob contains 'inversao' %}
   {% assign cmpInverter = true %}
 {% endif %}
-{% if specBlob contains 'cobre' %}
+
+{% if specBlob contains 'cobre' or specBlob contains 'copper' %}
   {% unless specBlob contains 'alumínio' or specBlob contains 'aluminio' %}
     {% assign cmpCobre = true %}
   {% endunless %}
 {% endif %}
-{% if specBlob contains '220v' %}
-  {% assign cmpVoltage = '220V' %}
-{% elsif specBlob contains '127v' %}
-  {% assign cmpVoltage = '127V' %}
-{% elsif specBlob contains 'bivolt' %}
-  {% assign cmpVoltage = 'Bivolt' %}
+
+{% if specBlob contains 'alumínio' or specBlob contains 'aluminio' %}
+  {% unless specBlob contains 'cobre' %}
+    {% assign cmpAluminio = true %}
+  {% endunless %}
 {% endif %}
-{% unless specTitle contains 'mecânico' or specTitle contains 'mecanico' or specTitle contains 'janela' %}
-  {% if specBlob contains 'wi-fi' or specBlob contains 'wifi' %}
+
+{% assign specWifiBlob = specTitle %}
+{% if specPlain != '' %}
+  {% assign specWifiBlob = specWifiBlob | append: ' | ' | append: specPlain %}
+{% endif %}
+
+{% assign wifiBlocked = false %}
+{% if specTitle contains 'mecânico' or specTitle contains 'mecanico' or specWifiBlob contains 'controle mecânico' or specWifiBlob contains 'controle mecanico' %}
+  {% assign wifiBlocked = true %}
+{% endif %}
+{% if specTitle contains 'janela' %}
+  {% unless specTitle contains 'wi-fi' or specTitle contains 'wifi' %}
+    {% assign wifiBlocked = true %}
+  {% endunless %}
+{% endif %}
+
+{% unless wifiBlocked %}
+  {% if specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' or specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' or specWifiBlob contains 'smart wi-fi' or specWifiBlob contains 'smart wifi' %}
+    {% assign cmpWifi = true %}
+  {% elsif specTitle contains ' wi-fi' or specTitle contains '-wi-fi' or specTitle contains 'wifi' %}
     {% assign cmpWifi = true %}
   {% endif %}
 {% endunless %}
+
+{% if cmpVoltage == '' %}
+  {% if specBlob contains '220v' or specBlob contains '220 v' %}
+    {% assign cmpVoltage = '220V' %}
+  {% elsif specBlob contains '127v' or specBlob contains '127 v' %}
+    {% assign cmpVoltage = '127V' %}
+  {% elsif specBlob contains '110v' or specBlob contains '110 v' or specBlob contains '115v' or specBlob contains '115 v' %}
+    {% assign cmpVoltage = '110V' %}
+  {% elsif specBlob contains '380v' or specBlob contains '380 v' %}
+    {% assign cmpVoltage = '380V' %}
+  {% elsif specBlob contains 'bivolt' or specBlob contains 'bi-volt' or specBlob contains 'bi volt' %}
+    {% assign cmpVoltage = 'Bivolt' %}
+  {% endif %}
+{% endif %}
 
 {% assign cmpType = 'Split' %}
 {% if specTitle contains 'janela' %}
   {% assign cmpType = 'Janela' %}
 {% elsif specTitle contains 'piso teto' or specTitle contains 'piso-teto' %}
   {% assign cmpType = 'Piso Teto' %}
+{% endif %}
+
+{% if cmpQuenteFrio == false and cmpFrio == false %}
+  {% if specTitle contains 'janela' or specTitle contains 'mecânico' or specTitle contains 'mecanico' %}
+    {% assign cmpFrio = true %}
+  {% endif %}
 {% endif %}
 
 {% assign cmpPix = pixPrice | default: product.price.price %}
@@ -99,4 +231,4 @@
   {% assign cmpImg = product.medias[0].path | imgUrl: 250 %}
 {% endif %}
 
-<template class="product-compare-data" data-product-id="{{ product.id }}">{"id":{{ product.id }},"title":{{ product.title | json }},"url":{{ product.url | json }},"image":{{ cmpImg | json }},"pixPrice":{{ cmpPix }},"listPrice":{{ cmpList }},"area":{{ cmpArea | json }},"areaHint":{{ cmpAreaHint | json }},"specs":{"procelA":{{ cmpProcelA }},"quenteFrio":{{ cmpQuenteFrio }},"frio":{{ cmpFrio }},"inverter":{{ cmpInverter }},"cobre":{{ cmpCobre }},"wifi":{{ cmpWifi }},"voltage":{{ cmpVoltage | json }},"type":{{ cmpType | json }},"recommendedArea":{{ cmpArea | json }}}}</template>
+<template class="product-compare-data" data-product-id="{{ product.id }}">{"id":{{ product.id }},"title":{{ product.title | json }},"url":{{ product.url | json }},"image":{{ cmpImg | json }},"pixPrice":{{ cmpPix }},"listPrice":{{ cmpList }},"area":{{ cmpArea | json }},"areaHint":{{ cmpAreaHint | json }},"specs":{"procelA":{{ cmpProcelA }},"quenteFrio":{{ cmpQuenteFrio }},"frio":{{ cmpFrio }},"inverter":{{ cmpInverter }},"cobre":{{ cmpCobre }},"aluminio":{{ cmpAluminio }},"wifi":{{ cmpWifi }},"voltage":{{ cmpVoltage | json }},"type":{{ cmpType | json }},"recommendedArea":{{ cmpArea | json }}}}</template>

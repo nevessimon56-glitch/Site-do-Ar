@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/product-compare.js
- * VERSAO: 2026-07-30-compare-v3-perf
+ * VERSAO: 2026-07-30-compare-v4-specs
  */
 (function () {
   'use strict';
@@ -142,13 +142,25 @@
     return { display: '—', min: null, max: null, source: 'none' };
   }
 
+  function resolveCycle(specs) {
+    if (specs.quenteFrio) return 'Quente/Frio';
+    if (specs.frio) return 'Só Frio';
+    if (specs.type === 'Janela') return 'Só Frio';
+    return '—';
+  }
+
+  function resolveCoil(specs) {
+    if (specs.cobre) return 'Cobre';
+    if (specs.aluminio) return 'Alumínio';
+    return '—';
+  }
+
   function enrichProduct(data) {
     if (!data) return null;
     var specs = data.specs || {};
     var btu = extractBtu(data.title);
-    var cycle = '—';
-    if (specs.quenteFrio) cycle = 'Quente/Frio';
-    else if (specs.frio) cycle = 'Só Frio';
+    var cycle = resolveCycle(specs);
+    var coil = resolveCoil(specs);
     var area = resolveRecommendedArea(data, btu);
 
     return {
@@ -167,6 +179,8 @@
       inverter: !!specs.inverter,
       wifi: !!specs.wifi,
       cobre: !!specs.cobre,
+      aluminio: !!specs.aluminio,
+      coil: coil,
       procelA: !!specs.procelA,
       voltage: specs.voltage || '—',
       type: specs.type || '—',
@@ -303,7 +317,7 @@
       { key: 'inverter', label: 'Tecnologia', a: a.inverter ? 'Inverter' : 'Convencional', b: b.inverter ? 'Inverter' : 'Convencional', boolA: a.inverter, boolB: b.inverter },
       { key: 'voltage', label: 'Voltagem', a: a.voltage, b: b.voltage },
       { key: 'wifi', label: 'Wi-Fi', a: a.wifi ? 'Sim' : 'Não', b: b.wifi ? 'Sim' : 'Não', boolA: a.wifi, boolB: b.wifi },
-      { key: 'cobre', label: 'Serpentina', a: a.cobre ? 'Cobre' : '—', b: b.cobre ? 'Cobre' : '—', boolA: a.cobre, boolB: b.cobre },
+      { key: 'cobre', label: 'Serpentina', a: a.coil, b: b.coil, boolA: a.cobre, boolB: b.cobre },
       { key: 'procelA', label: 'Procel', a: a.procelA ? 'Classe A' : '—', b: b.procelA ? 'Classe A' : '—', boolA: a.procelA, boolB: b.procelA }
     ];
   }
@@ -378,12 +392,12 @@
       consA.push('Sem Wi-Fi integrado');
     }
 
-    if (a.cobre && !b.cobre) {
+    if (a.coil === 'Cobre' && b.coil !== 'Cobre') {
       prosA.push('Serpentina de cobre — melhor troca térmica');
-      consB.push('Sem serpentina de cobre informada');
-    } else if (b.cobre && !a.cobre) {
+      consB.push('Serpentina sem cobre informada');
+    } else if (b.coil === 'Cobre' && a.coil !== 'Cobre') {
       prosB.push('Serpentina de cobre — melhor troca térmica');
-      consA.push('Sem serpentina de cobre informada');
+      consA.push('Serpentina sem cobre informada');
     }
 
     if (a.cycle === 'Quente/Frio' && b.cycle === 'Só Frio') {
