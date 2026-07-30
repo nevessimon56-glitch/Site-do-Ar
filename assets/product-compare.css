@@ -1,6 +1,6 @@
 /**
  * Comparador de produtos — Site do Ar
- * VERSAO: 2026-07-30-compare-v5-btn-visible
+ * VERSAO: 2026-07-30-compare-v6-buy-color
  */
 
 /* Garante imagem visível nos cards (lazy load) */
@@ -491,6 +491,17 @@ body.has-compare-bar.has-mobile-account-dock {
   width: auto;
   min-height: 44px;
   font-size: 15px;
+  background: linear-gradient(135deg, #1a6eb5, #2c8fd6) !important;
+  border-color: #1a6eb5 !important;
+  color: #fff !important;
+  box-shadow: 0 3px 10px rgba(44, 119, 187, 0.25);
+}
+
+.product-compare-actions .product-btn_buy:hover,
+.product-compare-actions .product-btn_buy:focus {
+  background: linear-gradient(135deg, #155d9a, #2688c8) !important;
+  border-color: #155d9a !important;
+  color: #fff !important;
 }
 
 @media (max-width: 767px) {
