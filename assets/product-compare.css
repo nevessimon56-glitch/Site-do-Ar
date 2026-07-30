@@ -1,6 +1,6 @@
 /**
  * Comparador de produtos — Site do Ar
- * VERSAO: 2026-07-30-compare-v4-btn-size
+ * VERSAO: 2026-07-30-compare-v4-btn-size-fix
  */
 
 /* Garante imagem visível nos cards (lazy load) */
@@ -46,6 +46,8 @@
   font-size: 13px;
   box-sizing: border-box;
 }
+
+.showcase-compare-btn,
 .product-compare-btn {
   display: inline-flex;
   align-items: center;
@@ -79,7 +81,7 @@
   box-shadow: 0 3px 10px rgba(26, 110, 181, 0.28);
 }
 
-.showcase-compare-btn,
+.product-compare-data,
 .product-compare-json {
   display: none !important;
 }
