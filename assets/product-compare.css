@@ -1,6 +1,6 @@
 /**
  * Comparador de produtos — Site do Ar
- * VERSAO: 2026-07-30-compare-v3-perf-wdna
+ * VERSAO: 2026-07-30-compare-v4-btn-size
  */
 
 /* Garante imagem visível nos cards (lazy load) */
@@ -21,19 +21,31 @@
 .showcase-card-actions {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   width: 100%;
+  align-items: stretch;
 }
 
-.showcase-card-actions .showcase-compare-btn,
-.showcase-card-actions .showcase-product_buy.btn {
-  flex: 1 1 46%;
+.showcase-card-actions .showcase-compare-btn {
+  flex: 0 1 30%;
+  width: auto;
   min-width: 0;
+  min-height: 32px;
+  padding: 6px 8px;
+  font-size: 11px;
   box-sizing: border-box;
 }
 
-.showcase-compare-btn,
+.showcase-card-actions .showcase-product_buy.btn {
+  flex: 1 1 66%;
+  min-width: 0;
+  width: auto;
+  min-height: 42px;
+  padding: 10px 14px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
 .product-compare-btn {
   display: inline-flex;
   align-items: center;
@@ -67,12 +79,7 @@
   box-shadow: 0 3px 10px rgba(26, 110, 181, 0.28);
 }
 
-.showcase-product_buy.btn {
-  min-height: 38px;
-  width: 100%;
-}
-
-.product-compare-data,
+.showcase-compare-btn,
 .product-compare-json {
   display: none !important;
 }
@@ -441,10 +448,19 @@ body.has-compare-bar.has-mobile-account-dock {
   margin-top: 10px;
 }
 
-.product-compare-actions .product-compare-btn,
-.product-compare-actions .product-btn_buy {
-  flex: 1 1 46%;
+.product-compare-actions .product-compare-btn {
+  flex: 0 1 30%;
   min-width: 0;
+  min-height: 36px;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.product-compare-actions .product-btn_buy {
+  flex: 1 1 66%;
+  min-width: 0;
+  min-height: 44px;
+  font-size: 15px;
 }
 
 @media (max-width: 767px) {
