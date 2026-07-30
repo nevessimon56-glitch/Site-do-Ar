@@ -1,6 +1,6 @@
 {% comment %}
   ARQUIVO: showcase-model-product.liquid
-  VERSAO: 2026-07-15-v4  (nao usa primaryPrice / tabela Mercado Livre)
+  VERSAO: 2026-07-30-v5-compare
   No editor WDNA: substitua TODO o conteudo deste arquivo.
   Preco Pix + parcelas estao INLINE neste arquivo (nao depende de outro).
   Os icones de spec ficam APENAS em showcase-spec-wrap (abaixo do titulo).
@@ -103,13 +103,22 @@
             <div class="showcase-spec-wrap">
                 {% render 'sections/product-spec-icons', product: product %}
             </div>
+            {% render 'sections/product-compare-data', product: product, pixPrice: pixPriceCard, listPrice: listPriceCard %}
             <div class="card-footer">
                 {% if product.price.showPrice == false and themeConfig.buyAction.type != 'hide' %}
                     <div class="showcase-prices"></div>
                     {% assign msgChatContact = 'Olá, gostaria de saber preço do produto:%0A%0A'| append: product.title | append: '%0AID: ' | append: product.id %}
-                    <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
-                        Sob consulta
-                    </a>
+                    <div class="showcase-card-actions">
+                        <button type="button"
+                                class="showcase-compare-btn"
+                                data-compare-id="{{ product.id }}"
+                                aria-pressed="false">
+                            Comparar
+                        </button>
+                        <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
+                            Sob consulta
+                        </a>
+                    </div>
                 {% else %}
                     {% if themeConfig.price.type == 'show' or themeConfig.price.type == 'show-logged' %}
                         {% assign classShowcaseLoginPrice = '' %}
@@ -140,9 +149,17 @@
                             {% endif %}
                         </div>
                     {% endif %}
-                    <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
-                        Comprar
-                    </a>
+                    <div class="showcase-card-actions">
+                        <button type="button"
+                                class="showcase-compare-btn"
+                                data-compare-id="{{ product.id }}"
+                                aria-pressed="false">
+                            Comparar
+                        </button>
+                        <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
+                            Comprar
+                        </a>
+                    </div>
                 {% endif %}
             </div>
         </div>

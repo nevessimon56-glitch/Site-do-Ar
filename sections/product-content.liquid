@@ -419,8 +419,19 @@
                                     </div>
                                     <div class="columns">
                                         <div class="column col-12 col-sm-12">
+                                            {% assign compareListPrice = product.price.price %}
+                                            {% assign comparePixPrice = mainPrice %}
+                                            {% render 'sections/product-compare-data', product: product, pixPrice: comparePixPrice, listPrice: compareListPrice %}
                                             <div class="product-buy">
-                                                <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" title="Comprar" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ product.price.price }}')">Comprar</a>
+                                                <div class="product-compare-actions">
+                                                    <button type="button"
+                                                            class="product-compare-btn"
+                                                            data-compare-id="{{ product.id }}"
+                                                            aria-pressed="false">
+                                                        Comparar
+                                                    </button>
+                                                    <a class="product-btn product-btn_buy btn" href="javascript:void(0)" title="Comprar" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ product.price.price }}')">Comprar</a>
+                                                </div>
                                             </div>
                                         </div>
                                         {% if product.physicalProduct == true %}
