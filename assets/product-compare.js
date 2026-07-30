@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/product-compare.js
- * VERSAO: 2026-07-30-compare-v1
+ * VERSAO: 2026-07-30-compare-v2-area
  */
 (function () {
   'use strict';
@@ -49,6 +49,107 @@
     return parseInt(match[1], 10);
   }
 
+  function parseAreaRange(text) {
+    var raw = String(text || '').toLowerCase().replace(/m2/g, 'm²');
+    var range = raw.match(/(\d{1,3})\s*(?:a|até|ate|-|–)\s*(\d{1,3})\s*m²/);
+    if (range) {
+      return {
+        display: range[1] + '–' + range[2] + ' m²',
+        min: parseInt(range[1], 10),
+        max: parseInt(range[2], 10),
+        source: 'ficha'
+      };
+    }
+    var ate = raw.match(/at[eé]\s*(\d{1,3})\s*m²/);
+    if (ate) {
+      var maxOnly = parseInt(ate[1], 10);
+      return {
+        display: 'Até ' + maxOnly + ' m²',
+        min: 0,
+        max: maxOnly,
+        source: 'ficha'
+      };
+    }
+    var single = raw.match(/(\d{1,3})\s*m²/);
+    if (single) {
+      var value = parseInt(single[1], 10);
+      return {
+        display: value + ' m²',
+        min: value,
+        max: value,
+        source: 'ficha'
+      };
+    }
+    return null;
+  }
+
+  function parseAreaFromAttributes(attributes) {
+    if (!attributes || !attributes.length) return null;
+    for (var i = 0; i < attributes.length; i++) {
+      var name = String(attributes[i].name || '').toLowerCase();
+      var value = String(attributes[i].value || '').trim();
+      if (!value) continue;
+      if (name.indexOf('área') !== -1 || name.indexOf('area') !== -1 || name.indexOf('ambiente') !== -1) {
+        var parsed = parseAreaRange(value);
+        if (parsed) return parsed;
+        return { display: value, min: null, max: null, source: 'ficha' };
+      }
+    }
+    return null;
+  }
+
+  function estimateAreaFromBtu(btu) {
+    if (!btu) return null;
+    var table = [
+      { btu: 9000, min: 12, max: 15 },
+      { btu: 12000, min: 15, max: 22 },
+      { btu: 18000, min: 20, max: 30 },
+      { btu: 24000, min: 30, max: 40 },
+      { btu: 30000, min: 40, max: 50 },
+      { btu: 36000, min: 50, max: 60 },
+      { btu: 48000, min: 65, max: 80 },
+      { btu: 56000, min: 80, max: 95 }
+    ];
+    for (var i = 0; i < table.length; i++) {
+      if (btu <= Math.round(table[i].btu * 1.1)) {
+        return {
+          display: table[i].min + '–' + table[i].max + ' m² (estimativa)',
+          min: table[i].min,
+          max: table[i].max,
+          source: 'estimativa'
+        };
+      }
+    }
+    var minM2 = Math.round(btu / 800);
+    var maxM2 = Math.round(btu / 600);
+    return {
+      display: minM2 + '–' + maxM2 + ' m² (estimativa)',
+      min: minM2,
+      max: maxM2,
+      source: 'estimativa'
+    };
+  }
+
+  function resolveRecommendedArea(data, btu) {
+    var specs = data.specs || {};
+    if (specs.recommendedArea) {
+      var fromSpecField = parseAreaRange(specs.recommendedArea) || {
+        display: specs.recommendedArea,
+        min: null,
+        max: null,
+        source: 'ficha'
+      };
+      return fromSpecField;
+    }
+    var fromAttributes = parseAreaFromAttributes(data.attributes || []);
+    if (fromAttributes) return fromAttributes;
+    var fromText = parseAreaRange(data.searchText || '');
+    if (fromText) return fromText;
+    var estimated = estimateAreaFromBtu(btu);
+    if (estimated) return estimated;
+    return { display: '—', min: null, max: null, source: 'none' };
+  }
+
   function enrichProduct(data) {
     if (!data) return null;
     var specs = data.specs || {};
@@ -56,6 +157,7 @@
     var cycle = '—';
     if (specs.quenteFrio) cycle = 'Quente/Frio';
     else if (specs.frio) cycle = 'Só Frio';
+    var area = resolveRecommendedArea(data, btu);
 
     return {
       id: String(data.id),
@@ -65,6 +167,10 @@
       pixPrice: Number(data.pixPrice) || 0,
       listPrice: Number(data.listPrice) || 0,
       btu: btu,
+      recommendedArea: area.display,
+      areaMin: area.min,
+      areaMax: area.max,
+      areaSource: area.source,
       cycle: cycle,
       inverter: !!specs.inverter,
       wifi: !!specs.wifi,
@@ -199,6 +305,7 @@
       { key: 'pixPrice', label: 'Preço no Pix', a: formatMoney(a.pixPrice), b: formatMoney(b.pixPrice), rawA: a.pixPrice, rawB: b.pixPrice },
       { key: 'listPrice', label: 'Preço de tabela', a: formatMoney(a.listPrice), b: formatMoney(b.listPrice), rawA: a.listPrice, rawB: b.listPrice },
       { key: 'btu', label: 'Capacidade (BTU)', a: a.btu ? a.btu.toLocaleString('pt-BR') + ' BTUs' : '—', b: b.btu ? b.btu.toLocaleString('pt-BR') + ' BTUs' : '—', rawA: a.btu || 0, rawB: b.btu || 0 },
+      { key: 'area', label: 'Área recomendada', a: a.recommendedArea || '—', b: b.recommendedArea || '—', rawA: a.areaMax || a.areaMin || 0, rawB: b.areaMax || b.areaMin || 0 },
       { key: 'type', label: 'Tipo', a: a.type, b: b.type },
       { key: 'cycle', label: 'Ciclo', a: a.cycle, b: b.cycle },
       { key: 'inverter', label: 'Tecnologia', a: a.inverter ? 'Inverter' : 'Convencional', b: b.inverter ? 'Inverter' : 'Convencional', boolA: a.inverter, boolB: b.inverter },
@@ -228,11 +335,31 @@
     if (a.btu && b.btu) {
       if (a.btu > b.btu) {
         prosA.push('Maior capacidade de refrigeração (' + a.btu.toLocaleString('pt-BR') + ' BTUs)');
-        consB.push('Capacidade menor para ambientes amplos');
+        consB.push('Capacidade menor — pode não refrigerar bem ambientes amplos');
       } else if (b.btu > a.btu) {
         prosB.push('Maior capacidade de refrigeração (' + b.btu.toLocaleString('pt-BR') + ' BTUs)');
-        consA.push('Capacidade menor para ambientes amplos');
+        consA.push('Capacidade menor — pode não refrigerar bem ambientes amplos');
       }
+    }
+
+    if (a.areaMax && b.areaMax) {
+      if (a.areaMax > b.areaMax) {
+        prosA.push('Cobre área maior (' + a.recommendedArea + ')');
+        consB.push('Área recomendada menor (' + b.recommendedArea + ')');
+      } else if (b.areaMax > a.areaMax) {
+        prosB.push('Cobre área maior (' + b.recommendedArea + ')');
+        consA.push('Área recomendada menor (' + a.recommendedArea + ')');
+      }
+    } else if (a.recommendedArea !== '—' && b.recommendedArea === '—') {
+      prosA.push('Área recomendada informada (' + a.recommendedArea + ')');
+    } else if (b.recommendedArea !== '—' && a.recommendedArea === '—') {
+      prosB.push('Área recomendada informada (' + b.recommendedArea + ')');
+    }
+
+    if (a.areaSource === 'ficha' && b.areaSource === 'estimativa') {
+      prosA.push('Área recomendada confirmada na ficha técnica');
+    } else if (b.areaSource === 'ficha' && a.areaSource === 'estimativa') {
+      prosB.push('Área recomendada confirmada na ficha técnica');
     }
 
     if (a.inverter && !b.inverter) {
@@ -329,6 +456,10 @@
           classB = row.rawB < row.rawA ? ' is-better' : '';
         }
         if (row.key === 'btu' && row.rawA && row.rawB) {
+          classA = row.rawA > row.rawB ? ' is-better' : '';
+          classB = row.rawB > row.rawA ? ' is-better' : '';
+        }
+        if (row.key === 'area' && row.rawA && row.rawB) {
           classA = row.rawA > row.rawB ? ' is-better' : '';
           classB = row.rawB > row.rawA ? ' is-better' : '';
         }

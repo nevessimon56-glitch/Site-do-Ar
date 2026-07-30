@@ -1,6 +1,6 @@
 {% comment %}
   Dados JSON para comparador de produtos
-  VERSAO: 2026-07-30-compare-v1
+  VERSAO: 2026-07-30-compare-v2-area
   Uso: {% render 'sections/product-compare-data', product: product, pixPrice: pixPriceCard, listPrice: listPriceCard %}
 {% endcomment %}
 
@@ -92,6 +92,26 @@
   {% assign cmpType = 'Multi Split' %}
 {% endif %}
 
+{% assign cmpArea = '' %}
+{% if product.attributes and product.attributes.size > 0 %}
+  {% for attr in product.attributes %}
+    {% assign attrNameCmp = attr.name | default: attr.nome | default: '' | downcase %}
+    {% assign attrValCmp = '' %}
+    {% if attr.values and attr.values.size > 0 %}
+      {% assign attrValCmp = attr.values[0].name | default: attr.values[0].value | default: '' %}
+    {% elsif attr.value %}
+      {% assign attrValCmp = attr.value %}
+    {% endif %}
+    {% if attrNameCmp contains 'área' or attrNameCmp contains 'area' or attrNameCmp contains 'ambiente' %}
+      {% if attrValCmp != '' %}
+        {% assign cmpArea = attrValCmp %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% assign cmpSearchText = specBlob | truncate: 1800, '' %}
+
 {% assign cmpPix = pixPrice | default: product.price.price %}
 {% assign cmpList = listPrice | default: product.price.price %}
 {% assign cmpImg = '' %}
@@ -115,8 +135,10 @@
     "cobre": {{ cmpCobre | json }},
     "wifi": {{ cmpWifi | json }},
     "voltage": {{ cmpVoltage | json }},
-    "type": {{ cmpType | json }}
+    "type": {{ cmpType | json }},
+    "recommendedArea": {{ cmpArea | json }}
   },
+  "searchText": {{ cmpSearchText | json }},
   "attributes": [
     {% if product.attributes and product.attributes.size > 0 %}
       {% for attr in product.attributes %}
