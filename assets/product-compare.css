@@ -1,6 +1,6 @@
 /**
  * Comparador de produtos — Site do Ar
- * VERSAO: 2026-07-30-compare-v4-btn-size-fix
+ * VERSAO: 2026-07-30-compare-v5-btn-visible
  */
 
 /* Garante imagem visível nos cards (lazy load) */
@@ -19,32 +19,55 @@
 }
 
 .showcase-card-actions {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  gap: 8px;
-  width: 100%;
-  align-items: stretch;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 6px !important;
+  width: 100% !important;
+  align-items: stretch !important;
+  overflow: visible !important;
 }
 
 .showcase-card-actions .showcase-compare-btn {
-  flex: 0 1 30%;
-  width: auto;
-  min-width: 0;
-  min-height: 32px;
-  padding: 6px 8px;
-  font-size: 11px;
-  box-sizing: border-box;
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  width: auto !important;
+  min-width: 74px !important;
+  max-width: 38% !important;
+  min-height: 34px !important;
+  padding: 6px 8px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
 }
 
 .showcase-card-actions .showcase-product_buy.btn {
-  flex: 1 1 66%;
-  min-width: 0;
-  width: auto;
-  min-height: 42px;
-  padding: 10px 14px;
-  font-size: 13px;
-  box-sizing: border-box;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 1 auto !important;
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  float: none !important;
+  margin: 0 !important;
+  min-height: 40px !important;
+  padding: 10px 12px !important;
+  font-size: 13px !important;
+  box-sizing: border-box !important;
+}
+
+/* mega-menu força width:100% no Comprar em grid 2 colunas — neutraliza dentro da linha de ações */
+.showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-product_buy.btn {
+  width: auto !important;
+  max-width: none !important;
+  flex: 1 1 auto !important;
+  margin: 0 !important;
 }
 
 .showcase-compare-btn,
@@ -52,7 +75,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: auto;
   min-height: 38px;
   padding: 8px 10px;
   border: 1px solid #cfe3f2;
@@ -445,22 +468,27 @@ body.has-compare-bar.has-mobile-account-dock {
 .product-compare-actions {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 10px;
   margin-top: 10px;
+  width: 100%;
 }
 
 .product-compare-actions .product-compare-btn {
-  flex: 0 1 30%;
-  min-width: 0;
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  min-width: 96px;
+  max-width: 34%;
   min-height: 36px;
   padding: 8px 10px;
   font-size: 12px;
+  white-space: nowrap;
 }
 
 .product-compare-actions .product-btn_buy {
-  flex: 1 1 66%;
+  flex: 1 1 auto;
   min-width: 0;
+  width: auto;
   min-height: 44px;
   font-size: 15px;
 }
