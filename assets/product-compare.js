@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/product-compare.js
- * VERSAO: 2026-07-30-compare-v2-area
+ * VERSAO: 2026-07-30-compare-v3-perf
  */
 (function () {
   'use strict';
@@ -30,9 +30,13 @@
   function getProductDataFromCard(card) {
     if (!card) return null;
     var root = card.closest('.showcase-product, .showcase-item, .product-main, .product-content') || card;
-    var jsonEl = root.querySelector('.product-compare-json');
-    if (jsonEl) return parseProductJson(jsonEl);
-    var btn = card.querySelector('[data-compare-product]');
+    var tpl = root.querySelector('template.product-compare-data');
+    if (tpl && tpl.innerHTML) {
+      return parseProductJson({ textContent: tpl.innerHTML });
+    }
+    var legacy = root.querySelector('.product-compare-json');
+    if (legacy) return parseProductJson(legacy);
+    var btn = root.querySelector('[data-compare-product]');
     if (btn) {
       try {
         return JSON.parse(btn.getAttribute('data-compare-product'));
@@ -83,21 +87,6 @@
     return null;
   }
 
-  function parseAreaFromAttributes(attributes) {
-    if (!attributes || !attributes.length) return null;
-    for (var i = 0; i < attributes.length; i++) {
-      var name = String(attributes[i].name || '').toLowerCase();
-      var value = String(attributes[i].value || '').trim();
-      if (!value) continue;
-      if (name.indexOf('área') !== -1 || name.indexOf('area') !== -1 || name.indexOf('ambiente') !== -1) {
-        var parsed = parseAreaRange(value);
-        if (parsed) return parsed;
-        return { display: value, min: null, max: null, source: 'ficha' };
-      }
-    }
-    return null;
-  }
-
   function estimateAreaFromBtu(btu) {
     if (!btu) return null;
     var table = [
@@ -132,6 +121,11 @@
 
   function resolveRecommendedArea(data, btu) {
     var specs = data.specs || {};
+    if (data.area) {
+      var fromArea = parseAreaRange(data.area);
+      if (fromArea) return fromArea;
+      return { display: data.area, min: null, max: null, source: 'ficha' };
+    }
     if (specs.recommendedArea) {
       var fromSpecField = parseAreaRange(specs.recommendedArea) || {
         display: specs.recommendedArea,
@@ -141,9 +135,7 @@
       };
       return fromSpecField;
     }
-    var fromAttributes = parseAreaFromAttributes(data.attributes || []);
-    if (fromAttributes) return fromAttributes;
-    var fromText = parseAreaRange(data.searchText || '');
+    var fromText = parseAreaRange(data.areaHint || '');
     if (fromText) return fromText;
     var estimated = estimateAreaFromBtu(btu);
     if (estimated) return estimated;
@@ -178,7 +170,7 @@
       procelA: !!specs.procelA,
       voltage: specs.voltage || '—',
       type: specs.type || '—',
-      attributes: Array.isArray(data.attributes) ? data.attributes : []
+      attributes: []
     };
   }
 
@@ -525,17 +517,16 @@
     selectProduct(product);
   }
 
-  function bindButtons(root) {
-    root = root || document;
-    var buttons = root.querySelectorAll('.showcase-compare-btn:not([data-compare-bound]), .product-compare-btn:not([data-compare-bound])');
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].setAttribute('data-compare-bound', '1');
-      buttons[i].addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        onCompareClick(this);
-      });
-    }
+  function bindButtons() {
+    if (document.body.getAttribute('data-compare-delegation') === '1') return;
+    document.body.setAttribute('data-compare-delegation', '1');
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.showcase-compare-btn, .product-compare-btn');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      onCompareClick(btn);
+    });
   }
 
   function bindPanel() {
@@ -565,24 +556,15 @@
   }
 
   function init() {
+    if (window.__productCompareInit) return;
+    window.__productCompareInit = true;
+
     loadState();
     bindPanel();
     bindBar();
-    bindButtons(document);
+    bindButtons();
     syncButtons();
     updateBar();
-
-    if (typeof MutationObserver !== 'undefined') {
-      var observer = new MutationObserver(function (mutations) {
-        for (var i = 0; i < mutations.length; i++) {
-          if (mutations[i].addedNodes.length) {
-            bindButtons(document);
-            syncButtons();
-          }
-        }
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
-    }
   }
 
   window.initProductCompare = init;

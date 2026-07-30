@@ -1,7 +1,22 @@
 /**
  * Comparador de produtos — Site do Ar
- * VERSAO: 2026-07-30-compare-v2-area
+ * VERSAO: 2026-07-30-compare-v3-perf
  */
+
+/* Garante imagem visível nos cards (lazy load) */
+.showcase-product_link__image > img.product-hover-swap,
+.showcase-product_link__image > img.lazy {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  visibility: visible !important;
+}
+
+.showcase-product .card-footer .showcase-card-actions {
+  margin-top: 6px;
+}
 
 .showcase-card-actions {
   display: grid;
@@ -15,6 +30,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   min-height: 38px;
   padding: 8px 10px;
   border: 1px solid #cfe3f2;
@@ -45,8 +61,10 @@
 
 .showcase-product_buy.btn {
   min-height: 38px;
+  width: 100%;
 }
 
+.product-compare-data,
 .product-compare-json {
   display: none !important;
 }
