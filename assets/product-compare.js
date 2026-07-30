@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/product-compare.js
- * VERSAO: 2026-07-30-compare-v4-specs
+ * VERSAO: 2026-07-30-compare-v5-ml-attrs
  */
 (function () {
   'use strict';
@@ -142,6 +142,213 @@
     return { display: '—', min: null, max: null, source: 'none' };
   }
 
+  function normalizeAttrKey(value) {
+    return String(value || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+  }
+
+  function buildAttrIndex(attrs) {
+    var map = {};
+    var labels = {};
+    if (!attrs || !attrs.length) return { map: map, labels: labels };
+    for (var i = 0; i < attrs.length; i++) {
+      var item = attrs[i];
+      if (!item || !item.k || !item.v) continue;
+      var key = normalizeAttrKey(item.k);
+      var val = String(item.v).trim();
+      if (!key || !val) continue;
+      map[key] = val;
+      labels[key] = item.l || item.k || key;
+    }
+    return { map: map, labels: labels };
+  }
+
+  function findAttr(map, patterns) {
+    for (var key in map) {
+      for (var i = 0; i < patterns.length; i++) {
+        if (key.indexOf(patterns[i]) !== -1) return map[key];
+      }
+    }
+    return '';
+  }
+
+  function attrKeyMatches(key, patterns) {
+    for (var i = 0; i < patterns.length; i++) {
+      if (key.indexOf(patterns[i]) !== -1) return true;
+    }
+    return false;
+  }
+
+  function parseBtuFromText(text) {
+    var raw = String(text || '');
+    var match = raw.match(/(\d{1,2})[\.\s]?(\d{3})\s*btus?/i) || raw.match(/(\d{4,5})\s*btus?/i) || raw.match(/(\d{4,5})/);
+    if (!match) return null;
+    if (match[2]) return parseInt(match[1] + match[2], 10);
+    return parseInt(match[1], 10);
+  }
+
+  function parseCycleFromText(text) {
+    var value = normalizeAttrKey(text);
+    if (!value) return '';
+    if (value.indexOf('quente') !== -1) return 'Quente/Frio';
+    if (value.indexOf('frio') !== -1) return 'Só Frio';
+    return String(text).trim();
+  }
+
+  function parseVoltageFromText(text) {
+    var value = normalizeAttrKey(text);
+    if (!value) return '';
+    if (value.indexOf('220') !== -1) return '220V';
+    if (value.indexOf('127') !== -1) return '127V';
+    if (value.indexOf('110') !== -1 || value.indexOf('115') !== -1) return '110V';
+    if (value.indexOf('380') !== -1) return '380V';
+    if (value.indexOf('bivolt') !== -1 || value.indexOf('bi-volt') !== -1) return 'Bivolt';
+    return String(text).trim();
+  }
+
+  function parseBoolFromText(text, positivePatterns) {
+    var value = normalizeAttrKey(text);
+    if (!value) return null;
+    if (value === 'sim' || value === 'yes' || value === 'true') return true;
+    if (value === 'nao' || value === 'não' || value === 'no' || value === 'false') return false;
+    for (var i = 0; i < positivePatterns.length; i++) {
+      if (value.indexOf(positivePatterns[i]) !== -1) return true;
+    }
+    return null;
+  }
+
+  function parseCoilFromText(text) {
+    var value = normalizeAttrKey(text);
+    if (!value) return null;
+    if (value.indexOf('cobre') !== -1) return { cobre: true, aluminio: false, coil: 'Cobre' };
+    if (value.indexOf('alum') !== -1) return { cobre: false, aluminio: true, coil: 'Alumínio' };
+    return { cobre: false, aluminio: false, coil: String(text).trim() };
+  }
+
+  function parseProcelLabel(text) {
+    var value = String(text || '').trim();
+    if (!value) return '—';
+    var norm = normalizeAttrKey(value);
+    if (norm === 'a' || norm.indexOf('classe a') !== -1) return 'Classe A';
+    if (norm === 'b' || norm.indexOf('classe b') !== -1) return 'Classe B';
+    if (norm === 'c' || norm.indexOf('classe c') !== -1) return 'Classe C';
+    return value;
+  }
+
+  function applyMlAttributes(product, attrs) {
+    var index = buildAttrIndex(attrs);
+    var map = index.map;
+    var labels = index.labels;
+    product.attrMap = map;
+    product.attrLabels = labels;
+
+    var btuAttr = findAttr(map, ['btu', 'capacidade de refrigera', 'capacidade em btu', 'cooling_capacity', 'capacidade nominal']);
+    if (btuAttr) {
+      var parsedBtu = parseBtuFromText(btuAttr);
+      if (parsedBtu) product.btu = parsedBtu;
+    }
+
+    var areaAttr = findAttr(map, ['area recomendada', 'area de cobertura', 'ambiente recomendado', 'tamanho do ambiente', 'room_size', 'area minima', 'area maxima']);
+    if (areaAttr) {
+      var parsedArea = parseAreaRange(areaAttr);
+      if (parsedArea) {
+        product.recommendedArea = parsedArea.display;
+        product.areaMin = parsedArea.min;
+        product.areaMax = parsedArea.max;
+        product.areaSource = 'atributo';
+      } else {
+        product.recommendedArea = areaAttr;
+        product.areaSource = 'atributo';
+      }
+    }
+
+    var typeAttr = findAttr(map, ['tipo de ar', 'tipo do ar', 'tipo de aparelho', 'tipo de equipamento', 'product_type', 'tipo split']);
+    if (typeAttr) product.type = typeAttr;
+
+    var cycleAttr = findAttr(map, ['ciclo', 'cooling_and_heating', 'funcao do ciclo', 'funcao ciclo', 'modo de operacao']);
+    if (cycleAttr) product.cycle = parseCycleFromText(cycleAttr);
+
+    var voltageAttr = findAttr(map, ['voltagem', 'voltage', 'tensao', 'alimentacao eletrica', 'line_voltage', 'tensao nominal']);
+    if (voltageAttr) product.voltage = parseVoltageFromText(voltageAttr);
+
+    var inverterAttr = findAttr(map, ['inverter', 'inversor', 'tecnologia do compressor', 'tipo de tecnologia', 'tecnologia']);
+    if (inverterAttr) {
+      var inverterBool = parseBoolFromText(inverterAttr, ['inverter', 'inversor']);
+      if (inverterBool !== null) product.inverter = inverterBool;
+    }
+
+    var wifiAttr = findAttr(map, ['wi-fi', 'wifi', 'conectividade', 'compatibilidade wi-fi', 'smart']);
+    if (wifiAttr) {
+      var wifiBool = parseBoolFromText(wifiAttr, ['wi-fi', 'wifi', 'smart']);
+      if (wifiBool !== null) product.wifi = wifiBool;
+    }
+
+    var coilAttr = findAttr(map, ['serpentina', 'material do evaporador', 'material da serpentina', 'material da tubulacao', 'tubulacao', 'evaporador']);
+    if (coilAttr) {
+      var coilParsed = parseCoilFromText(coilAttr);
+      if (coilParsed) {
+        product.cobre = coilParsed.cobre;
+        product.aluminio = coilParsed.aluminio;
+        product.coil = coilParsed.coil;
+      }
+    }
+
+    var procelAttr = findAttr(map, ['procel', 'eficiencia energ', 'classificacao energ', 'energy_efficiency', 'selo procel', 'classe energetica']);
+    if (procelAttr) {
+      product.procelLabel = parseProcelLabel(procelAttr);
+      var procelNorm = normalizeAttrKey(procelAttr);
+      product.procelA = procelNorm === 'a' || procelNorm.indexOf('classe a') !== -1 || procelNorm.indexOf('procel a') !== -1;
+    }
+
+    return product;
+  }
+
+  function buildMlExtraRows(a, b) {
+    var skipPatterns = ['marca', 'brand', 'modelo', 'model', 'ean', 'gtin', 'sku', 'condicao', 'condition', 'mpn', 'referencia'];
+    var corePatterns = [
+      'btu', 'capacidade de refrigera', 'capacidade em btu', 'cooling_capacity',
+      'area recomendada', 'area de cobertura', 'ambiente recomendado', 'tamanho do ambiente', 'room_size',
+      'tipo de ar', 'tipo do ar', 'tipo de aparelho', 'product_type',
+      'ciclo', 'cooling_and_heating', 'funcao do ciclo', 'modo de operacao',
+      'voltagem', 'voltage', 'tensao', 'alimentacao eletrica', 'line_voltage',
+      'inverter', 'inversor', 'tecnologia do compressor', 'tipo de tecnologia',
+      'wi-fi', 'wifi', 'conectividade', 'compatibilidade wi-fi', 'smart',
+      'serpentina', 'material do evaporador', 'material da serpentina', 'tubulacao', 'evaporador',
+      'procel', 'eficiencia energ', 'classificacao energ', 'energy_efficiency', 'selo procel', 'classe energetica'
+    ];
+    var keys = {};
+    var mapA = a.attrMap || {};
+    var mapB = b.attrMap || {};
+    var labelA = a.attrLabels || {};
+    var labelB = b.attrLabels || {};
+
+    for (var key in mapA) keys[key] = true;
+    for (var keyB in mapB) keys[keyB] = true;
+
+    var rows = [];
+    for (var attrKey in keys) {
+      if (attrKeyMatches(attrKey, skipPatterns)) continue;
+      if (attrKeyMatches(attrKey, corePatterns)) continue;
+      var valA = mapA[attrKey] || '—';
+      var valB = mapB[attrKey] || '—';
+      if (valA === '—' && valB === '—') continue;
+      rows.push({
+        key: 'attr_' + attrKey,
+        label: labelA[attrKey] || labelB[attrKey] || attrKey,
+        a: valA,
+        b: valB
+      });
+    }
+
+    rows.sort(function (x, y) {
+      return String(x.label).localeCompare(String(y.label), 'pt-BR');
+    });
+    return rows;
+  }
+
   function resolveCycle(specs) {
     if (specs.quenteFrio) return 'Quente/Frio';
     if (specs.frio) return 'Só Frio';
@@ -163,7 +370,7 @@
     var coil = resolveCoil(specs);
     var area = resolveRecommendedArea(data, btu);
 
-    return {
+    var product = {
       id: String(data.id),
       title: data.title || '',
       url: data.url || '#',
@@ -182,10 +389,14 @@
       aluminio: !!specs.aluminio,
       coil: coil,
       procelA: !!specs.procelA,
+      procelLabel: specs.procelA ? 'Classe A' : '—',
       voltage: specs.voltage || '—',
       type: specs.type || '—',
-      attributes: []
+      attrMap: {},
+      attrLabels: {}
     };
+
+    return applyMlAttributes(product, data.attrs || []);
   }
 
   function saveState() {
@@ -307,7 +518,7 @@
   }
 
   function getCompareRows(a, b) {
-    return [
+    var coreRows = [
       { key: 'pixPrice', label: 'Preço no Pix', a: formatMoney(a.pixPrice), b: formatMoney(b.pixPrice), rawA: a.pixPrice, rawB: b.pixPrice },
       { key: 'listPrice', label: 'Preço de tabela', a: formatMoney(a.listPrice), b: formatMoney(b.listPrice), rawA: a.listPrice, rawB: b.listPrice },
       { key: 'btu', label: 'Capacidade (BTU)', a: a.btu ? a.btu.toLocaleString('pt-BR') + ' BTUs' : '—', b: b.btu ? b.btu.toLocaleString('pt-BR') + ' BTUs' : '—', rawA: a.btu || 0, rawB: b.btu || 0 },
@@ -318,8 +529,10 @@
       { key: 'voltage', label: 'Voltagem', a: a.voltage, b: b.voltage },
       { key: 'wifi', label: 'Wi-Fi', a: a.wifi ? 'Sim' : 'Não', b: b.wifi ? 'Sim' : 'Não', boolA: a.wifi, boolB: b.wifi },
       { key: 'cobre', label: 'Serpentina', a: a.coil, b: b.coil, boolA: a.cobre, boolB: b.cobre },
-      { key: 'procelA', label: 'Procel', a: a.procelA ? 'Classe A' : '—', b: b.procelA ? 'Classe A' : '—', boolA: a.procelA, boolB: b.procelA }
+      { key: 'procelA', label: 'Procel / Eficiência', a: a.procelLabel || (a.procelA ? 'Classe A' : '—'), b: b.procelLabel || (b.procelA ? 'Classe A' : '—'), boolA: a.procelA, boolB: b.procelA }
     ];
+
+    return coreRows.concat(buildMlExtraRows(a, b));
   }
 
   function buildInsights(a, b) {
@@ -366,6 +579,10 @@
       prosA.push('Área recomendada confirmada na ficha técnica');
     } else if (b.areaSource === 'ficha' && a.areaSource === 'estimativa') {
       prosB.push('Área recomendada confirmada na ficha técnica');
+    } else if (a.areaSource === 'atributo' && b.areaSource !== 'atributo') {
+      prosA.push('Área recomendada informada nos atributos do produto');
+    } else if (b.areaSource === 'atributo' && a.areaSource !== 'atributo') {
+      prosB.push('Área recomendada informada nos atributos do produto');
     }
 
     if (a.inverter && !b.inverter) {

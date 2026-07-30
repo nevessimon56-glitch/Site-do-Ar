@@ -1,6 +1,6 @@
 {% comment %}
   Dados compactos para comparador (sem script tag — não quebra layout do card)
-  VERSAO: 2026-07-30-compare-v4-specs
+  VERSAO: 2026-07-30-compare-v5-ml-attrs
   Usa a mesma base de detecção de product-spec-icons (ficha, atributos, propriedades).
 {% endcomment %}
 
@@ -231,4 +231,28 @@
   {% assign cmpImg = product.medias[0].path | imgUrl: 250 %}
 {% endif %}
 
-<template class="product-compare-data" data-product-id="{{ product.id }}">{"id":{{ product.id }},"title":{{ product.title | json }},"url":{{ product.url | json }},"image":{{ cmpImg | json }},"pixPrice":{{ cmpPix }},"listPrice":{{ cmpList }},"area":{{ cmpArea | json }},"areaHint":{{ cmpAreaHint | json }},"specs":{"procelA":{{ cmpProcelA }},"quenteFrio":{{ cmpQuenteFrio }},"frio":{{ cmpFrio }},"inverter":{{ cmpInverter }},"cobre":{{ cmpCobre }},"aluminio":{{ cmpAluminio }},"wifi":{{ cmpWifi }},"voltage":{{ cmpVoltage | json }},"type":{{ cmpType | json }},"recommendedArea":{{ cmpArea | json }}}}</template>
+{% capture cmpAttrsJson %}[
+{% assign cmpAttrFirst = true %}
+{% if product.attributes and product.attributes.size > 0 %}
+  {% for attr in product.attributes %}
+    {% assign aLabel = attr.name | default: attr.nome | default: attr.title | default: '' | strip %}
+    {% assign aKey = aLabel | downcase %}
+    {% assign aVal = '' %}
+    {% if attr.values and attr.values.size > 0 %}
+      {% capture aValParts %}{% for v in attr.values %}{% assign vPart = v.name | default: v.value | default: '' | strip %}{% if vPart != '' %}{{ vPart }}{% unless forloop.last %}, {% endunless %}{% endif %}{% endfor %}{% endcapture %}
+      {% assign aVal = aValParts | strip %}
+    {% elsif attr.valores and attr.valores.size > 0 %}
+      {% capture aValParts %}{% for v in attr.valores %}{% assign vPart = v.nome | default: v.name | default: '' | strip %}{% if vPart != '' %}{{ vPart }}{% unless forloop.last %}, {% endunless %}{% endif %}{% endfor %}{% endcapture %}
+      {% assign aVal = aValParts | strip %}
+    {% elsif attr.value %}
+      {% assign aVal = attr.value | strip %}
+    {% endif %}
+    {% if aLabel != '' and aVal != '' %}
+      {% unless cmpAttrFirst %},{% endunless %}{"k":{{ aKey | json }},"l":{{ aLabel | json }},"v":{{ aVal | json }}}
+      {% assign cmpAttrFirst = false %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+]{% endcapture %}
+
+<template class="product-compare-data" data-product-id="{{ product.id }}">{"id":{{ product.id }},"title":{{ product.title | json }},"url":{{ product.url | json }},"image":{{ cmpImg | json }},"pixPrice":{{ cmpPix }},"listPrice":{{ cmpList }},"area":{{ cmpArea | json }},"areaHint":{{ cmpAreaHint | json }},"attrs":{{ cmpAttrsJson }},"specs":{"procelA":{{ cmpProcelA }},"quenteFrio":{{ cmpQuenteFrio }},"frio":{{ cmpFrio }},"inverter":{{ cmpInverter }},"cobre":{{ cmpCobre }},"aluminio":{{ cmpAluminio }},"wifi":{{ cmpWifi }},"voltage":{{ cmpVoltage | json }},"type":{{ cmpType | json }},"recommendedArea":{{ cmpArea | json }}}}</template>
