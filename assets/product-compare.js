@@ -1,11 +1,11 @@
 /**
  * ARQUIVO: assets/product-compare.js
- * VERSAO: 2026-07-30-compare-v5-ml-attrs
+ * VERSAO: 2026-07-30-compare-v6-ml-attrs-safe
  */
 (function () {
   'use strict';
 
-  var STORAGE_KEY = 'site-do-ar-compare-v1';
+  var STORAGE_KEY = 'site-do-ar-compare-v2';
   var state = { first: null, second: null };
 
   function formatMoney(value) {
@@ -142,6 +142,49 @@
     return { display: '—', min: null, max: null, source: 'none' };
   }
 
+  var INTERNAL_ATTR_KEYS = [
+    'productmaingridoption', 'maingridoption', 'gridoption', 'optionid', 'productid',
+    'channel', 'integration', 'marketplace', 'serialized', 'payload', 'base64',
+    'hash', 'token', 'compressed', 'meli_', 'ml_', 'json', 'script', 'html'
+  ];
+
+  var ALLOWED_EXTRA_ATTR_KEYS = [
+    'garantia', 'warranty', 'potencia', 'power', 'dimens', 'altura', 'largura', 'profund',
+    'peso', 'weight', 'cor', 'color', 'refrigerante', 'gas', 'ruido', 'noise', 'decibel',
+    'funcoes', 'recursos', 'filtro', 'controle', 'display', 'timer', 'modalidade',
+    'compressor', 'origem', 'pais', 'linha', 'serie', 'modelo comercial', 'consumo',
+    'capacidade de aquecimento', 'umidade', 'velocidade', 'dreno', 'instalacao'
+  ];
+
+  function isInternalAttrKey(key, rawKey) {
+    var k = normalizeAttrKey(key);
+    if (!k) return true;
+    for (var i = 0; i < INTERNAL_ATTR_KEYS.length; i++) {
+      if (k.indexOf(INTERNAL_ATTR_KEYS[i]) !== -1) return true;
+    }
+    if (rawKey && /[a-z][A-Z]/.test(String(rawKey))) return true;
+    if (k.indexOf(' ') === -1 && k.length > 24 && /^[a-z0-9_]+$/.test(k) === false && /[A-Z]/.test(String(rawKey || ''))) {
+      return true;
+    }
+    return false;
+  }
+
+  function isGarbageAttrValue(value) {
+    var v = String(value || '').trim();
+    if (!v) return true;
+    if (v.length > 100) return true;
+    if (v.indexOf('H4sI') === 0) return true;
+    if (/^[A-Za-z0-9+/=_-]{50,}$/.test(v)) return true;
+    return false;
+  }
+
+  function isUsableAttribute(item) {
+    if (!item || !item.k || !item.v) return false;
+    if (isInternalAttrKey(item.k, item.l || item.k)) return false;
+    if (isGarbageAttrValue(item.v)) return false;
+    return true;
+  }
+
   function normalizeAttrKey(value) {
     return String(value || '')
       .toLowerCase()
@@ -156,7 +199,7 @@
     if (!attrs || !attrs.length) return { map: map, labels: labels };
     for (var i = 0; i < attrs.length; i++) {
       var item = attrs[i];
-      if (!item || !item.k || !item.v) continue;
+      if (!isUsableAttribute(item)) continue;
       var key = normalizeAttrKey(item.k);
       var val = String(item.v).trim();
       if (!key || !val) continue;
@@ -164,6 +207,18 @@
       labels[key] = item.l || item.k || key;
     }
     return { map: map, labels: labels };
+  }
+
+  function findValueContaining(map, patterns, excludePatterns) {
+    for (var key in map) {
+      if (excludePatterns && attrKeyMatches(key, excludePatterns)) continue;
+      if (isInternalAttrKey(key, key)) continue;
+      var valNorm = normalizeAttrKey(map[key]);
+      for (var i = 0; i < patterns.length; i++) {
+        if (valNorm.indexOf(patterns[i]) !== -1) return map[key];
+      }
+    }
+    return '';
   }
 
   function findAttr(map, patterns) {
@@ -286,7 +341,13 @@
       if (wifiBool !== null) product.wifi = wifiBool;
     }
 
-    var coilAttr = findAttr(map, ['serpentina', 'material do evaporador', 'material da serpentina', 'material da tubulacao', 'tubulacao', 'evaporador']);
+    var coilAttr = findAttr(map, [
+      'serpentina', 'material do evaporador', 'material da serpentina', 'material da tubulacao',
+      'tubulacao', 'evaporador', 'trocador de calor', 'coil_material', 'material do condensador'
+    ]);
+    if (!coilAttr) {
+      coilAttr = findValueContaining(map, ['cobre', 'aluminio', 'aluminium', 'copper'], ['refrigerante', 'gas']);
+    }
     if (coilAttr) {
       var coilParsed = parseCoilFromText(coilAttr);
       if (coilParsed) {
@@ -296,7 +357,13 @@
       }
     }
 
-    var procelAttr = findAttr(map, ['procel', 'eficiencia energ', 'classificacao energ', 'energy_efficiency', 'selo procel', 'classe energetica']);
+    var procelAttr = findAttr(map, [
+      'procel', 'eficiencia energ', 'classificacao energ', 'energy_efficiency', 'selo procel',
+      'classe energetica', 'consumo energetico', 'seer', 'eer', 'efficiency'
+    ]);
+    if (!procelAttr) {
+      procelAttr = findValueContaining(map, ['classe a', 'classe b', 'classe c', 'procel'], []);
+    }
     if (procelAttr) {
       product.procelLabel = parseProcelLabel(procelAttr);
       var procelNorm = normalizeAttrKey(procelAttr);
@@ -307,7 +374,6 @@
   }
 
   function buildMlExtraRows(a, b) {
-    var skipPatterns = ['marca', 'brand', 'modelo', 'model', 'ean', 'gtin', 'sku', 'condicao', 'condition', 'mpn', 'referencia'];
     var corePatterns = [
       'btu', 'capacidade de refrigera', 'capacidade em btu', 'cooling_capacity',
       'area recomendada', 'area de cobertura', 'ambiente recomendado', 'tamanho do ambiente', 'room_size',
@@ -330,11 +396,13 @@
 
     var rows = [];
     for (var attrKey in keys) {
-      if (attrKeyMatches(attrKey, skipPatterns)) continue;
+      if (isInternalAttrKey(attrKey, labelA[attrKey] || labelB[attrKey] || attrKey)) continue;
       if (attrKeyMatches(attrKey, corePatterns)) continue;
+      if (!attrKeyMatches(attrKey, ALLOWED_EXTRA_ATTR_KEYS)) continue;
       var valA = mapA[attrKey] || '—';
       var valB = mapB[attrKey] || '—';
       if (valA === '—' && valB === '—') continue;
+      if (isGarbageAttrValue(valA === '—' ? valB : valA)) continue;
       rows.push({
         key: 'attr_' + attrKey,
         label: labelA[attrKey] || labelB[attrKey] || attrKey,
@@ -532,7 +600,14 @@
       { key: 'procelA', label: 'Procel / Eficiência', a: a.procelLabel || (a.procelA ? 'Classe A' : '—'), b: b.procelLabel || (b.procelA ? 'Classe A' : '—'), boolA: a.procelA, boolB: b.procelA }
     ];
 
-    return coreRows.concat(buildMlExtraRows(a, b));
+    var filteredCore = [];
+    for (var i = 0; i < coreRows.length; i++) {
+      var row = coreRows[i];
+      if ((row.key === 'cobre' || row.key === 'procelA') && row.a === '—' && row.b === '—') continue;
+      filteredCore.push(row);
+    }
+
+    return filteredCore.concat(buildMlExtraRows(a, b));
   }
 
   function buildInsights(a, b) {

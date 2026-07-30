@@ -1,6 +1,6 @@
 {% comment %}
   Dados compactos para comparador (sem script tag — não quebra layout do card)
-  VERSAO: 2026-07-30-compare-v5-ml-attrs
+  VERSAO: 2026-07-30-compare-v6-ml-attrs-safe
   Usa a mesma base de detecção de product-spec-icons (ficha, atributos, propriedades).
 {% endcomment %}
 
@@ -247,10 +247,41 @@
     {% elsif attr.value %}
       {% assign aVal = attr.value | strip %}
     {% endif %}
-    {% if aLabel != '' and aVal != '' %}
+    {% assign skipAttr = false %}
+    {% if aLabel == '' or aVal == '' %}
+      {% assign skipAttr = true %}
+    {% endif %}
+    {% if aKey contains 'productmaingridoption' or aKey contains 'maingridoption' or aKey contains 'gridoption' or aKey contains 'serialized' or aKey contains 'payload' %}
+      {% assign skipAttr = true %}
+    {% endif %}
+    {% if aVal.size > 100 %}
+      {% assign skipAttr = true %}
+    {% endif %}
+    {% unless skipAttr %}
       {% unless cmpAttrFirst %},{% endunless %}{"k":{{ aKey | json }},"l":{{ aLabel | json }},"v":{{ aVal | json }}}
       {% assign cmpAttrFirst = false %}
+    {% endunless %}
+  {% endfor %}
+{% endif %}
+{% if product.properties and product.properties.size > 0 %}
+  {% for prop in product.properties %}
+    {% assign pLabel = prop.name | default: prop.nome | default: '' | strip %}
+    {% assign pKey = pLabel | downcase %}
+    {% assign pVal = prop.value | default: prop.valor | default: '' | strip %}
+    {% assign skipProp = false %}
+    {% if pLabel == '' or pVal == '' %}
+      {% assign skipProp = true %}
     {% endif %}
+    {% if pKey contains 'productmaingridoption' or pKey contains 'maingridoption' or pKey contains 'gridoption' %}
+      {% assign skipProp = true %}
+    {% endif %}
+    {% if pVal.size > 100 %}
+      {% assign skipProp = true %}
+    {% endif %}
+    {% unless skipProp %}
+      {% unless cmpAttrFirst %},{% endunless %}{"k":{{ pKey | json }},"l":{{ pLabel | json }},"v":{{ pVal | json }}}
+      {% assign cmpAttrFirst = false %}
+    {% endunless %}
   {% endfor %}
 {% endif %}
 ]{% endcapture %}
