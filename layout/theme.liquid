@@ -69,9 +69,16 @@
     <meta name="description" content="{{ seoDescription }}">
     <meta name="keywords" content="{{ seoKeywords }}">
     <meta name="theme-color" content="{{ themeConfig.color }}"/>
-    <link rel="icon" href="{{ theme.favicon.path | imgUrl: 48 }}" sizes="48x48" type="image/webp">
-    <link rel="shortcut icon" href="{{ theme.favicon.path | imgUrl: 48 }}" type="image/webp">
-    <link rel="apple-touch-icon" href="{{ theme.favicon.path | imgUrl: 180 }}" sizes="180x180">
+    {% if theme.favicon.path %}
+    {% assign fav = theme.favicon.path %}
+    {% assign favVer = '20260803' %}
+    <link rel="icon" type="image/webp" sizes="48x48" href="{{ fav | imgUrl: 48 }}?v={{ favVer }}">
+    <link rel="icon" type="image/webp" sizes="96x96" href="{{ fav | imgUrl: 96 }}?v={{ favVer }}">
+    <link rel="icon" type="image/webp" sizes="192x192" href="{{ fav | imgUrl: 192 }}?v={{ favVer }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ fav | imgUrl: 180 }}?v={{ favVer }}">
+    {% else %}
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2048%2048'%3E%3Crect%20width%3D'48'%20height%3D'48'%20fill%3D'%23000'%2F%3E%3Cg%20fill%3D'%232c8fd6'%20stroke%3D'%232c8fd6'%20stroke-width%3D'1.2'%20stroke-linecap%3D'round'%20fill%3D'none'%3E%3Cpath%20d%3D'M12%2024h6M9.5%2019.5l3%203M9.5%2028.5l3-3M15%2015v6M15%2027v6'/%3E%3Cpath%20d%3D'M24%2013v22M20.5%2017h7M20.5%2031h7'/%3E%3Cpath%20d%3D'M29%2018c1.8%201.6%204.2%203.8%204.2%206s-2.4%204.4-4.2%206M35%2018c-1.8%201.6-4.2%203.8-4.2%206s2.4%204.4%204.2%206M29%2030c1.8-1.6%204.2-3.8%204.2-6s-2.4-4.4-4.2-6'/%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+    {% endif %}
     <link rel="preconnect" href="https://salescdn.net" crossorigin>
     <link rel="preload" href="{{ 'assets/theme.js' | themeAssetUrl }}" as="script">
     <script src="{{ 'assets/theme.js' | themeAssetUrl }}"></script>
