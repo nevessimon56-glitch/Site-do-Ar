@@ -70,14 +70,18 @@
     <meta name="keywords" content="{{ seoKeywords }}">
     <meta name="theme-color" content="{{ themeConfig.color }}"/>
     {% comment %}
-      Favicon fixo em assets/favicon.png (floco + folha azul).
-      Publicar: assets/favicon.png + este trecho no layout/theme.liquid
+      FAVICON — não usa pasta assets/ (WDNA só aceita .js/.css lá).
+      1) Painel WDNA → Tema/Visual → Favicon → enviar PNG quadrado (192px+)
+      2) Publicar assets/favicon-head.js + este trecho no layout/theme.liquid
     {% endcomment %}
-    {% assign siteFaviconUrl = 'assets/favicon.png' | themeAssetUrl %}
-    <link rel="icon" type="image/png" sizes="48x48" href="{{ siteFaviconUrl }}">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ siteFaviconUrl }}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ siteFaviconUrl }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ siteFaviconUrl }}">
+    {% if theme.favicon.path %}
+    {% assign fav = theme.favicon.path %}
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ fav | imgUrl: 48 }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ fav | imgUrl: 96 }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ fav | imgUrl: 192 }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ fav | imgUrl: 180 }}">
+    {% endif %}
+    <script src="{{ 'assets/favicon-head.js' | themeAssetUrl }}"></script>
     <link rel="preconnect" href="https://salescdn.net" crossorigin>
     <link rel="preload" href="{{ 'assets/theme.js' | themeAssetUrl }}" as="script">
     <script src="{{ 'assets/theme.js' | themeAssetUrl }}"></script>
