@@ -1,6 +1,6 @@
 /**
  * Comparador de produtos — Site do Ar
- * VERSAO: 2026-07-30-compare-v6-buy-color
+ * VERSAO: 2026-08-03-compare-v7-card-btn-balance
  */
 
 /* Garante imagem visível nos cards (lazy load) */
@@ -22,9 +22,9 @@
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
-  gap: 6px !important;
+  gap: 5px !important;
   width: 100% !important;
-  align-items: stretch !important;
+  align-items: center !important;
   overflow: visible !important;
 }
 
@@ -35,30 +35,32 @@
   flex: 0 0 auto !important;
   flex-shrink: 0 !important;
   width: auto !important;
-  min-width: 74px !important;
-  max-width: 38% !important;
-  min-height: 34px !important;
-  padding: 6px 8px !important;
-  font-size: 11px !important;
+  min-width: 0 !important;
+  max-width: 26% !important;
+  min-height: 28px !important;
+  height: 28px !important;
+  padding: 4px 6px !important;
+  font-size: 10px !important;
   white-space: nowrap !important;
   box-sizing: border-box !important;
   overflow: visible !important;
+  border-radius: 6px !important;
 }
 
 .showcase-card-actions .showcase-product_buy.btn {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  flex: 1 1 auto !important;
+  flex: 1 1 0% !important;
   flex-shrink: 1 !important;
   min-width: 0 !important;
   width: auto !important;
   max-width: none !important;
   float: none !important;
   margin: 0 !important;
-  min-height: 40px !important;
-  padding: 10px 12px !important;
-  font-size: 13px !important;
+  min-height: 44px !important;
+  padding: 11px 12px !important;
+  font-size: 14px !important;
   box-sizing: border-box !important;
 }
 
@@ -66,8 +68,19 @@
 .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-product_buy.btn {
   width: auto !important;
   max-width: none !important;
-  flex: 1 1 auto !important;
+  flex: 1 1 0% !important;
   margin: 0 !important;
+  min-height: 38px !important;
+  padding: 9px 8px !important;
+  font-size: 12px !important;
+}
+
+.showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-compare-btn {
+  max-width: 30% !important;
+  min-height: 26px !important;
+  height: 26px !important;
+  padding: 3px 5px !important;
+  font-size: 9px !important;
 }
 
 .showcase-compare-btn,
@@ -76,13 +89,13 @@
   align-items: center;
   justify-content: center;
   width: auto;
-  min-height: 38px;
-  padding: 8px 10px;
+  min-height: 32px;
+  padding: 6px 8px;
   border: 1px solid #cfe3f2;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #fff;
   color: #1a6eb5 !important;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   line-height: 1.1;
   text-decoration: none !important;
