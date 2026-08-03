@@ -1,0 +1,50 @@
+{% comment %} VERSAO: 2026-07-28-customer-account-nav-v2 {% endcomment %}
+{%- assign active = activePage | default: '' -%}
+<nav class="customer-account-nav customer-account-nav--page" aria-label="Painel do cliente">
+  <ul class="customer-account-nav__list">
+    <li class="customer-account-nav__item-wrap">
+      <a class="customer-account-nav__item{% if active == 'account' %} is-active{% endif %}"
+         href="/conta"
+         title="Dados cadastrais"
+         {% if active == 'account' %}aria-current="page"{% endif %}>
+        <span class="customer-account-nav__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12zm0 2.25c-3.04 0-9 1.52-9 4.53V21h18v-2.22c0-3.01-5.96-4.53-9-4.53z" fill="currentColor"/></svg>
+        </span>
+        <span class="customer-account-nav__label">Dados cadastrais</span>
+      </a>
+    </li>
+    <li class="customer-account-nav__item-wrap">
+      <a class="customer-account-nav__item{% if active == 'addresses' %} is-active{% endif %}"
+         href="/enderecos"
+         title="Meus endereços"
+         {% if active == 'addresses' %}aria-current="page"{% endif %}>
+        <span class="customer-account-nav__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 14.5 9 2.5 2.5 0 0 1 12 11.5z" fill="currentColor"/></svg>
+        </span>
+        <span class="customer-account-nav__label">Meus endereços</span>
+      </a>
+    </li>
+    <li class="customer-account-nav__item-wrap">
+      <a class="customer-account-nav__item{% if active == 'orders' %} is-active{% endif %}"
+         href="/pedidos"
+         title="Meus pedidos"
+         {% if active == 'orders' %}aria-current="page"{% endif %}>
+        <span class="customer-account-nav__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M7 4h10l1 2h4v2H3V6h4l1-2zm-1 6h12v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V10zm3 2v8h2v-8h-2zm4 0v8h2v-8h-2z" fill="currentColor"/></svg>
+        </span>
+        <span class="customer-account-nav__label">Meus pedidos</span>
+      </a>
+    </li>
+    <li class="customer-account-nav__item-wrap customer-account-nav__item-wrap--secondary">
+      <a class="customer-account-nav__item"
+         href="javascript:void(0)"
+         title="Alterar senha"
+         onclick="if (typeof openUserPassword === 'function') { openUserPassword(); }">
+        <span class="customer-account-nav__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-3 0H10V7a2 2 0 0 1 4 0v2z" fill="currentColor"/></svg>
+        </span>
+        <span class="customer-account-nav__label">Alterar senha</span>
+      </a>
+    </li>
+  </ul>
+</nav>

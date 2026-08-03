@@ -1,0 +1,56 @@
+{% comment %} VERSAO: 2026-07-30-compare-v1 {% endcomment %}
+<div class="product-compare-panel" id="product-compare-panel" hidden aria-hidden="true">
+  <div class="product-compare-panel__backdrop" data-compare-close></div>
+  <div class="product-compare-panel__dialog" role="dialog" aria-modal="true" aria-labelledby="product-compare-title">
+    <div class="product-compare-panel__header">
+      <h2 class="product-compare-panel__title" id="product-compare-title">Comparar ar-condicionado</h2>
+      <button type="button" class="product-compare-panel__close" data-compare-close aria-label="Fechar comparação">&times;</button>
+    </div>
+    <div class="product-compare-panel__body">
+      <div class="product-compare-panel__products" data-compare-products></div>
+      <div class="product-compare-panel__table-wrap">
+        <table class="product-compare-table" data-compare-table>
+          <thead data-compare-table-head></thead>
+          <tbody data-compare-table-body></tbody>
+        </table>
+      </div>
+      <div class="product-compare-panel__insights">
+        <div class="product-compare-insight" data-compare-insight-a>
+          <h3 class="product-compare-insight__title" data-compare-insight-title-a></h3>
+          <div class="product-compare-insight__group">
+            <p class="product-compare-insight__label product-compare-insight__label--pro">Pontos positivos</p>
+            <ul class="product-compare-insight__list product-compare-insight__list--pro" data-compare-pros-a></ul>
+          </div>
+          <div class="product-compare-insight__group">
+            <p class="product-compare-insight__label product-compare-insight__label--con">Pontos de atenção</p>
+            <ul class="product-compare-insight__list product-compare-insight__list--con" data-compare-cons-a></ul>
+          </div>
+        </div>
+        <div class="product-compare-insight" data-compare-insight-b>
+          <h3 class="product-compare-insight__title" data-compare-insight-title-b></h3>
+          <div class="product-compare-insight__group">
+            <p class="product-compare-insight__label product-compare-insight__label--pro">Pontos positivos</p>
+            <ul class="product-compare-insight__list product-compare-insight__list--pro" data-compare-pros-b></ul>
+          </div>
+          <div class="product-compare-insight__group">
+            <p class="product-compare-insight__label product-compare-insight__label--con">Pontos de atenção</p>
+            <ul class="product-compare-insight__list product-compare-insight__list--con" data-compare-cons-b></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="product-compare-bar" id="product-compare-bar" hidden aria-label="Comparador de produtos">
+  <div class="product-compare-bar__inner">
+    <div class="product-compare-bar__info">
+      <span class="product-compare-bar__badge" data-compare-bar-count>1</span>
+      <span class="product-compare-bar__text" data-compare-bar-text>Produto selecionado — escolha outro para comparar</span>
+    </div>
+    <div class="product-compare-bar__actions">
+      <button type="button" class="product-compare-bar__btn product-compare-bar__btn--ghost" data-compare-bar-clear>Limpar</button>
+      <button type="button" class="product-compare-bar__btn product-compare-bar__btn--primary" data-compare-bar-open disabled>Comparar</button>
+    </div>
+  </div>
+</nav>
