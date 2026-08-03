@@ -69,9 +69,17 @@
     <meta name="description" content="{{ seoDescription }}">
     <meta name="keywords" content="{{ seoKeywords }}">
     <meta name="theme-color" content="{{ themeConfig.color }}"/>
-    <link rel="icon" href="{{ theme.favicon.path | imgUrl: 48 }}" sizes="48x48" type="image/webp">
-    <link rel="shortcut icon" href="{{ theme.favicon.path | imgUrl: 48 }}" type="image/webp">
-    <link rel="apple-touch-icon" href="{{ theme.favicon.path | imgUrl: 180 }}" sizes="180x180">
+    {% comment %}
+      Favicon: enviar PNG quadrado (mín. 192×192) no painel WDNA → Tema → Favicon.
+      Google indexa o ícone do <link rel="icon">; pode levar dias/semanas para atualizar no buscador.
+    {% endcomment %}
+    {% if theme.favicon.path %}
+    {% assign siteFavicon = theme.favicon.path %}
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ siteFavicon | imgUrl: 48 }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ siteFavicon | imgUrl: 96 }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ siteFavicon | imgUrl: 192 }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ siteFavicon | imgUrl: 180 }}">
+    {% endif %}
     <link rel="preconnect" href="https://salescdn.net" crossorigin>
     <link rel="preload" href="{{ 'assets/theme.js' | themeAssetUrl }}" as="script">
     <script src="{{ 'assets/theme.js' | themeAssetUrl }}"></script>
