@@ -2301,3 +2301,92 @@
     text-overflow: ellipsis;
   }
 }
+
+/* ========== Comparar nos cards (COMPARE-CARD-v1) — fallback se product-compare.css não estiver publicado ========== */
+
+.showcase-product .card-footer .showcase-card-actions {
+  margin-top: 6px;
+}
+
+.showcase-card-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 6px !important;
+  width: 100% !important;
+  align-items: stretch !important;
+  overflow: visible !important;
+}
+
+.showcase-card-actions .showcase-compare-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  width: auto !important;
+  min-width: 74px !important;
+  max-width: 38% !important;
+  min-height: 34px !important;
+  padding: 6px 8px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  border: 1px solid #cfe3f2 !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  color: #1a6eb5 !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  box-shadow: none !important;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.showcase-card-actions .showcase-compare-btn:hover {
+  border-color: #9fc8e8 !important;
+  background: #f3f9fe !important;
+}
+
+.showcase-card-actions .showcase-compare-btn.is-selected {
+  border-color: #1a6eb5 !important;
+  background: linear-gradient(135deg, #1a6eb5, #2c8fd6) !important;
+  color: #fff !important;
+  box-shadow: 0 3px 10px rgba(26, 110, 181, 0.28) !important;
+}
+
+.showcase-card-actions .showcase-product_buy.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 1 auto !important;
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  float: none !important;
+  margin: 0 !important;
+  min-height: 40px !important;
+  padding: 10px 12px !important;
+  font-size: 13px !important;
+  box-sizing: border-box !important;
+}
+
+.showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-product_buy.btn {
+  width: auto !important;
+  max-width: none !important;
+  flex: 1 1 auto !important;
+  margin: 0 !important;
+}
+
+.product-compare-data,
+.product-compare-json {
+  display: none !important;
+}
