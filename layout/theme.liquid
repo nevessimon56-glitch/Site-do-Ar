@@ -1,23 +1,44 @@
 {% assign seoTitle = '' %}
+{% assign seoDescription = '' %}
+{% assign seoCategoryPath = '' %}
+{% assign seoCategoryCurrent = nil %}
+
+{% if search.results[0].categories and search.results[0].categories.size > 0 %}
+    {% for cat in search.results[0].categories %}
+        {% assign seoCategoryCurrent = cat %}
+        {% if cat.title and cat.title != '' %}
+            {% if seoCategoryPath != '' %}
+                {% assign seoCategoryPath = seoCategoryPath | append: ' ' %}
+            {% endif %}
+            {% assign seoCategoryPath = seoCategoryPath | append: cat.title %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 {% if product.seoTitle %}
     {% assign seoTitle = product.seoTitle %}
-{% elsif search.results[0].categories[0].title %}
-    {% assign seoTitle = search.results[0].categories[0].title %}
+{% elsif seoCategoryCurrent.seoTitle and seoCategoryCurrent.seoTitle != '' %}
+    {% assign seoTitle = seoCategoryCurrent.seoTitle %}
+{% elsif seoCategoryPath != '' %}
+    {% assign seoTitle = 'Ar Condicionado ' | append: seoCategoryPath | append: ' | Site Do Ar' %}
 {% elsif seo.title %}
     {% assign seoTitle = seo.title %}
 {% else %}
-    {% assign seoTitle = 'Site Do Ar: Os Melhores Preços Aqui!!' %}
+    {% assign seoTitle = 'Site Do Ar | Ar-Condicionado com os Melhores Preços em SP' %}
 {% endif %}
 
-{% assign seoDescription = '' %}
 {% if product.seoDescription %}
     {% assign seoDescription = product.seoDescription %}
-{% elsif search.results[0].categories[0].description %}
-    {% assign seoDescription = search.results[0].categories[0].description %}
+{% elsif seoCategoryCurrent.seoDescription and seoCategoryCurrent.seoDescription != '' %}
+    {% assign seoDescription = seoCategoryCurrent.seoDescription %}
+{% elsif seoCategoryCurrent.description and seoCategoryCurrent.description != '' %}
+    {% assign seoDescription = seoCategoryCurrent.description %}
 {% elsif seo.description %}
     {% assign seoDescription = seo.description %}
 {% elsif store.description %}
     {% assign seoDescription = store.description %}
+{% elsif seoCategoryPath != '' %}
+    {% assign seoDescription = 'Compre ar-condicionado ' | append: seoCategoryPath | append: ' com os melhores preços no Site Do Ar. Parcelamento em até 12x e desconto no Pix.' %}
 {% else %}
     {% assign seoDescription = 'Ar-condicionado em São Paulo com os melhores preços! Split, Inverter, portátil e mais em até 12x. Compre com instalação profissional no Site Do Ar. Confira!' %}
 {% endif %}
@@ -64,6 +85,15 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-24XPH3WR9S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-24XPH3WR9S');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <title>{{ seoTitle }}</title>
@@ -80,6 +110,9 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-plugins.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-semibold.woff2" type="font/woff2" crossorigin="anonymous">
@@ -97,7 +130,7 @@
     <meta property="og:image:width" content="{{ seoImageWidth }}"/>
     <meta property="og:image:height" content="{{ seoImageHeight }}"/>
     {% if seoImageType != '' %}<meta property="og:image:type" content="{{ seoImageType }}"/>{% endif %}
-    <meta property="og:site_name" content="{{ seoTitle }}"/>
+    <meta property="og:site_name" content="Site Do Ar"/>
     <meta property="og:description" content="{{ seoDescription }}"/>
     <meta name="csrf-token" content="{{ csrfToken }}">
     {%- for script in scripts.header -%}
@@ -113,6 +146,8 @@
 <span class="loading-main loading"></span>
 {% render 'sections/check-cookie'%}
 {% render 'sections/sidenav-overlay-cart', cart: cart, store: store, themeConfig: themeConfig %}
+{% render 'sections/mega-menu-ar' %}
+{% render 'sections/product-compare-panel' %}
 {% block content %}{% endblock %}
 {% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
 <script>
@@ -154,6 +189,19 @@
     window.currencyStore = {% if store.symbolPrice %}"{{ store.symbolPrice }}"{% else %}null{% endif %};
 </script>
 <script src="{{ scripts.main.src }}"></script>
+<script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
+<script>
+  window.addEventListener('load', function () {
+    if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
+      window.initMegaMenuAr();
+    }
+    if (typeof window.initProductCompare === 'function') {
+      window.initProductCompare();
+    }
+  });
+</script>
 <script>
     function setupStore() {
         return {
