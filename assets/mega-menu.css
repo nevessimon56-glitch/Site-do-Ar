@@ -2403,7 +2403,7 @@
   display: none !important;
 }
 
-/* ========== Barra de navegação — fundo azul, texto branco (NAV-BAR-INVERT-v1) ========== */
+/* ========== Barra de navegação — fundo azul, texto branco (NAV-BAR-INVERT-v2) ========== */
 
 @media (min-width: 992px) {
   .header .nav-content,
@@ -2411,10 +2411,60 @@
     background: linear-gradient(135deg, #1a6eb5, #2c8fd6) !important;
     background-color: #1a6eb5 !important;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: visible !important;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .nav-content > .container {
+    overflow: visible !important;
   }
 
   .nav-content .nav-main {
-    height: 88px;
+    height: auto !important;
+    min-height: 104px;
+    overflow: visible !important;
+    align-items: stretch !important;
+  }
+
+  .nav-content .nav-main_item {
+    overflow: visible !important;
+  }
+
+  .nav-content .nav-main_link {
+    overflow: visible !important;
+    padding-top: 12px !important;
+    padding-bottom: 10px !important;
+  }
+
+  .nav-content .nav-main-box_link {
+    min-height: calc(36px + 12px + 18px) !important;
+    justify-content: flex-start !important;
+  }
+
+  .nav-content .nav-main_icon {
+    max-height: 36px !important;
+    height: 36px !important;
+    margin-bottom: 8px !important;
+    overflow: visible !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .nav-content .nav-main_icon img {
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+    display: block !important;
+    max-height: 36px !important;
+    max-width: 42px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  .nav-content .nav-main_text {
+    line-height: 1.15 !important;
   }
 
   .nav-content .nav-main_link,
@@ -2432,16 +2482,13 @@
     background-color: rgba(255, 255, 255, 0.14) !important;
   }
 
-  .nav-content .nav-main_link .nav-main_arrow svg,
-  .nav-content .nav-main_link svg.icon_arrow_down,
-  .nav-content .nav-main_link svg {
+  .nav-content .nav-main_link .nav-main_arrow svg {
     display: inline-block !important;
     fill: #fff !important;
-  }
-
-  .nav-content .nav-main_icon img {
-    filter: brightness(0) invert(1);
-    opacity: 0.95;
+    height: 14px !important;
+    width: 14px !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
   }
 
   .nav-content .nav-main_item:hover .nav-main_icon img,
