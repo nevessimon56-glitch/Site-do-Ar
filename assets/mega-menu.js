@@ -1,6 +1,6 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-08-26-js-mega-offer-prices-v1
+ * VERSAO: 2026-08-27-js-account-nav-v3-offer-prices
  * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
  * O CSS fica em assets/mega-menu.css
  */
@@ -163,37 +163,6 @@
     return megaItem;
   }
 
-  function bindMegaMenuEvents(megaItem, panel) {
-    if (megaItem.getAttribute('data-mega-menu-bound') === '1') {
-      initMegaMenuCarousel(panel);
-      return;
-    }
-    megaItem.setAttribute('data-mega-menu-bound', '1');
-
-    var closeTimer;
-    function openMenu() {
-      clearTimeout(closeTimer);
-      megaItem.classList.add('is-open');
-    }
-    function closeMenu() {
-      closeTimer = setTimeout(function () {
-        megaItem.classList.remove('is-open');
-      }, 120);
-    }
-
-    megaItem.addEventListener('mouseenter', function () {
-      openMenu();
-      initMegaMenuCarousel(panel);
-    });
-    megaItem.addEventListener('mouseleave', closeMenu);
-    megaItem.addEventListener('focusin', openMenu);
-    megaItem.addEventListener('focusout', function (e) {
-      if (!megaItem.contains(e.relatedTarget)) closeMenu();
-    });
-
-    initMegaMenuCarousel(panel);
-  }
-
   var offerPriceCache = {};
 
   function extractOfferProductId(slide) {
@@ -267,6 +236,39 @@
           .catch(function () {});
       })(slides[i]);
     }
+  }
+
+  function bindMegaMenuEvents(megaItem, panel) {
+    if (megaItem.getAttribute('data-mega-menu-bound') === '1') {
+      initMegaMenuCarousel(panel);
+      syncMegaMenuOfferPrices(panel);
+      return;
+    }
+    megaItem.setAttribute('data-mega-menu-bound', '1');
+
+    var closeTimer;
+    function openMenu() {
+      clearTimeout(closeTimer);
+      megaItem.classList.add('is-open');
+    }
+    function closeMenu() {
+      closeTimer = setTimeout(function () {
+        megaItem.classList.remove('is-open');
+      }, 120);
+    }
+
+    megaItem.addEventListener('mouseenter', function () {
+      openMenu();
+      initMegaMenuCarousel(panel);
+      syncMegaMenuOfferPrices(panel);
+    });
+    megaItem.addEventListener('mouseleave', closeMenu);
+    megaItem.addEventListener('focusin', openMenu);
+    megaItem.addEventListener('focusout', function (e) {
+      if (!megaItem.contains(e.relatedTarget)) closeMenu();
+    });
+
+    initMegaMenuCarousel(panel);
   }
 
   function mountMegaMenuPanel(megaItem, inner, template) {

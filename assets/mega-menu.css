@@ -4,6 +4,17 @@
  * Layout em flexbox (compativel com editor WDNA)
  */
 
+/* Template oculto — nunca exibir na página (só serve de fonte pro mega menu) */
+#mega-menu-ar-template {
+  display: none !important;
+  visibility: hidden !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
 @media (min-width: 992px) {
   .nav-content {
     position: relative;
@@ -69,33 +80,35 @@
   }
 
   .mega-menu-ar__promo-banner {
-    margin: 14px 0 0;
-    border-radius: 10px;
+    margin: 10px 0 0;
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(44, 119, 187, 0.14);
-    border: 1px solid rgba(44, 119, 187, 0.12);
+    box-shadow: 0 2px 8px rgba(44, 119, 187, 0.12);
+    border: 1px solid rgba(44, 119, 187, 0.14);
   }
 
   .mega-menu-ar__promo-banner a {
     display: block;
-    line-height: 0;
+    padding: 7px 12px;
+    line-height: 1.35;
     text-decoration: none !important;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    background: linear-gradient(90deg, #1a6eb5 0%, #2c8fd6 50%, #1a6eb5 100%);
+    transition: opacity 0.2s ease, filter 0.2s ease;
   }
 
   .mega-menu-ar__promo-banner a:hover {
-    opacity: 0.94;
-    transform: translateY(-1px);
+    opacity: 0.96;
+    filter: brightness(1.04);
   }
 
-  .mega-menu-ar__promo-banner img {
+  .mega-menu-ar__promo-text {
     display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1400 / 160;
-    max-height: 160px;
-    object-fit: contain;
-    object-position: center;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #fff;
+    text-align: center;
   }
 
   .mega-menu-ar__brands-strip-kicker {
@@ -790,11 +803,6 @@
   }
 }
 
-@media (max-width: 991px) {
-  #mega-menu-ar-template {
-    display: none !important;
-  }
-}
 
 /* Hover de imagem nos cards de produto — wrap isolado, 2a imagem só no hover */
 
