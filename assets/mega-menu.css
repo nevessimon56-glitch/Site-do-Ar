@@ -2429,7 +2429,7 @@
   display: none !important;
 }
 
-/* ========== Barra de navegação — fundo azul, texto branco (NAV-BAR-INVERT-v3) ========== */
+/* ========== Barra de navegação — fundo azul, texto branco (NAV-BAR-INVERT-v4) ========== */
 /* Não altera .top-bar (banner do topo do site — controlado pelo tema WDNA) */
 
 @media (min-width: 992px) {
@@ -2443,37 +2443,49 @@
     padding-bottom: 0 !important;
   }
 
-  .nav-content > .container {
+  .nav-content > .container,
+  .header .nav-content > .container {
     overflow: visible !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 
   .nav-content .nav-main {
-    height: 88px !important;
-    min-height: 88px !important;
-    max-height: 88px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
     overflow: visible !important;
-    align-items: stretch !important;
+    align-items: center !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 
   .nav-content .nav-main_item {
     overflow: visible !important;
+    height: auto !important;
   }
 
   .nav-content .nav-main_link {
     overflow: visible !important;
-    padding-top: 8px !important;
-    padding-bottom: 6px !important;
+    padding-top: 5px !important;
+    padding-bottom: 4px !important;
+    height: auto !important;
+    min-height: 0 !important;
   }
 
   .nav-content .nav-main-box_link {
-    min-height: auto !important;
-    justify-content: flex-start !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    justify-content: center !important;
+    gap: 2px !important;
   }
 
   .nav-content .nav-main_icon {
     max-height: none !important;
     height: auto !important;
-    margin-bottom: 4px !important;
+    margin-bottom: 1px !important;
     overflow: visible !important;
     display: flex !important;
     align-items: center !important;
@@ -2484,15 +2496,18 @@
     filter: brightness(0) invert(1);
     opacity: 0.95;
     display: block !important;
-    max-height: 50px !important;
-    max-width: 58px !important;
+    max-height: 38px !important;
+    max-width: 44px !important;
     width: auto !important;
     height: auto !important;
     object-fit: contain !important;
   }
 
   .nav-content .nav-main_text {
-    line-height: 1.15 !important;
+    line-height: 1.1 !important;
+    font-size: 11px !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .nav-content .nav-main_link,
@@ -2510,18 +2525,33 @@
     background-color: rgba(255, 255, 255, 0.14) !important;
   }
 
-  .nav-content .nav-main_link .nav-main_arrow svg {
+  .nav-content .nav-main_link .nav-main_arrow svg,
+  .nav-content .nav-main_link svg.icon_arrow_down {
     display: inline-block !important;
     fill: #fff !important;
-    height: 14px !important;
-    width: 14px !important;
+    height: 10px !important;
+    width: 10px !important;
     margin-left: 0 !important;
-    margin-top: 2px !important;
+    margin-top: 0 !important;
+  }
+
+  .nav-content .nav-main_arrow {
+    margin-top: 0 !important;
+    line-height: 0 !important;
   }
 
   .nav-content .nav-main_item:hover .nav-main_icon img,
   .nav-content .mega-menu-ar.is-open .nav-main_icon img {
     opacity: 1;
+  }
+
+  /* Força barra fina mesmo se o tema WDNA impuser 88px/104px */
+  .header .nav-content .nav-main,
+  .nav-content.content .nav-main,
+  .nav-content .nav-main.nav-main {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: 58px !important;
   }
 
   /* Dropdowns abertos continuam claros para legibilidade */
