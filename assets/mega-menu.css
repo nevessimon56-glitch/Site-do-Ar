@@ -80,17 +80,21 @@
   }
 
   .mega-menu-ar__promo-banner {
-    margin: 10px 0 0;
-    border-radius: 6px;
+    margin: 12px 0 0;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(44, 119, 187, 0.12);
-    border: 1px solid rgba(44, 119, 187, 0.14);
+    box-shadow: 0 2px 10px rgba(44, 119, 187, 0.14);
+    border: 1px solid rgba(44, 119, 187, 0.12);
   }
 
   .mega-menu-ar__promo-banner a {
-    display: block;
-    padding: 7px 12px;
-    line-height: 1.35;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    max-height: 52px;
+    padding: 0 18px;
+    line-height: 1.2;
     text-decoration: none !important;
     background: linear-gradient(90deg, #1a6eb5 0%, #2c8fd6 50%, #1a6eb5 100%);
     transition: opacity 0.2s ease, filter 0.2s ease;
@@ -103,12 +107,25 @@
 
   .mega-menu-ar__promo-text {
     display: block;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 800;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
     color: #fff;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .mega-menu-ar__promo-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 52px;
+    object-fit: cover;
+    object-position: center;
   }
 
   .mega-menu-ar__brands-strip-kicker {
@@ -178,8 +195,9 @@
   }
 
   .mega-menu-ar__section--produtos.mega-menu-ar__banner-col {
-    flex: 0 0 290px;
-    width: 290px;
+    flex: 0 0 320px;
+    width: 320px;
+    min-width: 320px;
     padding-right: 0;
     padding-left: 24px;
     border-left: 1px solid #e8edf2;
@@ -357,7 +375,7 @@
 
   .mega-menu-ar__section--produtos .mega-menu-ar__banner {
     width: 100%;
-    max-width: 290px;
+    max-width: 320px;
   }
 
   .mega-menu-ar__col-title {
@@ -2411,7 +2429,8 @@
   display: none !important;
 }
 
-/* ========== Barra de navegação — fundo azul, texto branco (NAV-BAR-INVERT-v2) ========== */
+/* ========== Barra de navegação — fundo azul, texto branco (NAV-BAR-INVERT-v3) ========== */
+/* Não altera .top-bar (banner do topo do site — controlado pelo tema WDNA) */
 
 @media (min-width: 992px) {
   .header .nav-content,
@@ -2420,8 +2439,8 @@
     background-color: #1a6eb5 !important;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     overflow: visible !important;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 
   .nav-content > .container {
@@ -2429,8 +2448,9 @@
   }
 
   .nav-content .nav-main {
-    height: auto !important;
-    min-height: 104px;
+    height: 88px !important;
+    min-height: 88px !important;
+    max-height: 88px !important;
     overflow: visible !important;
     align-items: stretch !important;
   }
@@ -2441,19 +2461,19 @@
 
   .nav-content .nav-main_link {
     overflow: visible !important;
-    padding-top: 12px !important;
-    padding-bottom: 10px !important;
+    padding-top: 8px !important;
+    padding-bottom: 6px !important;
   }
 
   .nav-content .nav-main-box_link {
-    min-height: calc(36px + 12px + 18px) !important;
+    min-height: auto !important;
     justify-content: flex-start !important;
   }
 
   .nav-content .nav-main_icon {
-    max-height: 36px !important;
-    height: 36px !important;
-    margin-bottom: 8px !important;
+    max-height: none !important;
+    height: auto !important;
+    margin-bottom: 4px !important;
     overflow: visible !important;
     display: flex !important;
     align-items: center !important;
@@ -2464,8 +2484,8 @@
     filter: brightness(0) invert(1);
     opacity: 0.95;
     display: block !important;
-    max-height: 36px !important;
-    max-width: 42px !important;
+    max-height: 50px !important;
+    max-width: 58px !important;
     width: auto !important;
     height: auto !important;
     object-fit: contain !important;
