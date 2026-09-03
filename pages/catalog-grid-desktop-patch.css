@@ -1,0 +1,62 @@
+/* PATCH — cole no FINAL do seu assets/mega-menu.css (~2000 linhas) */
+/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-DESKTOP-v1 */
+
+@media (min-width: 992px) {
+  .showcase-search .showcase-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    clear: both;
+  }
+
+  .showcase-search .showcase-list::before,
+  .showcase-search .showcase-list::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  .showcase-search .showcase-item {
+    float: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 0 0 33.333% !important;
+    width: 33.333% !important;
+    max-width: 33.333% !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-search .showcase-product {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: 100% !important;
+    float: none !important;
+  }
+
+  .showcase-search .showcase-product_image,
+  .showcase-search .showcase-product .card-footer,
+  .showcase-search .showcase-product_buy {
+    float: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .showcase-search .showcase-product .card-header {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .showcase-search .showcase-product .card-footer {
+    margin-top: auto !important;
+  }
+
+  .showcase-search .showcase-product_link_title {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
