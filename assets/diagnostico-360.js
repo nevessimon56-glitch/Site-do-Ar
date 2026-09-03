@@ -1,14 +1,8 @@
 (function () {
-  function isDiagPage() {
-    var p = (window.location.pathname || '').toLowerCase();
-    return p.indexOf('diagnostico') !== -1 || p.indexOf('diag360') !== -1;
-  }
+  if (window.__diag360Ready) return;
 
   var overlay = document.getElementById('diag360-overlay');
-  if (!isDiagPage()) {
-    if (overlay) overlay.remove();
-    return;
-  }
+  if (!overlay) return;
 
   document.body.classList.add('diag360-active');
 
@@ -443,6 +437,7 @@
 
   function renderQ() {
     var q = questions[state.step];
+    if (!q || !els.qTitle || !els.options) return;
     var sel = getSelected(q);
     els.stepNum.textContent = state.step+1;
     els.stepOf.textContent = 'de '+questions.length;
@@ -528,28 +523,34 @@
     els.result.scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  els.options.addEventListener('click', function(e) {
-    var btn = e.target.closest('.d-option');
-    if (!btn) return;
-    toggle(Number(btn.dataset.i));
-  });
+  if (els.options) {
+    els.options.addEventListener('click', function(e) {
+      var btn = e.target.closest('.d-option');
+      if (!btn) return;
+      toggle(Number(btn.dataset.i));
+    });
+  }
 
-  els.back.addEventListener('click', function() {
-    if (state.step === 0) return;
-    state.step--; renderQ();
-  });
+  if (els.back) {
+    els.back.addEventListener('click', function() {
+      if (state.step === 0) return;
+      state.step--; renderQ();
+    });
+  }
 
-  els.next.addEventListener('click', function() {
-    var q = questions[state.step];
-    var a = state.answers[q.id];
-    var empty = a===undefined||a===null||(Array.isArray(a)&&a.length===0);
-    if (empty) {
-      els.options.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:260});
-      return;
-    }
-    if (state.step < questions.length-1) { state.step++; renderQ(); return; }
-    buildResult();
-  });
+  if (els.next) {
+    els.next.addEventListener('click', function() {
+      var q = questions[state.step];
+      var a = state.answers[q.id];
+      var empty = a===undefined||a===null||(Array.isArray(a)&&a.length===0);
+      if (empty) {
+        if (els.options && els.options.animate) els.options.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:260});
+        return;
+      }
+      if (state.step < questions.length-1) { state.step++; renderQ(); return; }
+      buildResult();
+    });
+  }
 
   if (els.result) els.result.classList.remove('show');
 
@@ -560,4 +561,6 @@
   if (overlay && overlay.parentNode !== document.body) {
     document.body.appendChild(overlay);
   }
+
+  window.__diag360Ready = true;
 })();
