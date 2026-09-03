@@ -1,4 +1,4 @@
-<!-- VERSAO: 2026-09-03-dimensionamento-v2 -->
+<!-- VERSAO: 2026-09-03-quiz-15-perguntas-v4 -->
 <!-- NÃO cole no theme.liquid, Todos-os-Produtos nem em outras páginas -->
 <!-- No admin, preencha também:
      Meta Tag title: Site Do Ar: Os Melhores Preços em Ar-Condicionado — São Paulo
@@ -39,7 +39,7 @@
     z-index: 2147483646;
     background: #0a0e1a;
     background-image:
-      radial-gradient(ellipse 60% 40% at 10% 0%, rgba(249,115,22,0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 10% 0%, rgba(14,165,233,0.12), transparent),
       radial-gradient(ellipse 50% 50% at 90% 100%, rgba(59,130,246,0.1), transparent);
     overflow-y: auto;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
@@ -55,10 +55,10 @@
     --d-surface: #111827;
     --d-surface2: #1a2235;
     --d-border: rgba(255,255,255,0.08);
-    --d-border-active: rgba(249,115,22,0.7);
-    --d-accent: #f97316;
-    --d-accent2: #fb923c;
-    --d-glow: rgba(249,115,22,0.25);
+    --d-border-active: rgba(14,165,233,0.7);
+    --d-accent: #0ea5e9;
+    --d-accent2: #38bdf8;
+    --d-glow: rgba(14,165,233,0.25);
     --d-cyan: #22d3ee;
     --d-white: #f1f5f9;
     --d-muted: #64748b;
@@ -100,8 +100,8 @@
     flex-shrink: 0;
     padding: 6px 10px;
     border-radius: 10px;
-    background: rgba(249,115,22,0.08);
-    border: 1px solid rgba(249,115,22,0.2);
+    background: rgba(14,165,233,0.08);
+    border: 1px solid rgba(14,165,233,0.2);
     text-align: center;
     min-width: 64px;
   }
@@ -145,7 +145,7 @@
   }
   .d-header-badge {
     padding: 6px 12px; border-radius: 999px;
-    background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3);
+    background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.3);
     color: var(--d-accent2); font-size: 0.78rem; font-weight: 700;
     letter-spacing: 0.06em; text-transform: uppercase;
   }
@@ -232,7 +232,7 @@
   .d-live-btu .d-btu-label { font-size: 0.78rem; font-weight: 600; color: var(--d-muted); text-transform: uppercase; letter-spacing: 0.1em; }
   .d-status-row {
     display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 10px;
-    background: rgba(249,115,22,0.08); border: 1px solid rgba(249,115,22,0.2); margin-bottom: 14px;
+    background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.2); margin-bottom: 14px;
   }
   .d-status-dot {
     width: 8px; height: 8px; border-radius: 50%; background: var(--d-accent);
@@ -259,16 +259,20 @@
   .d-q-title { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; margin-bottom: 10px; color: var(--d-white); }
   .d-q-hint { font-size: 0.95rem; color: var(--d-muted2); line-height: 1.6; margin-bottom: 24px; }
   .d-option-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+  .d-option-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 960px) and (min-width: 768px) {
+    .d-option-grid.cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
   .d-option {
     padding: 18px; border-radius: 14px; border: 1px solid var(--d-border);
     background: var(--d-surface2); color: var(--d-white); text-align: left; cursor: pointer;
     transition: border-color 0.2s, background 0.2s, transform 0.18s;
     display: flex; flex-direction: column;
   }
-  .d-option:hover { border-color: rgba(249,115,22,0.4); background: rgba(249,115,22,0.06); transform: translateY(-2px); }
-  .d-option.selected { border-color: var(--d-border-active); background: rgba(249,115,22,0.1); box-shadow: 0 0 0 1px rgba(249,115,22,0.25) inset; transform: translateY(-2px); }
+  .d-option:hover { border-color: rgba(14,165,233,0.4); background: rgba(14,165,233,0.06); transform: translateY(-2px); }
+  .d-option.selected { border-color: var(--d-border-active); background: rgba(14,165,233,0.1); box-shadow: 0 0 0 1px rgba(14,165,233,0.25) inset; transform: translateY(-2px); }
   .d-opt-emoji { width: 42px; height: 42px; border-radius: 10px; background: rgba(255,255,255,0.07); display: grid; place-items: center; font-size: 1.25rem; margin-bottom: 12px; }
-  .d-option.selected .d-opt-emoji { background: rgba(249,115,22,0.15); }
+  .d-option.selected .d-opt-emoji { background: rgba(14,165,233,0.15); }
   .d-opt-title { display: block; font-weight: 700; font-size: 0.95rem; margin-bottom: 5px; color: var(--d-white); }
   .d-opt-desc { font-size: 0.82rem; color: var(--d-muted); line-height: 1.45; }
   .d-fact-box {
@@ -303,11 +307,11 @@
   .d-result.show { display: block; }
   .d-result-banner {
     padding: 40px; border-radius: 20px; background: linear-gradient(135deg, #1a2235, #0f172a);
-    border: 1px solid rgba(249,115,22,0.3); box-shadow: 0 0 60px rgba(249,115,22,0.08); margin-bottom: 20px;
+    border: 1px solid rgba(14,165,233,0.3); box-shadow: 0 0 60px rgba(14,165,233,0.08); margin-bottom: 20px;
   }
   .d-result-tag {
     display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
-    border-radius: 8px; background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.3);
+    border-radius: 8px; background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.3);
     color: var(--d-accent2); font-size: 0.75rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 18px;
   }
@@ -320,7 +324,7 @@
   .d-result-text { color: var(--d-muted2); line-height: 1.7; font-size: 1rem; margin-bottom: 20px; }
   .d-result-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
   .d-badge { padding: 8px 14px; border-radius: 8px; background: rgba(255,255,255,0.07); border: 1px solid var(--d-border); font-size: 0.82rem; font-weight: 700; color: var(--d-white); }
-  .d-badge.hl { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.35); color: var(--d-accent2); }
+  .d-badge.hl { background: rgba(14,165,233,0.12); border-color: rgba(14,165,233,0.35); color: var(--d-accent2); }
   .d-result-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
   .d-btn-products {
     display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px;
@@ -504,7 +508,7 @@
       <span class="d-mobile-lbl">Perfil</span>
     </div>
     <div class="d-mobile-progress-wrap">
-      <span class="d-mobile-step" id="dMobStep">1 de 10</span>
+      <span class="d-mobile-step" id="dMobStep">1 de 15</span>
       <div class="d-mobile-track"><span id="dMobBar"></span></div>
     </div>
   </div>
@@ -512,7 +516,7 @@
   <section class="d-hero" id="d-hero">
     <div class="d-hero-text">
       <h1>Diagnóstico<br><span>Clima 360</span></h1>
-      <p>Responda 10 perguntas e descubra o ar-condicionado ideal para o seu ambiente. O quiz cruza rotina, tamanho, prioridades e urgência para gerar uma recomendação personalizada.</p>
+      <p>Responda 15 perguntas e descubra o ar-condicionado ideal para o seu ambiente. O quiz cruza metragem, insolacao, isolamento, clima, ocupacao e prioridades para um dimensionamento completo.</p>
       <div class="d-hero-actions">
         <a class="d-btn-primary" href="#d-quiz">Começar diagnóstico →</a>
         <a class="d-btn-secondary" href="/">Ver loja</a>
@@ -558,7 +562,7 @@
       <div class="d-quiz-head">
         <div class="d-step-counter">
           <div class="d-step-num" id="dStepNum">1</div>
-          <span class="d-step-of" id="dStepOf">de 10</span>
+          <span class="d-step-of" id="dStepOf">de 15</span>
         </div>
         <span class="d-step-type" id="dStepType">Escolha única</span>
       </div>
@@ -652,34 +656,79 @@
     { max: 18000, btu: 18000, label: '18.000', url: '/split-inverter/18000-Btus' },
     { max: 24000, btu: 24000, label: '24.000', url: '/split-inverter/24000-Btus' },
     { max: 30000, btu: 30000, label: '30.000', url: '/split-inverter/30000-Btus' },
+    { max: 36000, btu: 36000, label: '36.000', url: '/Piso-Teto/36000-Btus' },
+    { max: 46000, btu: 46000, label: '46.000', url: '/Piso-Teto/46000-Btus' },
     { max: 48000, btu: 48000, label: '48.000', url: '/Piso-Teto/48000-Btus' },
     { max: 56000, btu: 56000, label: '56.000', url: '/Piso-Teto/56000-btus' },
     { max: 99999, btu: 56000, label: '56.000', url: '/Piso-Teto/56000-btus' }
   ];
 
   var questions = [
-    { id:'environment', type:'single', title:'Qual tipo de ambiente será climatizado?', hint:'Define o perfil de uso — a metragem vem na próxima etapa.',
+    { id:'environment', type:'single', title:'Qual tipo de ambiente será climatizado?', hint:'Cada ambiente tem perfil de uso e carga térmica diferente.',
       options:[
         {label:'Quarto',desc:'Dormitório ou quarto de hóspedes.',emoji:'🛏',scores:{silence:2,comfort:2}},
         {label:'Sala de estar',desc:'Área de convivência da casa.',emoji:'🛋',scores:{comfort:3,power:1}},
         {label:'Escritório',desc:'Home office ou sala de estudos.',emoji:'💻',scores:{silence:2,tech:2}},
-        {label:'Comercial',desc:'Loja, consultório ou recepção.',emoji:'🏢',scores:{power:3,speed:2}}
+        {label:'Comercial',desc:'Loja, consultório ou recepção.',emoji:'🏢',scores:{power:3,speed:2}},
+        {label:'Cozinha',desc:'Calor de fogão e eletros.',emoji:'🍳',scores:{power:4,speed:1}},
+        {label:'Lavanderia',desc:'Umidade e calor de máquinas.',emoji:'🧺',scores:{power:2,comfort:1}}
       ]
     },
-    { id:'roomType', type:'single', title:'Como é a configuração do ambiente?', hint:'Afeta a eficiência do ar e o dimensionamento final.',
+    { id:'roomSize', type:'single', title:'Qual é a área aproximada do ambiente?', hint:'Usamos a mesma base da calculadora de BTUs do site (600 BTU/m²).',
       options:[
-        {label:'Janelas pequenas',desc:'Pouca exposição solar.',emoji:'🪟',scores:{economy:1}},
-        {label:'Muito sol direto',desc:'Exposição solar alta.',emoji:'☀',scores:{power:3}},
-        {label:'Pé-direito alto',desc:'Acima de 3 metros.',emoji:'⬆',scores:{power:2}},
-        {label:'Mezanino ou planta aberta',desc:'Espaço integrado.',emoji:'🏗',scores:{power:4}}
+        {label:'Até 10 m²',desc:'Quarto individual ou closet.',emoji:'📐'},
+        {label:'10 a 15 m²',desc:'Quarto pequeno ou home office.',emoji:'📐'},
+        {label:'15 a 25 m²',desc:'Quarto casal ou sala compacta.',emoji:'📐'},
+        {label:'25 a 40 m²',desc:'Sala de estar ou escritório médio.',emoji:'📐'},
+        {label:'Mais de 40 m²',desc:'Sala grande ou ambiente comercial.',emoji:'📐'}
       ]
     },
-    { id:'roomSize', type:'single', title:'Qual é a área aproximada do ambiente?', hint:'Usamos a mesma fórmula da calculadora de BTUs do site (600 BTU/m²).',
+    { id:'roomType', type:'single', title:'Como é a exposição solar do ambiente?', hint:'Sol e pé-direito influenciam a potência necessária.',
       options:[
-        {label:'Até 10 m²',desc:'Quarto individual, home office pequeno.',emoji:'📐'},
-        {label:'10 a 20 m²',desc:'Quarto casal ou sala pequena.',emoji:'📐'},
-        {label:'20 a 40 m²',desc:'Sala de estar, escritório médio.',emoji:'📐'},
-        {label:'Mais de 40 m²',desc:'Sala grande, espaço comercial.',emoji:'📐'}
+        {label:'Pouco sol',desc:'Sombra ou janelas pequenas.',emoji:'🌥',scores:{economy:2}},
+        {label:'Sol parcial',desc:'Sol em parte do dia.',emoji:'⛅',scores:{comfort:1}},
+        {label:'Muito sol direto',desc:'Janelas grandes voltadas ao sol.',emoji:'☀',scores:{power:3}},
+        {label:'Pé-direito alto',desc:'Acima de 3 metros de altura.',emoji:'⬆',scores:{power:2}},
+        {label:'Planta aberta',desc:'Mezanino ou integrado à casa.',emoji:'🏗',scores:{power:4}}
+      ]
+    },
+    { id:'windows', type:'single', title:'Quantas janelas ou aberturas o ambiente tem?', hint:'Vidros e aberturas aumentam a carga térmica.',
+      options:[
+        {label:'Poucas janelas',desc:'Uma janela ou quase fechado.',emoji:'🪟',scores:{economy:1}},
+        {label:'Janelas médias',desc:'Duas a três janelas comuns.',emoji:'🪟',scores:{comfort:1}},
+        {label:'Muitas janelas',desc:'Vários vãos ou parede de vidro.',emoji:'🌅',scores:{power:2}},
+        {label:'Varanda integrada',desc:'Portas de correr ou sacada aberta.',emoji:'🚪',scores:{power:3}}
+      ]
+    },
+    { id:'floor', type:'single', title:'Em qual andar fica o ambiente?', hint:'Cobertura e térreo recebem calor de formas diferentes.',
+      options:[
+        {label:'Térreo ou subsolo',desc:'Sem apartamento acima.',emoji:'🏠',scores:{comfort:1}},
+        {label:'Andar intermediário',desc:'Entre o 2º e penúltimo andar.',emoji:'🏢',scores:{economy:1}},
+        {label:'Cobertura ou último andar',desc:'Sol direto no telhado/laje.',emoji:'☀',scores:{power:3}}
+      ]
+    },
+    { id:'insulation', type:'single', title:'Como é o isolamento térmico do ambiente?', hint:'Paredes, vidros e laje afetam quanto calor entra.',
+      options:[
+        {label:'Bem isolado',desc:'Paredes grossas, vidro duplo ou reforma recente.',emoji:'🧱',scores:{economy:2}},
+        {label:'Isolamento padrão',desc:'Construção comum, sem destaque.',emoji:'🏠',scores:{comfort:1}},
+        {label:'Pouco isolado',desc:'Vidro simples, parede fina ou muito sol.',emoji:'🌡',scores:{power:2}}
+      ]
+    },
+    { id:'occupants', type:'single', title:'Quantas pessoas ocupam o ambiente normalmente?', hint:'Cada pessoa adiciona cerca de 600 BTU/h.',
+      options:[
+        {label:'Somente eu',desc:'Uso individual.',emoji:'👤',scores:{economy:2}},
+        {label:'2 pessoas',desc:'Casal ou dupla.',emoji:'👥',scores:{comfort:2}},
+        {label:'3 a 4 pessoas',desc:'Família ou reunião pequena.',emoji:'👨‍👩‍👧',scores:{comfort:2,power:1}},
+        {label:'5 a 8 pessoas',desc:'Sala de reunião ou família grande.',emoji:'👨‍👩‍👧‍👦',scores:{power:3}},
+        {label:'9 ou mais',desc:'Comercial, sala de aula ou eventos.',emoji:'↔',scores:{power:5,speed:2}}
+      ]
+    },
+    { id:'heatLoad', type:'single', title:'Há equipamentos que geram calor no ambiente?', hint:'TV, PC, geladeira e fogão aumentam a carga térmica.',
+      options:[
+        {label:'Quase nenhum',desc:'Só lâmpadas e celular.',emoji:'💡',scores:{economy:2}},
+        {label:'TV e computador',desc:'Home office ou entretenimento.',emoji:'🖥',scores:{tech:2,comfort:1}},
+        {label:'Vários eletrodomésticos',desc:'PC, TV, geladeira ou micro-ondas.',emoji:'🔌',scores:{power:2}},
+        {label:'Ambiente comercial/cozinha',desc:'Equipamentos ligados o dia todo.',emoji:'🏭',scores:{power:4,speed:1}}
       ]
     },
     { id:'usage', type:'single', title:'Qual é a rotina de uso do ar-condicionado?', hint:'Frequência de uso influencia eficiência e payback.',
@@ -690,20 +739,19 @@
         {label:'Uso comercial',desc:'Abertura à fechamento.',emoji:'🏪',scores:{power:5,speed:2}}
       ]
     },
-    { id:'priority', type:'single', title:'Qual fator é mais importante para você?', hint:'Define o perfil de recomendação e argumentação de venda.',
-      options:[
-        {label:'Economizar na conta',desc:'Menor consumo possível.',emoji:'💡',scores:{economy:5}},
-        {label:'Conforto constante',desc:'Temperatura sempre agradável.',emoji:'🌡',scores:{comfort:5}},
-        {label:'Menos ruído',desc:'Dormir e trabalhar sem barulho.',emoji:'🔇',scores:{silence:5}},
-        {label:'Tecnologia e praticidade',desc:'Controle pelo celular e recursos.',emoji:'📱',scores:{tech:5}}
-      ]
-    },
-    { id:'climate', type:'single', title:'Como é o clima na sua região?', hint:'Impacta a carga térmica e dimensionamento.',
+    { id:'climate', type:'single', title:'Como é o clima na sua região?', hint:'Temperatura média impacta o dimensionamento.',
       options:[
         {label:'Muito quente',desc:'Verão intenso, acima de 35°C.',emoji:'🔥',scores:{power:3,economy:2}},
         {label:'Quente com chuvas',desc:'Umidade alta e calor.',emoji:'🌧',scores:{comfort:2,power:2}},
         {label:'Clima ameno',desc:'Temperaturas moderadas.',emoji:'🌤',scores:{economy:2,comfort:2}},
         {label:'Faz frio no inverno',desc:'Precisa aquecer também.',emoji:'❄',scores:{comfort:4}}
+      ]
+    },
+    { id:'humidity', type:'single', title:'Como é a umidade do ar na região?', hint:'Ambientes úmidos exigem mais capacidade de resfriamento.',
+      options:[
+        {label:'Baixa umidade',desc:'Ar seco, interior ou altitude.',emoji:'🏜',scores:{economy:1}},
+        {label:'Umidade normal',desc:'Padrão da maioria das cidades.',emoji:'💧',scores:{comfort:1}},
+        {label:'Alta umidade',desc:'Litoral, vale ou chuvas frequentes.',emoji:'🌊',scores:{power:2,comfort:1}}
       ]
     },
     { id:'noise', type:'single', title:'O barulho do ar-condicionado te incomoda?', hint:'Filtra linhas silenciosas e inverter.',
@@ -714,19 +762,22 @@
         {label:'É para área comercial',desc:'Ruído não é determinante.',emoji:'🏪',scores:{power:3}}
       ]
     },
-    { id:'occupants', type:'single', title:'Quantas pessoas ocupam o ambiente normalmente?', hint:'Cada pessoa adiciona carga térmica ao ambiente.',
+    { id:'priority', type:'single', title:'Qual fator é mais importante para você?', hint:'Define o perfil de recomendação e argumentação de venda.',
       options:[
-        {label:'Somente eu',desc:'Uso individual.',emoji:'👤',scores:{economy:2}},
-        {label:'2 a 3 pessoas',desc:'Uso residencial comum.',emoji:'👥',scores:{comfort:2}},
-        {label:'4 a 6 pessoas',desc:'Sala, reunião ou família grande.',emoji:'👨‍👩‍👧‍👦',scores:{power:3,comfort:2}},
-        {label:'Fluxo grande',desc:'Comercial ou entrada e saída constante.',emoji:'↔',scores:{power:5,speed:2}}
+        {label:'Economizar na conta',desc:'Menor consumo possível.',emoji:'💡',scores:{economy:5}},
+        {label:'Conforto constante',desc:'Temperatura sempre agradável.',emoji:'🌡',scores:{comfort:5}},
+        {label:'Menos ruído',desc:'Dormir e trabalhar sem barulho.',emoji:'🔇',scores:{silence:5}},
+        {label:'Tecnologia e praticidade',desc:'Controle pelo celular e recursos.',emoji:'📱',scores:{tech:5}},
+        {label:'Potência máxima',desc:'Resfriamento rápido e forte.',emoji:'⚡',scores:{power:5}}
       ]
     },
-    { id:'features', type:'multi', title:'Quais recursos fariam você escolher mais rápido?', hint:'Essa pergunta revela argumentos de venda, não apenas produto.',
+    { id:'features', type:'multi', title:'Quais recursos fariam você escolher mais rápido?', hint:'Selecione quantos quiser — ajuda a personalizar a recomendação.',
       options:[
         {label:'Inverter',desc:'Economia e conforto contínuo.',emoji:'♻',scores:{economy:4,comfort:2}},
         {label:'Wi-Fi',desc:'Controle pelo celular e rotina.',emoji:'📶',scores:{tech:5}},
         {label:'Quente/Frio',desc:'Uso em mais épocas do ano.',emoji:'🌡',scores:{comfort:4}},
+        {label:'Purificador de ar',desc:'Filtro HEPA ou ionizador.',emoji:'🌬',scores:{comfort:3,tech:2}},
+        {label:'Controle por voz',desc:'Alexa, Google ou app inteligente.',emoji:'🎙',scores:{tech:4}},
         {label:'Marca reconhecida',desc:'Segurança e pós-venda.',emoji:'⭐',scores:{comfort:2,power:1}}
       ]
     },
@@ -750,7 +801,12 @@
     'O Protocolo de Montreal limitou os CFCs e impulsionou a evolução dos fluidos refrigerantes.',
     'Sistemas modernos controlam temperatura, umidade, filtração e nível de ruído ao mesmo tempo.',
     'O ar-condicionado ajudou no crescimento de regiões muito quentes, tornando casas e escritórios confortáveis.',
-    'Em 1939, a Packard apresentou um dos primeiros sistemas de ar-condicionado para automóveis.'
+    'Em 1939, a Packard apresentou um dos primeiros sistemas de ar-condicionado para automóveis.',
+    'Cada pessoa em um ambiente adiciona cerca de 600 BTU/h de carga térmica — por isso salas cheias exigem mais potência.',
+    'Ambientes no último andar ou cobertura recebem calor extra do telhado e podem precisar de 10% a 15% mais BTUs.',
+    'Vidros grandes sem proteção solar podem aumentar a necessidade de resfriamento em até 20%.',
+    'Um aparelho subdimensionado trabalha no limite, consome mais e desgasta mais rápido.',
+    'O dimensionamento correto considera área, pessoas, sol, umidade, equipamentos e horas de uso — não só metragem.'
   ];
 
   var els = {
@@ -810,33 +866,54 @@
 
   /* Converte respostas do quiz nos parametros da calculadora BTUs v4 do site */
   function mapAnswersToBtuParams() {
-    var areaBySize = [10, 18, 32, 55];
-    var area = 18;
+    var areaBySize = [8, 13, 20, 32, 55];
+    var area = 20;
     if (state.answers.roomSize !== undefined) {
-      area = areaBySize[state.answers.roomSize] || 18;
+      area = areaBySize[state.answers.roomSize] || 20;
     }
 
     var fatSol = 1.10;
     var fatPe = 1.0;
     var fatLayout = 1.0;
     var fatJanelas = 1.08;
+    var fatIsol = 1.0;
+    var fatAndar = 1.0;
+
     if (state.answers.roomType !== undefined) {
-      var solByType = [1.0, 1.25, 1.10, 1.15];
+      var solByType = [1.0, 1.10, 1.25, 1.10, 1.15];
       fatSol = solByType[state.answers.roomType] || 1.10;
-      if (state.answers.roomType === 2) fatPe = 3.0 / 2.6;
-      if (state.answers.roomType === 3) fatLayout = 1.20;
-      if (state.answers.roomType === 0) fatJanelas = 1.0;
-      if (state.answers.roomType === 1) fatJanelas = 1.18;
+      if (state.answers.roomType === 3) fatPe = 3.0 / 2.6;
+      if (state.answers.roomType === 4) fatLayout = 1.20;
+    }
+
+    if (state.answers.windows !== undefined) {
+      var janelasByAns = [1.0, 1.08, 1.15, 1.20];
+      fatJanelas = janelasByAns[state.answers.windows] || 1.08;
+      if (state.answers.windows === 3) fatLayout = Math.max(fatLayout, 1.12);
+    }
+
+    if (state.answers.floor !== undefined) {
+      var andarByAns = [1.0, 1.0, 1.10];
+      fatAndar = andarByAns[state.answers.floor] || 1.0;
+    }
+
+    if (state.answers.insulation !== undefined) {
+      var isolByAns = [0.95, 1.0, 1.10];
+      fatIsol = isolByAns[state.answers.insulation] || 1.0;
     }
 
     var fatUso = 1.10;
     var equip = 0;
     if (state.answers.environment !== undefined) {
-      var usoByEnv = [1.0, 1.10, 1.10, 1.50];
+      var usoByEnv = [1.0, 1.10, 1.10, 1.50, 1.40, 1.20];
+      var equipByEnv = [0, 600, 1500, 3000, 2500, 800];
       fatUso = usoByEnv[state.answers.environment] || 1.10;
-      if (state.answers.environment === 1) equip = 600;
-      if (state.answers.environment === 2) equip = 1500;
-      if (state.answers.environment === 3) equip = 3000;
+      equip = equipByEnv[state.answers.environment] || 0;
+    }
+
+    if (state.answers.heatLoad !== undefined) {
+      var equipByLoad = [0, 600, 1500, 3000];
+      equip = Math.max(equip, equipByLoad[state.answers.heatLoad] || 0);
     }
 
     var fatHoras = 1.05;
@@ -848,31 +925,38 @@
         fatUso = Math.max(fatUso, 1.50);
         equip = Math.max(equip, 1500);
       }
-      if (state.answers.usage === 2) equip = Math.max(equip, 1500);
+      if (state.answers.usage === 2) equip = Math.max(equip, 800);
     }
 
     var fatClima = 1.08;
     if (state.answers.climate !== undefined) {
       var climaByAns = [1.15, 1.10, 1.0, 1.0];
       fatClima = climaByAns[state.answers.climate] || 1.08;
-      if (state.answers.climate === 1) fatUmid = 1.05;
+    }
+
+    if (state.answers.humidity !== undefined) {
+      var umidByAns = [1.0, 1.0, 1.05];
+      fatUmid = umidByAns[state.answers.humidity] || 1.0;
+      if (state.answers.humidity === 2 && state.answers.climate === 1) fatUmid = 1.08;
     }
 
     var pessoas = 2;
     if (state.answers.occupants !== undefined) {
-      pessoas = [1, 3, 5, 12][state.answers.occupants] || 2;
+      pessoas = [1, 2, 4, 7, 12][state.answers.occupants] || 2;
     }
 
-    /* Coerencia: sala/reuniao com muitas pessoas raramente e ambiente minusculo */
-    if (state.answers.occupants >= 2 && area < 22) area = 22;
+    if (state.answers.occupants >= 3 && area < 22) area = 22;
     if (state.answers.environment === 1 && state.answers.occupants >= 2 && area < 24) area = 24;
     if (state.answers.environment === 3 && area < 35) area = 35;
-    if (state.answers.roomType === 3 && area < 28) area = 28;
+    if (state.answers.environment === 4 && area < 12) area = 12;
+    if (state.answers.roomType === 4 && area < 28) area = 28;
+    if (state.answers.occupants >= 4 && area < 30) area = 30;
 
     return {
       area: area, fatSol: fatSol, fatUso: fatUso, fatPe: fatPe,
       fatLayout: fatLayout, fatJanelas: fatJanelas, fatClima: fatClima,
-      fatHoras: fatHoras, fatUmid: fatUmid, pessoas: pessoas, equip: equip
+      fatHoras: fatHoras, fatUmid: fatUmid, fatIsol: fatIsol, fatAndar: fatAndar,
+      pessoas: pessoas, equip: equip
     };
   }
 
@@ -881,13 +965,15 @@
     var base = params.area * 600;
     var fatorTotal = params.fatSol * params.fatUso * params.fatPe *
       params.fatLayout * params.fatJanelas * params.fatClima *
-      params.fatHoras * params.fatUmid;
+      params.fatHoras * params.fatUmid * (params.fatIsol || 1) * (params.fatAndar || 1);
     var btus = base * fatorTotal;
     if (params.pessoas > 1) btus += (params.pessoas - 1) * 600;
     btus += params.equip || 0;
 
     if (params.pessoas >= 5) btus = Math.max(btus, 15000);
+    if (params.pessoas >= 7) btus = Math.max(btus, 18000);
     if (params.pessoas >= 10) btus = Math.max(btus, 24000);
+    if (params.area >= 32) btus = Math.max(btus, 18000);
     if (params.area >= 40) btus = Math.max(btus, 22000);
     if (params.area >= 55) btus = Math.max(btus, 30000);
 
@@ -944,7 +1030,7 @@
     var btu = state.btuBase;
     var btuHtml = fmtBtuHtml(btu);
     var btuText = fmtBtuNum(btu) + ' BTUs/h';
-    var status = answered < 3 ? 'Coletando sinais' : answered < 7 ? 'Perfil em formacao' : 'Diagnostico quase pronto';
+    var status = answered < 4 ? 'Coletando sinais' : answered < 10 ? 'Perfil em formacao' : 'Diagnostico quase pronto';
     els.heroFit.textContent = fit+'%';
     els.heroBar.style.width = fit+'%';
     els.heroBtu.innerHTML = btuHtml;
@@ -973,6 +1059,7 @@
     els.stepType.textContent = q.type==='multi' ? 'Múltipla escolha' : 'Escolha única';
     els.qTitle.textContent = q.title;
     els.qHint.textContent = q.hint;
+    els.options.className = 'd-option-grid' + (q.options.length >= 5 ? ' cols-3' : '');
     els.options.innerHTML = q.options.map(function(opt,i) {
       return '<button class="d-option'+(sel.includes(i)?' selected':'')+'" type="button" data-i="'+i+'"><div class="d-opt-emoji">'+opt.emoji+'</div><span class="d-opt-title">'+opt.label+'</span><span class="d-opt-desc">'+opt.desc+'</span></button>';
     }).join('');
@@ -1000,10 +1087,11 @@
       return q ? q.options[a]?.label||null : null;
     };
     var lines = ['Ola! Fiz o Diagnostico Clima 360 no site.','','📊 *Meu perfil:* '+persona.title,'🌡 *BTUs sugeridos:* '+fmtBtuNum(btu)+' BTUs/h','⚡ *Prioridade:* '+priority,''];
-    var env=get('environment'),type=get('roomType'),size=get('roomSize'),urg=get('urgency');
+    var env=get('environment'),type=get('roomType'),size=get('roomSize'),win=get('windows'),urg=get('urgency');
     if(env) lines.push('🏠 *Tipo de ambiente:* '+env);
     if(size) lines.push('📏 *Área:* '+size);
-    if(type) lines.push('🔧 *Configuração:* '+type);
+    if(type) lines.push('☀ *Exposição solar:* '+type);
+    if(win) lines.push('🪟 *Janelas:* '+win);
     if(urg) lines.push('⏰ *Urgência:* '+urg);
     if(feats.length) lines.push('✅ *Recursos:* '+feats.join(', '));
     lines.push('','Pode me ajudar a escolher o modelo ideal?');
