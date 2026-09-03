@@ -1,0 +1,44 @@
+/* PATCH — cole no FINAL do assets/mega-menu.css (~2500 linhas) */
+/* NÃO substitua o arquivo inteiro. Versão: NAV-BAR-FONT-v3 */
+/* Se já tiver NAV-BAR-INVERT-v2, pode SUBSTITUIR só o bloco .nav-main_text e ícones por este trecho */
+
+@media (min-width: 992px) {
+  .nav-content .nav-main {
+    min-height: 116px !important;
+  }
+
+  .nav-content .nav-main-box_link {
+    min-height: calc(40px + 14px + 24px) !important;
+  }
+
+  .nav-content .nav-main_icon {
+    max-height: 40px !important;
+    height: 40px !important;
+  }
+
+  .nav-content .nav-main_icon img {
+    max-height: 40px !important;
+    max-width: 46px !important;
+  }
+
+  .nav-content .nav-main_text {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
+    line-height: 1.15 !important;
+    text-transform: uppercase;
+  }
+
+  .nav-content .nav-main_link,
+  .nav-content .nav-main_link:visited,
+  .nav-content .nav-main_link .nav-main_text {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+  }
+
+  .nav-content .nav-main_link .nav-main_arrow svg {
+    height: 16px !important;
+    width: 16px !important;
+    margin-top: 3px !important;
+  }
+}

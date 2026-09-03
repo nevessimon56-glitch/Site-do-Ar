@@ -2403,7 +2403,7 @@
   display: none !important;
 }
 
-/* ========== Barra de navegação — fundo azul, texto branco (NAV-BAR-INVERT-v2) ========== */
+/* ========== Barra de navegação — fundo azul, texto branco (NAV-BAR-INVERT-v3) ========== */
 
 @media (min-width: 992px) {
   .header .nav-content,
@@ -2412,8 +2412,8 @@
     background-color: #1a6eb5 !important;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     overflow: visible !important;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 
   .nav-content > .container {
@@ -2422,7 +2422,7 @@
 
   .nav-content .nav-main {
     height: auto !important;
-    min-height: 104px;
+    min-height: 116px;
     overflow: visible !important;
     align-items: stretch !important;
   }
@@ -2438,13 +2438,13 @@
   }
 
   .nav-content .nav-main-box_link {
-    min-height: calc(36px + 12px + 18px) !important;
+    min-height: calc(40px + 14px + 24px) !important;
     justify-content: flex-start !important;
   }
 
   .nav-content .nav-main_icon {
-    max-height: 36px !important;
-    height: 36px !important;
+    max-height: 40px !important;
+    height: 40px !important;
     margin-bottom: 8px !important;
     overflow: visible !important;
     display: flex !important;
@@ -2456,21 +2456,27 @@
     filter: brightness(0) invert(1);
     opacity: 0.95;
     display: block !important;
-    max-height: 36px !important;
-    max-width: 42px !important;
+    max-height: 40px !important;
+    max-width: 46px !important;
     width: auto !important;
     height: auto !important;
     object-fit: contain !important;
   }
 
   .nav-content .nav-main_text {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
     line-height: 1.15 !important;
+    text-transform: uppercase;
   }
 
   .nav-content .nav-main_link,
   .nav-content .nav-main_link:visited,
   .nav-content .nav-main_link .nav-main_text {
     color: #fff !important;
+    font-size: 17px !important;
+    font-weight: 800 !important;
   }
 
   .nav-content .nav-main_link:hover,
@@ -2485,10 +2491,10 @@
   .nav-content .nav-main_link .nav-main_arrow svg {
     display: inline-block !important;
     fill: #fff !important;
-    height: 14px !important;
-    width: 14px !important;
+    height: 16px !important;
+    width: 16px !important;
     margin-left: 0 !important;
-    margin-top: 2px !important;
+    margin-top: 3px !important;
   }
 
   .nav-content .nav-main_item:hover .nav-main_icon img,
