@@ -638,13 +638,15 @@
   var dims = { economy: 'Economia', comfort: 'Conforto', speed: 'Agilidade', silence: 'Silêncio', tech: 'Tecnologia', power: 'Potência' };
   var state = { step: 0, answers: {}, scores: { economy:0, comfort:0, speed:0, silence:0, tech:0, power:0 }, btuRaw: 9000, btuBase: 9000 };
 
-  /* Faixas com URLs reais do catálogo (sem 36k split — vitrine inexistente na loja) */
+  /* Faixas com URLs reais do catálogo (split só até 30k; acima → Piso Teto) */
   var BTU_RANGES = [
     { max:  9000, btu:  9000, label: '9.000',  url: '/split-inverter/9000-btus' },
     { max: 12000, btu: 12000, label: '12.000', url: '/split-inverter/12000-Btus' },
     { max: 18000, btu: 18000, label: '18.000', url: '/split-inverter/18000-Btus' },
     { max: 24000, btu: 24000, label: '24.000', url: '/split-inverter/24000-Btus' },
     { max: 30000, btu: 30000, label: '30.000', url: '/split-inverter/30000-Btus' },
+    { max: 36000, btu: 36000, label: '36.000', url: '/Piso-Teto/36000-Btus' },
+    { max: 46000, btu: 46000, label: '46.000', url: '/Piso-Teto/46000-Btus' },
     { max: 48000, btu: 48000, label: '48.000', url: '/Piso-Teto/48000-Btus' },
     { max: 56000, btu: 56000, label: '56.000', url: '/Piso-Teto/56000-btus' },
     { max: 99999, btu: 56000, label: '56.000', url: '/Piso-Teto/56000-btus' }
