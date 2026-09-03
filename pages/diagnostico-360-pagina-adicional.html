@@ -1,4 +1,4 @@
-<!-- Cole TODO este conteúdo SOMENTE na página adicional "diagnostico-360" -->
+<!-- VERSAO: 2026-09-03-dimensionamento-v2 -->
 <!-- NÃO cole no theme.liquid, Todos-os-Produtos nem em outras páginas -->
 <!-- No admin, preencha também:
      Meta Tag title: Site Do Ar: Os Melhores Preços em Ar-Condicionado — São Paulo
@@ -186,9 +186,13 @@
   .d-hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .d-stat-card {
     padding: 20px; border-radius: 16px; border: 1px solid var(--d-border);
-    background: var(--d-surface); position: relative; overflow: hidden;
+    background: var(--d-surface); position: relative;
   }
-  .d-stat-val { font-size: 1.8rem; font-weight: 900; letter-spacing: -0.04em; line-height: 1; margin-bottom: 6px; color: var(--d-white); }
+  .d-stat-val {
+    font-size: 1.8rem; font-weight: 900; letter-spacing: -0.02em; line-height: 1.1;
+    margin-bottom: 6px; color: var(--d-white); white-space: nowrap;
+  }
+  .d-stat-val .d-btu-unit { display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; color: var(--d-muted); margin-top: 4px; text-transform: uppercase; }
   .d-stat-label { font-size: 0.8rem; font-weight: 500; color: var(--d-muted); }
   .d-stat-card.span2 { grid-column: span 2; }
   .d-progress-hero { margin-top: 14px; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.07); overflow: hidden; }
@@ -218,9 +222,12 @@
   .d-bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--d-accent), var(--d-accent2)); width: 0%; transition: width 0.3s ease; }
   .d-live-btu { text-align: center; padding: 16px; }
   .d-live-btu .d-btu-val {
-    font-size: 2.2rem; font-weight: 900; letter-spacing: -0.05em;
-    background: linear-gradient(135deg, var(--d-accent), var(--d-accent2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    font-size: 2.2rem; font-weight: 900; letter-spacing: -0.02em; line-height: 1.1;
+    color: var(--d-accent2);
+  }
+  .d-live-btu .d-btu-val .d-btu-unit {
+    display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--d-muted); margin-top: 4px; text-transform: uppercase;
   }
   .d-live-btu .d-btu-label { font-size: 0.78rem; font-weight: 600; color: var(--d-muted); text-transform: uppercase; letter-spacing: 0.1em; }
   .d-status-row {
@@ -542,7 +549,7 @@
       </div>
       <div class="d-sidebar-card">
         <div class="d-live-btu">
-          <div class="d-btu-val" id="dLiveBtu">9.000</div>
+          <div class="d-btu-val" id="dLiveBtu">9.000<span class="d-btu-unit">BTUs/h</span></div>
           <div class="d-btu-label">BTUs estimados</div>
         </div>
       </div>
@@ -801,48 +808,98 @@
     state.btuBase = 9000;
   }
 
-  /* Converte respostas do quiz nos parâmetros da calculadora BTUs do site */
+  /* Converte respostas do quiz nos parametros da calculadora BTUs v4 do site */
   function mapAnswersToBtuParams() {
-    var areaBySize = [8, 15, 30, 50];
-    var area = 15;
+    var areaBySize = [10, 18, 32, 55];
+    var area = 18;
     if (state.answers.roomSize !== undefined) {
-      area = areaBySize[state.answers.roomSize] || 15;
+      area = areaBySize[state.answers.roomSize] || 18;
     }
 
     var fatSol = 1.10;
     var fatPe = 1.0;
+    var fatLayout = 1.0;
+    var fatJanelas = 1.08;
     if (state.answers.roomType !== undefined) {
-      var solByType = [1.0, 1.25, 1.10, 1.10];
+      var solByType = [1.0, 1.25, 1.10, 1.15];
       fatSol = solByType[state.answers.roomType] || 1.10;
       if (state.answers.roomType === 2) fatPe = 3.0 / 2.6;
+      if (state.answers.roomType === 3) fatLayout = 1.20;
+      if (state.answers.roomType === 0) fatJanelas = 1.0;
+      if (state.answers.roomType === 1) fatJanelas = 1.18;
     }
 
     var fatUso = 1.10;
+    var equip = 0;
     if (state.answers.environment !== undefined) {
       var usoByEnv = [1.0, 1.10, 1.10, 1.50];
       fatUso = usoByEnv[state.answers.environment] || 1.10;
+      if (state.answers.environment === 1) equip = 600;
+      if (state.answers.environment === 2) equip = 1500;
+      if (state.answers.environment === 3) equip = 3000;
     }
-    if (state.answers.usage === 3) fatUso = Math.max(fatUso, 1.50);
+
+    var fatHoras = 1.05;
+    var fatUmid = 1.0;
+    if (state.answers.usage !== undefined) {
+      var horasByUsage = [1.0, 1.05, 1.10, 1.15];
+      fatHoras = horasByUsage[state.answers.usage] || 1.05;
+      if (state.answers.usage === 3) {
+        fatUso = Math.max(fatUso, 1.50);
+        equip = Math.max(equip, 1500);
+      }
+      if (state.answers.usage === 2) equip = Math.max(equip, 1500);
+    }
+
+    var fatClima = 1.08;
+    if (state.answers.climate !== undefined) {
+      var climaByAns = [1.15, 1.10, 1.0, 1.0];
+      fatClima = climaByAns[state.answers.climate] || 1.08;
+      if (state.answers.climate === 1) fatUmid = 1.05;
+    }
 
     var pessoas = 2;
     if (state.answers.occupants !== undefined) {
-      pessoas = [1, 3, 5, 10][state.answers.occupants] || 2;
+      pessoas = [1, 3, 5, 12][state.answers.occupants] || 2;
     }
 
-    var equip = 0;
-    if (state.answers.environment === 1) equip = 600;
-    if (state.answers.environment === 2 || state.answers.environment === 3) equip = 1500;
-    if (state.answers.usage === 3) equip = Math.max(equip, 1500);
+    /* Coerencia: sala/reuniao com muitas pessoas raramente e ambiente minusculo */
+    if (state.answers.occupants >= 2 && area < 22) area = 22;
+    if (state.answers.environment === 1 && state.answers.occupants >= 2 && area < 24) area = 24;
+    if (state.answers.environment === 3 && area < 35) area = 35;
+    if (state.answers.roomType === 3 && area < 28) area = 28;
 
-    return { area: area, fatSol: fatSol, fatUso: fatUso, fatPe: fatPe, pessoas: pessoas, equip: equip };
+    return {
+      area: area, fatSol: fatSol, fatUso: fatUso, fatPe: fatPe,
+      fatLayout: fatLayout, fatJanelas: fatJanelas, fatClima: fatClima,
+      fatHoras: fatHoras, fatUmid: fatUmid, pessoas: pessoas, equip: equip
+    };
   }
 
-  /* Fórmula idêntica à sdaCalcular(): 600 BTU/m² × fatores + pessoas + equipamentos */
+  /* Mesma logica da calculadora BTUs v4 do site */
   function calcBtuSiteDoAr(params) {
-    var btus = params.area * 600 * params.fatSol * params.fatUso * params.fatPe;
+    var base = params.area * 600;
+    var fatorTotal = params.fatSol * params.fatUso * params.fatPe *
+      params.fatLayout * params.fatJanelas * params.fatClima *
+      params.fatHoras * params.fatUmid;
+    var btus = base * fatorTotal;
     if (params.pessoas > 1) btus += (params.pessoas - 1) * 600;
     btus += params.equip || 0;
+
+    if (params.pessoas >= 5) btus = Math.max(btus, 15000);
+    if (params.pessoas >= 10) btus = Math.max(btus, 24000);
+    if (params.area >= 40) btus = Math.max(btus, 22000);
+    if (params.area >= 55) btus = Math.max(btus, 30000);
+
     return Math.ceil(btus / 500) * 500;
+  }
+
+  function fmtBtuNum(n) {
+    return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function fmtBtuHtml(n) {
+    return fmtBtuNum(n) + '<span class="d-btu-unit">BTUs/h</span>';
   }
 
   function recommendBtuRange(raw) {
@@ -854,10 +911,6 @@
 
   function recommendBtu(raw) {
     return recommendBtuRange(raw).btu;
-  }
-
-  function normBtu(v) {
-    return recommendBtu(v);
   }
 
   function recalc() {
@@ -888,17 +941,18 @@
     });
     var answered = Object.keys(state.answers).length;
     var fit = Math.round((answered/questions.length)*100);
-    var btu = normBtu(state.btuBase);
-    var btuStr = btu.toLocaleString('pt-BR');
-    var status = answered < 3 ? 'Coletando sinais' : answered < 7 ? 'Perfil em formação' : 'Diagnóstico quase pronto';
+    var btu = state.btuBase;
+    var btuHtml = fmtBtuHtml(btu);
+    var btuText = fmtBtuNum(btu) + ' BTUs/h';
+    var status = answered < 3 ? 'Coletando sinais' : answered < 7 ? 'Perfil em formacao' : 'Diagnostico quase pronto';
     els.heroFit.textContent = fit+'%';
     els.heroBar.style.width = fit+'%';
-    els.heroBtu.textContent = btuStr;
-    els.heroStatus.textContent = answered === 0 ? 'Aguardando início do diagnóstico' : status;
-    els.liveBtu.textContent = btuStr;
+    els.heroBtu.innerHTML = btuHtml;
+    els.heroStatus.textContent = answered === 0 ? 'Aguardando inicio do diagnostico' : status;
+    els.liveBtu.innerHTML = btuHtml;
     els.sideStatus.textContent = status;
     els.quizBar.style.width = Math.round(((state.step+1)/questions.length)*100)+'%';
-    if (els.mobBtu) els.mobBtu.textContent = btuStr;
+    if (els.mobBtu) els.mobBtu.textContent = btuText;
     if (els.mobFit) els.mobFit.textContent = fit + '%';
     if (els.mobStep) els.mobStep.textContent = (state.step + 1) + ' de ' + questions.length;
     if (els.mobBar) els.mobBar.style.width = Math.round(((state.step + 1) / questions.length) * 100) + '%';
@@ -945,7 +999,7 @@
       var q = questions.find(function(q){return q.id===id;});
       return q ? q.options[a]?.label||null : null;
     };
-    var lines = ['Olá! Fiz o Diagnóstico Clima 360 no site.','','📊 *Meu perfil:* '+persona.title,'🌡 *BTUs sugeridos:* '+btu.toLocaleString('pt-BR')+' BTUs','⚡ *Prioridade:* '+priority,''];
+    var lines = ['Ola! Fiz o Diagnostico Clima 360 no site.','','📊 *Meu perfil:* '+persona.title,'🌡 *BTUs sugeridos:* '+fmtBtuNum(btu)+' BTUs/h','⚡ *Prioridade:* '+priority,''];
     var env=get('environment'),type=get('roomType'),size=get('roomSize'),urg=get('urgency');
     if(env) lines.push('🏠 *Tipo de ambiente:* '+env);
     if(size) lines.push('📏 *Área:* '+size);
@@ -964,7 +1018,7 @@
   function buildResult() {
     recalc();
     var top = getTop(), topKey = top[0];
-    var btu = normBtu(state.btuBase);
+    var btu = state.btuBase;
     var hasUrgency = state.answers.urgency === 2;
     var featIdxs = state.answers.features || [];
     var feats = featIdxs.map(function(i){ return questions.find(function(q){return q.id==='features';}).options[i].label; });
@@ -980,13 +1034,13 @@
     var p = personas[topKey] || personas.comfort;
 
     document.getElementById('dResultTitle').textContent = p.title;
-    document.getElementById('dResultText').textContent = p.text+' Faixa sugerida: '+btu.toLocaleString('pt-BR')+' BTUs.';
+    document.getElementById('dResultText').textContent = p.text+' Faixa sugerida: '+fmtBtuNum(btu)+' BTUs/h (calculo bruto: '+fmtBtuNum(state.btuRaw)+' BTUs/h).';
     document.getElementById('dRouteTitle').textContent = hasUrgency ? 'Rota: atendimento imediato' : 'Rota recomendada';
     document.getElementById('dRouteText').textContent = p.route+(feats.length ? ' Recursos citados: '+feats.join(', ')+'.' : '');
     document.getElementById('dPrimaryCta').href = buildLink(state.btuRaw);
     document.getElementById('dWaCta').href = buildWa(p, btu, dims[topKey], feats);
     document.getElementById('dResultBadges').innerHTML = [
-      {label:btu.toLocaleString('pt-BR')+' BTUs',h:true},
+      {label:fmtBtuNum(btu)+' BTUs/h',h:true},
       {label:dims[topKey],h:true},
       {label:hasUrgency?'Alta urgência':'Comparar opções',h:false}
     ].concat(feats.slice(0,2).map(function(l){return {label:l,h:false};}))
