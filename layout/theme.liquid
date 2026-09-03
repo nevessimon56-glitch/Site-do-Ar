@@ -396,5 +396,23 @@
 })();
 </script>
 
+<!-- Calculadora BTUs: carrega JS automaticamente quando a pagina tem .sda-calc -->
+<script>
+(function () {
+  function loadSdaCalc() {
+    if (window.__SDA_CALC_READY || !document.querySelector('.sda-calc')) return;
+    var s = document.createElement('script');
+    s.src = '{{ 'assets/calculadora-btus.js' | themeAssetUrl }}';
+    s.async = true;
+    document.body.appendChild(s);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadSdaCalc);
+  } else {
+    loadSdaCalc();
+  }
+})();
+</script>
+
 </body>
 </html>
