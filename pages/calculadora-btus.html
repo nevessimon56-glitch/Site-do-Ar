@@ -1,0 +1,635 @@
+<!-- CALCULADORA BTUs — Site do Ar -->
+<!-- VERSAO: 2026-09-03-urls-reais-v1 -->
+<p></p>
+<!-- CSS 100% encapsulado em .sda-calc para não vazar para a plataforma -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap');
+
+  .sda-calc *, .sda-calc *::before, .sda-calc *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sda-calc {
+    --sda-blue: #1565C0;
+    --sda-blue-light: #1E88E5;
+    --sda-blue-dark: #0D47A1;
+    --sda-accent: #29B6F6;
+    --sda-bg: #f4f6f9;
+    --sda-card: #ffffff;
+    --sda-text: #1a1f2e;
+    --sda-muted: #5a6a7a;
+    --sda-border: #dde3ec;
+    --sda-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--sda-text);
+  }
+
+  .sda-calc .hero {
+    background: linear-gradient(135deg, #1976D2 0%, #42A5F5 50%, #64B5F6 100%);
+    padding: 48px 24px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sda-calc .hero::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    border: 60px solid rgba(255, 255, 255, 0.05);
+    top: -100px;
+    right: -80px;
+  }
+
+  .sda-calc .hero::after {
+    content: '';
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    border: 40px solid rgba(255, 255, 255, 0.05);
+    bottom: -60px;
+    left: -40px;
+  }
+
+  .sda-calc .hero-logo {
+    display: block;
+    margin: 0 auto 20px;
+    width: 160px;
+  }
+
+  .sda-calc .hero-logo img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .sda-calc .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 400;
+    color: #fff;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .sda-calc .hero p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .sda-calc .calc-wrapper {
+    max-width: 780px;
+    margin: -32px auto 48px;
+    padding: 0 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .sda-calc .card {
+    background: var(--sda-card);
+    border-radius: var(--sda-radius);
+    border: 1px solid var(--sda-border);
+    padding: 28px 32px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  }
+
+  .sda-calc .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--sda-blue-dark);
+    text-transform: none;
+    letter-spacing: 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sda-calc .card-title .num {
+    width: 26px;
+    height: 26px;
+    background: var(--sda-blue);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .sda-calc .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .sda-calc .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sda-calc .form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sda-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .sda-calc .form-group input,
+  .sda-calc .form-group select {
+    height: 44px;
+    border: 1.5px solid var(--sda-border);
+    border-radius: 8px;
+    padding: 0 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--sda-text);
+    background: #fff;
+    transition: border-color 0.2s;
+    outline: none;
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .sda-calc .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235a6a7a' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  .sda-calc .form-group input:focus,
+  .sda-calc .form-group select:focus {
+    border-color: var(--sda-blue-light);
+    box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+  }
+
+  .sda-calc .hint {
+    font-size: 12px;
+    color: var(--sda-muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  .sda-calc .btn-calc {
+    width: 100%;
+    height: 52px;
+    background: linear-gradient(135deg, var(--sda-blue) 0%, var(--sda-blue-light) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-top: 8px;
+  }
+
+  .sda-calc .btn-calc:hover {
+    opacity: 0.92;
+  }
+
+  .sda-calc .btn-calc:active {
+    transform: scale(0.99);
+  }
+
+  .sda-calc .result-box {
+    display: none;
+    background: linear-gradient(135deg, #E3F2FD 0%, #E8F5E9 100%);
+    border: 1.5px solid #90CAF9;
+    border-radius: var(--sda-radius);
+    padding: 28px 32px;
+    margin-bottom: 16px;
+    animation: sdaFadeUp 0.4s ease;
+  }
+
+  @keyframes sdaFadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .sda-calc .result-box.show {
+    display: block;
+  }
+
+  .sda-calc .result-header {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--sda-blue-dark);
+    text-transform: none;
+    margin-bottom: 16px;
+  }
+
+  .sda-calc .result-btus {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(40px, 8vw, 64px);
+    font-weight: 400;
+    color: var(--sda-blue-dark);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .sda-calc .result-btus span {
+    font-size: 22px;
+    font-weight: 500;
+    margin-left: 6px;
+    color: var(--sda-blue);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .sda-calc .result-sub {
+    font-size: 14px;
+    color: var(--sda-muted);
+    margin-bottom: 24px;
+  }
+
+  .sda-calc .rec-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sda-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  .sda-calc .rec-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  .sda-calc .rec-card {
+    background: #fff;
+    border: 1.5px solid #BBDEFB;
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .sda-calc .rec-card:hover {
+    border-color: var(--sda-blue-light);
+    box-shadow: 0 4px 16px rgba(21, 101, 192, 0.12);
+  }
+
+  .sda-calc .rec-tag {
+    display: inline-block;
+    background: var(--sda-blue);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .sda-calc .rec-tag.recomendado {
+    background: #2E7D32;
+  }
+
+  .sda-calc .rec-tag.minimo {
+    background: #F57C00;
+  }
+
+  .sda-calc .rec-tag.folga {
+    background: var(--sda-blue);
+  }
+
+  .sda-calc .rec-btus {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--sda-blue-dark);
+    margin-bottom: 2px;
+  }
+
+  .sda-calc .rec-label {
+    font-size: 12px;
+    color: var(--sda-muted);
+    margin-bottom: 10px;
+  }
+
+  .sda-calc .rec-link {
+    display: inline-block;
+    background: var(--sda-blue);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .sda-calc .rec-link:hover {
+    background: var(--sda-blue-dark);
+  }
+
+  .sda-calc .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .sda-calc .info-item {
+    background: #fff;
+    border: 1px solid var(--sda-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+
+  .sda-calc .info-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--sda-blue-dark);
+  }
+
+  .sda-calc .info-key {
+    font-size: 12px;
+    color: var(--sda-muted);
+    margin-top: 2px;
+  }
+
+  .sda-calc .divider {
+    height: 1px;
+    background: var(--sda-border);
+    margin: 20px 0;
+  }
+
+  .sda-calc .tip-box {
+    background: #FFF8E1;
+    border: 1px solid #FFE082;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: #5D4037;
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+
+  .sda-calc .tip-box strong {
+    color: #E65100;
+  }
+
+  .sda-calc .error-msg {
+    display: none;
+    background: #FFEBEE;
+    border: 1px solid #EF9A9A;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #C62828;
+    margin-top: 8px;
+  }
+
+  .sda-calc .error-msg.show {
+    display: block;
+  }
+
+  @media (max-width: 520px) {
+    .sda-calc .card {
+      padding: 20px 16px;
+    }
+
+    .sda-calc .result-box {
+      padding: 20px 16px;
+    }
+
+    .sda-calc .hero {
+      padding: 36px 16px 52px;
+    }
+  }
+</style>
+
+<div class="sda-calc">
+  <div class="hero">
+    <a href="/" title="Site do Ar" class="hero-logo">
+      <img src="https://salescdn.net/maT0h6neqzha7hneLLSUgCnCdII=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1778871926257.webp" alt="Site do Ar">
+    </a>
+    <p>Descubra a capacidade ideal de ar-condicionado para o seu ambiente em segundos.</p>
+  </div>
+
+  <div class="calc-wrapper">
+    <div class="card">
+      <div class="card-title"><span class="num">1</span> Dados do ambiente</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Comprimento (m)</label>
+          <input type="number" id="sda-comp" placeholder="Ex: 4" min="1" step="0.1">
+        </div>
+        <div class="form-group">
+          <label>Largura (m)</label>
+          <input type="number" id="sda-larg" placeholder="Ex: 3" min="1" step="0.1">
+        </div>
+        <div class="form-group">
+          <label>Altura do teto (m)</label>
+          <input type="number" id="sda-pe" placeholder="Ex: 2.60" min="1.5" step="0.1" value="2.6">
+          <span class="hint">Padrão: 2,60 m. Acima de 3 m aplica acréscimo.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">2</span> Características do ambiente</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Insolação</label>
+          <select id="sda-sol">
+            <option value="sem_sol">Sem sol direto / Sombra</option>
+            <option value="sol_manha" selected>Sol pela manhã</option>
+            <option value="sol_tarde">Sol à tarde (forte)</option>
+          </select>
+          <span class="hint">Exposição solar predominante do ambiente</span>
+        </div>
+        <div class="form-group">
+          <label>Tipo de uso</label>
+          <select id="sda-uso">
+            <option value="quarto">Quarto / Dormitório</option>
+            <option value="sala" selected>Sala / Escritório</option>
+            <option value="cozinha">Cozinha / Área de serviço</option>
+            <option value="comercio">Comércio / Loja</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Nº de pessoas</label>
+          <input type="number" id="sda-pessoas" placeholder="Ex: 2" min="1" max="50" value="2">
+          <span class="hint">Pessoas que usam o ambiente simultaneamente</span>
+        </div>
+        <div class="form-group">
+          <label>Equipamentos</label>
+          <select id="sda-equip">
+            <option value="0">Nenhum</option>
+            <option value="600">Poucos (TV, iluminação)</option>
+            <option value="1500" selected>Moderado (computadores)</option>
+            <option value="3000">Muitos (servidores, maquinário)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="error-msg" id="sda-error">⚠️ Por favor, preencha o comprimento e a largura do ambiente.</div>
+    <button type="button" class="btn-calc" onclick="sdaCalcular()">🔍 Calcular BTUs Necessários</button>
+
+    <div class="result-box" id="sda-resultBox">
+      <div class="result-header">✅ Resultado do cálculo</div>
+      <div class="result-btus" id="sda-resultNum">&mdash;<span>BTUs/h</span></div>
+      <div class="result-sub" id="sda-resultSub"></div>
+      <div class="info-grid" id="sda-infoGrid"></div>
+      <div class="divider"></div>
+      <div class="rec-title">🛒 Equipamentos recomendados para o seu ambiente</div>
+      <div class="rec-cards" id="sda-recCards"></div>
+      <div class="tip-box" id="sda-tipBox"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* Catálogo real — cada url retorna produtos (testado no site ao vivo) */
+  var SDA_CATALOG = [
+    { btu: 9000, label: '9.000', tipo: 'Split Inverter', url: '/split-inverter/9000-btus' },
+    { btu: 12000, label: '12.000', tipo: 'Split Inverter', url: '/split-inverter/12000-Btus' },
+    { btu: 18000, label: '18.000', tipo: 'Split Inverter', url: '/split-inverter/18000-Btus' },
+    { btu: 24000, label: '24.000', tipo: 'Split Inverter', url: '/split-inverter/24000-Btus' },
+    { btu: 30000, label: '30.000', tipo: 'Split Inverter', url: '/split-inverter/30000-Btus' },
+    { btu: 36000, label: '36.000', tipo: 'Piso Teto', url: '/Piso-Teto/36000-Btus' },
+    { btu: 46000, label: '46.000', tipo: 'Piso Teto', url: '/Piso-Teto/46000-Btus' },
+    { btu: 48000, label: '48.000', tipo: 'Piso Teto', url: '/Piso-Teto/48000-Btus' },
+    { btu: 56000, label: '56.000', tipo: 'Piso Teto', url: '/Piso-Teto/56000-btus' }
+  ];
+
+  var FAT_SOL = { sem_sol: 1.0, sol_manha: 1.10, sol_tarde: 1.25 };
+  var FAT_USO = { quarto: 1.0, sala: 1.10, cozinha: 1.20, comercio: 1.50 };
+
+  function fmt(n) {
+    return n.toLocaleString('pt-BR');
+  }
+
+  function fatPe(altura) {
+    return altura > 3 ? altura / 2.6 : 1.0;
+  }
+
+  function calcBtus(area, sol, uso, pe, pessoas, equip) {
+    var btus = area * 600 * (FAT_SOL[sol] || 1.10) * (FAT_USO[uso] || 1.10) * fatPe(pe);
+    if (pessoas > 1) btus += (pessoas - 1) * 600;
+    btus += equip || 0;
+    return Math.ceil(btus / 500) * 500;
+  }
+
+  function findIdealIndex(rawBtu) {
+    for (var i = 0; i < SDA_CATALOG.length; i++) {
+      if (rawBtu <= SDA_CATALOG[i].btu) return i;
+    }
+    return SDA_CATALOG.length - 1;
+  }
+
+  function catalogEntry(idx) {
+    if (idx < 0) return SDA_CATALOG[0];
+    if (idx >= SDA_CATALOG.length) return SDA_CATALOG[SDA_CATALOG.length - 1];
+    return SDA_CATALOG[idx];
+  }
+
+  function renderRecCard(tagClass, tagLabel, entry, sublabel) {
+    return (
+      '<div class="rec-card">' +
+        '<span class="rec-tag ' + tagClass + '">' + tagLabel + '</span>' +
+        '<div class="rec-btus">' + entry.label + '</div>' +
+        '<div class="rec-label">' + sublabel + '<br>' + entry.tipo + '</div>' +
+        '<a class="rec-link" href="' + entry.url + '">Ver modelos</a>' +
+      '</div>'
+    );
+  }
+
+  window.sdaCalcular = function sdaCalcular() {
+    var errEl = document.getElementById('sda-error');
+    var boxEl = document.getElementById('sda-resultBox');
+    var comp = parseFloat(document.getElementById('sda-comp').value);
+    var larg = parseFloat(document.getElementById('sda-larg').value);
+    var pe = parseFloat(document.getElementById('sda-pe').value) || 2.6;
+    var sol = document.getElementById('sda-sol').value;
+    var uso = document.getElementById('sda-uso').value;
+    var pessoas = parseInt(document.getElementById('sda-pessoas').value, 10) || 1;
+    var equip = parseInt(document.getElementById('sda-equip').value, 10) || 0;
+
+    if (!comp || !larg || comp <= 0 || larg <= 0) {
+      errEl.classList.add('show');
+      boxEl.classList.remove('show');
+      return;
+    }
+    errEl.classList.remove('show');
+
+    var area = comp * larg;
+    var btus = calcBtus(area, sol, uso, pe, pessoas, equip);
+    var idealIdx = findIdealIndex(btus);
+    var minEntry = catalogEntry(idealIdx - 1);
+    var recEntry = catalogEntry(idealIdx);
+    var maxEntry = catalogEntry(idealIdx + 1);
+
+    document.getElementById('sda-resultNum').innerHTML = fmt(btus) + '<span>BTUs/h</span>';
+    document.getElementById('sda-resultSub').textContent =
+      'Ambiente de ' + area.toFixed(1).replace('.', ',') + ' m² · capacidade arredondada para o padrão comercial';
+
+    document.getElementById('sda-infoGrid').innerHTML =
+      '<div class="info-item"><div class="info-val">' + area.toFixed(1).replace('.', ',') + ' m²</div><div class="info-key">Área total</div></div>' +
+      '<div class="info-item"><div class="info-val">' + fmt(recEntry.btu) + '</div><div class="info-key">Capacidade sugerida</div></div>' +
+      '<div class="info-item"><div class="info-val">' + recEntry.tipo + '</div><div class="info-key">Linha indicada</div></div>';
+
+    document.getElementById('sda-recCards').innerHTML =
+      renderRecCard('minimo', 'Mínimo', minEntry, 'Para ambientes menores') +
+      renderRecCard('recomendado', 'Recomendado', recEntry, 'Ideal para o seu cálculo') +
+      renderRecCard('folga', 'Com folga', maxEntry, 'Margem extra de potência');
+
+    var tip = document.getElementById('sda-tipBox');
+    if (btus > 30000 && recEntry.tipo === 'Piso Teto') {
+      tip.innerHTML =
+        '<strong>Acima de 30.000 BTUs:</strong> split hi-wall não existe nesta faixa na loja. ' +
+        'Os modelos de <strong>Piso Teto</strong> são os indicados para salões, lojas e ambientes amplos.';
+    } else if (btus >= 36000) {
+      tip.innerHTML =
+        '<strong>Dica:</strong> para ' + fmt(btus) + ' BTUs, confira a linha <strong>Piso Teto</strong> — ' +
+        'não há split inverter de 36.000 BTUs no catálogo.';
+    } else {
+      tip.innerHTML =
+        '<strong>Dica:</strong> prefira inverter na faixa recomendada para economia de energia. ' +
+        'Subdimensionar força o aparelho e aumenta a conta de luz.';
+    }
+
+    boxEl.classList.add('show');
+    boxEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
+})();
+</script>
+<p></p>
