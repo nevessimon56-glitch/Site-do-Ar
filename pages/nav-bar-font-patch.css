@@ -1,44 +1,56 @@
 /* PATCH — cole no FINAL do assets/mega-menu.css (~2500 linhas) */
-/* NÃO substitua o arquivo inteiro. Versão: NAV-BAR-FONT-v3 */
-/* Se já tiver NAV-BAR-INVERT-v2, pode SUBSTITUIR só o bloco .nav-main_text e ícones por este trecho */
+/* NÃO substitua o arquivo inteiro. Versão: NAV-BAR-COMPACT-v4 */
+/* Substitui v3 se já colou antes — quadrados menores, texto ainda legível (15px) */
 
 @media (min-width: 992px) {
+  .header .nav-content,
+  .nav-content.content {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+  }
+
   .nav-content .nav-main {
-    min-height: 116px !important;
+    min-height: 86px !important;
+  }
+
+  .nav-content .nav-main_link {
+    padding-top: 8px !important;
+    padding-bottom: 6px !important;
   }
 
   .nav-content .nav-main-box_link {
-    min-height: calc(40px + 14px + 24px) !important;
+    min-height: calc(28px + 8px + 18px) !important;
   }
 
   .nav-content .nav-main_icon {
-    max-height: 40px !important;
-    height: 40px !important;
+    max-height: 28px !important;
+    height: 28px !important;
+    margin-bottom: 4px !important;
   }
 
   .nav-content .nav-main_icon img {
-    max-height: 40px !important;
-    max-width: 46px !important;
+    max-height: 28px !important;
+    max-width: 34px !important;
   }
 
   .nav-content .nav-main_text {
-    font-size: 17px !important;
+    font-size: 15px !important;
     font-weight: 800 !important;
-    letter-spacing: 0.04em !important;
-    line-height: 1.15 !important;
+    letter-spacing: 0.03em !important;
+    line-height: 1.1 !important;
     text-transform: uppercase;
   }
 
   .nav-content .nav-main_link,
   .nav-content .nav-main_link:visited,
   .nav-content .nav-main_link .nav-main_text {
-    font-size: 17px !important;
+    font-size: 15px !important;
     font-weight: 800 !important;
   }
 
   .nav-content .nav-main_link .nav-main_arrow svg {
-    height: 16px !important;
-    width: 16px !important;
-    margin-top: 3px !important;
+    height: 12px !important;
+    width: 12px !important;
+    margin-top: 2px !important;
   }
 }
