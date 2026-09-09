@@ -1,5 +1,5 @@
 /* PATCH — cole no FINAL do assets/mega-menu.js */
-/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-MOBILE-v3 */
+/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-MOBILE-v4 */
 /* Força 2 produtos por linha no catálogo mobile (remove Slick + grid inline) */
 
 (function () {
@@ -55,10 +55,18 @@
       item.style.setProperty('width', '100%', 'important');
       item.style.setProperty('max-width', '100%', 'important');
       item.style.setProperty('min-width', '0', 'important');
+      item.style.setProperty('height', 'auto', 'important');
+      item.style.setProperty('min-height', '0', 'important');
       item.style.setProperty('float', 'none', 'important');
       item.style.setProperty('clear', 'none', 'important');
       item.style.setProperty('opacity', '1', 'important');
       item.style.setProperty('visibility', 'visible', 'important');
+
+      var card = item.querySelector('.showcase-product');
+      if (card) {
+        card.style.setProperty('height', 'auto', 'important');
+        card.style.setProperty('min-height', '0', 'important');
+      }
     }
   }
 
