@@ -1,9 +1,9 @@
 /* ============================================================
    PATCH — cole no FINAL do assets/mega-menu.css
    NÃO substitua o arquivo inteiro.
-   Versão: CATALOG-GRID-COMPACT-v14
-   Substitui v1–v13 se já colou antes.
-   Mobile: 2 col, azul original, sem barra cinza, card termina nos botões.
+   Versão: CATALOG-GRID-COMPACT-v15
+   Substitui v1–v14 se já colou antes.
+   Mobile: 2 col, cards uniformes (sem vão), respiro abaixo do COMPRAR.
    Desktop: catálogo 3 col + home carrossel 4.
    Mobile: catálogo + home com 2 produtos/linha + cards compactos.
    Cole TAMBÉM pages/catalog-grid-mobile-patch.js no final do mega-menu.js.
@@ -315,7 +315,7 @@
   }
 }
 
-/* ========== Mobile — estilo Leveros: 2 col, compacto, legível (v13) ========== */
+/* ========== Mobile — 2 col compacto, cards uniformes (v15) ========== */
 
 @media (max-width: 991px) {
   /* Grade 2 col — linhas só com a altura do conteúdo */
@@ -352,7 +352,7 @@
   .showcase-search .showcase-list {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0 6px !important;
+    gap: 4px 6px !important;
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
@@ -375,7 +375,7 @@
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
-    padding: 0 0 6px !important;
+    padding: 0 !important;
     margin: 0 !important;
     box-sizing: border-box !important;
     clear: none !important;
@@ -401,7 +401,7 @@
   .showcase-search .showcase-list.slick-initialized .slick-track {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0 6px !important;
+    gap: 4px 6px !important;
     width: 100% !important;
     max-width: 100% !important;
     transform: none !important;
@@ -462,6 +462,15 @@
     padding: 0 8px 4px !important;
     background: transparent !important;
     border: 0 !important;
+    min-height: 16px !important;
+    max-height: 16px !important;
+    overflow: hidden !important;
+  }
+
+  .showcase-item .showcase-spec-wrap:empty {
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 0 !important;
   }
 
   .showcase-item .showcase-product .card-header {
@@ -472,7 +481,7 @@
 
   .showcase-item .showcase-product .card-footer {
     flex: 0 0 auto !important;
-    padding: 2px 8px 0 !important;
+    padding: 2px 8px 8px !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     text-align: left !important;
@@ -491,6 +500,7 @@
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
+    min-height: 2.5em !important;
   }
 
   .showcase-item .showcase-product_link__image,
@@ -636,7 +646,7 @@
   section.showcase .showcase-list {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0 6px !important;
+    gap: 4px 6px !important;
     width: 100% !important;
     max-width: 100% !important;
     padding: 0 !important;
@@ -651,7 +661,7 @@
   section.showcase .showcase-list.slick-initialized .slick-track {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0 6px !important;
+    gap: 4px 6px !important;
     width: 100% !important;
     transform: none !important;
     left: 0 !important;
@@ -675,7 +685,7 @@
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
-    padding: 0 0 6px !important;
+    padding: 0 !important;
     margin: 0 !important;
     box-sizing: border-box !important;
   }
@@ -698,7 +708,7 @@
   .showcase-item .showcase-product .card-footer,
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-footer {
     margin-top: 0 !important;
-    padding-bottom: 0 !important;
+    padding-bottom: 8px !important;
   }
 
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link__image {
@@ -717,8 +727,7 @@
     flex: 0 0 auto !important;
   }
 
-  .showcase-item .showcase-card-actions,
-  .showcase-item .showcase-product_buy {
+  .showcase-item .showcase-card-actions {
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
   }

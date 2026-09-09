@@ -1928,7 +1928,7 @@
 })();
 
 /* PATCH — cole no FINAL do assets/mega-menu.js */
-/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-MOBILE-v4 */
+/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-MOBILE-v5 */
 /* Força 2 produtos por linha no catálogo mobile (remove Slick + grid inline) */
 
 (function () {
@@ -1953,7 +1953,7 @@
   function applyGridToList(list) {
     list.style.setProperty('display', 'grid', 'important');
     list.style.setProperty('grid-template-columns', 'repeat(2, minmax(0, 1fr))', 'important');
-    list.style.setProperty('gap', '0 6px', 'important');
+    list.style.setProperty('gap', '4px 6px', 'important');
     list.style.setProperty('width', '100%', 'important');
     list.style.setProperty('max-width', '100%', 'important');
     list.style.setProperty('margin', '0', 'important');
@@ -1964,7 +1964,7 @@
     if (track) {
       track.style.setProperty('display', 'grid', 'important');
       track.style.setProperty('grid-template-columns', 'repeat(2, minmax(0, 1fr))', 'important');
-      track.style.setProperty('gap', '0 6px', 'important');
+      track.style.setProperty('gap', '4px 6px', 'important');
       track.style.setProperty('width', '100%', 'important');
       track.style.setProperty('max-width', '100%', 'important');
       track.style.setProperty('transform', 'none', 'important');
