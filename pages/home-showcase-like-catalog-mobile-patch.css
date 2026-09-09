@@ -15,19 +15,22 @@
   }
 
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-item {
-    width: calc(50% - 8px) !important;
-    max-width: calc(50% - 8px) !important;
-    margin: 0 4px 12px !important;
-  }
-
-  /* --- Cards iguais: Promoção + Os mais vendidos (carrossel) --- */
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-item,
-  main.home-main section.showcase .showcase-products_carousel .showcase-item {
     float: none !important;
     display: flex !important;
     flex-direction: column !important;
+    width: calc(50% - 8px) !important;
+    max-width: calc(50% - 8px) !important;
+    margin: 0 4px 12px !important;
     box-sizing: border-box !important;
   }
+
+  /* Carrossel tns: NÃO forçar display/width no slide — o theme.js controla 2 colunas */
+  main.home-main section.showcase .showcase-products_carousel .showcase-slider .showcase-item {
+    min-width: 0 !important;
+    height: auto !important;
+  }
+
+  /* --- Cards iguais: Promoção + Os mais vendidos (só conteúdo interno) --- */
 
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product,
   main.home-main section.showcase .showcase-products_carousel .showcase-product {
