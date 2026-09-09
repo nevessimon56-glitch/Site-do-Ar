@@ -1,0 +1,97 @@
+/* PATCH — cole no FINAL do assets/mega-menu.css (~2500 linhas) */
+/* NÃO substitua o arquivo inteiro. Versão: CATALOG-CARD-COMPACT-v1 */
+/* Cards de produto menores no catálogo desktop — mantém 3 colunas */
+
+@media (min-width: 992px) {
+  .showcase-search .showcase-list {
+    gap: 14px 10px !important;
+    justify-content: center !important;
+  }
+
+  .showcase-search .showcase-item {
+    flex: 0 0 calc(33.333% - 12px) !important;
+    width: calc(33.333% - 12px) !important;
+    max-width: 300px !important;
+    padding: 0 4px 12px !important;
+  }
+
+  .showcase-search .showcase-product {
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    border-radius: 10px !important;
+  }
+
+  .showcase-search .showcase-product_image.card-image {
+    padding: 6px 6px 0 !important;
+  }
+
+  .showcase-search .showcase-product_link__image {
+    min-height: 120px !important;
+    max-height: 170px !important;
+  }
+
+  .showcase-search .product-hover-wrap {
+    max-height: 170px !important;
+    min-height: 120px !important;
+  }
+
+  .showcase-search .product-hover-wrap img,
+  .showcase-search .showcase-product_link__image > img {
+    max-height: 155px !important;
+    max-width: 92% !important;
+  }
+
+  .showcase-search .showcase-product .card-header {
+    padding: 6px 8px 0 !important;
+  }
+
+  .showcase-search .showcase-product_link_title {
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+  }
+
+  .showcase-search .showcase-spec-wrap {
+    padding: 0 8px 4px !important;
+  }
+
+  .showcase-search .showcase-spec-bar__tag {
+    height: 18px !important;
+    padding: 0 5px !important;
+    font-size: 8px !important;
+  }
+
+  .showcase-search .showcase-product .card-footer {
+    padding: 4px 8px 10px !important;
+  }
+
+  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_strike,
+  .showcase-search .showcase-product .card-footer .showcase-prices--card del.showcase-prices_strike {
+    font-size: 11px !important;
+  }
+
+  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_price,
+  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_price b {
+    font-size: 18px !important;
+  }
+
+  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_pix {
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_installment {
+    font-size: 11px !important;
+  }
+
+  .showcase-search .showcase-product_buy,
+  .showcase-search .showcase-card-actions .showcase-product_buy.btn {
+    font-size: 11px !important;
+    padding: 8px 10px !important;
+  }
+
+  .showcase-search .showcase-card-actions .showcase-compare-btn {
+    font-size: 10px !important;
+    padding: 6px 8px !important;
+  }
+}
