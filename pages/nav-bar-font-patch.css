@@ -1,56 +1,58 @@
 /* PATCH — cole no FINAL do assets/mega-menu.css (~2500 linhas) */
-/* NÃO substitua o arquivo inteiro. Versão: NAV-BAR-COMPACT-v4 */
-/* Substitui v3 se já colou antes — quadrados menores, texto ainda legível (15px) */
+/* NÃO substitua o arquivo inteiro. Versão: NAV-BAR-COMPACT-v5 */
+/* Substitui v3/v4 se já colou antes — células mais compactas (altura ~68px) */
 
 @media (min-width: 992px) {
   .header .nav-content,
   .nav-content.content {
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 
   .nav-content .nav-main {
-    min-height: 86px !important;
+    min-height: 68px !important;
   }
 
   .nav-content .nav-main_link {
-    padding-top: 8px !important;
-    padding-bottom: 6px !important;
+    padding-top: 5px !important;
+    padding-bottom: 4px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
   }
 
   .nav-content .nav-main-box_link {
-    min-height: calc(28px + 8px + 18px) !important;
+    min-height: calc(22px + 5px + 14px) !important;
   }
 
   .nav-content .nav-main_icon {
-    max-height: 28px !important;
-    height: 28px !important;
-    margin-bottom: 4px !important;
+    max-height: 22px !important;
+    height: 22px !important;
+    margin-bottom: 3px !important;
   }
 
   .nav-content .nav-main_icon img {
-    max-height: 28px !important;
-    max-width: 34px !important;
+    max-height: 22px !important;
+    max-width: 28px !important;
   }
 
   .nav-content .nav-main_text {
-    font-size: 15px !important;
+    font-size: 13px !important;
     font-weight: 800 !important;
-    letter-spacing: 0.03em !important;
-    line-height: 1.1 !important;
+    letter-spacing: 0.02em !important;
+    line-height: 1.05 !important;
     text-transform: uppercase;
   }
 
   .nav-content .nav-main_link,
   .nav-content .nav-main_link:visited,
   .nav-content .nav-main_link .nav-main_text {
-    font-size: 15px !important;
+    font-size: 13px !important;
     font-weight: 800 !important;
   }
 
   .nav-content .nav-main_link .nav-main_arrow svg {
-    height: 12px !important;
-    width: 12px !important;
-    margin-top: 2px !important;
+    height: 10px !important;
+    width: 10px !important;
+    margin-top: 1px !important;
   }
 }
