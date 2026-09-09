@@ -1,3 +1,38 @@
+    background: #c8ecd2 !important;
+    color: #1a6b32 !important;
+    border: 1px solid #5ec47a !important;
+    box-shadow: 0 1px 4px rgba(30, 122, 56, 0.18) !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  section.showcase .showcase-product .card-footer .showcase-prices--card .showcase-prices_installment {
+    font-size: 12px !important;
+  }
+
+  section.showcase .showcase-card-actions {
+    margin-top: 10px !important;
+    gap: 6px !important;
+  }
+
+  section.showcase .showcase-product .card-footer > .showcase-product_buy {
+    margin-top: 10px !important;
+  }
+
+  section.showcase .showcase-card-actions .showcase-product_buy.btn,
+  section.showcase .showcase-product .card-footer > .showcase-product_buy.btn {
+    min-height: 36px !important;
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+  }
+
+  section.showcase .showcase-card-actions .showcase-compare-btn {
+    min-height: 26px !important;
+    height: 26px !important;
+    padding: 4px 6px !important;
+    font-size: 10px !important;
+    max-width: 28% !important;
+  }
+}
 /* ==========================================================
    HOME MOBILE — vitrine grid 2 col (Promoção) + carrossel tns (Mais vendidos)
    NÃO afeta catálogo (.showcase-search).
@@ -100,23 +135,47 @@
   main.home-main section.showcase .showcase-products_carousel .showcase-prices--card {
     float: none !important;
     width: 100% !important;
+    text-align: center !important;
+    padding: 6px 4px 4px !important;
+    margin-bottom: 2px !important;
+    background: linear-gradient(180deg, #eef6fd 0%, #fff 100%) !important;
+    border-radius: 8px !important;
+    border: 1px solid #cce4f7 !important;
+  }
+
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_strike,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col del.showcase-prices_strike,
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices_strike,
+  main.home-main section.showcase .showcase-products_carousel del.showcase-prices_strike {
+    font-size: 10px !important;
+    color: #8a9aab !important;
+    margin-bottom: 2px !important;
   }
 
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_price b,
-  main.home-main section.showcase .showcase-products_carousel .showcase-prices_price b {
-    font-size: 16px !important;
-    color: #1565a8 !important;
-    font-weight: 800 !important;
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_price--pix b,
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices_price b,
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices_price--pix b {
+    font-size: 19px !important;
+    line-height: 1.1 !important;
+    color: #0d5a9e !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.02em !important;
   }
 
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_pix,
   main.home-main section.showcase .showcase-products_carousel .showcase-prices_pix {
-    font-size: 10px !important;
-    padding: 3px 8px !important;
-    background: #e8f7ec !important;
-    color: #2d8a47 !important;
-    font-weight: 700 !important;
+    display: inline-block !important;
+    font-size: 11px !important;
+    padding: 4px 10px !important;
+    margin: 4px 0 2px !important;
+    background: linear-gradient(135deg, #c8ecd2 0%, #a8e6b8 100%) !important;
+    color: #145a28 !important;
+    font-weight: 800 !important;
     border-radius: 999px !important;
+    border: 1px solid #5ec47a !important;
+    box-shadow: 0 2px 6px rgba(30, 122, 56, 0.22) !important;
+    letter-spacing: 0.03em !important;
   }
 
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_installment,
