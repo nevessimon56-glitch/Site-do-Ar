@@ -1,23 +1,42 @@
 /* ==========================================================
-   HOME MOBILE — vitrine igual catálogo (MOBILE-CATALOG-GRID espelhado)
-   Alvo: main.home-main section.showcase .showcase-products (PROMO/carrossel/grid)
+   HOME MOBILE — vitrine 2 col (CSS Grid — telas estreitas OK)
+   Alvo: main.home-main section.showcase .showcase-products
    NÃO afeta catálogo (.showcase-search / main.search-main).
    ========================================================== */
 
 @media (max-width: 991px) {
 
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-list,
-  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-slider {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    margin-left: -4px !important;
-    margin-right: -4px !important;
-    width: calc(100% + 8px) !important;
-    max-width: calc(100% + 8px) !important;
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-slider,
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-list.slick-initialized .slick-track,
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-slider.slick-initialized .slick-track {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px 10px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     height: auto !important;
     transform: none !important;
     left: 0 !important;
     float: none !important;
+    box-sizing: border-box !important;
+  }
+
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-list.slick-initialized .slick-list,
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-slider.slick-initialized .slick-list {
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
   }
 
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-item,
@@ -25,23 +44,28 @@
     float: none !important;
     display: flex !important;
     flex-direction: column !important;
-    width: calc(50% - 8px) !important;
-    max-width: calc(50% - 8px) !important;
-    margin: 0 4px 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
     box-sizing: border-box !important;
     height: auto !important;
     min-height: 0 !important;
     opacity: 1 !important;
     visibility: visible !important;
+    clear: none !important;
   }
 
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-product {
     display: flex !important;
     flex-direction: column !important;
     height: 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
     padding: 0 !important;
     float: none !important;
-    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-product_image {
@@ -60,14 +84,14 @@
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .product-mobile-carousel__slide {
     width: 100% !important;
     height: auto !important;
-    min-height: 120px !important;
-    max-height: 150px !important;
+    min-height: 100px !important;
+    max-height: 140px !important;
   }
 
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .product-mobile-carousel__slide img,
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-product_link__image img,
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .product-hover-wrap img {
-    max-height: 140px !important;
+    max-height: 130px !important;
     width: auto !important;
     max-width: 94% !important;
     object-fit: contain !important;
@@ -75,21 +99,16 @@
 
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-product .card-header {
     position: static !important;
-    left: auto !important;
-    right: auto !important;
     margin: 0 !important;
     padding: 6px 8px 0 !important;
     width: 100% !important;
-    max-width: 100% !important;
   }
 
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-product_link_title,
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-product .card-header h3 a {
     width: 100% !important;
-    max-width: 100% !important;
     text-align: center !important;
     font-size: 11px !important;
-    height: auto !important;
     line-height: 1.3 !important;
     display: -webkit-box !important;
     -webkit-line-clamp: 2 !important;
@@ -104,18 +123,13 @@
   }
 
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-product .card-footer {
-    float: none !important;
-    margin: 0 !important;
     margin-top: auto !important;
     padding: 4px 8px 10px !important;
     width: 100% !important;
-    max-width: 100% !important;
   }
 
-  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-prices_price,
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-prices_price b {
     font-size: 16px !important;
-    line-height: 1.2 !important;
     color: #1565a8 !important;
     font-weight: 800 !important;
   }
@@ -129,47 +143,25 @@
     border-radius: 999px !important;
   }
 
-  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-prices_installment,
-  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-prices_plots {
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-prices_installment {
     font-size: 10px !important;
-    letter-spacing: 0 !important;
-  }
-
-  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-product_buy,
-  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-card-actions .showcase-product_buy {
-    float: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 6px 0 0 !important;
-    font-size: 10px !important;
-    padding: 8px 6px !important;
-    border-radius: 999px !important;
   }
 
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-card-actions {
     display: flex !important;
     flex-direction: row !important;
-    align-items: center !important;
     gap: 4px !important;
     margin-top: 6px !important;
   }
 
-  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-card-actions .showcase-compare-btn {
-    font-size: 9px !important;
-    padding: 0 !important;
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-product_buy,
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-card-actions .showcase-product_buy {
+    font-size: 10px !important;
+    padding: 8px 6px !important;
+    border-radius: 999px !important;
+    width: 100% !important;
   }
 
-  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-tag {
-    font-size: 8px !important;
-    min-width: 0 !important;
-    top: 12px !important;
-  }
-
-  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-tag:nth-child(2) {
-    top: 30px !important;
-  }
-
-  /* Esconde setas do carrossel PROMO */
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .controls,
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .controls-arrow,
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .slider__arrow,
@@ -177,12 +169,21 @@
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .slick-dots {
     display: none !important;
   }
+}
 
-  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .slick-list,
+/* Reforço telas estreitas (ex.: iPhone SE, Galaxy compacto) */
+@media (max-width: 480px) {
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-list,
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-slider,
   main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .slick-track {
-    overflow: visible !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px 8px !important;
+  }
+
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-item,
+  main.home-main section.showcase .showcase-products.showcase-home_grid--mobile-2col .showcase-item.slick-slide {
     width: 100% !important;
-    height: auto !important;
-    transform: none !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
   }
 }

@@ -1,5 +1,5 @@
 /* ==========================================================
-   HOME MOBILE — grid 2 col igual catálogo (PROMO / vitrines)
+   HOME MOBILE — grid 2 col (CSS Grid + inline, telas estreitas)
    Alvo: main.home-main — NÃO mexe em .showcase-search
    ========================================================== */
 
@@ -8,6 +8,7 @@
 
   var MOBILE_MQ = '(max-width: 991px)';
   var GRID_CLASS = 'showcase-home_grid--mobile-2col';
+  var GAP = '8px 10px';
 
   function isMobile() {
     return window.matchMedia(MOBILE_MQ).matches;
@@ -19,8 +20,14 @@
     return !!document.querySelector('main.home-main');
   }
 
-  function isCatalogContext(node) {
-    return !!(node && node.closest && (node.closest('.showcase-search') || node.closest('main.search-main') || node.closest('.search-main')));
+  function isHomeProductBlock(node) {
+    return !!(
+      node &&
+      node.closest &&
+      node.closest('main.home-main section.showcase .showcase-products') &&
+      !node.closest('.showcase-search') &&
+      !node.closest('main.search-main')
+    );
   }
 
   function unslickNode(node) {
@@ -33,31 +40,88 @@
     }
   }
 
+  function applyGridStyles(list) {
+    if (!list) return;
+
+    list.style.setProperty('display', 'grid', 'important');
+    list.style.setProperty('grid-template-columns', 'repeat(2, minmax(0, 1fr))', 'important');
+    list.style.setProperty('gap', GAP, 'important');
+    list.style.setProperty('align-items', 'stretch', 'important');
+    list.style.setProperty('width', '100%', 'important');
+    list.style.setProperty('max-width', '100%', 'important');
+    list.style.setProperty('margin', '0', 'important');
+    list.style.setProperty('padding', '0', 'important');
+    list.style.setProperty('transform', 'none', 'important');
+    list.style.setProperty('left', '0', 'important');
+    list.style.setProperty('height', 'auto', 'important');
+
+    var slickList = list.querySelector('.slick-list');
+    if (slickList) {
+      slickList.style.setProperty('overflow', 'visible', 'important');
+      slickList.style.setProperty('width', '100%', 'important');
+      slickList.style.setProperty('height', 'auto', 'important');
+    }
+
+    var track = list.querySelector('.slick-track');
+    if (track) {
+      track.style.setProperty('display', 'grid', 'important');
+      track.style.setProperty('grid-template-columns', 'repeat(2, minmax(0, 1fr))', 'important');
+      track.style.setProperty('gap', GAP, 'important');
+      track.style.setProperty('width', '100%', 'important');
+      track.style.setProperty('transform', 'none', 'important');
+      track.style.setProperty('left', '0', 'important');
+      track.style.setProperty('height', 'auto', 'important');
+    }
+
+    var items = list.querySelectorAll('.showcase-item');
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      item.style.setProperty('width', '100%', 'important');
+      item.style.setProperty('max-width', '100%', 'important');
+      item.style.setProperty('min-width', '0', 'important');
+      item.style.setProperty('display', 'flex', 'important');
+      item.style.setProperty('flex-direction', 'column', 'important');
+      item.style.setProperty('height', 'auto', 'important');
+      item.style.setProperty('float', 'none', 'important');
+      item.style.setProperty('margin', '0', 'important');
+      item.style.setProperty('opacity', '1', 'important');
+      item.style.setProperty('visibility', 'visible', 'important');
+    }
+  }
+
   function applyHomeShowcaseGrid() {
     if (!isMobile() || !isHomePage()) return;
 
     var blocks = document.querySelectorAll('main.home-main section.showcase .showcase-products');
     for (var i = 0; i < blocks.length; i++) {
       var block = blocks[i];
-      if (isCatalogContext(block)) continue;
       if (!block.querySelector('.showcase-item')) continue;
 
       block.classList.add(GRID_CLASS);
       block.setAttribute('data-mobile-grid', '2col');
 
-      var lists = block.querySelectorAll('.showcase-list, .showcase-slider, ul[class*="showcase-slider"]');
-      for (var j = 0; j < lists.length; j++) {
-        if (!lists[j].querySelector('.showcase-item')) continue;
-        unslickNode(lists[j]);
+      var roots = block.querySelectorAll(
+        '.showcase-slider, .showcase-list, ul[class*="showcase-slider"], .slick-initialized'
+      );
+      for (var j = 0; j < roots.length; j++) {
+        if (!roots[j].querySelector('.showcase-item') && !roots[j].classList.contains('showcase-item')) continue;
+        unslickNode(roots[j]);
+      }
+
+      var grids = block.querySelectorAll('.showcase-slider, .showcase-list, .slick-track');
+      for (var k = 0; k < grids.length; k++) {
+        if (grids[k].querySelector('.showcase-item')) {
+          applyGridStyles(grids[k]);
+        }
       }
     }
   }
 
   function scheduleFix() {
     applyHomeShowcaseGrid();
-    window.setTimeout(applyHomeShowcaseGrid, 150);
-    window.setTimeout(applyHomeShowcaseGrid, 600);
-    window.setTimeout(applyHomeShowcaseGrid, 1500);
+    window.setTimeout(applyHomeShowcaseGrid, 100);
+    window.setTimeout(applyHomeShowcaseGrid, 400);
+    window.setTimeout(applyHomeShowcaseGrid, 1200);
   }
 
   window.applyHomeShowcaseGrid = applyHomeShowcaseGrid;
@@ -70,7 +134,10 @@
 
   window.addEventListener('load', scheduleFix);
   window.addEventListener('resize', function () {
-    window.setTimeout(applyHomeShowcaseGrid, 120);
+    window.setTimeout(applyHomeShowcaseGrid, 100);
+  });
+  window.addEventListener('orientationchange', function () {
+    window.setTimeout(applyHomeShowcaseGrid, 300);
   });
 
   var origRefresh = window.refreshThemeShowcaseSliders;
@@ -87,14 +154,7 @@
     var originalSlick = jQuery.fn.slick;
     jQuery.fn.slick = function (options) {
       var el = this[0];
-      if (
-        isMobile() &&
-        el &&
-        el.closest &&
-        el.closest('main.home-main') &&
-        el.closest('.' + GRID_CLASS) &&
-        !el.closest('.showcase-search')
-      ) {
+      if (isMobile() && isHomeProductBlock(el)) {
         if (typeof options === 'string' && options === 'unslick') {
           return originalSlick.apply(this, arguments);
         }
