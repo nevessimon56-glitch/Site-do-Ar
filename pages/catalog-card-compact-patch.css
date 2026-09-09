@@ -112,8 +112,12 @@
   }
 
   .showcase-search .showcase-product .card-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
     margin-top: auto !important;
     padding: 4px 8px 8px !important;
+    min-height: 0 !important;
   }
 
   .showcase-search .showcase-product_link_title {
@@ -167,6 +171,7 @@
   }
 
   .showcase-search .showcase-product .card-footer .showcase-prices--card {
+    flex: 0 0 auto !important;
     padding: 4px 0 6px !important;
   }
 
@@ -202,13 +207,19 @@
     font-size: 12px !important;
   }
 
+  .showcase-search .showcase-card-actions,
+  .showcase-search .showcase-product .card-footer > .showcase-product_buy {
+    margin-top: auto !important;
+    padding-top: 16px !important;
+    flex: 0 0 auto !important;
+  }
+
   .showcase-search .showcase-card-actions {
-    margin-top: 14px !important;
     gap: 6px !important;
   }
 
   .showcase-search .showcase-card-actions .showcase-product_buy.btn,
-  .showcase-search .showcase-product_buy {
+  .showcase-search .showcase-product .card-footer > .showcase-product_buy {
     min-height: 36px !important;
     padding: 8px 10px !important;
     font-size: 12px !important;
@@ -227,8 +238,26 @@
     padding: 5px 8px 0 !important;
   }
 
+  section.showcase .showcase-item {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+  }
+
+  section.showcase .showcase-product {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    height: 100% !important;
+  }
+
   section.showcase .showcase-product .card-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    margin-top: auto !important;
     padding: 4px 8px 8px !important;
+    min-height: 0 !important;
   }
 
   section.showcase .showcase-product_link_title {
@@ -279,6 +308,7 @@
   }
 
   section.showcase .showcase-product .card-footer .showcase-prices--card {
+    flex: 0 0 auto !important;
     padding: 4px 0 6px !important;
   }
 
@@ -314,13 +344,19 @@
     font-size: 12px !important;
   }
 
+  section.showcase .showcase-card-actions,
+  section.showcase .showcase-product .card-footer > .showcase-product_buy {
+    margin-top: auto !important;
+    padding-top: 16px !important;
+    flex: 0 0 auto !important;
+  }
+
   section.showcase .showcase-card-actions {
-    margin-top: 14px !important;
     gap: 6px !important;
   }
 
   section.showcase .showcase-card-actions .showcase-product_buy.btn,
-  section.showcase .showcase-product_buy {
+  section.showcase .showcase-product .card-footer > .showcase-product_buy {
     min-height: 36px !important;
     padding: 8px 10px !important;
     font-size: 12px !important;
