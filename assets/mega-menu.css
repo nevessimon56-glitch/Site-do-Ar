@@ -1506,9 +1506,11 @@
   .showcase-search .showcase-list {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0 6px !important;
+    gap: 0 10px !important;
+    padding: 0 10px !important;
     width: 100% !important;
     max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   main.search-main .showcase-item,
@@ -2318,7 +2320,7 @@
   }
 }
 
-/* ========== Catálogo desktop + home vitrines compactas (CATALOG-GRID-COMPACT-v9) ========== */
+/* ========== Catálogo desktop + home vitrines compactas (CATALOG-GRID-COMPACT-v10) ========== */
 
 @media (min-width: 992px) {
   .showcase-search .showcase-list {
@@ -2621,7 +2623,6 @@
     max-width: 28% !important;
   }
 }
-
 @media (max-width: 991px) {
   /* Catálogo — 2 produtos por linha */
   main.search-main .showcase-search,
@@ -2638,12 +2639,13 @@
   .showcase-search .showcase-list {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0 6px !important;
+    gap: 0 10px !important;
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 10px !important;
     float: none !important;
+    box-sizing: border-box !important;
   }
 
   .showcase-search .showcase-list::before,
@@ -2687,7 +2689,7 @@
   .showcase-search .showcase-list.slick-initialized .slick-track {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0 6px !important;
+    gap: 0 10px !important;
     width: 100% !important;
     max-width: 100% !important;
     transform: none !important;
@@ -2721,11 +2723,13 @@
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
+    max-width: 100% !important;
     height: 100% !important;
     float: none !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
     border-radius: 8px !important;
-    box-shadow: 0 2px 8px rgba(44, 119, 187, 0.1) !important;
+    box-shadow: 0 2px 6px rgba(44, 119, 187, 0.08) !important;
+    box-sizing: border-box !important;
   }
 
   main.search-main .showcase-product .card-header,
@@ -2762,36 +2766,36 @@
 
   main.search-main .showcase-product_link__image,
   .showcase-search .showcase-product_link__image {
-    min-height: 65px !important;
-    max-height: 82px !important;
+    min-height: 58px !important;
+    max-height: 72px !important;
   }
 
   main.search-main .product-hover-wrap,
   .showcase-search .product-hover-wrap {
-    min-height: 65px !important;
-    max-height: 82px !important;
+    min-height: 58px !important;
+    max-height: 72px !important;
   }
 
   main.search-main .product-hover-wrap img,
   main.search-main .showcase-product_link__image > img,
   .showcase-search .product-hover-wrap img,
   .showcase-search .showcase-product_link__image > img {
-    max-width: 94% !important;
-    max-height: 78px !important;
+    max-width: 90% !important;
+    max-height: 68px !important;
   }
 
   main.search-main .product-mobile-carousel,
   .showcase-search .product-mobile-carousel {
-    min-height: 65px !important;
-    max-height: 82px !important;
+    min-height: 58px !important;
+    max-height: 72px !important;
   }
 
   main.search-main .product-mobile-carousel__track,
   main.search-main .product-mobile-carousel__slide,
   .showcase-search .product-mobile-carousel__track,
   .showcase-search .product-mobile-carousel__slide {
-    min-height: 65px !important;
-    max-height: 82px !important;
+    min-height: 58px !important;
+    max-height: 72px !important;
     padding: 2px !important;
   }
 
@@ -2799,7 +2803,7 @@
   main.search-main .product-mobile-carousel__img,
   .showcase-search .product-mobile-carousel__slide img,
   .showcase-search .product-mobile-carousel__img {
-    max-height: 78px !important;
+    max-height: 68px !important;
   }
 
   main.search-main .showcase-spec-wrap,
@@ -2904,9 +2908,18 @@
   section.showcase .showcase-list {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0 6px !important;
+    gap: 0 10px !important;
     width: 100% !important;
     max-width: 100% !important;
+    padding: 0 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  section.showcase .showcase-product {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
   }
 
   section.showcase .showcase-list.slick-initialized .slick-list {
@@ -2918,7 +2931,7 @@
   section.showcase .showcase-list.slick-initialized .slick-track {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0 6px !important;
+    gap: 0 10px !important;
     width: 100% !important;
     transform: none !important;
     left: 0 !important;
@@ -2963,35 +2976,35 @@
   }
 
   section.showcase .showcase-product_link__image {
-    min-height: 65px !important;
-    max-height: 82px !important;
+    min-height: 58px !important;
+    max-height: 72px !important;
   }
 
   section.showcase .product-hover-wrap {
-    min-height: 65px !important;
-    max-height: 82px !important;
+    min-height: 58px !important;
+    max-height: 72px !important;
   }
 
   section.showcase .product-hover-wrap img,
   section.showcase .showcase-product_link__image > img {
-    max-width: 94% !important;
-    max-height: 78px !important;
+    max-width: 90% !important;
+    max-height: 68px !important;
   }
 
   section.showcase .product-mobile-carousel {
-    min-height: 65px !important;
-    max-height: 82px !important;
+    min-height: 58px !important;
+    max-height: 72px !important;
   }
 
   section.showcase .product-mobile-carousel__track,
   section.showcase .product-mobile-carousel__slide {
-    min-height: 65px !important;
-    max-height: 82px !important;
+    min-height: 58px !important;
+    max-height: 72px !important;
   }
 
   section.showcase .product-mobile-carousel__slide img,
   section.showcase .product-mobile-carousel__img {
-    max-height: 78px !important;
+    max-height: 68px !important;
   }
 
   section.showcase .showcase-spec-wrap {
