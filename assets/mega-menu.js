@@ -1064,8 +1064,35 @@
     return !!document.querySelector('main.search-main');
   }
 
+  function applyGridToList(list) {
+    list.style.setProperty('display', 'grid', 'important');
+    list.style.setProperty('grid-template-columns', 'repeat(2, minmax(0, 1fr))', 'important');
+    list.style.setProperty('gap', '0 6px', 'important');
+    list.style.setProperty('width', '100%', 'important');
+    list.style.setProperty('max-width', '100%', 'important');
+    list.style.setProperty('overflow', 'visible', 'important');
+
+    var track = list.querySelector('.slick-track');
+    if (track) {
+      track.style.setProperty('display', 'grid', 'important');
+      track.style.setProperty('grid-template-columns', 'repeat(2, minmax(0, 1fr))', 'important');
+      track.style.setProperty('gap', '0 6px', 'important');
+      track.style.setProperty('width', '100%', 'important');
+      track.style.setProperty('transform', 'none', 'important');
+      track.style.setProperty('left', '0', 'important');
+    }
+
+    var items = list.querySelectorAll('.showcase-item');
+    for (var j = 0; j < items.length; j++) {
+      items[j].style.setProperty('width', '100%', 'important');
+      items[j].style.setProperty('max-width', '100%', 'important');
+      items[j].style.setProperty('min-width', '0', 'important');
+      items[j].style.setProperty('float', 'none', 'important');
+    }
+  }
+
   function applyCatalogGrid(root) {
-    var section = root || document.querySelector('.showcase-search.showcase-search_list');
+    var section = root || document.querySelector('.showcase-search');
     if (!section) return;
 
     section.classList.remove('showcase-search_list');
@@ -1076,6 +1103,22 @@
   function initCatalogMobileGrid() {
     if (!isMobile() || !isCatalogPage()) return;
     applyCatalogGrid();
+
+    var lists = document.querySelectorAll(
+      'main.search-main .showcase-list, .search-main .showcase-list, .showcase-search .showcase-list'
+    );
+    for (var i = 0; i < lists.length; i++) {
+      var list = lists[i];
+      if (typeof jQuery !== 'undefined' && jQuery.fn && jQuery.fn.slick) {
+        var $list = jQuery(list);
+        if ($list.hasClass('slick-initialized')) {
+          try {
+            $list.slick('unslick');
+          } catch (e) {}
+        }
+      }
+      applyGridToList(list);
+    }
   }
 
   window.initCatalogMobileGrid = initCatalogMobileGrid;
