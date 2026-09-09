@@ -1,5 +1,5 @@
 /* PATCH — cole no FINAL do assets/mega-menu.js */
-/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-MOBILE-v5 */
+/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-MOBILE-v6 */
 /* Força 2 produtos por linha no catálogo mobile (remove Slick + grid inline) */
 
 (function () {

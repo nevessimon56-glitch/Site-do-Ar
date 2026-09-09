@@ -1,9 +1,9 @@
 /* ============================================================
    PATCH — cole no FINAL do assets/mega-menu.css
    NÃO substitua o arquivo inteiro.
-   Versão: CATALOG-GRID-COMPACT-v15
-   Substitui v1–v14 se já colou antes.
-   Mobile: 2 col, cards uniformes (sem vão), respiro abaixo do COMPRAR.
+   Versão: CATALOG-GRID-COMPACT-v16
+   Substitui v1–v15 se já colou antes.
+   Mobile: cards alinhados na fila, tags visíveis, badge OFF sem corte.
    Desktop: catálogo 3 col + home carrossel 4.
    Mobile: catálogo + home com 2 produtos/linha + cards compactos.
    Cole TAMBÉM pages/catalog-grid-mobile-patch.js no final do mega-menu.js.
@@ -315,10 +315,10 @@
   }
 }
 
-/* ========== Mobile — 2 col compacto, cards uniformes (v15) ========== */
+/* ========== Mobile — 2 col, cards alinhados, tags inteiras (v16) ========== */
 
 @media (max-width: 991px) {
-  /* Grade 2 col — linhas só com a altura do conteúdo */
+  /* Grade 2 col — mesma altura por fila, botões alinhados embaixo */
   main.search-main .showcase-list,
   .search-main .showcase-list,
   .showcase-search .showcase-list,
@@ -326,14 +326,15 @@
   main.search-main .showcase-list.slick-initialized .slick-track,
   .showcase-search .showcase-list.slick-initialized .slick-track,
   section.showcase .showcase-list.slick-initialized .slick-track {
-    align-items: start !important;
-    grid-auto-rows: min-content !important;
+    align-items: stretch !important;
   }
 
   .showcase-item,
   .showcase-item.slick-slide {
-    align-self: start !important;
-    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-self: stretch !important;
+    height: 100% !important;
     min-height: 0 !important;
   }
 
@@ -371,7 +372,8 @@
   .showcase-search.showcase-search_list .showcase-item,
   .showcase-search .showcase-item {
     float: none !important;
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
@@ -429,7 +431,7 @@
     display: none !important;
   }
 
-  /* Card estilo Leveros — borda fina, altura = conteúdo */
+  /* Card — mesma altura na fila, footer colado embaixo */
   .showcase-item .showcase-product.card,
   .showcase-search .showcase-product,
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product {
@@ -438,22 +440,24 @@
     align-items: stretch !important;
     justify-content: flex-start !important;
     width: 100% !important;
-    height: auto !important;
+    height: 100% !important;
     min-height: 0 !important;
+    flex: 1 1 auto !important;
     float: none !important;
     margin: 0 !important;
     padding: 0 !important;
     border: 1px solid #e3e8ed !important;
     border-radius: 6px !important;
     box-shadow: none !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     background: #fff !important;
   }
 
   .showcase-item .showcase-product_image.card-image {
-    padding: 6px 6px 0 !important;
+    padding: 8px 8px 0 !important;
     min-height: 0 !important;
     flex: 0 0 auto !important;
+    overflow: visible !important;
   }
 
   .showcase-item .showcase-spec-wrap {
@@ -462,14 +466,10 @@
     padding: 0 8px 4px !important;
     background: transparent !important;
     border: 0 !important;
-    min-height: 16px !important;
-    max-height: 16px !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
 
   .showcase-item .showcase-spec-wrap:empty {
-    min-height: 0 !important;
-    max-height: none !important;
     padding: 0 !important;
   }
 
@@ -477,12 +477,13 @@
     flex: 0 0 auto !important;
     padding: 4px 8px 0 !important;
     text-align: left !important;
+    min-height: 2.6em !important;
   }
 
   .showcase-item .showcase-product .card-footer {
     flex: 0 0 auto !important;
     padding: 2px 8px 8px !important;
-    margin-top: 0 !important;
+    margin-top: auto !important;
     margin-bottom: 0 !important;
     text-align: left !important;
   }
@@ -530,19 +531,26 @@
   }
 
   .showcase-item .showcase-spec-bar {
-    flex-wrap: nowrap !important;
-    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
     gap: 3px !important;
-    overflow: hidden !important;
+    overflow: visible !important;
+    min-height: 18px !important;
   }
 
   .showcase-item .showcase-spec-bar__tag {
-    height: auto !important;
-    min-height: 14px !important;
-    padding: 2px 4px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 16px !important;
+    min-height: 16px !important;
+    line-height: 1 !important;
+    padding: 0 5px !important;
     font-size: 7px !important;
     border-radius: 3px !important;
     flex-shrink: 0 !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
   }
 
   .showcase-item .showcase-product .card-footer .showcase-prices--card {
@@ -635,11 +643,15 @@
     top: 22px !important;
   }
 
+  .showcase-item .showcase-product_image .showcase-offer,
   main.search-main .showcase-product_image .showcase-offer,
   .showcase-search .showcase-product_image .showcase-offer,
   section.showcase .showcase-product_image .showcase-offer {
-    transform: scale(0.85);
-    transform-origin: top left;
+    transform: none !important;
+    z-index: 3 !important;
+    top: 4px !important;
+    right: 4px !important;
+    left: auto !important;
   }
 
   /* Home mobile — 2 produtos por linha + altura menor */
@@ -681,7 +693,8 @@
 
   section.showcase .showcase-item {
     float: none !important;
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
@@ -690,25 +703,29 @@
     box-sizing: border-box !important;
   }
 
-  /* Override final — tema 767px + grid--mobile-2col (faixa branca embaixo) */
+  /* Override final — tema 767px + grid--mobile-2col */
   .showcase-item .showcase-product.card,
-  .showcase-item .showcase-product .card-header,
-  .showcase-item .showcase-product .card-footer,
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-product,
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-item {
-    height: auto !important;
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product {
+    height: 100% !important;
     min-height: 0 !important;
     max-height: none !important;
+    overflow: visible !important;
   }
 
-  .showcase-item .showcase-product.card {
-    padding-bottom: 0 !important;
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-item {
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   .showcase-item .showcase-product .card-footer,
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-footer {
-    margin-top: 0 !important;
+    margin-top: auto !important;
     padding-bottom: 8px !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-footer {
+    margin-top: auto !important;
   }
 
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link__image {
