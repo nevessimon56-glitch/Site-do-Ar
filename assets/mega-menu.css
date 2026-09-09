@@ -2751,28 +2751,59 @@
     border-radius: 999px !important;
   }
 
-  /* --- Os mais vendidos: carrossel tns — 2 cards + seta > --- */
+  /* --- Os mais vendidos: carrossel tns — 2 cards compactos + seta > --- */
   main.home-main section.showcase .showcase-products_carousel {
     position: relative;
     box-sizing: border-box;
   }
 
-  main.home-main section.showcase .showcase-products_carousel .showcase-list-4,
+  main.home-main section.showcase .showcase-products_carousel .showcase-list-4 {
+    position: relative;
+    padding-right: 38px !important;
+    box-sizing: border-box;
+  }
+
   main.home-main section.showcase .showcase-products_carousel .tns-outer {
     overflow: hidden;
     width: 100%;
     max-width: 100%;
   }
 
+  main.home-main section.showcase .showcase-products_carousel .showcase-item .showcase-product.card {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    border-radius: 12px !important;
+    border: 1px solid #dce8f2 !important;
+    box-shadow: 0 2px 10px rgba(44, 119, 187, 0.1) !important;
+    background: #fff !important;
+    box-sizing: border-box !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-item {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
   main.home-main section.showcase .showcase-products_carousel .controls-arrow {
     display: block !important;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 72px;
+    z-index: 6;
+    pointer-events: none;
   }
 
   main.home-main section.showcase .showcase-products_carousel .slider__arrow {
     display: flex !important;
     align-items: center;
     justify-content: center;
-    z-index: 5;
+    pointer-events: auto;
   }
 
   main.home-main section.showcase .showcase-products_carousel .slider__arrow--prev {
@@ -2782,81 +2813,163 @@
   main.home-main section.showcase .showcase-products_carousel .slider__arrow--next {
     right: 0 !important;
     left: auto !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    margin: 0 !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-product {
     display: flex !important;
     flex-direction: column !important;
     height: 100% !important;
+    float: none !important;
     box-sizing: border-box !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-product_image {
-    padding: 8px 8px 0 !important;
+    float: none !important;
+    padding: 6px 6px 0 !important;
+    width: 100% !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image,
   main.home-main section.showcase .showcase-products_carousel .product-hover-wrap {
-    min-height: 100px !important;
-    max-height: 140px !important;
+    min-height: 72px !important;
+    max-height: 88px !important;
+    width: 100% !important;
+    background: linear-gradient(160deg, #f8fafb 0%, #eef4fa 100%) !important;
+    border-radius: 6px !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image img,
-  main.home-main section.showcase .showcase-products_carousel .product-hover-wrap img {
-    max-height: 130px !important;
+  main.home-main section.showcase .showcase-products_carousel .product-hover-wrap img,
+  main.home-main section.showcase .showcase-products_carousel .product-mobile-carousel__slide img {
+    max-height: 80px !important;
+    max-width: 90% !important;
+    width: auto !important;
     object-fit: contain !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-product .card-header {
     position: static !important;
-    padding: 6px 8px 0 !important;
+    float: none !important;
+    width: 100% !important;
+    padding: 4px 6px 0 !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-product_link_title {
-    font-size: 11px !important;
-    line-height: 1.3 !important;
+    font-size: 10px !important;
+    line-height: 1.25 !important;
     text-align: center !important;
     display: -webkit-box !important;
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
+    width: 100% !important;
+    float: none !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-spec-wrap {
+    padding: 0 4px 2px !important;
+    width: 100% !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-spec-bar {
+    gap: 2px !important;
+    justify-content: center !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-spec-bar__tag {
+    font-size: 7px !important;
+    padding: 1px 4px !important;
+    line-height: 1.2 !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-product .card-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    float: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
     margin-top: auto !important;
-    padding: 4px 8px 10px !important;
+    padding: 2px 6px 8px !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices--card {
+    width: 100% !important;
+    float: none !important;
+    padding: 2px 0 4px !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices_strike {
+    font-size: 9px !important;
+    line-height: 1.2 !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-prices_price b {
-    font-size: 16px !important;
+    font-size: 13px !important;
     color: #1565a8 !important;
     font-weight: 800 !important;
+    line-height: 1.15 !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-prices_pix {
-    font-size: 10px !important;
-    padding: 3px 8px !important;
+    font-size: 9px !important;
+    padding: 2px 6px !important;
     background: #e8f7ec !important;
     color: #2d8a47 !important;
     font-weight: 700 !important;
     border-radius: 999px !important;
+    display: inline-block !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-prices_installment {
-    font-size: 10px !important;
+    font-size: 8px !important;
+    line-height: 1.25 !important;
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-card-actions {
     display: flex !important;
     flex-direction: row !important;
+    align-items: stretch !important;
     gap: 4px !important;
-    margin-top: 6px !important;
+    width: 100% !important;
+    margin-top: 4px !important;
+    padding-top: 0 !important;
   }
 
-  main.home-main section.showcase .showcase-products_carousel .showcase-product_buy,
-  main.home-main section.showcase .showcase-products_carousel .showcase-card-actions .showcase-product_buy {
-    font-size: 10px !important;
-    padding: 8px 6px !important;
+  main.home-main section.showcase .showcase-products_carousel .showcase-compare-btn {
+    flex: 0 0 32% !important;
+    max-width: 32% !important;
+    min-height: 30px !important;
+    height: 30px !important;
+    padding: 4px 2px !important;
+    font-size: 8px !important;
+    line-height: 1.1 !important;
+    float: none !important;
     border-radius: 999px !important;
+    box-sizing: border-box !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-card-actions .showcase-product_buy,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_buy {
+    flex: 1 1 auto !important;
+    float: none !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 30px !important;
+    height: 30px !important;
+    padding: 6px 4px !important;
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    border-radius: 999px !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-transform: uppercase !important;
+    box-sizing: border-box !important;
   }
 }
