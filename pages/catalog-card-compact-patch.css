@@ -1,19 +1,25 @@
 /* ============================================================
-   PATCH — cole no FINAL do assets/mega-menu.css (última linha)
-   NÃO substitua o arquivo inteiro. Versão: CATALOG-CARD-COMPACT-v2
-   Cards de produto menores — catálogo + vitrines da home (desktop)
-   Mantém 3 produtos por linha.
+   PATCH — cole no FINAL do assets/mega-menu.css
+   NÃO substitua o arquivo inteiro.
+   Versão: CATALOG-GRID-COMPACT-v3
+   Remove blocos antigos CATALOG-GRID-DESKTOP-v1 / CATALOG-CARD-COMPACT-v2
+   se já colou antes (evita conflito).
    ============================================================ */
 
 @media (min-width: 992px) {
-  /* Layout 3 colunas (evita quebra 3+1+2 no catálogo) */
+  /* --- Grade 3 colunas (catálogo) --- */
   .showcase-search .showcase-list {
     display: flex !important;
+    flex-direction: row !important;
     flex-wrap: wrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
     width: 100% !important;
-    gap: 12px 8px !important;
-    justify-content: center !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     clear: both;
+    box-sizing: border-box;
   }
 
   .showcase-search .showcase-list::before,
@@ -22,42 +28,50 @@
     content: none !important;
   }
 
-  .showcase-search .showcase-item,
-  .showcase .showcase-item {
-    float: none !important;
+  .showcase-search .showcase-item {
+    float: left !important;
     display: flex !important;
     flex-direction: column !important;
-    flex: 0 0 calc(33.333% - 10px) !important;
-    width: calc(33.333% - 10px) !important;
-    max-width: 280px !important;
-    padding: 0 4px 10px !important;
+    flex: 0 0 33.333% !important;
+    width: 33.333% !important;
+    max-width: 33.333% !important;
+    min-width: 0 !important;
+    padding: 0 8px 16px !important;
+    margin: 0 !important;
     box-sizing: border-box !important;
+    clear: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
-  .showcase-search .showcase-product,
-  .showcase .showcase-product {
+  /* Slick às vezes deixa slides com width:100% inline */
+  .showcase-search .showcase-list.slick-initialized .showcase-item,
+  .showcase-search .showcase-list .showcase-item.slick-slide {
+    float: left !important;
+    flex: 0 0 33.333% !important;
+    width: 33.333% !important;
+    max-width: 33.333% !important;
+  }
+
+  .showcase-search .showcase-product {
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
     height: 100% !important;
     float: none !important;
-    margin: 0 auto !important;
-    border-radius: 10px !important;
+    margin: 0 !important;
+    box-sizing: border-box;
   }
 
   .showcase-search .showcase-product_image,
   .showcase-search .showcase-product .card-footer,
-  .showcase-search .showcase-product_buy,
-  .showcase .showcase-product_image,
-  .showcase .showcase-product .card-footer,
-  .showcase .showcase-product_buy {
+  .showcase-search .showcase-product_buy {
     float: none !important;
     width: 100% !important;
     max-width: 100% !important;
   }
 
-  .showcase-search .showcase-product .card-header,
-  .showcase .showcase-product .card-header {
+  .showcase-search .showcase-product .card-header {
     position: static !important;
     left: auto !important;
     right: auto !important;
@@ -67,121 +81,100 @@
     padding: 5px 8px 0 !important;
   }
 
-  .showcase-search .showcase-product .card-footer,
-  .showcase .showcase-product .card-footer {
+  .showcase-search .showcase-product .card-footer {
     margin-top: auto !important;
     padding: 4px 8px 8px !important;
   }
 
-  /* Imagem menor */
-  .showcase-search .showcase-product_image.card-image,
-  .showcase .showcase-product_image.card-image {
+  .showcase-search .showcase-product_link_title {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  /* --- Cards menores (conteúdo interno) --- */
+  .showcase-search .showcase-product_image.card-image {
     padding: 5px 5px 0 !important;
   }
 
-  .showcase-search .showcase-product_link__image,
-  .showcase .showcase-product_link__image {
-    min-height: 100px !important;
-    max-height: 150px !important;
+  .showcase-search .showcase-product_link__image {
+    min-height: 90px !important;
+    max-height: 140px !important;
   }
 
-  .showcase-search .product-hover-wrap,
-  .showcase .product-hover-wrap {
-    max-height: 150px !important;
-    min-height: 100px !important;
+  .showcase-search .product-hover-wrap {
+    max-height: 140px !important;
+    min-height: 90px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
   }
 
   .showcase-search .product-hover-wrap img,
-  .showcase-search .showcase-product_link__image > img,
-  .showcase .product-hover-wrap img,
-  .showcase .showcase-product_link__image > img {
+  .showcase-search .showcase-product_link__image > img {
     width: auto !important;
-    max-width: 90% !important;
-    max-height: 140px !important;
+    max-width: 88% !important;
+    max-height: 130px !important;
     height: auto !important;
     object-fit: contain !important;
   }
 
-  /* Texto e preços menores */
-  .showcase-search .showcase-product_link_title,
-  .showcase .showcase-product_link_title {
-    font-size: 12px !important;
-    line-height: 1.2 !important;
-    height: auto !important;
-  }
-
-  .showcase-search .showcase-product .card-header h3,
-  .showcase .showcase-product .card-header h3 {
+  .showcase-search .showcase-product .card-header h3 {
     font-size: 12px !important;
     margin-bottom: 3px !important;
   }
 
-  .showcase-search .showcase-spec-wrap,
-  .showcase .showcase-spec-wrap {
+  .showcase-search .showcase-spec-wrap {
     padding: 0 6px 3px !important;
   }
 
-  .showcase-search .showcase-spec-bar__tag,
-  .showcase .showcase-spec-bar__tag {
+  .showcase-search .showcase-spec-bar__tag {
     height: 17px !important;
     padding: 0 5px !important;
     font-size: 7px !important;
   }
 
+  .showcase-search .showcase-product .card-footer .showcase-prices--card {
+    padding: 2px 0 4px !important;
+  }
+
   .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_strike,
-  .showcase-search .showcase-product .card-footer .showcase-prices--card del.showcase-prices_strike,
-  .showcase .showcase-product .card-footer .showcase-prices--card .showcase-prices_strike,
-  .showcase .showcase-product .card-footer .showcase-prices--card del.showcase-prices_strike {
+  .showcase-search .showcase-product .card-footer .showcase-prices--card del.showcase-prices_strike {
     font-size: 10px !important;
     margin-bottom: 2px !important;
   }
 
   .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_price,
-  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_price b,
-  .showcase .showcase-product .card-footer .showcase-prices--card .showcase-prices_price,
-  .showcase .showcase-product .card-footer .showcase-prices--card .showcase-prices_price b {
+  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_price b {
     font-size: 17px !important;
     margin-bottom: 4px !important;
   }
 
-  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_pix,
-  .showcase .showcase-product .card-footer .showcase-prices--card .showcase-prices_pix {
+  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_pix {
     font-size: 9px !important;
     padding: 2px 7px !important;
     margin-bottom: 4px !important;
   }
 
-  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_installment,
-  .showcase .showcase-product .card-footer .showcase-prices--card .showcase-prices_installment {
+  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_installment {
     font-size: 10px !important;
   }
 
-  .showcase-search .showcase-product .card-footer .showcase-prices--card,
-  .showcase .showcase-product .card-footer .showcase-prices--card {
-    padding: 2px 0 4px !important;
-  }
-
-  /* Botões comparar/comprar — reduz altura (COMPARE-CARD-v2 usa 44px) */
-  .showcase-search .showcase-card-actions,
-  .showcase .showcase-card-actions {
+  .showcase-search .showcase-card-actions {
     margin-top: 4px !important;
     gap: 4px !important;
   }
 
   .showcase-search .showcase-card-actions .showcase-product_buy.btn,
-  .showcase .showcase-card-actions .showcase-product_buy.btn,
-  .showcase-search .showcase-product_buy,
-  .showcase .showcase-product_buy {
+  .showcase-search .showcase-product_buy {
     min-height: 34px !important;
     padding: 7px 8px !important;
     font-size: 11px !important;
   }
 
-  .showcase-search .showcase-card-actions .showcase-compare-btn,
-  .showcase .showcase-card-actions .showcase-compare-btn {
+  .showcase-search .showcase-card-actions .showcase-compare-btn {
     min-height: 24px !important;
     height: 24px !important;
     padding: 3px 5px !important;

@@ -1,5 +1,6 @@
-/* PATCH — cole no FINAL do seu assets/mega-menu.css (~2000 linhas) */
-/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-DESKTOP-v1 */
+/* PATCH — use catalog-card-compact-patch.css (CATALOG-GRID-COMPACT-v3) */
+/* Este arquivo v1 foi substituído — não cole mais separadamente. */
+/* Versão legada: CATALOG-GRID-DESKTOP-v1 */
 
 @media (min-width: 992px) {
   .showcase-search .showcase-list {

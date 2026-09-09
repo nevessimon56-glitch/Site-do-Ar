@@ -1,8 +1,8 @@
-/* PATCH — cole no FINAL do seu assets/mega-menu.js (~1800 linhas) */
-/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-DESKTOP-v1 */
+/* PATCH — cole no FINAL do assets/mega-menu.js (~1800 linhas) */
+/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-DESKTOP-v2 */
 
 /**
- * Catálogo desktop — remove slick/float que quebra 6 produtos em 3+1+2
+ * Catálogo desktop — remove slick e força grade 3 colunas
  */
 (function () {
   'use strict';
@@ -16,6 +16,27 @@
     if (p.indexOf('/busca') === 0) return true;
     if (/\d+\s*btus?/.test(p) || p.indexOf('btus') !== -1) return true;
     return false;
+  }
+
+  function applyGridToList(list) {
+    list.style.setProperty('display', 'flex', 'important');
+    list.style.setProperty('flex-direction', 'row', 'important');
+    list.style.setProperty('flex-wrap', 'wrap', 'important');
+    list.style.setProperty('width', '100%', 'important');
+    list.style.setProperty('max-width', '100%', 'important');
+
+    var items = list.querySelectorAll('.showcase-item');
+    for (var j = 0; j < items.length; j++) {
+      var item = items[j];
+      item.style.setProperty('float', 'left', 'important');
+      item.style.setProperty('display', 'flex', 'important');
+      item.style.setProperty('flex', '0 0 33.333%', 'important');
+      item.style.setProperty('width', '33.333%', 'important');
+      item.style.setProperty('max-width', '33.333%', 'important');
+      item.style.setProperty('clear', 'none', 'important');
+      item.style.setProperty('opacity', '1', 'important');
+      item.style.setProperty('visibility', 'visible', 'important');
+    }
   }
 
   function fixCatalogDesktopGrid() {
@@ -35,17 +56,7 @@
         }
       }
 
-      list.style.removeProperty('display');
-      list.style.removeProperty('width');
-
-      var items = list.querySelectorAll('.showcase-item');
-      for (var j = 0; j < items.length; j++) {
-        items[j].style.removeProperty('width');
-        items[j].style.removeProperty('display');
-        items[j].style.removeProperty('float');
-        items[j].style.removeProperty('opacity');
-        items[j].style.removeProperty('visibility');
-      }
+      applyGridToList(list);
     }
   }
 
@@ -61,4 +72,7 @@
     scheduleDesktopGridFix();
   }
   window.addEventListener('load', scheduleDesktopGridFix);
+  window.addEventListener('resize', function () {
+    window.setTimeout(fixCatalogDesktopGrid, 100);
+  });
 })();
