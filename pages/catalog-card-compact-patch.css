@@ -1,9 +1,9 @@
 /* ============================================================
    PATCH — cole no FINAL do assets/mega-menu.css
    NÃO substitua o arquivo inteiro.
-   Versão: CATALOG-GRID-COMPACT-v16
-   Substitui v1–v15 se já colou antes.
-   Mobile: cards alinhados na fila, tags visíveis, badge OFF sem corte.
+   Versão: CATALOG-GRID-COMPACT-v17
+   Substitui v1–v16 se já colou antes.
+   Mobile: relacionados 2 col full-width, fontes maiores, preço em destaque.
    Desktop: catálogo 3 col + home carrossel 4.
    Mobile: catálogo + home com 2 produtos/linha + cards compactos.
    Cole TAMBÉM pages/catalog-grid-mobile-patch.js no final do mega-menu.js.
@@ -315,9 +315,79 @@
   }
 }
 
-/* ========== Mobile — 2 col, cards alinhados, tags inteiras (v16) ========== */
+/* ========== Mobile — 2 col + produtos relacionados (v17) ========== */
 
 @media (max-width: 991px) {
+  /* Produtos relacionados — col-9/col-3 empilham 100% (evita card estreito) */
+  .product-showcase .columns,
+  .product-showcase-container .columns {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    margin: 0 !important;
+  }
+
+  .product-showcase .col-product-related,
+  .product-showcase .col-product-visited,
+  .col-product-related.column,
+  .col-product-visited.column {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .product-showcase .showcase-list,
+  .col-product-related .showcase-list,
+  .product-showcase .showcase-list.slick-initialized .slick-track,
+  .col-product-related .showcase-list.slick-initialized .slick-track {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    align-items: start !important;
+  }
+
+  .product-showcase .showcase-list.slick-initialized .slick-list,
+  .col-product-related .showcase-list.slick-initialized .slick-list {
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .product-showcase .showcase-item,
+  .col-product-related .showcase-item,
+  .product-showcase .showcase-list.slick-initialized .slick-slide,
+  .col-product-related .showcase-list.slick-initialized .slick-slide {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    display: block !important;
+    float: none !important;
+  }
+
+  .product-showcase .showcase-product.card,
+  .col-product-related .showcase-product.card {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .product-showcase .showcase-product .card-footer,
+  .col-product-related .showcase-product .card-footer {
+    margin-top: 0 !important;
+    padding-bottom: 6px !important;
+  }
+
+  .product-showcase .showcase-list.slick-initialized .slick-arrow,
+  .product-showcase .showcase-list.slick-initialized .slick-dots,
+  .col-product-related .showcase-list.slick-initialized .slick-arrow,
+  .col-product-related .showcase-list.slick-initialized .slick-dots {
+    display: none !important;
+  }
+
   /* Grade 2 col — mesma altura por fila, botões alinhados embaixo */
   main.search-main .showcase-list,
   .search-main .showcase-list,
@@ -353,7 +423,7 @@
   .showcase-search .showcase-list {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 4px 6px !important;
+    gap: 6px 8px !important;
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
@@ -403,7 +473,7 @@
   .showcase-search .showcase-list.slick-initialized .slick-track {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 4px 6px !important;
+    gap: 6px 8px !important;
     width: 100% !important;
     max-width: 100% !important;
     transform: none !important;
@@ -482,7 +552,7 @@
 
   .showcase-item .showcase-product .card-footer {
     flex: 0 0 auto !important;
-    padding: 2px 8px 8px !important;
+    padding: 2px 8px 6px !important;
     margin-top: auto !important;
     margin-bottom: 0 !important;
     text-align: left !important;
@@ -491,7 +561,7 @@
   .showcase-item .showcase-product_link_title,
   .showcase-item .showcase-product .card-header h3,
   .showcase-item .showcase-product .card-header h3 a {
-    font-size: 11px !important;
+    font-size: 12px !important;
     line-height: 1.25 !important;
     margin: 0 !important;
     text-align: left !important;
@@ -561,7 +631,7 @@
 
   .showcase-item .showcase-product .card-footer .showcase-prices--card .showcase-prices_strike,
   .showcase-item .showcase-product .card-footer .showcase-prices--card del.showcase-prices_strike {
-    font-size: 10px !important;
+    font-size: 11px !important;
     margin: 0 0 1px !important;
     color: #9aa8b5 !important;
   }
@@ -569,27 +639,28 @@
   .showcase-item .showcase-product .card-footer .showcase-prices--card .showcase-prices_price,
   .showcase-item .showcase-product .card-footer .showcase-prices--card .showcase-prices_price b,
   .showcase-item .showcase-prices_price {
-    font-size: 16px !important;
+    font-size: 18px !important;
     font-weight: 800 !important;
-    margin: 0 0 2px !important;
-    color: #1a6eb5 !important;
-    line-height: 1.15 !important;
+    margin: 0 0 3px !important;
+    color: #1565a8 !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.02em !important;
   }
 
   .showcase-item .showcase-product .card-footer .showcase-prices--card .showcase-prices_pix {
     display: inline-block !important;
     background: #e8f2fc !important;
-    padding: 2px 8px !important;
+    padding: 3px 8px !important;
     margin: 0 0 3px !important;
     border-radius: 999px !important;
-    font-size: 9px !important;
+    font-size: 10px !important;
     font-weight: 800 !important;
     color: #1a6eb5 !important;
   }
 
   .showcase-item .showcase-product .card-footer .showcase-prices--card .showcase-prices_installment,
   .showcase-item .showcase-prices_plots {
-    font-size: 10px !important;
+    font-size: 11px !important;
     line-height: 1.2 !important;
     margin: 0 !important;
     color: #5a6f82 !important;
@@ -610,7 +681,7 @@
     min-height: 28px !important;
     height: auto !important;
     padding: 5px 8px !important;
-    font-size: 10px !important;
+    font-size: 11px !important;
     letter-spacing: 0.03em !important;
     border-radius: 999px !important;
     box-shadow: none !important;
@@ -658,7 +729,7 @@
   section.showcase .showcase-list {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 4px 6px !important;
+    gap: 6px 8px !important;
     width: 100% !important;
     max-width: 100% !important;
     padding: 0 !important;
@@ -673,7 +744,7 @@
   section.showcase .showcase-list.slick-initialized .slick-track {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 4px 6px !important;
+    gap: 6px 8px !important;
     width: 100% !important;
     transform: none !important;
     left: 0 !important;
@@ -721,7 +792,7 @@
   .showcase-item .showcase-product .card-footer,
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-footer {
     margin-top: auto !important;
-    padding-bottom: 8px !important;
+    padding-bottom: 6px !important;
   }
 
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-footer {

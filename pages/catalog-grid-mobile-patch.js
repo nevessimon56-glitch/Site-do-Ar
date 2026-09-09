@@ -1,6 +1,6 @@
 /* PATCH — cole no FINAL do assets/mega-menu.js */
-/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-MOBILE-v6 */
-/* Força 2 produtos por linha no catálogo mobile (remove Slick + grid inline) */
+/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-MOBILE-v7 */
+/* Catálogo mobile 2 col + produtos relacionados (remove Slick + grid) */
 
 (function () {
   'use strict';
@@ -21,10 +21,26 @@
     return false;
   }
 
-  function applyGridToList(list) {
+  function unslickList(list) {
+    if (typeof jQuery !== 'undefined' && jQuery.fn && jQuery.fn.slick) {
+      var $list = jQuery(list);
+      if ($list.hasClass('slick-initialized')) {
+        try {
+          $list.slick('unslick');
+        } catch (e) {}
+      }
+    }
+  }
+
+  function applyGridToList(list, opts) {
+    opts = opts || {};
+    var gap = opts.gap || '6px 8px';
+    var stretch = opts.stretch !== false;
+
     list.style.setProperty('display', 'grid', 'important');
     list.style.setProperty('grid-template-columns', 'repeat(2, minmax(0, 1fr))', 'important');
-    list.style.setProperty('gap', '4px 6px', 'important');
+    list.style.setProperty('gap', gap, 'important');
+    list.style.setProperty('align-items', stretch ? 'stretch' : 'start', 'important');
     list.style.setProperty('width', '100%', 'important');
     list.style.setProperty('max-width', '100%', 'important');
     list.style.setProperty('margin', '0', 'important');
@@ -35,7 +51,8 @@
     if (track) {
       track.style.setProperty('display', 'grid', 'important');
       track.style.setProperty('grid-template-columns', 'repeat(2, minmax(0, 1fr))', 'important');
-      track.style.setProperty('gap', '4px 6px', 'important');
+      track.style.setProperty('gap', gap, 'important');
+      track.style.setProperty('align-items', stretch ? 'stretch' : 'start', 'important');
       track.style.setProperty('width', '100%', 'important');
       track.style.setProperty('max-width', '100%', 'important');
       track.style.setProperty('transform', 'none', 'important');
@@ -49,13 +66,18 @@
       slickList.style.setProperty('max-width', '100%', 'important');
     }
 
+    var itemHeight = stretch ? '100%' : 'auto';
     var items = list.querySelectorAll('.showcase-item');
     for (var j = 0; j < items.length; j++) {
       var item = items[j];
       item.style.setProperty('width', '100%', 'important');
       item.style.setProperty('max-width', '100%', 'important');
       item.style.setProperty('min-width', '0', 'important');
-      item.style.setProperty('height', 'auto', 'important');
+      item.style.setProperty('display', stretch ? 'flex' : 'block', 'important');
+      if (stretch) {
+        item.style.setProperty('flex-direction', 'column', 'important');
+      }
+      item.style.setProperty('height', itemHeight, 'important');
       item.style.setProperty('min-height', '0', 'important');
       item.style.setProperty('float', 'none', 'important');
       item.style.setProperty('clear', 'none', 'important');
@@ -64,8 +86,13 @@
 
       var card = item.querySelector('.showcase-product');
       if (card) {
-        card.style.setProperty('height', 'auto', 'important');
+        card.style.setProperty('height', itemHeight, 'important');
         card.style.setProperty('min-height', '0', 'important');
+        if (stretch) {
+          card.style.setProperty('flex', '1 1 auto', 'important');
+        } else {
+          card.style.removeProperty('flex');
+        }
       }
     }
   }
@@ -85,25 +112,35 @@
     );
 
     for (var i = 0; i < lists.length; i++) {
-      var list = lists[i];
+      unslickList(lists[i]);
+      applyGridToList(lists[i], { gap: '6px 8px', stretch: true });
+    }
+  }
 
-      if (typeof jQuery !== 'undefined' && jQuery.fn && jQuery.fn.slick) {
-        var $list = jQuery(list);
-        if ($list.hasClass('slick-initialized')) {
-          try {
-            $list.slick('unslick');
-          } catch (e) {}
-        }
-      }
+  function fixProductShowcaseMobile() {
+    if (!isMobile()) return;
 
-      applyGridToList(list);
+    var lists = document.querySelectorAll(
+      '.product-showcase .showcase-list, .col-product-related .showcase-list'
+    );
+
+    for (var i = 0; i < lists.length; i++) {
+      unslickList(lists[i]);
+      applyGridToList(lists[i], { gap: '8px 10px', stretch: false });
     }
   }
 
   function scheduleMobileGridFix() {
     fixCatalogMobileGrid();
-    window.setTimeout(fixCatalogMobileGrid, 300);
-    window.setTimeout(fixCatalogMobileGrid, 1200);
+    fixProductShowcaseMobile();
+    window.setTimeout(function () {
+      fixCatalogMobileGrid();
+      fixProductShowcaseMobile();
+    }, 300);
+    window.setTimeout(function () {
+      fixCatalogMobileGrid();
+      fixProductShowcaseMobile();
+    }, 1200);
   }
 
   if (document.readyState === 'loading') {
@@ -113,6 +150,6 @@
   }
   window.addEventListener('load', scheduleMobileGridFix);
   window.addEventListener('resize', function () {
-    window.setTimeout(fixCatalogMobileGrid, 150);
+    window.setTimeout(scheduleMobileGridFix, 150);
   });
 })();
