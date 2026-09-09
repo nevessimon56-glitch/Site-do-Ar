@@ -1,0 +1,68 @@
+/* ==========================================================
+   HOME MOBILE — vitrine igual ao catálogo (grid 2 col)
+   Alvo: APENAS section.showcase na home/vitrines.
+   NÃO afeta catálogo (.showcase-search / main.search-main).
+   Substitui bloco PROMO SHOWCASE CARD antigo no mega-menu.css.
+   ========================================================== */
+
+@media (max-width: 991px) {
+
+  /* Grid 2 colunas — mesmo padrão visual do catálogo */
+  section.showcase .showcase-list,
+  section.showcase .showcase-list.slick-initialized .slick-track {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px 10px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+    transform: none !important;
+    left: 0 !important;
+    height: auto !important;
+  }
+
+  section.showcase .showcase-list.slick-initialized .slick-list {
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  section.showcase .showcase-item,
+  section.showcase .showcase-list .showcase-item.slick-slide {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    float: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  section.showcase .showcase-product.card {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  section.showcase .showcase-product .card-footer {
+    margin-top: auto !important;
+  }
+
+  section.showcase .showcase-list.slick-initialized .slick-arrow,
+  section.showcase .showcase-list.slick-initialized .slick-dots {
+    display: none !important;
+  }
+
+  /* Cards usam os estilos globais @media 767px do tema — sem encolher */
+}

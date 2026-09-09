@@ -2542,215 +2542,70 @@
   }
 }
 /* ==========================================================
-   PROMO SHOWCASE CARD — COMPACT PATCH (v3 — cards bem menores)
-   Alvo: carrossel "PROMOÇÃO" (section.showcase / .showcase-list)
-   e vitrines mobile — NÃO afeta catálogo (.showcase-search).
-   Cole no FINAL do mega-menu.css, substituindo bloco antigo deste patch.
+   HOME MOBILE — vitrine igual ao catálogo (grid 2 col)
+   Alvo: APENAS section.showcase na home/vitrines.
+   NÃO afeta catálogo (.showcase-search / main.search-main).
+   Substitui bloco PROMO SHOWCASE CARD antigo no mega-menu.css.
    ========================================================== */
 
 @media (max-width: 991px) {
 
-  /* Escopo: vitrines/carrossel — exclui grade de catálogo e produto */
-  body.has-mobile-catalog-dock section.showcase .showcase-product.card,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product.card {
+  /* Grid 2 colunas — mesmo padrão visual do catálogo */
+  section.showcase .showcase-list,
+  section.showcase .showcase-list.slick-initialized .slick-track {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px 10px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
     padding: 0 !important;
-    margin: 0 0 8px !important;
-    border-radius: 10px !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07) !important;
+    float: none !important;
+    transform: none !important;
+    left: 0 !important;
     height: auto !important;
+  }
+
+  section.showcase .showcase-list.slick-initialized .slick-list {
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  section.showcase .showcase-item,
+  section.showcase .showcase-list .showcase-item.slick-slide {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    float: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  section.showcase .showcase-product.card {
+    width: 100% !important;
+    height: 100% !important;
     min-height: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    flex-grow: 0 !important;
-    align-self: flex-start !important;
-    overflow: visible !important;
   }
 
-  /* Slick: não esticar slide/item */
-  body.has-mobile-catalog-dock section.showcase .showcase-list.slick-initialized .slick-track,
-  body.has-mobile-catalog-dock section.showcase .showcase-list.slick-initialized .slick-slide,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list).slick-initialized .slick-track,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list).slick-initialized .slick-slide {
-    display: flex !important;
-    height: auto !important;
-    align-items: flex-start !important;
+  section.showcase .showcase-product .card-footer {
+    margin-top: auto !important;
   }
 
-  body.has-mobile-catalog-dock section.showcase .showcase-list.slick-initialized .slick-list,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list).slick-initialized .slick-list {
-    overflow: visible !important;
-    height: auto !important;
+  section.showcase .showcase-list.slick-initialized .slick-arrow,
+  section.showcase .showcase-list.slick-initialized .slick-dots {
+    display: none !important;
   }
 
-  body.has-mobile-catalog-dock section.showcase .showcase-item,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-item {
-    height: auto !important;
-    min-height: 0 !important;
-    align-self: flex-start !important;
-  }
-
-  /* Imagem ~60px */
-  body.has-mobile-catalog-dock section.showcase .showcase-product_image.card-image,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product_image.card-image {
-    padding: 6px 6px 0 !important;
-    max-height: none !important;
-    min-height: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    overflow: visible !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-product_link__image,
-  body.has-mobile-catalog-dock section.showcase .product-hover-wrap,
-  body.has-mobile-catalog-dock section.showcase .product-mobile-carousel,
-  body.has-mobile-catalog-dock section.showcase .product-mobile-carousel__track,
-  body.has-mobile-catalog-dock section.showcase .product-mobile-carousel__slide,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product_link__image,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .product-hover-wrap,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .product-mobile-carousel,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .product-mobile-carousel__track,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .product-mobile-carousel__slide {
-    min-height: 0 !important;
-    max-height: 60px !important;
-    height: auto !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-product_link__image img,
-  body.has-mobile-catalog-dock section.showcase .product-hover-wrap img,
-  body.has-mobile-catalog-dock section.showcase .product-mobile-carousel__slide img,
-  body.has-mobile-catalog-dock section.showcase .product-mobile-carousel__img,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product_link__image img,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .product-hover-wrap img,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .product-mobile-carousel__slide img {
-    max-height: 50px !important;
-    width: auto !important;
-    max-width: 92% !important;
-    object-fit: contain !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-product_image .showcase-offer,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product_image .showcase-offer {
-    transform: scale(0.85) !important;
-    transform-origin: top right !important;
-  }
-
-  /* Título — 10px, 2 linhas */
-  body.has-mobile-catalog-dock section.showcase .showcase-product .card-header,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product .card-header {
-    padding: 4px 8px 0 !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-product_link.showcase-product_link_title,
-  body.has-mobile-catalog-dock section.showcase .showcase-product .card-header h3 a,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product_link.showcase-product_link_title,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product .card-header h3 a {
-    font-size: 10px !important;
-    line-height: 1.25 !important;
-    margin: 0 !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    text-align: left !important;
-  }
-
-  /* Specs — discretas, sem fundo */
-  body.has-mobile-catalog-dock section.showcase .showcase-spec-wrap,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-spec-wrap {
-    margin: 0 8px 5px !important;
-    gap: 3px !important;
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    overflow: visible !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-spec-bar__tag,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-spec-bar__tag {
-    font-size: 8px !important;
-    padding: 1px 5px !important;
-    min-height: 0 !important;
-    height: auto !important;
-  }
-
-  /* Preços — azul no valor principal */
-  body.has-mobile-catalog-dock section.showcase .showcase-prices_price,
-  body.has-mobile-catalog-dock section.showcase .showcase-prices_price--pix,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-prices_price,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-prices_price--pix {
-    margin: 3px 0 0 !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-prices_price b,
-  body.has-mobile-catalog-dock section.showcase .showcase-prices_price--pix b,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-prices_price b,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-prices_price--pix b {
-    font-size: 13px !important;
-    font-weight: 800 !important;
-    color: #1565a8 !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-prices_strike,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-prices_strike {
-    font-size: 9px !important;
-    margin: 0 0 2px !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-prices_pix,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-prices_pix {
-    display: inline-block !important;
-    font-size: 8px !important;
-    font-weight: 700 !important;
-    margin: 1px 0 4px !important;
-    padding: 2px 6px !important;
-    border-radius: 999px !important;
-    background: #e8f7ec !important;
-    color: #2d8a47 !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-prices_installment,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-prices_installment {
-    font-size: 8px !important;
-    line-height: 1.2 !important;
-    margin: 0 !important;
-  }
-
-  /* Rodapé compacto */
-  body.has-mobile-catalog-dock section.showcase .showcase-product .card-footer,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product .card-footer {
-    padding: 0 8px 6px !important;
-    gap: 5px !important;
-    margin-top: 0 !important;
-    flex-grow: 0 !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-product .card-footer .showcase-prices--card,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product .card-footer .showcase-prices--card {
-    padding: 0 !important;
-  }
-
-  /* Botões */
-  body.has-mobile-catalog-dock section.showcase .showcase-product_buy.btn,
-  body.has-mobile-catalog-dock section.showcase .showcase-card-actions .showcase-product_buy.btn,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-product_buy.btn,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-card-actions .showcase-product_buy.btn {
-    padding: 6px 8px !important;
-    font-size: 10px !important;
-    min-height: 0 !important;
-    border-radius: 16px !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-card-actions,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-card-actions {
-    margin-top: 5px !important;
-    gap: 4px !important;
-  }
-
-  body.has-mobile-catalog-dock section.showcase .showcase-card-actions .showcase-compare-btn,
-  body.has-mobile-catalog-dock .showcase-list:not(.showcase-search .showcase-list) .showcase-card-actions .showcase-compare-btn {
-    padding: 4px 6px !important;
-    font-size: 9px !important;
-    min-height: 0 !important;
-  }
+  /* Cards usam os estilos globais @media 767px do tema — sem encolher */
 }
