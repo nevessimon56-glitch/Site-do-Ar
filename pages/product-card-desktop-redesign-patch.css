@@ -1,11 +1,12 @@
-/* ========== Card desktop — grid 4 col alinhado (CARD-DESKTOP-REDESIGN-v2) ========== */
+/* ========== Card desktop — grid 4 col alinhado (CARD-DESKTOP-REDESIGN-v3) ========== */
 /* Catálogo .showcase-search ≥992px. Cole no FINAL do mega-menu.css.
-   Sobrescreve bloco antigo "Grade 3 colunas" se ainda existir no arquivo. */
+   Usa .showcase-search_grid / _list — vence theme-all.css (display:table + width 33%). */
 
 @media (min-width: 992px) {
 
   /* 0 — Grid 4 colunas (catálogo desktop) */
-  .showcase-search .showcase-list {
+  .showcase-search.showcase-search_grid .showcase-list,
+  .showcase-search.showcase-search_list .showcase-list {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     align-items: stretch !important;
@@ -17,7 +18,8 @@
     box-sizing: border-box !important;
   }
 
-  .showcase-search .showcase-list.slick-initialized .slick-track {
+  .showcase-search.showcase-search_grid .showcase-list.slick-initialized .slick-track,
+  .showcase-search.showcase-search_list .showcase-list.slick-initialized .slick-track {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     width: 100% !important;
@@ -29,7 +31,8 @@
     margin: 0 !important;
   }
 
-  .showcase-search .showcase-item {
+  .showcase-search.showcase-search_grid .showcase-item,
+  .showcase-search.showcase-search_list .showcase-item {
     float: none !important;
     display: flex !important;
     flex-direction: column !important;
@@ -37,8 +40,11 @@
     max-width: 100% !important;
     min-width: 0 !important;
     padding: 0 6px 14px !important;
-    margin: 0 !important;
+    margin: 0 0 14px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
     box-sizing: border-box !important;
+    clear: none !important;
   }
 
   /* 6 — Imagem: altura fixa, produto centralizado */
