@@ -2,11 +2,11 @@
 /* NÃO altera @media (max-width: 991px). Cole no FINAL do mega-menu.css */
 @media (min-width: 992px) {
 
-  /* Catálogo: grid 4 col (única diferença de layout vs mobile) */
+  /* Catálogo: grid 3 col (theme-all / todos os produtos) */
   .showcase-search.showcase-search_grid .showcase-list,
   .showcase-search.showcase-search_list .showcase-list {
     display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     align-items: stretch !important;
     width: 100% !important;
     margin: 0 !important;
@@ -17,7 +17,7 @@
   .showcase-search.showcase-search_grid .showcase-list.slick-initialized .slick-track,
   .showcase-search.showcase-search_list .showcase-list.slick-initialized .slick-track {
     display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     width: 100% !important;
     transform: none !important;
     left: 0 !important;
