@@ -2177,10 +2177,12 @@
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
-  gap: 5px !important;
+  gap: 8px !important;
   width: 100% !important;
-  align-items: center !important;
+  max-width: 100% !important;
+  align-items: stretch !important;
   overflow: visible !important;
+  box-sizing: border-box !important;
 }
 
 .showcase-card-actions .showcase-compare-btn {
@@ -2190,10 +2192,11 @@
   visibility: visible !important;
   opacity: 1 !important;
   flex: 0 0 auto !important;
+  flex-grow: 0 !important;
   flex-shrink: 0 !important;
   width: auto !important;
   min-width: 0 !important;
-  max-width: 26% !important;
+  max-width: none !important;
   min-height: 28px !important;
   height: 28px !important;
   padding: 4px 6px !important;
@@ -2233,6 +2236,7 @@
   align-items: center !important;
   justify-content: center !important;
   flex: 1 1 0% !important;
+  flex-grow: 1 !important;
   flex-shrink: 1 !important;
   min-width: 0 !important;
   width: auto !important;
@@ -2841,10 +2845,13 @@
     flex-direction: column !important;
   }
 
-  /* Spec pills logo abaixo da imagem (desktop) */
+  /* Área da imagem — mesmo padding mobile; selo ancora na quina */
   .showcase-search .showcase-product_image.card-image,
   main.home-main section.showcase .showcase-product_image.card-image {
     order: 0 !important;
+    position: relative !important;
+    overflow: hidden !important;
+    padding: 8px 8px 0 !important;
   }
 
   .showcase-search .showcase-spec-wrap,
@@ -2865,18 +2872,24 @@
     order: 3 !important;
   }
 
-  /* Selo 5% OFF — ribbon azul canto superior esquerdo (igual mobile) */
+  /* Selo 5% OFF — retângulo cravado no canto superior esquerdo (igual mobile) */
+  .showcase-search .showcase-product_image .showcase-offer,
   .showcase-search .showcase-offer,
+  main.home-main section.showcase .showcase-product_image .showcase-offer,
   main.home-main section.showcase .showcase-offer {
+    position: absolute !important;
     top: 0 !important;
     left: 0 !important;
     right: auto !important;
+    bottom: auto !important;
+    margin: 0 !important;
+    transform: none !important;
     width: auto !important;
     height: auto !important;
     min-width: 0 !important;
     min-height: 0 !important;
     padding: 3px 7px 4px !important;
-    border-radius: 0 0 8px 0 !important;
+    border-radius: 0 !important;
     background: #1a6eb5 !important;
     box-shadow: 0 2px 6px rgba(26, 110, 181, 0.28) !important;
     z-index: 6 !important;
@@ -3049,23 +3062,33 @@
     padding: 2px 6px 8px !important;
   }
 
-  /* Catálogo desktop: Comparar + Comprar lado a lado (visível) */
+  /* Catálogo desktop: Comparar (fixo) + Comprar (flex) — alinhado ao conteúdo */
   .showcase-search .showcase-card-actions {
     display: flex !important;
     flex-direction: row !important;
-    gap: 6px !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    gap: 8px !important;
     margin-top: 4px !important;
     width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
   }
 
   .showcase-search .showcase-compare-btn {
     position: static !important;
-    flex: 0 0 38% !important;
-    max-width: 38% !important;
+    flex: 0 0 auto !important;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
     min-height: 32px !important;
     height: 32px !important;
-    padding: 0 8px !important;
+    padding: 0 10px !important;
     overflow: visible !important;
+    white-space: nowrap !important;
     font-size: 11px !important;
     font-weight: 700 !important;
     line-height: 1.1 !important;
@@ -3075,6 +3098,7 @@
     background: #eef6fd !important;
     box-shadow: 0 1px 3px rgba(26, 110, 181, 0.12) !important;
     cursor: pointer !important;
+    box-sizing: border-box !important;
   }
 
   .showcase-search .showcase-compare-btn::before {
@@ -3091,7 +3115,11 @@
 
   .showcase-search .showcase-card-actions .showcase-product_buy,
   .showcase-search .showcase-product .card-footer > .showcase-product_buy {
-    flex: 1 1 auto !important;
+    flex: 1 1 0% !important;
+    flex-grow: 1 !important;
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: none !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
