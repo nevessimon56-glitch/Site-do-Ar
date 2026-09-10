@@ -1,8 +1,9 @@
-/* PATCH — cole no FINAL do assets/mega-menu.js (~1800 linhas) */
-/* NÃO substitua o arquivo inteiro. Versão: CATALOG-GRID-DESKTOP-v2 */
+/* PATCH — cole no FINAL do assets/mega-menu.js */
+/* NÃO substitua o arquivo inteiro. Versão: CATALOG-DESKTOP-GRID-v3 (4 colunas) */
+/* NÃO use o patch antigo com flex + 33.333% — ele força 3 colunas via inline style. */
 
 /**
- * Catálogo desktop — remove slick e força grade 3 colunas
+ * Catálogo desktop — grade 4 col (CSS no mega-menu.css CARD-DESKTOP-REDESIGN-v3)
  */
 (function () {
   'use strict';
@@ -18,30 +19,32 @@
     return false;
   }
 
-  function applyGridToList(list) {
-    list.style.setProperty('display', 'flex', 'important');
-    list.style.setProperty('flex-direction', 'row', 'important');
-    list.style.setProperty('flex-wrap', 'wrap', 'important');
-    list.style.setProperty('width', '100%', 'important');
-    list.style.setProperty('max-width', '100%', 'important');
+  function clearInlineGridStyles(list) {
+    var listProps = ['display', 'width', 'max-width', 'flex-direction', 'flex-wrap', 'margin-left', 'margin-right'];
+    for (var p = 0; p < listProps.length; p++) {
+      list.style.removeProperty(listProps[p]);
+    }
 
     var items = list.querySelectorAll('.showcase-item');
+    var itemProps = ['width', 'max-width', 'min-width', 'flex', 'display', 'float', 'clear', 'opacity', 'visibility', 'margin-left', 'margin-right'];
     for (var j = 0; j < items.length; j++) {
-      var item = items[j];
-      item.style.setProperty('float', 'left', 'important');
-      item.style.setProperty('display', 'flex', 'important');
-      item.style.setProperty('flex', '0 0 33.333%', 'important');
-      item.style.setProperty('width', '33.333%', 'important');
-      item.style.setProperty('max-width', '33.333%', 'important');
-      item.style.setProperty('clear', 'none', 'important');
-      item.style.setProperty('opacity', '1', 'important');
-      item.style.setProperty('visibility', 'visible', 'important');
+      for (var k = 0; k < itemProps.length; k++) {
+        items[j].style.removeProperty(itemProps[k]);
+      }
     }
   }
 
   function fixCatalogDesktopGrid() {
     if (!window.matchMedia(DESKTOP_MQ).matches) return;
     if (!isCatalogListingPage()) return;
+
+    var sections = document.querySelectorAll('.showcase-search.showcase-search_list, .showcase-search.showcase-search_grid');
+    for (var s = 0; s < sections.length; s++) {
+      if (sections[s].classList.contains('showcase-search_list')) {
+        sections[s].classList.remove('showcase-search_list');
+        sections[s].classList.add('showcase-search_grid');
+      }
+    }
 
     var lists = document.querySelectorAll('.showcase-search .showcase-list');
     for (var i = 0; i < lists.length; i++) {
@@ -56,7 +59,7 @@
         }
       }
 
-      applyGridToList(list);
+      clearInlineGridStyles(list);
     }
   }
 

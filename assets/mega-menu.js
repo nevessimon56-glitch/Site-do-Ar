@@ -1106,8 +1106,10 @@
 })();
 
 /**
- * Catálogo desktop — remove slick/float que quebra 6 produtos em 3+1+2
- * Cole no FINAL do mega-menu.js se ainda não existir este bloco
+ * Catálogo desktop — grade 4 col (CATALOG-DESKTOP-GRID-v3)
+ * - Converte showcase-search_list → showcase-search_grid (tema usa _list no HTML)
+ * - Remove slick e estilos inline antigos (patch JS 33.333% = 3 col)
+ * Cole no FINAL do mega-menu.js
  */
 (function () {
   'use strict';
@@ -1123,9 +1125,32 @@
     return false;
   }
 
+  function clearInlineGridStyles(list) {
+    var listProps = ['display', 'width', 'max-width', 'flex-direction', 'flex-wrap', 'margin-left', 'margin-right'];
+    for (var p = 0; p < listProps.length; p++) {
+      list.style.removeProperty(listProps[p]);
+    }
+
+    var items = list.querySelectorAll('.showcase-item');
+    var itemProps = ['width', 'max-width', 'min-width', 'flex', 'display', 'float', 'clear', 'opacity', 'visibility', 'margin-left', 'margin-right'];
+    for (var j = 0; j < items.length; j++) {
+      for (var k = 0; k < itemProps.length; k++) {
+        items[j].style.removeProperty(itemProps[k]);
+      }
+    }
+  }
+
   function fixCatalogDesktopGrid() {
     if (!window.matchMedia(DESKTOP_MQ).matches) return;
     if (!isCatalogListingPage()) return;
+
+    var sections = document.querySelectorAll('.showcase-search.showcase-search_list, .showcase-search.showcase-search_grid');
+    for (var s = 0; s < sections.length; s++) {
+      if (sections[s].classList.contains('showcase-search_list')) {
+        sections[s].classList.remove('showcase-search_list');
+        sections[s].classList.add('showcase-search_grid');
+      }
+    }
 
     var lists = document.querySelectorAll('.showcase-search .showcase-list');
     for (var i = 0; i < lists.length; i++) {
@@ -1140,17 +1165,7 @@
         }
       }
 
-      list.style.removeProperty('display');
-      list.style.removeProperty('width');
-
-      var items = list.querySelectorAll('.showcase-item');
-      for (var j = 0; j < items.length; j++) {
-        items[j].style.removeProperty('width');
-        items[j].style.removeProperty('display');
-        items[j].style.removeProperty('float');
-        items[j].style.removeProperty('opacity');
-        items[j].style.removeProperty('visibility');
-      }
+      clearInlineGridStyles(list);
     }
   }
 
@@ -1166,6 +1181,9 @@
     scheduleDesktopGridFix();
   }
   window.addEventListener('load', scheduleDesktopGridFix);
+  window.addEventListener('resize', function () {
+    window.setTimeout(fixCatalogDesktopGrid, 100);
+  });
 })();
 
 /**
