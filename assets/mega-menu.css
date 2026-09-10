@@ -3248,6 +3248,65 @@
     clear: none !important;
   }
 
+  /* 0b — Neutraliza layout horizontal .showcase-search_list do theme-all */
+  .showcase-search.showcase-search_grid .showcase-product,
+  .showcase-search.showcase-search_list .showcase-product {
+    display: flex !important;
+    flex-direction: column !important;
+    float: none !important;
+    width: 100% !important;
+  }
+
+  .showcase-search.showcase-search_grid .showcase-product_image,
+  .showcase-search.showcase-search_list .showcase-product_image {
+    float: none !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+  }
+
+  .showcase-search.showcase-search_grid .showcase-product .card-header,
+  .showcase-search.showcase-search_list .showcase-product .card-header {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    margin-top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .showcase-search.showcase-search_grid .showcase-product .card-footer,
+  .showcase-search.showcase-search_list .showcase-product .card-footer {
+    float: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .showcase-search.showcase-search_grid .showcase-product_link__image,
+  .showcase-search.showcase-search_list .showcase-product_link__image {
+    height: auto !important;
+    margin-bottom: 0 !important;
+  }
+
+  .showcase-search.showcase-search_grid .showcase-product_link_title,
+  .showcase-search.showcase-search_list .showcase-product_link_title {
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: left !important;
+    height: auto !important;
+  }
+
+  .showcase-search.showcase-search_grid .showcase-product_buy,
+  .showcase-search.showcase-search_list .showcase-product_buy {
+    float: none !important;
+    display: block !important;
+    max-width: 100% !important;
+    width: auto !important;
+    position: static !important;
+  }
+
   /* 6 — Imagem: altura fixa, produto centralizado */
   .showcase-search .showcase-product_image.card-image {
     height: 168px !important;
