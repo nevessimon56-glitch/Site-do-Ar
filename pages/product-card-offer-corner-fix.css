@@ -1,0 +1,29 @@
+/* PATCH — selo 5% OFF cravado na quina (desktop ≥992). Cole no FINAL do mega-menu.css */
+@media (min-width: 992px) {
+
+  .showcase-search .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-product_image.card-image {
+    position: relative !important;
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-product_image .showcase-offer,
+  .showcase-search .showcase-product.card .showcase-offer,
+  main.home-main section.showcase .showcase-product.card .showcase-product_image .showcase-offer,
+  main.home-main section.showcase .showcase-product.card .showcase-offer {
+    position: absolute !important;
+    inset: 0 auto auto 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 8px !important;
+    z-index: 6 !important;
+  }
+}
