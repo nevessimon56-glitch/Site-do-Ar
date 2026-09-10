@@ -269,6 +269,8 @@
 (function () {
   'use strict';
 
+  window.__SDA_HOVER_V2__ = true;
+
   var PROCESSED = 'data-hover-swap-ready';
   var PLOT_FIXED = 'data-plot-fixed';
   var cache = {};
@@ -448,6 +450,7 @@
     if (!img.getAttribute('data-hover-src')) img.setAttribute('data-hover-src', hoverSrc);
     img.classList.add('product-hover-img--main');
     if (img.classList.contains('lazy')) img.classList.add('loaded');
+    ensureImgSrc(img);
 
     var wrap = link.querySelector('.product-hover-wrap');
     if (!wrap) {
@@ -463,7 +466,8 @@
     if (!hoverImg) {
       hoverImg = document.createElement('img');
       hoverImg.className = 'product-hover-img--hover';
-      hoverImg.alt = img.alt || '';
+      hoverImg.alt = '';
+      hoverImg.setAttribute('aria-hidden', 'true');
       hoverImg.setAttribute('data-src', hoverSrc);
       wrap.appendChild(hoverImg);
     } else if (!hoverImg.getAttribute('data-src')) {

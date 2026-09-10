@@ -2753,7 +2753,7 @@
   }
 }
 
-/* ── Desktop (≥992): espelho fiel CARD-MOBILE-REDESIGN-v1 — só grid 4 col ── */
+/* ── Desktop (≥992): espelho fiel do mobile — grid 3 col no catálogo ── */
 /* NÃO altera @media (max-width: 991px). Cole DEPOIS do bloco mobile. */
 @media (min-width: 992px) {
 
@@ -3095,5 +3095,38 @@
     color: #fff !important;
     box-shadow: 0 2px 8px rgba(26, 110, 181, 0.28) !important;
   }
+}
+
+/* ========== Fix: 2ª imagem hover visível com alt roxo / ícone quebrado (HOVER-IMG-FIX-v1) ========== */
+/* Causa: blocos desktop genéricos (.showcase-product_image img { display:block }) sobrescrebem display:none da 2ª foto. */
+
+.showcase-search .showcase-product.card .showcase-product_image .product-hover-wrap img.product-hover-img--hover,
+.showcase-search .showcase-product.card .showcase-product_image .product-hover-wrap img.product-hover-img--alt,
+main.home-main section.showcase .showcase-product.card .showcase-product_image .product-hover-wrap img.product-hover-img--hover,
+main.home-main section.showcase .showcase-product.card .showcase-product_image .product-hover-wrap img.product-hover-img--alt {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  color: transparent !important;
+  text-indent: -9999px !important;
+}
+
+.showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--hover,
+.showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--hover,
+.showcase-product.has-hover-image:hover .product-hover-img--alt,
+.showcase-product.has-hover-image.is-img-hover .product-hover-img--alt {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  font-size: inherit !important;
+  line-height: normal !important;
+  text-indent: 0 !important;
 }
 
