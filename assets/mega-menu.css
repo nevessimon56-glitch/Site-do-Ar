@@ -3382,3 +3382,39 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
     border-radius: 999px !important;
   }
 }
+
+/* ========== Selo 5% OFF colado na quina — site inteiro (OFFER-CORNER-v2) ========== */
+/* top/left sozinhos não funcionam sem position:absolute */
+
+.showcase-product.card .showcase-product_image.card-image {
+  position: relative !important;
+  padding-top: 0 !important;
+  padding-left: 0 !important;
+}
+
+.showcase-product.card .showcase-product_image .showcase-offer,
+.showcase-product.card .showcase-product_image.card-image .showcase-offer {
+  position: absolute !important;
+  inset: 0 auto auto 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: auto !important;
+  bottom: auto !important;
+  margin: 0 !important;
+  transform: none !important;
+  float: none !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 3px 7px 4px !important;
+  border: 0 !important;
+  border-radius: 0 0 8px 0 !important;
+  background: #1a6eb5 !important;
+  box-shadow: 0 2px 6px rgba(26, 110, 181, 0.28) !important;
+  z-index: 6 !important;
+}
+
+.showcase-product.card .showcase-product_image .showcase-offer_text {
+  border-radius: 0 !important;
+}
