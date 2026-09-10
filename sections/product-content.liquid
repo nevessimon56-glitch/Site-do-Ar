@@ -1,0 +1,1139 @@
+{% if product %}
+    <div
+        x-on:cart-change-quantity.window="changeProductDefault($event.detail.quantity)"
+        x-on:change-product-kit.window="handleProductKit($event.detail)"
+        x-on:update-ajax-product.window="updateAjaxProduct($event.detail)"
+        x-on:update-total-second-price.window="updateTotalSecondPrice($event.detail)"
+        x-on:change-product-group-purchase.window="handleProductGroupPurchase($event.detail)"
+        x-data="setupProduct()" x-init="initProduct()">
+
+        {% assign buyButtonText = 'Comprar' %}
+
+        <!-- TODO: Não alterar mainPrice. Se caso alterar, vai afetar no calculo de pagamento-->
+        {% assign mainPrice = product.price.price %}
+        {% if product.price.promotionPrice > 0 %}
+            {% assign mainPrice = product.price.promotionPrice %}
+        {% endif %}
+
+        {% assign productPricePrimary = product.price %}
+        {% comment %} Desconto Pix está no método de pagamento, não em product.primaryPrice {% endcomment %}
+        {% if product.secondaryPrice %}
+            {% assign productPriceSecond = product.secondaryPrice %}
+        {% endif %}
+
+        {% assign classProductLogin = '' %}
+        {% if themeConfig.price.type == 'show-logged' %}
+            {% assign classProductLogin = ' login-btn_logged d-hide' %}
+        {% endif %}
+
+        {% assign firstVariationId = '' %}
+        {% for _go in product.gridOptions %}{% for _v in _go.options %}{% if _v.productId and firstVariationId == '' %}{% assign firstVariationId = _v.productId %}{% endif %}{% endfor %}{% endfor %}
+
+        {% assign subjectContactProductUnavailable = 'subject=Avise-me quando o produto estiver disponível' %}
+        {% assign messageContactProductUnavailable = 'message=Nome: ' | append: product.title | append: '%0A' | append: 'Produto id: ' | append: product.id %}
+        {% if product.sku %}
+            {% assign messageContactProductUnavailable = messageContactProductUnavailable | append: '%0A' | append: 'Referência: ' | append: product.sku %}
+        {% endif %}
+
+        <!-- Start - Showcase -->
+        {% for showcaseSection in showcase.sections %}
+            {% if showcaseSection.display != 'inactive' %}
+                {% assign showcaseModel = 'sections/showcase-model-' | append: showcaseSection.typeId %}
+                {%- render showcaseModel, showcaseSection: showcaseSection, products: showcaseSection.products, themeConfig: themeConfig -%}
+            {% endif %}
+        {% endfor %}
+        <!-- End - Showcase -->
+        <section class="product-breadcrumb">
+            <div class="product-breadcrumb-content content">
+                <div class="product-breadcrumb-container container">
+                    <ol class="product-breadcrumb-list breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+                        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                            <a href="/" title="Página Inicial" itemprop="item">
+                                <span itemprop="name">
+                                    Home
+                                </span>
+                            </a>
+                            <meta itemprop="position" content="1">
+                        </li>
+                        {%- assign positionCategory = 1 -%}
+                        {% for categories in product.categories %}
+                            {% if categories.main == true %}
+                                {%- assign listCategories = categories.treeName | split: '##' -%}
+                                {% for category in listCategories %}
+                                    {%- assign positionCategory = positionCategory | plus: 1 -%}
+                                    <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                                        <a title="{{ category }}" itemprop="item" href="{{ categories.treeSlug | linkCategory: forloop.index }}">
+                                            <span itemprop="name">{{ category }}</span>
+                                        </a>
+                                        <meta itemprop="position" content="{{ positionCategory }}">
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if product.title %}
+                            <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                                <a title="{{ product.title | escape }}" itemprop="item" href="javascript:void(0)">
+                                    <span itemprop="name">{{ product.title | escape }}</span>
+                                </a>
+                                <meta itemprop="position" content="{{ positionCategory | plus: 1 }}">
+                            </li>
+                        {% endif %}
+                    </ol>
+                </div>
+            </div>
+        </section>
+        <section class="product-header">
+            <div class="product-header-content content">
+                <div class="product-header-container container">
+                    <div class="columns">
+                        <div class="product-header-left col-7 col-lg-12 column">
+                            <div class="product-images col-12">
+                                <p class="product-title product-title_mobile show-lg">
+                                    {{ product.title | escape }}
+                                    {% if product.multiple > 1 %}
+                                        - {{ product.multiple }}
+                                        {% if product.unitName %}
+                                            {{ product.unitName | downcase }}
+                                        {% endif %}
+                                    {% endif %}
+                                </p>
+                                <div class="product-zoom">
+                                    {% if themeConfig.price.type != 'hide' %}
+                                        {% if product.price.priceProgressive.size > 0 %}
+                                            <div class="product-tag">
+                                                Atacado
+                                            </div>
+                                        {% endif %}
+                                        {% if product.promotion %}
+                                            <div class="product-tag">
+                                                {{ product.promotion.label }}
+                                            </div>
+                                        {% endif %}
+                                        {% if product.freeShipping == true %}
+                                            <div class="product-tag product-tag-free_shipping">
+                                                Frete Grátis
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if product.medias[0].path != blank %}
+                                        <a class="product-zoom_link" title="{{ product.title | escape }}" href="javascript:void(0)">
+                                            <div class="loading loading-lg" style="display: none;"></div>
+                                            <picture>
+                                                <source class="product-zoom_image__mobile" media="(max-width:575px)" data-srcset="{{ product.medias[0].path | imgUrl: 250}}">
+                                                <img class="product-zoom_image lazy" data-src="{{ product.medias[0].path | imgUrl: 500}}" alt="{{ product.title | escape }}">
+                                            </picture>
+                                        </a>
+                                    {% else %}
+                                        <a class="product-zoom_link" title="{{ product.title | escape }}" href="javascript:void(0)">
+                                            {{ themeConfig.icons.image }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                {%- assign galleryListType = "desktop mobile" | split: ' ' -%}
+                                {% for galleryItemType in galleryListType %}
+                                    <div class="product-gallery product-gallery_{{ galleryItemType }}">
+                                        <div class="product-gallery_list slider-hide">
+                                            <ul class="product-gallery-slider product-gallery-slider_desktop">
+                                                {% for medias in product.medias %}
+                                                    {% assign classImageMain = '' %}
+                                                    {% if forloop.first == true %}
+                                                        {% assign classImageMain = ' image-main' %}
+                                                    {% endif %}
+                                                    <li class="product-gallery_item">
+                                                        <a class="product-gallery_link{{ classImageMain }}" title="{{ product.title | escape }}" href="javascript:void(0)" data-index="{{ forloop.index | minus: 1 }}" data-zoom="{{ medias.path | imgUrl: 0 }}" onclick="onChangeProductGallery('{{ forloop.index | minus: 1 }}','{{ medias.path | imgUrl: 500 }}','{{ medias.path | imgUrl: 250 }}')">
+                                                            <picture>
+                                                                <img class="product-gallery_image lazy" alt="{{ product.title | escape }}" data-src="{{ medias.path | imgUrl: 120 }}">
+                                                            </picture>
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                            <div class="controls controls-arrow" aria-label="Carousel Navigation" tabindex="0">
+                                                <button class="slider__arrow slider__arrow--prev prev" title="Anterior" aria-controls="customize" tabindex="-1" data-controls="prev">
+                                                    {{ themeConfig.icons.arrow.down }}
+                                                </button>
+                                                <button class="slider__arrow slider__arrow--next next" title="Próximo" aria-controls="customize" tabindex="-1" data-controls="next">
+                                                    {{ themeConfig.icons.arrow.down }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <!-- Start - Photoswipe -->
+                                <div class="product-zoom-open pswp" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="pswp__bg"></div>
+                                    <div class="pswp__scroll-wrap">
+                                        <div class="pswp__container">
+                                            <div class="pswp__item"></div>
+                                            <div class="pswp__item"></div>
+                                            <div class="pswp__item"></div>
+                                        </div>
+                                        <div class="pswp__ui pswp__ui--hidden">
+                                            <div class="pswp__top-bar">
+                                                <div class="pswp__counter"></div>
+                                                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                                                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                                                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                                                <div class="pswp__preloader">
+                                                    <div class="pswp__preloader__icn">
+                                                        <div class="pswp__preloader__cut">
+                                                            <div class="pswp__preloader__donut"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                                                <div class="pswp__share-tooltip"></div>
+                                            </div>
+                                            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                                            </button>
+                                            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                                            </button>
+                                            <div class="pswp__caption">
+                                                <div class="pswp__caption__center"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End - Photoswipe -->
+                            </div>
+                        </div>
+                        <div class="product-header-right col-5 col-lg-12 column">
+                            <div class="product-header-box">
+                                <div class="product-header-box_top">
+                                    {% if product.sku %}
+                                        <div class="product-sku">
+                                            Ref.: {{ product.sku }}
+                                        </div>
+                                    {% endif %}
+                                    {% if store.displayAvailability %}
+                                        {% if kitOptions.size > 0 %}
+                                            <template x-if="state.productKit && state.productKit?.totalSelected?.stockAvailability !==''">
+                                                <div class="product-stock">
+                                                    Disponibilidade: <span x-text="state.productKit?.totalSelected?.stockAvailability"></span>
+                                                </div>
+                                            </template>
+                                        {% else %}
+                                            <div class="product-stock">
+                                                Disponibilidade: <span>{{ product | productStockAvailability: store }}</span>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                <h1 class="product-title product-title_desktop hide-lg">
+                                    {{ product.title | escape }}
+                                    {% if product.multiple > 1 %}
+                                        - {{ product.multiple }}
+                                        {% if product.unitName %}
+                                            {{ product.unitName | downcase }}s
+                                        {% endif %}
+                                    {% endif %}
+                                </h1>
+                                <template x-if="state.review.total > 0">
+                                    <div class="product-review">
+                                        <div class="product-review-star" onclick="redirectReviewSection()" style="cursor: pointer;">
+                                            <div class="star-rating" :title="`${state.review.media} (${state.review.total} avaliações)`">
+                                                <div class="star-rating-top" :style="`width: ${Math.round(state.review.media * 2) / 2 * 20}%`">★★★★★</div>
+                                                <div class="star-rating-bottom">★★★★★</div>
+                                            </div>
+                                            <span class="product-review-star_text" x-text="`${state.review.media} (${state.review.total} avaliações)`"></span>
+                                        </div>
+                                    </div>
+                                </template>
+                                {% if product.prices.length > 1 %}
+                                    <div class="product-price-group">
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                Selecione o modelo de compra abaixo:
+                                            </label>
+                                            <template x-for="(priceGroupItem, indexPriceGroup, collection) in state.product.prices" :key="indexPriceGroup">
+                                                <label class="form-radio">
+                                                    <input type="radio" name="priceGroup" :disabled="!priceGroupItem.status" :value="priceGroupItem.priceGroupId" :checked="Number('{{ product.price.priceGroupId }}') === Number(priceGroupItem.priceGroupId)" @click="handlePriceGroup(priceGroupItem.priceGroupId)">
+                                                    <i class="form-icon"></i>
+                                                    <div x-show="priceGroupItem?.priceGroupName?.length">
+                                                        <span x-text="priceGroupItem.priceGroupName"></span>
+                                                    </div>
+                                                </label>
+                                            </template>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if product.gridOptions %}
+                                <div class="product-variations">
+                                    <div class="columns">
+                                        {% for gridOption in product.gridOptions %}
+                                            <div class="product-box_variations product-box_variations__{{ gridOption.displayType }} col-6 col-md-12 column">
+                                                <p class="product-variations_title">
+                                                    Selecionar {{ gridOption.name | downcase }}
+                                                </p>
+                                                {% case gridOption.displayType %}
+                                                    {% when 'button' %}
+                                                        <div class="product-variations_content product-variations_content__{{ gridOption.displayType }}">
+                                                            <ul class="product-variation_list">
+                                                                {% for variation in gridOption.options %}
+                                                                    {% assign classSelected = '' %}
+                                                                    {% assign classDisabled = '' %}
+                                                                    {% assign classColors = '' %}
+                                                                    {% if variation.selected == true %}
+                                                                        {% assign classSelected = ' active' %}
+                                                                    {% endif %}
+                                                                    {% if variation.available == false %}
+                                                                        {% assign classDisabled = ' disabled' %}
+                                                                    {% endif %}
+                                                                    {% assign textVariation = variation.value %}
+                                                                    {% assign styleColors = '' %}
+                                                                    {% if variation.display != blank %}
+                                                                        {% assign textVariation = '' %}
+                                                                        {% assign classColors = ' product-variation_link__colors' %}
+                                                                        {% assign variationDisplayArray = variation.display | split: '||' %}
+                                                                        {% if variationDisplayArray.size > 1 %}
+                                                                            {% assign styleColors = 'style=" background: linear-gradient(135deg, #color1# 50%, #color2# 50%)"' %}
+                                                                            {% assign styleColors = styleColors | replace: '#color1#', variationDisplayArray[0] | replace: '#color2#', variationDisplayArray[1] %}
+                                                                        {% else %}
+                                                                            {% assign startBackgroundColor = 'background-color: ' | append: variation.display %}
+                                                                            {% assign backgroundColor = ';' | prepend: startBackgroundColor %}
+                                                                            {% assign startStyleColors = ' style="' | append: backgroundColor %}
+                                                                            {% assign styleColors = '"' | prepend: startStyleColors %}
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                    {% if variation.productId %}
+                                                                        <li class="product-variation_item{{ classSelected }}{{ classDisabled }}">
+                                                                            <a class="product-variation_link{{ classColors }}" href="javascript:void(0)" @click="handlerProduct('{{ variation.productId }}',{{ product.id }})" title="{{ variation.value }}"{{ styleColors }}>
+                                                                                {% if variation.available == false %}
+                                                                                    <div class="product-variation_icon">
+                                                                                        {{ themeConfig.icons.close }}
+                                                                                    </div>
+                                                                                {% endif %}
+                                                                                {{ textVariation }}
+                                                                            </a>
+                                                                        </li>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    {% when 'miniature' %}
+                                                        <div class="product-variations_content product-variations_content__{{ gridOption.displayType }}">
+                                                            <ul class="product-variation_list">
+                                                                {% for variation in gridOption.options %}
+                                                                    {% assign classSelected = '' %}
+                                                                    {% assign classDisabled = '' %}
+                                                                    {% if variation.selected == true %}
+                                                                        {% assign classSelected = ' active' %}
+                                                                    {% endif %}
+                                                                    {% if variation.available == false %}
+                                                                        {% assign classDisabled = ' disabled' %}
+                                                                    {% endif %}
+                                                                    {% if variation.productId %}
+                                                                        <li class="product-variation_item{{ classSelected }}{{ classDisabled }}">
+                                                                            <a class="product-variation_link" href="javascript:void(0)" @click="handlerProduct('{{ variation.productId }}',{{ product.id }})" title="{{ variation.value }}">
+                                                                                {% if variation.available == false %}
+                                                                                    <div class="product-variation_icon">
+                                                                                        {{ themeConfig.icons.close }}
+                                                                                    </div>
+                                                                                {% endif %}
+                                                                                {% if variation.image.path %}
+                                                                                    <img class="product-variation_img lazy" data-src="{{ variation.image.path | imgUrl: 120 }}" alt="{{ variation.value }}">
+                                                                                {% else %}
+                                                                                    {{ themeConfig.icons.image }}
+                                                                                {% endif %}
+                                                                            </a>
+                                                                        </li>
+                                                                    {% endif  %}
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    {% when 'list' %}
+                                                        <div class="product-variations_content product-variations_content__{{ gridOption.displayType }}">
+                                                            <div class="dropdown">
+                                                                <a href="javascript:void(0)" class="btn btn-link dropdown-toggle" tabindex="0">
+                                                                    {% for variation in gridOption.options %}
+                                                                        {% if variation.selected == true %}
+                                                                            {{ variation.value }}
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                    {{ themeConfig.icons.arrow.down }}
+                                                                </a>
+                                                                <ul class="menu">
+                                                                    {% for variation in gridOption.options %}
+                                                                        {% if variation.productId %}
+                                                                            <li class="menu-item">
+                                                                                <a class="menu-item_link{% if variation.available == false %} menu-item-link_disabled{% endif %}" href="javascript:void(0)"  @click="handlerProduct('{{ variation.productId }}',{{ product.id }})" title="{{ variation.value }}">
+                                                                                    <div class="menu-item-link_text">{{ variation.value }}</div>
+                                                                                    {% if variation.available == false %}
+                                                                                        <div class="menu-item-disabled_icon">{{ themeConfig.icons.close }}</div>
+                                                                                    {% endif%}
+                                                                                </a>
+                                                                            </li>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                {% endcase %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if product.typeId != 2 or product.gridOptions.size > 0 %}
+                                    {% assign _listPrice = product.price.price %}
+                                    {% assign _pixPercent = 5 %}
+                                    {% assign _pixPrice = _listPrice %}
+                                    {% assign _pixPercentShow = _pixPercent %}
+                                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                                        {% assign _pixPrice = product.price.promotionPrice %}
+                                        {% assign _pixPercentShow = product.price.promotionMargin | round %}
+                                    {% else %}
+                                        {% assign _pixDiscountAmt = _listPrice | times: _pixPercent | divided_by: 100 %}
+                                        {% assign _pixPrice = _listPrice | minus: _pixDiscountAmt %}
+                                    {% endif %}
+                                    <div class="product-prices">
+                                        <div class="product-content_box product-box_prices col-12">
+                                            {% if _listPrice > _pixPrice %}
+                                                <del class="product-prices_strike"><s>{{ _listPrice | money }}</s></del>
+                                                <p class="product-prices_price">{{ _pixPrice | money }}</p>
+                                                <p class="product-prices_pix">{{ _pixPercentShow }}% de desconto no Pix</p>
+                                            {% else %}
+                                                <p class="product-prices_price">{{ _listPrice | money }}</p>
+                                            {% endif %}
+                                            {% if productPriceSecond %}
+                                                {% assign _mainPriceSecond = productPriceSecond.price %}
+                                                {% if productPriceSecond.promotionPrice > 0 %}{% assign _mainPriceSecond = productPriceSecond.promotionPrice %}{% endif %}
+                                                {% if productPriceSecond.installment > 1 %}
+                                                    <p class="product-prices_plots">{{ productPriceSecond.installment }}x de {{ productPriceSecond.installmentValue | money }} no cartão</p>
+                                                {% else %}
+                                                    <p class="product-prices_plots">ou {{ _mainPriceSecond | money }} à vista</p>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="product-content_box product-box_qtd col-12">
+                                            <div class="product-qtd input-group_qtd input-group">
+                                                <button class="product-qtd_minus btn input-group-btn" @click="handleQuantity('-')">-</button>
+                                                <input class="product-qtd_value form-input" type="number" min="1" x-model="state.quantity" @focusout="handleQuantity('', false)">
+                                                <button class="product-qtd_plus btn input-group-btn" @click="handleQuantity('+', false)">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-payments">
+                                        <a class="product-btn_payment btn col-12" href="javascript:void(0)" title="Outras formas de pagamentos" @click="openPaymentCalculation()">Mais formas de pagamento</a>
+                                    </div>
+                                    <div class="columns">
+                                        <div class="column col-12 col-sm-12">
+                                            <div class="product-buy">
+                                                <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" title="Comprar" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ product.price.price }}')">Comprar</a>
+                                            </div>
+                                        </div>
+                                        {% if product.physicalProduct == true %}
+                                            <div class="column col-12 col-sm-12">
+                                                <div class="product-shipping">
+                                                    <a class="product-btn product-btn_shipping btn col-12" href="javascript:void(0)" title="Calcule o frete e prazo de entrega" @click="openShippingCalculation()">Calcular frete</a>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if product.physicalProduct == false %}
+                                            <div class="column col-12 col-sm-12">
+                                                <div class="product-shipping">
+                                                    <a class="product-btn product-btn_shipping btn col-12" title="Entrega digital">Entrega digital</a>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% if kitOptions.size > 0 %}
+            {% assign visibleKitOptions = false %}
+            {% if product.manageStock %}
+                {% if product.stockTotal > 0 %}
+                    {% assign visibleKitOptions = true %}
+                {% endif %}
+            {% else %}
+                {% assign visibleKitOptions = true %}
+            {% endif %}
+
+            {% if visibleKitOptions %}
+                {% render 'sections/product-kit', kitOptions: kitOptions, product: product, themeConfig: themeConfig %}
+            {% endif %}
+        {% endif %}
+
+        {% if product.descriptions.size > 0 %}
+            <section class="product-descriptions">
+                <div class="product-descriptions-content content">
+                    <div class="product-descriptions-container container">
+                        {% for description in product.descriptions %}
+                            {% assign openDescription = 'open' %}
+                            {% if description.text != '' %}
+                                {% if forloop.first == true %}
+                                    {% assign openDescription = 'open' %}
+                                {% endif %}
+                                <details class="product-description accordion" {{ openDescription }}>
+                                    <summary class="product-description_header accordion-header">
+                                    <span class="product-description_title">
+                                        {{ description.name }}
+                                    </span>
+                                        <div class="product-description_ico">
+                                            {{ themeConfig.icons.arrow.down }}
+                                        </div>
+                                    </summary>
+                                    <div class="product-description_body">
+                                        <div class="accordion-body">
+                                            {{ description.text }}
+                                        </div>
+                                    </div>
+                                </details>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+        {% render 'sections/product-reviews', product: product, themeConfig: themeConfig %}
+
+        {% if kitOptions.size > 0 %}
+        {% else %}
+            {% if product.price.showPrice != false %}
+                {% if themeConfig.price.type == 'show' or themeConfig.price.type == 'show-logged' %}
+                    {% render 'sections/product-buy-to-gether', buyToGether: buyToGether, product: product, themeConfig: themeConfig %}
+                {% endif %}
+            {% endif %}
+            <section class="product-showcase">
+                <div class="product-showcase-content content">
+                    <div class="product-showcase-container container">
+                        <div class="columns">
+                            <div class="col-product-visited col-3 col-md-12 col-lg-6 col-xl-4 column">
+                                {% render 'sections/product-last-viewed', lastProducts: lastProducts, themeConfig: themeConfig %}
+                            </div>
+                            <div class="col-product-related col-9 col-md-12 col-lg-6 col-xl-8 column">
+                                {% render 'sections/product-related', relatedProducts: relatedProducts, themeConfig: themeConfig %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    </div>
+    {% render 'sections/product-schema', product: product, themeConfig: themeConfig %}
+    {% if product.price.showPrice %}
+        <script>
+            viewContentFacebookPixel();
+
+            function viewContentFacebookPixel() {
+                if (typeof fbq !== 'undefined') {
+                    const tempViewContentFacebookPixel = viewContentFacebookPixelTransform();
+                    fbq('track', 'ViewContent', tempViewContentFacebookPixel);
+                }
+            }
+
+            function viewContentFacebookPixelTransform() {
+                {% assign categorieMainFP = '' %}
+                {% for categorie in product.categories %}
+                {% if categorie.main %}
+                {% assign categorieMainFP = categorie.treeName | replace: '##', ' / ' %}
+                {% endif %}
+                {% endfor %}
+                const sku = '{% if product.sku %}{{ product.sku }}{% else %}null{% endif %}';
+
+                const result = {
+                    content_ids: ['{{ product.id }}'],
+                    content_category: '{{ categorieMainFP }}',
+                    content_name: 'Produto: {{ product.title | escape }}{% if product.multiple > 1 %}- {{ product.multiple }}{{ product.unitName | downcase }}s{% endif %}',
+                    content_type: 'product',
+                    contents: [
+                        {
+                            id: '{{ product.id }}',
+                            title: '{{ product.title | escape }}{% if product.multiple > 1 %} - {{ product.multiple }}{{ product.unitName | downcase }}{% endif %}',
+                            quantity: 1,
+                        }
+                    ],
+                    currency: 'BRL',
+                    value: parseFloat({{ mainPricePrimary }}),
+                };
+
+                if (sku) {
+                    result.contents[0].sku = sku;
+                }
+
+                return result;
+            }
+        </script>
+    {% endif %}
+    <script>
+        const store = {{ store | json }};
+        function setupProduct() {
+            const state = {
+                store,
+                quantity: 1,
+                price: {% if product.price.basePrice %}{{ product.price.basePrice }}{% else %}{% if mainPrice %}{{ mainPrice }}{% else %}null{% endif %}{% endif %},
+                productId: {{ product.id }},
+                themeConfig: {
+                    buyActionPlugin: '{{ themeConfig.buyAction.plugin }}',
+                    priceType: '{{ themeConfig.price.type }}',
+                },
+                product: {
+                    categories: {% if product.categories %}{{ product.categories | json }}{% else %}{}{% endif %},
+                    grids: {% if product.grids %}{{ product.grids | json }}{% else %}{}{% endif %},
+                    price: {% if product.price %}{{ product.price | json }}{% else %}{}{% endif %},
+                    sku: {% if product.sku %}"{{ product.sku | escape }}"{% else %}null{% endif %},
+                    title: {% if product.title %}"{{ product.title | escape }}"{% else %}null{% endif %},
+                    url: {% if product.url %}"{{ product.url }}"{% else %}null{% endif %},
+                    id: {% if product.id %}{{ product.id }}{% else %}null{% endif %},
+                    prices: {% if product.prices %}{{ product.prices | json }}{% else %}[]{% endif %},
+                    priceGroupId: {% if product.price.priceGroupId %}{{ product.price.priceGroupId }}{% else %}1{% endif %},
+                    typeId: {% if product.typeId %}{{ product.typeId }}{% else %}null{% endif %},
+                    variations: [
+                        {% for prodVariation in product.variations %}
+                        {
+                            mainId: Number({{ prodVariation.mainId }}),
+                            price: {% if prodVariation.price %}{{ prodVariation.price | json }}{% else %}{}{% endif %},
+                            primaryPrice: {% if prodVariation.primaryPrice %}{{ prodVariation.primaryPrice | json }}{% else %}{}{% endif %},
+                            prices: {% if prodVariation.prices %}{{ prodVariation.prices | json }}{% else %}[]{% endif %},
+                            url: "{% if prodVariation.url %}{{ prodVariation.url }}{% endif %}",
+                            title: "{% if prodVariation.title %}{{ prodVariation.title }}{% endif %}",
+                            sku: "{% if prodVariation.sku %}{{ prodVariation.sku }}{% endif %}",
+                            id: "{% if prodVariation.id %}{{ prodVariation.id }}{% endif %}",
+                        }{% if forloop.last == false %},{% endif %}
+                        {% endfor %}
+                    ]
+                },
+                hideBtnBuyProductKit: false,
+                review:{
+                    total: 0,
+                    media: 0,
+                    pagination: {
+                        total: 0,
+                        current: 0,
+                        pages: 0,
+                    },
+                    data: [],
+                    visibleViewMoreBtn: true,
+                },
+                {% if groupPurchase.size > 0 %}
+                groupPurchase: [
+                    {% for groupPurchaseItem in groupPurchase %}
+                    {
+                        id: "{{ groupPurchaseItem.id }}",
+                        title: "{{ groupPurchaseItem.title | escape }}",
+                        stockTotal: "{{ groupPurchaseItem.stockTotal }}",
+                        manageStock: {{ groupPurchaseItem.manageStock }},
+                        status: false,
+                        finalPrice: {% if groupPurchaseItem.price.promotionPrice and groupPurchaseItem.price.promotionPrice > 0 %}{{ groupPurchaseItem.price.promotionPrice }}{% else %}{{ groupPurchaseItem.price.price }}{% endif %},
+                        {% if groupPurchaseItem.price %}
+                        price: {
+                            price: {% if groupPurchaseItem.price.price %}{{ groupPurchaseItem.price.price }}{% else %}0{% endif %},
+                            promotionPrice: {% if groupPurchaseItem.price.promotionPrice %}{{ groupPurchaseItem.price.promotionPrice }}{% else %}0{% endif %},
+                            status: {% if groupPurchaseItem.price.status %}{{ groupPurchaseItem.price.status }}{% else %}false{% endif %},
+                        },
+                        {% endif %}
+                        {% if groupPurchaseItem.primaryPrice %}
+                        finalPrimaryPrice: {% if groupPurchaseItem.primaryPrice.promotionPrice and groupPurchaseItem.primaryPrice.promotionPrice > 0 %}{{ groupPurchaseItem.primaryPrice.promotionPrice }}{% else %}{{ groupPurchaseItem.primaryPrice.price }}{% endif %},
+                        primaryPrice: {
+                            price: {% if groupPurchaseItem.primaryPrice.price %}{{ groupPurchaseItem.primaryPrice.price }}{% else %}0{% endif %},
+                            promotionPrice: {% if groupPurchaseItem.primaryPrice.promotionPrice %}{{ groupPurchaseItem.primaryPrice.promotionPrice }}{% else %}0{% endif %},
+                        },
+                        {% endif %}
+                        {% if groupPurchaseItem.secondaryPrice %}
+                        secondaryPrice: {
+                            price: {% if groupPurchaseItem.secondaryPrice.price %}{{ groupPurchaseItem.secondaryPrice.price }}{% else %}0{% endif %},
+                            promotionPrice: {% if groupPurchaseItem.secondaryPrice.promotionPrice %}{{ groupPurchaseItem.secondaryPrice.promotionPrice }}{% else %}0{% endif %},
+                        },
+                        {% endif %}
+                    },
+                    {% endfor %}
+                ],
+                {% endif %}
+            }
+
+            // ─────────────────────────────────────────────────────────────────────
+            // initProduct: inicializa analytics e reviews.
+            // O bloco de auto-seleção de variação foi REMOVIDO intencionalmente.
+            // Motivo: chamava handlerProduct() durante o init do Alpine, causando
+            // requisição AJAX antes do componente estar pronto → erro
+            // "Não foi possível carregar produto selecionado" em todos os produtos
+            // com variação. Agora o botão Comprar fica visível imediatamente e o
+            // cliente seleciona a variação manualmente (ou compra direto o produto
+            // base, que a plataforma WDNA já trata corretamente).
+            // ─────────────────────────────────────────────────────────────────────
+            function initProduct() {
+                this.getProductReviews(this.state.product);
+                checkGtagViewItem(this.state.product);
+                viewItemMailbiz(this.state.product);
+            }
+
+            function checkGtagViewItem(product) {
+                let attemptsViewItemGA = 0;
+                if (typeof gtag !== 'undefined') {
+                    viewItemGA(product);
+                } else {
+                    attemptsViewItemGA++;
+                    if (attemptsViewItemGA < 3) {
+                        setTimeout(function () {
+                            checkGtagViewItem(product);
+                        }, 500);
+                    }
+                }
+            }
+
+            function viewItemGA(product) {
+                if (typeof gtag !== 'undefined') {
+                    if (product.price.showPrice) {
+                        const tempViewItem = viewItemGATransform(product);
+                        gtag("event", "view_item", tempViewItem);
+                    }
+                }
+            }
+
+            function viewItemGATransform(product) {
+                const returnProduct = {
+                    item_id: product.sku ? product.sku : product.id,
+                    item_name: product.title,
+                    currency: "BRL",
+                    price: parseFloat({{ mainPricePrimary }}).toFixed(2),
+                    quantity: 1
+                }
+
+                if (product.categories && (product.categories.length > 0)) {
+                    const categorieMain = product.categories.reduce((categorie) => (categorie.main === true));
+                    const tempCategory = categorieMain.treeName ? categorieMain.treeName.split('##') : null;
+                    if (tempCategory) {
+                        tempCategory.forEach((category, index) => {
+                            if (index <= 0) {
+                                returnProduct['item_category'] = category;
+                            } else {
+                                returnProduct[`item_category${index + 1}`] = category;
+                            }
+                        });
+                    }
+                }
+                if (product.grids && (product.grids.length > 0)) {
+                    let tempItemVariant = '';
+                    product.grids.forEach((grid) => {
+                        if (grid.value) {
+                            tempItemVariant += `${grid.value} / `
+                        }
+                    });
+                    returnProduct['item_variant'] = tempItemVariant.replace(/ \/ $/, '')
+                }
+                const returnViewItem = {
+                    currency: "BRL",
+                    value: parseFloat({{ mainPricePrimary }}).toFixed(2),
+                    items: [returnProduct],
+                };
+                return returnViewItem;
+            }
+
+            function viewItemMailbiz(product) {
+                if (typeof mb_track !== 'undefined') {
+                    const tempViewItem = viewItemMailbizTransform(product);
+                    window.mb_track('productView', { product: tempViewItem});
+                }
+            }
+
+            function viewItemMailbizTransform(product) {
+                const mainCategory = product?.categories?.find((cat) => cat.main);
+                let returnProductMailbiz = {
+                    product_id: product.id,
+                    url: `https://${store.url}${product.url}`,
+                    category: mainCategory ? mainCategory.name : '',
+                    variants: [
+                        {
+                            sku: product.sku ? product.sku : product.id,
+                            name: product.title,
+                            price: parseFloat({{ mainPricePrimary }}).toFixed(2),
+                            price_from: parseFloat({{ mainPricePrimary }}).toFixed(2),
+                        }
+                    ]
+                }
+
+                /* Produto Variação */
+                if ((product.typeId === 3) && (product?.variations?.length > 0)) {
+                    const variationsMailbiz = product.variations.map((variation) => {
+                        let priceVariationsMailbiz = 0;
+                        priceVariationsMailbiz = variation?.price?.promotionPrice > 0 ? variation.price.promotionPrice : variation.price.price;
+                        if (variation?.primaryPrice?.price) {
+                            priceVariationsMailbiz = variation?.primaryPrice?.promotionPrice > 0 ? variation.primaryPrice.promotionPrice : variation.primaryPrice.price;
+                        }
+
+                        return {
+                            sku: variation.sku || variation.id,
+                            name: variation.title,
+                            price: parseFloat(priceVariationsMailbiz).toFixed(2),
+                            price_from: parseFloat(priceVariationsMailbiz).toFixed(2),
+                        };
+                    });
+
+                    returnProductMailbiz = {
+                        product_id: product.variations[0].mainId,
+                        url: `https://${store.url}${product.url}`,
+                        category: mainCategory ? mainCategory.name : '',
+                        variants: variationsMailbiz
+                    }
+                }
+
+                return returnProductMailbiz;
+            }
+
+            function onSrollProductKit (){
+                setTimeout(function () {
+                    document.getElementById("product-kit").scrollIntoView({behavior: 'smooth'});
+                }, 500);
+            }
+            function openShippingCalculation() {
+                if (this.state?.productKit?.products && this.state?.productKit?.products.length > 0) {
+                    const productKitItems = [
+                        ...this.state?.productKit?.products.map((product) => {
+                            return {
+                                id: product.id,
+                                quantity: product.quantity,
+                            }
+                            return null;
+                        }).filter((f) => f)
+                    ];
+                    newProducts = [
+                        {
+                            id: this.state.productId,
+                            quantity: this.state.quantity,
+                            typeId: this.state.product.typeId,
+                            products: productKitItems
+                        },
+                    ]
+                } else if (this.state?.groupPurchase && this.state?.groupPurchase?.length > 0) {
+                    newProducts = [
+                        {
+                            id: this.state.productId,
+                            quantity: this.state.quantity,
+                            typeId: this.state.product.typeId,
+                        },
+                        ...this.state?.groupPurchase.map((product) => {
+                            if (product.status) {
+                                return {
+                                    id: product.id,
+                                    quantity: this.state.quantity,
+                                }
+                            }
+                            return null;
+                        }).filter((f) => f),
+                    ]
+                } else {
+                    newProducts = [
+                        {
+                            id: this.state.productId,
+                            quantity: this.state.quantity,
+                            typeId: this.state.product.typeId,
+                        }
+                    ];
+                }
+
+                window.dispatchEvent(
+                    new CustomEvent(
+                        "change-quantity",
+                        {
+                            detail: [ ...newProducts ]
+                        }
+                    )
+                );
+                openSideNavOverlay('.sidenav-shipping-calculation', true);
+            }
+
+            function openPaymentCalculation (){
+                window.dispatchEvent(
+                    new CustomEvent(
+                        "change-payment-calculate",
+                        {
+                            detail: {
+                                price: state.productKit && (state?.productKit?.totalSelected?.priceOriginalPromotion > 0) ? state.productKit.totalSelected.priceOriginalPromotion : state.productKit && state.productKit.totalSelected.priceOriginal ? state.productKit.totalSelected.priceOriginal : this.state.price
+                            }
+                        }
+                    )
+                );
+                openSideNavOverlay('.sidenav-payment-calculation');
+            }
+
+            function handleQuantity(operation = '', stockTotal) {
+                if (stockTotal === 0) {
+                    this.state.quantity = 1;
+                    return;
+                }
+                let newQuantity = typeof this.state.quantity === 'string' ? parseInt(this.state.quantity) : this.state.quantity;
+                if (stockTotal === false) {
+                    if (operation === '+') {
+                        this.state.quantity = newQuantity + 1;
+                    } else if (operation === '-') {
+                        if (this.state.quantity > 1) {
+                            this.state.quantity = newQuantity - 1;
+                        } else {
+                            this.state.quantity = 1;
+                        }
+                    } else {
+                        if (this.state.quantity < 1) {
+                            this.state.quantity = 1
+                        }
+                    }
+                } else {
+
+                    if (operation === '+') {
+                        if (newQuantity >= 1 && this.state.quantity < stockTotal) {
+                            this.state.quantity = newQuantity + 1;
+                        } else {
+                            this.state.quantity
+                        }
+                    } else if (operation === '-') {
+                        if (this.state.quantity > 1) {
+                            this.state.quantity = newQuantity - 1;
+                        } else {
+                            this.state.quantity = 1;
+                        }
+                    } else {
+                        if (this.state.quantity < 1) {
+                            this.state.quantity = 1
+                        } else if (this.state.quantity > stockTotal) {
+                            this.state.quantity = stockTotal;
+                        }
+                    }
+                }
+            }
+            function changeProductDefault(newQnt = 0) {
+                this.state.quantity = parseInt(newQnt);
+            }
+
+            function buyChatProduct() {
+                if (this.state.product) {
+                    let newProducts = [
+                        {
+                            id: this.state.product.id,
+                            quantity: this.state.quantity,
+                            title: this.state.product.title,
+                            url: this.state.product.url,
+                            unitPrice: '{{ mainPricePrimary }}',
+                            totalPrice: (parseInt('{{ mainPricePrimary }}') * this.state.quantity),
+                        }
+                    ];
+                    if(state.productKit && state.productKit.products){
+                        newProducts = state.productKit.products.map((product) =>(
+                            {
+                                id: product.id,
+                                quantity: product.quantity,
+                                title: product.title,
+                                url: this.state.product.url,
+                                unitPrice: product.price,
+                                totalPrice: (parseInt(product.price) * product.quantity),
+                            }
+                        ));
+                    }
+                    if (this.state.themeConfig.buyActionPlugin === 'whatsapp') {
+                        const msgChat = StoreSDK.utils.msgChatBuyProduct(this.state.themeConfig.buyActionPlugin, newProducts, window.location.hostname, this.state.themeConfig.priceType);
+                        sendWhatsPlugin(msgChat);
+                    }
+                }
+            }
+
+            function handleProductKit(data) {
+
+                if (data) {
+                    this.state.productKit = data;
+                }
+
+                if ((this.state.productKit && this.state.productKit.totalSelected.quantity <= 0)) {
+                    this.state.hideBtnBuyProductKit = true;
+                } else {
+                    if ((this.state.productKit && this.state.productKit.errorProductKit.length > 0)) {
+                        this.state.hideBtnBuyProductKit = true;
+                    } else {
+                        this.state.hideBtnBuyProductKit = false;
+                    }
+                }
+            }
+
+            function handlerProduct(idProduct, idProductOld) {
+                openLoadingMain();
+                idProduct = idProduct ? idProduct : '0';
+                StoreSDK.request.get(`/ajax/product/${idProduct}`)
+                    .then((response) => {
+                        response.text().then((text) => {
+                            var elsMain = document.querySelectorAll('main');
+                            for (var i = 0; i < elsMain.length; i++) {
+                                elsMain[i].innerHTML = text;
+                            }
+
+                            handleProductVariation(this.state, idProduct);
+
+                            /** Atualiza todos os plugins  **/
+                            handlerProductEvents(true);
+
+                            {% if themeConfig.price.type == 'show-logged' %}
+                            window.dispatchEvent(
+                                new CustomEvent("check-login-logged")
+                            );
+                            {% endif %}
+
+                            /** Altera o link da página **/
+                            const newLink = (window.location.pathname).replace(idProductOld, idProduct);
+                            window.history.pushState("", "", newLink);
+
+                            closeLoadingMain();
+                        });
+                    }).catch((error) => {
+                    notyf.open({type: 'warning', message: 'Não foi possivel carregar produto selecionado.'});
+                });
+            }
+
+            function updateAjaxProduct(data) {
+                this.state = data
+            }
+
+            function updateTotalSecondPrice(data) {
+                if ((data.price) && (data.secondaryPriceMethodId)) {
+                    StoreSDK.request.post('/ajax/payments/calculator', {price: data.price})
+                        .then((response) => {
+                                if (response.paymentCalculated.options.length > 0) {
+                                    const secondaryPriceTemp = response.paymentCalculated.options.find((paymentOption) => (parseInt(paymentOption.methodId) === parseInt(data.secondaryPriceMethodId)));
+                                    if (secondaryPriceTemp.installments.length > 0) {
+                                        if (secondaryPriceTemp.installments.length > 1) {
+                                            const secondaryPriceLast = secondaryPriceTemp.installments[Object.keys(secondaryPriceTemp.installments)[Object.keys(secondaryPriceTemp.installments).length - 1]];
+                                            this.state.productKit.totalSelected.secondaryPrice = {
+                                                paymentName: secondaryPriceTemp.name,
+                                                paymentId: data.secondaryPriceMethodId,
+                                                price: secondaryPriceTemp.value,
+                                                priceTotal: secondaryPriceLast.total,
+                                                installment: secondaryPriceLast.installment,
+                                                installmentValue: secondaryPriceLast.installmentValue,
+                                            }
+                                        } else {
+                                            this.state.productKit.totalSelected.secondaryPrice = {
+                                                paymentName: secondaryPriceTemp.name,
+                                                paymentId: data.secondaryPriceMethodId,
+                                                price: secondaryPriceTemp.value,
+                                                priceTotal: secondaryPriceTemp.total,
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        );
+                }
+            }
+
+            function handlePriceGroup(newIdPriceGroup) {
+                openLoadingMain();
+                StoreSDK.request.get(`/ajax/product/{{ product.id }}/price-group/${newIdPriceGroup}`)
+                    .then((response) => {
+                        response.text().then((text) => {
+                            var elsMain = document.querySelectorAll('main');
+                            for (var i = 0; i < elsMain.length; i++) {
+                                elsMain[i].innerHTML = text;
+                            }
+
+                            handleProductPriceGroup(this.state, {{ product.id }});
+
+                            /** Atualiza todos os plugins  **/
+                            handlerProductEvents(true);
+                            window.dispatchEvent(new CustomEvent("update-cart-plugins", {detail: [newIdPriceGroup]}));
+                            closeLoadingMain();
+                        });
+                    }).catch((error) => {
+                    notyf.open({type: 'warning', message: 'Não foi possivel selecionar tabela selecionado.'});
+                    closeLoadingMain();
+                });
+            }
+
+            function handleProductGroupPurchase(data) {
+                this.state.groupPurchase = data;
+            }
+
+            function getProductReviews(product) {
+                try {
+                    StoreSDK.request.get(`/ajax/product/${product.id}/review`).then((data) => {
+                        this.state.review.total = data?.total || 0;
+                        this.state.review.media = data?.media || 0;
+                        this.state.review.pagination.total = data?.pagination?.total || 0;
+                        this.state.review.pagination.current = data?.pagination?.current || 0;
+                        this.state.review.pagination.pages = data?.pagination?.pages || 0;
+                        this.state.review.data = data?.reviews || [];
+
+                        updateSchema(this.state);
+                    });
+                } catch (error) {
+                    console.error(error);
+                    updateSchema();
+                }
+            }
+
+            function loadMoreReviews(current) {
+                openLoadingMain();
+                try {
+                    StoreSDK.request.get(`/ajax/product/{{ product.id }}/review?page=${current}`).then((data) => {
+                        if (data?.reviews) {
+                            this.state.review.visibleViewMoreBtn = true;
+                            if (data?.pagination?.total) {
+                                this.state.review.pagination.total = data.pagination.total;
+                            }
+                            if (data?.pagination?.current) {
+                                this.state.review.pagination.current = data.pagination.current;
+                            }
+                            if (data?.pagination?.pages) {
+                                this.state.review.pagination.pages = data.pagination.pages;
+                            }
+                            this.state.review.data = [
+                                ...this.state.review.data,
+                                ...data.reviews
+                            ];
+                        } else {
+                            this.state.review.visibleViewMoreBtn = false;
+                        }
+                    });
+                    setTimeout(function () {
+                        closeLoadingMain();
+                    }, 300);
+                } catch (error) {
+                    console.error(error);
+                    setTimeout(function () {
+                        closeLoadingMain();
+                    }, 300);
+                }
+            }
+
+            return {
+                state,
+                initProduct,
+                handleQuantity,
+                changeProductDefault,
+                openShippingCalculation,
+                openPaymentCalculation,
+                buyChatProduct,
+                handleProductKit,
+                onSrollProductKit,
+                handlerProduct,
+                updateAjaxProduct,
+                updateTotalSecondPrice,
+                handlePriceGroup,
+                handleProductGroupPurchase,
+                getProductReviews,
+                loadMoreReviews,
+            }
+        }
+    </script>
+    <script>
+        function redirectReviewSection() {
+            document.getElementById("product-reviews").scrollIntoView({behavior: 'smooth'});
+        }
+
+        function formatNameReview(name) {
+            if (!name) return '';
+
+            const parts = name.trim().split(/\s+/);
+            const firstName = parts.shift();
+
+            const initials = parts
+                .map(word => word[0].toUpperCase() + '.')
+                .join(' ');
+
+            return `${firstName} ${initials}`.trim();
+        }
+    </script>
+
+{% else %}
+    {% render 'sections/404-content', msg: 'Desculpe, sua busca por este produto não retornou nenhum resultado.', themeConfig: themeConfig, classCustom: classCustom %}
+{% endif %}
