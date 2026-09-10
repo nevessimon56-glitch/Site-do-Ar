@@ -1,7 +1,45 @@
-/* ========== Card desktop — grid 4 col alinhado (CARD-DESKTOP-REDESIGN-v1) ========== */
-/* Catálogo .showcase-search ≥992px. Cole no final do mega-menu.css */
+/* ========== Card desktop — grid 4 col alinhado (CARD-DESKTOP-REDESIGN-v2) ========== */
+/* Catálogo .showcase-search ≥992px. Cole no FINAL do mega-menu.css.
+   Sobrescreve bloco antigo "Grade 3 colunas" se ainda existir no arquivo. */
 
 @media (min-width: 992px) {
+
+  /* 0 — Grid 4 colunas (catálogo desktop) */
+  .showcase-search .showcase-list {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-search .showcase-list.slick-initialized .slick-track {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+    left: 0 !important;
+    top: 0 !important;
+    opacity: 1 !important;
+    margin: 0 !important;
+  }
+
+  .showcase-search .showcase-item {
+    float: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 6px 14px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
 
   /* 6 — Imagem: altura fixa, produto centralizado */
   .showcase-search .showcase-product_image.card-image {
@@ -26,13 +64,18 @@
     justify-content: center !important;
   }
 
-  .showcase-search .product-hover-wrap img,
-  .showcase-search .showcase-product_link__image > img {
+  /* Especificidade extra — product-compare.css carrega depois do mega-menu */
+  .showcase-search .showcase-product .product-hover-wrap img,
+  .showcase-search .showcase-product .showcase-product_link__image > img,
+  .showcase-search .showcase-product .showcase-product_link__image > img.lazy,
+  .showcase-search .showcase-product .showcase-product_link__image > img.product-hover-swap {
     width: auto !important;
     max-width: 92% !important;
     max-height: 148px !important;
     height: auto !important;
     object-fit: contain !important;
+    display: block !important;
+    visibility: visible !important;
   }
 
   /* 4 — Selo desconto: tag discreta "-5% OFF" */
