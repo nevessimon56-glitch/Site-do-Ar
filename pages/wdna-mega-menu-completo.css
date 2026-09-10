@@ -2468,6 +2468,7 @@
   .showcase-search.showcase-search_grid--mobile-2col .showcase-offer,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-offer,
   main.home-main section.showcase .showcase-products_carousel .showcase-offer {
+    position: absolute !important;
     top: 0 !important;
     left: 0 !important;
     right: auto !important;
@@ -3043,76 +3044,71 @@
     padding: 2px 6px 8px !important;
   }
 
-  /* Comparar: checkbox canto + Comprar largura total (catálogo E home) */
+  /* Comparar + Comprar lado a lado — desktop (NÃO usar checkbox do mobile aqui) */
+  .showcase-search .showcase-card-actions,
+  main.home-main section.showcase .showcase-card-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    margin-top: 4px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
   .showcase-search .showcase-compare-btn,
   main.home-main section.showcase .showcase-compare-btn {
-    position: absolute !important;
-    top: 6px !important;
-    right: 6px !important;
-    left: auto !important;
-    z-index: 8 !important;
-    width: 26px !important;
-    height: 26px !important;
-    min-height: 26px !important;
-    max-width: 26px !important;
-    flex: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border-radius: 6px !important;
-    border: 1px solid #cce4f7 !important;
-    background: rgba(255, 255, 255, 0.96) !important;
-    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1) !important;
-    font-size: 0 !important;
-    line-height: 0 !important;
-    color: transparent !important;
-    overflow: hidden !important;
+    position: static !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 32px !important;
+    height: 32px !important;
+    padding: 0 10px !important;
+    overflow: visible !important;
+    white-space: nowrap !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+    color: #1a6eb5 !important;
+    border-radius: 999px !important;
+    border: 2px solid #1a6eb5 !important;
+    background: #eef6fd !important;
+    box-shadow: 0 1px 3px rgba(26, 110, 181, 0.12) !important;
     cursor: pointer !important;
+    box-sizing: border-box !important;
   }
 
   .showcase-search .showcase-compare-btn::before,
   main.home-main section.showcase .showcase-compare-btn::before {
-    content: '' !important;
-    display: block !important;
-    width: 12px !important;
-    height: 12px !important;
-    margin: 6px auto 0 !important;
-    border: 2px solid #1a6eb5 !important;
-    border-radius: 3px !important;
-    box-sizing: border-box !important;
-    background: transparent !important;
+    content: none !important;
+    display: none !important;
   }
 
+  .showcase-search .showcase-compare-btn:hover,
   .showcase-search .showcase-compare-btn[aria-pressed='true'],
+  main.home-main section.showcase .showcase-compare-btn:hover,
   main.home-main section.showcase .showcase-compare-btn[aria-pressed='true'] {
-    border-color: #1a6eb5 !important;
-    background: #eef6fd !important;
-  }
-
-  .showcase-search .showcase-compare-btn[aria-pressed='true']::before,
-  main.home-main section.showcase .showcase-compare-btn[aria-pressed='true']::before {
-    background: #1a6eb5 !important;
-    box-shadow: inset 0 0 0 1px #fff !important;
-  }
-
-  .showcase-search .showcase-card-actions,
-  main.home-main section.showcase .showcase-card-actions {
-    display: block !important;
-    margin-top: 4px !important;
-    padding-top: 0 !important;
-    width: 100% !important;
+    background: #dbeafe !important;
+    border-color: #1565a8 !important;
+    color: #0a5089 !important;
   }
 
   .showcase-search .showcase-card-actions .showcase-product_buy,
-  main.home-main section.showcase .showcase-card-actions .showcase-product_buy,
   .showcase-search .showcase-product .card-footer > .showcase-product_buy,
+  main.home-main section.showcase .showcase-card-actions .showcase-product_buy,
   main.home-main section.showcase .showcase-product .card-footer > .showcase-product_buy {
+    flex: 1 1 0% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    flex: none !important;
-    float: none !important;
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: none !important;
     min-height: 32px !important;
     height: 32px !important;
     margin: 0 !important;
@@ -3663,58 +3659,27 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
   }
 }
 
-/* ========== Selo 5% OFF colado na quina — site inteiro (OFFER-CORNER-v3) ========== */
-/* Tema WDNA usa padding:8px na imagem + top/left:6px no selo — sobrescreve no final do arquivo */
-
-.showcase-product.card {
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.showcase-product.card .showcase-product_image.card-image,
-.showcase-product.card .showcase-product_image {
-  position: relative !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  overflow: hidden !important;
-}
-
-.showcase-product.card .showcase-product_image .showcase-offer,
-.showcase-product.card .showcase-product_image.card-image .showcase-offer,
-.showcase-product.card .showcase-offer {
-  position: absolute !important;
-  inset: 0 auto auto 0 !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-  margin: 0 !important;
-  transform: none !important;
-  float: none !important;
-  width: auto !important;
-  height: auto !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  padding: 3px 7px 4px !important;
-  border: 0 !important;
-  border-radius: 0 0 8px 0 !important;
-  background: #1a6eb5 !important;
-  box-shadow: 0 2px 6px rgba(26, 110, 181, 0.28) !important;
-  z-index: 6 !important;
-  overflow: visible !important;
-}
-
-.showcase-product.card .showcase-product_image .showcase-offer_text {
-  border-radius: 0 !important;
-}
+/* ========== Selo 5% OFF colado na quina — SOMENTE desktop (OFFER-CORNER-v4) ========== */
+/* v3 global quebrava mobile (padding:0 na imagem). Este bloco afeta só ≥992px. */
 
 @media (min-width: 992px) {
 
+  .showcase-search .showcase-product.card,
+  main.home-main section.showcase .showcase-product.card,
+  .product-showcase .showcase .showcase-product.card {
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
   .showcase-search .showcase-product_image.card-image,
   main.home-main section.showcase .showcase-product_image.card-image,
-  .product-showcase .showcase .showcase-product_image.card-image {
+  .product-showcase .showcase .showcase-product_image.card-image,
+  .showcase-product.card .showcase-product_image.card-image,
+  .showcase-product.card .showcase-product_image {
+    position: relative !important;
     padding: 0 !important;
     margin: 0 !important;
+    overflow: hidden !important;
   }
 
   .showcase-search .showcase-product.card .showcase-product_image .showcase-offer,
@@ -3724,6 +3689,49 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
   .product-showcase .showcase .showcase-product.card .showcase-product_image .showcase-offer,
   .product-showcase .showcase .showcase-product.card .showcase-offer,
   .showcase-product.card .showcase-product_image .showcase-offer {
+    position: absolute !important;
+    inset: 0 auto auto 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 0 !important;
+    transform: none !important;
+    float: none !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 3px 7px 4px !important;
+    border: 0 !important;
+    border-radius: 0 0 8px 0 !important;
+    background: #1a6eb5 !important;
+    box-shadow: 0 2px 6px rgba(26, 110, 181, 0.28) !important;
+    z-index: 6 !important;
+    overflow: visible !important;
+  }
+
+  .showcase-product.card .showcase-product_image .showcase-offer_text {
+    border-radius: 0 !important;
+  }
+}
+
+/* ========== Proteção mobile — restaura padding/selo (MOBILE-CARD-SAFEGUARD-v1) ========== */
+
+@media (max-width: 991px) {
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_image,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_image,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_image,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_image.card-image {
+    padding: 8px 8px 0 !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-product_image .showcase-offer,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-offer,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-offer,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-offer {
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
