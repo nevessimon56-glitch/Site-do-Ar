@@ -2544,17 +2544,17 @@
   .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-bar,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-bar,
   main.home-main section.showcase .showcase-products_carousel .showcase-spec-bar {
-    gap: 3px !important;
-    min-height: 18px !important;
+    gap: 4px !important;
+    min-height: 20px !important;
   }
 
   .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-bar__tag,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-bar__tag,
   main.home-main section.showcase .showcase-products_carousel .showcase-spec-bar__tag {
-    height: 18px !important;
-    min-height: 18px !important;
-    padding: 0 5px !important;
-    font-size: 8px !important;
+    height: 20px !important;
+    min-height: 20px !important;
+    padding: 0 7px !important;
+    font-size: 9px !important;
     font-weight: 700 !important;
     line-height: 1 !important;
     border-radius: 4px !important;
@@ -2636,13 +2636,19 @@
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_pix,
   main.home-main section.showcase .showcase-products_carousel .showcase-prices_pix {
     display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     width: fit-content !important;
-    font-size: 10px !important;
-    padding: 2px 8px !important;
-    margin: 2px 0 0 !important;
-    box-shadow: none !important;
-    border: 1px solid #7bc896 !important;
-    background: #edf8f0 !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    padding: 5px 12px !important;
+    margin: 4px 0 6px !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.02em !important;
+    border-radius: 999px !important;
+    box-shadow: 0 1px 4px rgba(30, 122, 56, 0.2) !important;
+    border: 1px solid #5ec47a !important;
+    background: #c8ecd2 !important;
     color: #1a6b32 !important;
   }
 
@@ -2907,16 +2913,16 @@
 
   .showcase-search .showcase-spec-bar,
   main.home-main section.showcase .showcase-spec-bar {
-    gap: 3px !important;
-    min-height: 18px !important;
+    gap: 4px !important;
+    min-height: 20px !important;
   }
 
   .showcase-search .showcase-spec-bar__tag,
   main.home-main section.showcase .showcase-spec-bar__tag {
-    height: 18px !important;
-    min-height: 18px !important;
-    padding: 0 5px !important;
-    font-size: 8px !important;
+    height: 20px !important;
+    min-height: 20px !important;
+    padding: 0 7px !important;
+    font-size: 9px !important;
     font-weight: 700 !important;
     line-height: 1 !important;
     border-radius: 4px !important;
@@ -2984,12 +2990,19 @@
 
   .showcase-search .showcase-prices_pix,
   main.home-main section.showcase .showcase-prices_pix {
-    font-size: 10px !important;
-    padding: 2px 8px !important;
-    margin: 2px 0 0 !important;
-    box-shadow: none !important;
-    border: 1px solid #7bc896 !important;
-    background: #edf8f0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    padding: 6px 14px !important;
+    margin: 4px 0 6px !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.02em !important;
+    border-radius: 999px !important;
+    box-shadow: 0 1px 4px rgba(30, 122, 56, 0.22) !important;
+    border: 1px solid #5ec47a !important;
+    background: #c8ecd2 !important;
     color: #1a6b32 !important;
   }
 
@@ -3128,5 +3141,42 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
   font-size: inherit !important;
   line-height: normal !important;
   text-indent: 0 !important;
+}
+
+/* ========== Pill Pix + spec tags — destaque igual versão antiga (PIX-PILL-PROMO-v1) ========== */
+
+@media (max-width: 991px) {
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_pix,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_pix,
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices_pix {
+    font-size: 12px !important;
+    padding: 5px 12px !important;
+    margin: 4px 0 6px !important;
+    background: #c8ecd2 !important;
+    border-color: #5ec47a !important;
+    box-shadow: 0 1px 4px rgba(30, 122, 56, 0.2) !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .showcase-search .showcase-prices_pix,
+  main.home-main section.showcase .showcase-prices_pix,
+  .showcase-product .card-footer .showcase-prices--card .showcase-prices_pix {
+    font-size: 13px !important;
+    padding: 6px 14px !important;
+    margin: 4px 0 6px !important;
+    background: #c8ecd2 !important;
+    border: 1px solid #5ec47a !important;
+    box-shadow: 0 1px 4px rgba(30, 122, 56, 0.22) !important;
+    color: #1a6b32 !important;
+  }
+
+  .showcase-search .showcase-spec-bar__tag,
+  main.home-main section.showcase .showcase-spec-bar__tag {
+    height: 20px !important;
+    min-height: 20px !important;
+    padding: 0 7px !important;
+    font-size: 9px !important;
+  }
 }
 
