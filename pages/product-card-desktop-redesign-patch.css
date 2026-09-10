@@ -1,65 +1,17 @@
-/* ========== Card desktop — grid 4 col alinhado (CARD-DESKTOP-REDESIGN-v3.1) ========== */
-/* Catálogo .showcase-search ≥992px. Cole no FINAL do mega-menu.css.
-   Usa .showcase-search_grid / _list — vence theme-all.css (display:table + width 33%). */
-
+/* ── Desktop (≥992): só visual — catálogo 3 col fica no theme-all, sem forçar grid ── */
 @media (min-width: 992px) {
 
-  /* 0 — Grid 4 colunas (catálogo desktop) */
-  .showcase-search.showcase-search_grid .showcase-list,
-  .showcase-search.showcase-search_list .showcase-list {
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    align-items: stretch !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    float: none !important;
-    box-sizing: border-box !important;
-  }
-
-  .showcase-search.showcase-search_grid .showcase-list.slick-initialized .slick-track,
-  .showcase-search.showcase-search_list .showcase-list.slick-initialized .slick-track {
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    transform: none !important;
-    left: 0 !important;
-    top: 0 !important;
-    opacity: 1 !important;
-    margin: 0 !important;
-  }
-
-  .showcase-search.showcase-search_grid .showcase-item,
-  .showcase-search.showcase-search_list .showcase-item {
-    float: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    padding: 0 6px 14px !important;
-    margin: 0 0 14px !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    box-sizing: border-box !important;
-    clear: none !important;
-  }
-
-  /* 0b — Neutraliza layout horizontal .showcase-search_list do theme-all */
+  /* Catálogo: desfaz layout horizontal _list do theme (não mexe em colunas/largura) */
   .showcase-search.showcase-search_grid .showcase-product,
   .showcase-search.showcase-search_list .showcase-product {
     display: flex !important;
     flex-direction: column !important;
     float: none !important;
-    width: 100% !important;
   }
 
   .showcase-search.showcase-search_grid .showcase-product_image,
   .showcase-search.showcase-search_list .showcase-product_image {
     float: none !important;
-    max-width: 100% !important;
     margin-right: 0 !important;
   }
 
@@ -67,266 +19,161 @@
   .showcase-search.showcase-search_list .showcase-product .card-header {
     position: static !important;
     left: auto !important;
-    right: auto !important;
     top: auto !important;
     margin-top: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
+    padding-left: 0 !important;
   }
 
   .showcase-search.showcase-search_grid .showcase-product .card-footer,
   .showcase-search.showcase-search_list .showcase-product .card-footer {
     float: none !important;
     max-width: 100% !important;
-    width: 100% !important;
     margin-top: 0 !important;
     padding-top: 0 !important;
   }
 
   .showcase-search.showcase-search_grid .showcase-product_link__image,
   .showcase-search.showcase-search_list .showcase-product_link__image {
+    float: none !important;
     height: auto !important;
     margin-bottom: 0 !important;
-  }
-
-  .showcase-search.showcase-search_grid .showcase-product_link_title,
-  .showcase-search.showcase-search_list .showcase-product_link_title {
-    width: 100% !important;
-    max-width: 100% !important;
-    text-align: left !important;
-    height: auto !important;
   }
 
   .showcase-search.showcase-search_grid .showcase-product_buy,
   .showcase-search.showcase-search_list .showcase-product_buy {
     float: none !important;
-    display: block !important;
-    max-width: 100% !important;
-    width: auto !important;
     position: static !important;
   }
 
-  /* 6 — Imagem: altura fixa, produto centralizado */
-  .showcase-search .showcase-product_image.card-image {
-    height: 168px !important;
-    min-height: 168px !important;
-    max-height: 168px !important;
-    padding: 8px 8px 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-sizing: border-box !important;
+  /* Selo desconto — ribbon azul (igual mobile) */
+  .showcase-search .showcase-offer,
+  main.home-main section.showcase .showcase-offer {
+    top: 0 !important;
+    left: 0 !important;
+    padding: 3px 7px 4px !important;
+    border-radius: 0 0 8px 0 !important;
+    background: #1a6eb5 !important;
+    border: 0 !important;
+    box-shadow: 0 2px 6px rgba(26, 110, 181, 0.28) !important;
   }
 
-  .showcase-search .showcase-product_link__image,
-  .showcase-search .product-hover-wrap {
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 0 !important;
-    max-height: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  /* Especificidade extra — product-compare.css carrega depois do mega-menu */
-  .showcase-search .showcase-product .product-hover-wrap img,
-  .showcase-search .showcase-product .showcase-product_link__image > img,
-  .showcase-search .showcase-product .showcase-product_link__image > img.lazy,
-  .showcase-search .showcase-product .showcase-product_link__image > img.product-hover-swap {
-    width: auto !important;
-    max-width: 92% !important;
-    max-height: 148px !important;
-    height: auto !important;
-    object-fit: contain !important;
-    display: block !important;
-    visibility: visible !important;
-  }
-
-  /* 4 — Selo desconto: tag discreta "-5% OFF" */
-  .showcase-search .showcase-offer {
-    top: 6px !important;
-    left: 6px !important;
-    right: auto !important;
-    width: auto !important;
-    height: auto !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    padding: 2px 6px !important;
-    border-radius: 4px !important;
-    background: rgba(255, 255, 255, 0.94) !important;
-    border: 1px solid #dbeafe !important;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
-    z-index: 6 !important;
-  }
-
-  .showcase-search .showcase-offer_text {
+  .showcase-search .showcase-offer_text,
+  main.home-main section.showcase .showcase-offer_text {
     display: flex !important;
     flex-direction: row !important;
-    align-items: center !important;
+    align-items: baseline !important;
     gap: 2px !important;
-    font-size: 10px !important;
-    font-weight: 700 !important;
-    line-height: 1 !important;
-    color: #64748b !important;
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    color: #fff !important;
     text-transform: uppercase !important;
   }
 
-  .showcase-search .showcase-offer_text span:first-child::before {
-    content: '-' !important;
-    font-weight: 800 !important;
-  }
-
-  .showcase-search .showcase-offer_text span:first-child {
+  .showcase-search .showcase-offer_text span:first-child,
+  main.home-main section.showcase .showcase-offer_text span:first-child {
     font-size: 10px !important;
-    font-weight: 800 !important;
-    color: #475569 !important;
+    font-weight: 900 !important;
+    color: #fff !important;
   }
 
-  .showcase-search .showcase-offer_text span:last-child {
-    font-size: 9px !important;
-    font-weight: 700 !important;
-    color: #94a3b8 !important;
+  .showcase-search .showcase-offer_text span:first-child::before,
+  main.home-main section.showcase .showcase-offer_text span:first-child::before {
+    content: none !important;
   }
 
-  /* 1 — Título: 2 linhas fixas (grid alinhado) */
-  .showcase-search .showcase-product .card-header {
-    min-height: 3.2em !important;
-    max-height: 3.2em !important;
-    overflow: hidden !important;
-    padding: 8px 8px 0 !important;
-    box-sizing: border-box !important;
+  .showcase-search .showcase-offer_text span:last-child,
+  main.home-main section.showcase .showcase-offer_text span:last-child {
+    color: rgba(255, 255, 255, 0.92) !important;
   }
 
-  .showcase-search .showcase-product .card-header h3 {
-    min-height: 2.5em !important;
-    max-height: 2.5em !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-  }
-
-  .showcase-search .showcase-product_link_title {
+  /* Título: 2 linhas ellipsis (sem altura fixa) */
+  .showcase-search .showcase-product_link_title,
+  main.home-main section.showcase .showcase-product_link_title {
     display: -webkit-box !important;
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    min-height: 2.5em !important;
-    max-height: 2.5em !important;
-    line-height: 1.25 !important;
-    font-size: 13px !important;
   }
 
-  /* Badges: altura fixa para alinhar preço/botões entre cards */
-  .showcase-search .showcase-spec-wrap {
-    min-height: 46px !important;
-    padding: 0 8px 4px !important;
-    box-sizing: border-box !important;
-  }
-
-  .showcase-search .showcase-spec-bar {
-    gap: 4px !important;
-    justify-content: center !important;
-    align-content: flex-start !important;
-    min-height: 40px !important;
-  }
-
-  /* 2 — Sistema de badges (3 paletas por categoria) */
-  .showcase-search .showcase-spec-bar__tag {
-    height: 20px !important;
-    min-height: 20px !important;
-    padding: 0 6px !important;
-    font-size: 9px !important;
-    font-weight: 700 !important;
-    line-height: 1 !important;
+  /* Badges — paleta mobile */
+  .showcase-search .showcase-spec-bar__tag,
+  main.home-main section.showcase .showcase-spec-bar__tag {
     border-radius: 4px !important;
     box-shadow: none !important;
-  }
-
-  /* Refrigeração / ciclo / cobre — azul claro */
-  .showcase-search .showcase-spec-bar__tag--cycle-frio,
-  .showcase-search .showcase-spec-bar__tag--cycle-qf,
-  .showcase-search .showcase-spec-bar__tag--cobre {
     border: 1px solid #7eb8e8 !important;
     background: #eef6fd !important;
     color: #0d5a9e !important;
   }
 
-  /* Tecnologia / inverter / Procel — roxo */
+  .showcase-search .showcase-spec-bar__tag--procel,
+  main.home-main section.showcase .showcase-spec-bar__tag--procel {
+    border-color: #2e7d32 !important;
+    background: #e8f5e9 !important;
+    color: #1b5e20 !important;
+  }
+
   .showcase-search .showcase-spec-bar__tag--inverter,
-  .showcase-search .showcase-spec-bar__tag--procel {
-    border: 1px solid #c4b5fd !important;
-    background: #f3f0ff !important;
-    color: #5b21b6 !important;
+  .showcase-search .showcase-spec-bar__tag--voltage,
+  .showcase-search .showcase-spec-bar__tag--wifi,
+  .showcase-search .showcase-spec-bar__tag--cycle-frio,
+  .showcase-search .showcase-spec-bar__tag--cycle-qf,
+  .showcase-search .showcase-spec-bar__tag--cobre,
+  main.home-main section.showcase .showcase-spec-bar__tag--inverter,
+  main.home-main section.showcase .showcase-spec-bar__tag--voltage,
+  main.home-main section.showcase .showcase-spec-bar__tag--wifi,
+  main.home-main section.showcase .showcase-spec-bar__tag--cycle-frio,
+  main.home-main section.showcase .showcase-spec-bar__tag--cycle-qf,
+  main.home-main section.showcase .showcase-spec-bar__tag--cobre {
+    border-color: #7eb8e8 !important;
+    background: #eef6fd !important;
+    color: #0d5a9e !important;
   }
 
-  /* Voltagem — cinza-azulado neutro */
-  .showcase-search .showcase-spec-bar__tag--voltage {
-    border: 1px solid #cbd5e1 !important;
-    background: #f1f5f9 !important;
-    color: #475569 !important;
-  }
-
-  /* Wi-Fi — verde-água */
-  .showcase-search .showcase-spec-bar__tag--wifi {
-    border: 1px solid #5eead4 !important;
-    background: #ecfdf5 !important;
-    color: #0f766e !important;
-  }
-
-  /* Preço alinhado à esquerda + contraste de/por */
-  .showcase-search .showcase-product .card-footer .showcase-prices--card {
+  /* Preços */
+  .showcase-search .showcase-product .card-footer .showcase-prices--card,
+  main.home-main section.showcase .showcase-product .card-footer .showcase-prices--card {
     text-align: left !important;
-    padding: 4px 0 4px !important;
   }
 
-  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_strike,
-  .showcase-search .showcase-product .card-footer .showcase-prices--card del.showcase-prices_strike {
-    font-size: 11px !important;
-    color: #94a3b8 !important;
-    margin-bottom: 2px !important;
+  .showcase-search .showcase-prices_strike,
+  .showcase-search del.showcase-prices_strike,
+  main.home-main section.showcase .showcase-prices_strike,
+  main.home-main section.showcase del.showcase-prices_strike {
+    color: #9aa8b5 !important;
   }
 
-  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_price,
-  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_price b,
-  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_price--pix b {
-    font-size: 22px !important;
-    line-height: 1.05 !important;
+  .showcase-search .showcase-prices_price b,
+  .showcase-search .showcase-prices_price--pix b,
+  main.home-main section.showcase .showcase-prices_price b,
+  main.home-main section.showcase .showcase-prices_price--pix b {
     font-weight: 900 !important;
     color: #0a5089 !important;
-    letter-spacing: -0.02em !important;
-    margin-bottom: 4px !important;
   }
 
-  /* 5 — Pill Pix: fit-content, esquerda, ícone */
-  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_pix {
+  /* Pill Pix */
+  .showcase-search .showcase-prices_pix,
+  main.home-main section.showcase .showcase-prices_pix {
     display: inline-flex !important;
     align-items: center !important;
-    justify-content: flex-start !important;
     width: fit-content !important;
     max-width: 100% !important;
-    align-self: flex-start !important;
-    font-size: 11px !important;
-    font-weight: 800 !important;
-    padding: 3px 8px 3px 6px !important;
-    margin: 0 0 4px !important;
     border-radius: 999px !important;
     background: #edf8f0 !important;
     color: #1a6b32 !important;
     border: 1px solid #7bc896 !important;
-    box-shadow: none !important;
-    letter-spacing: 0.01em !important;
+    font-weight: 800 !important;
     gap: 4px !important;
   }
 
-  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_pix::before {
+  .showcase-search .showcase-prices_pix::before,
+  main.home-main section.showcase .showcase-prices_pix::before {
     content: 'P' !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     width: 12px !important;
     height: 12px !important;
-    flex-shrink: 0 !important;
     border-radius: 2px !important;
     background: #1a6b32 !important;
     color: #fff !important;
@@ -335,66 +182,126 @@
     line-height: 1 !important;
   }
 
-  .showcase-search .showcase-product .card-footer .showcase-prices--card .showcase-prices_installment {
-    font-size: 11px !important;
+  .showcase-search .showcase-prices_installment,
+  main.home-main section.showcase .showcase-prices_installment {
+    color: #5a6f82 !important;
     text-align: left !important;
-    margin: 0 !important;
   }
 
-  .showcase-search .showcase-product .card-footer {
-    padding: 2px 8px 10px !important;
-  }
-
-  /* 3 — Botões: Comparar secundário mas visível; Comprar primário */
+  /* Botões — catálogo: Comparar + Comprar lado a lado */
   .showcase-search .showcase-card-actions {
     display: flex !important;
     flex-direction: row !important;
-    align-items: stretch !important;
     gap: 6px !important;
-    margin-top: 6px !important;
-    padding-top: 0 !important;
     width: 100% !important;
   }
 
-  .showcase-search .showcase-card-actions .showcase-compare-btn {
+  .showcase-search .showcase-compare-btn {
+    position: static !important;
     flex: 0 0 38% !important;
     max-width: 38% !important;
-    min-height: 34px !important;
-    height: 34px !important;
-    padding: 0 8px !important;
+    overflow: visible !important;
     font-size: 11px !important;
     font-weight: 700 !important;
     line-height: 1.1 !important;
+    color: #1a6eb5 !important;
     border-radius: 999px !important;
     border: 2px solid #1a6eb5 !important;
     background: #eef6fd !important;
-    color: #1a6eb5 !important;
-    box-shadow: none !important;
-    cursor: pointer !important;
-    box-sizing: border-box !important;
+    box-shadow: 0 1px 3px rgba(26, 110, 181, 0.12) !important;
   }
 
-  .showcase-search .showcase-card-actions .showcase-compare-btn:hover,
-  .showcase-search .showcase-card-actions .showcase-compare-btn[aria-pressed='true'] {
+  .showcase-search .showcase-compare-btn::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  .showcase-search .showcase-compare-btn:hover,
+  .showcase-search .showcase-compare-btn[aria-pressed='true'] {
     background: #dbeafe !important;
     border-color: #1565a8 !important;
     color: #0a5089 !important;
   }
 
-  .showcase-search .showcase-card-actions .showcase-product_buy.btn,
+  .showcase-search .showcase-card-actions .showcase-product_buy,
   .showcase-search .showcase-product .card-footer > .showcase-product_buy {
     flex: 1 1 auto !important;
-    min-height: 34px !important;
-    height: 34px !important;
-    padding: 0 12px !important;
-    font-size: 12px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.04em !important;
-    text-transform: uppercase !important;
     border-radius: 999px !important;
     background: #1a6eb5 !important;
     border: 0 !important;
     color: #fff !important;
-    box-shadow: 0 2px 8px rgba(26, 110, 181, 0.25) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    box-shadow: 0 2px 8px rgba(26, 110, 181, 0.28) !important;
+  }
+
+  /* Home desktop: Comparar checkbox canto + Comprar full (igual mobile) */
+  main.home-main section.showcase .showcase-product.card {
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  main.home-main section.showcase .showcase-compare-btn {
+    position: absolute !important;
+    top: 6px !important;
+    right: 6px !important;
+    z-index: 8 !important;
+    width: 26px !important;
+    height: 26px !important;
+    min-height: 26px !important;
+    max-width: 26px !important;
+    padding: 0 !important;
+    border-radius: 6px !important;
+    border: 1px solid #cce4f7 !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1) !important;
+    font-size: 0 !important;
+    color: transparent !important;
+    overflow: hidden !important;
+  }
+
+  main.home-main section.showcase .showcase-compare-btn::before {
+    content: '' !important;
+    display: block !important;
+    width: 12px !important;
+    height: 12px !important;
+    margin: 6px auto 0 !important;
+    border: 2px solid #1a6eb5 !important;
+    border-radius: 3px !important;
+    box-sizing: border-box !important;
+    background: transparent !important;
+  }
+
+  main.home-main section.showcase .showcase-compare-btn[aria-pressed='true'] {
+    border-color: #1a6eb5 !important;
+    background: #eef6fd !important;
+  }
+
+  main.home-main section.showcase .showcase-compare-btn[aria-pressed='true']::before {
+    background: #1a6eb5 !important;
+    box-shadow: inset 0 0 0 1px #fff !important;
+  }
+
+  main.home-main section.showcase .showcase-card-actions {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  main.home-main section.showcase .showcase-card-actions .showcase-product_buy,
+  main.home-main section.showcase .showcase-product .card-footer > .showcase-product_buy {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 999px !important;
+    background: #1a6eb5 !important;
+    border: 0 !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    box-shadow: 0 2px 8px rgba(26, 110, 181, 0.28) !important;
   }
 }

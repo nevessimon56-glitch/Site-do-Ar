@@ -1,9 +1,9 @@
 /* PATCH — cole no FINAL do assets/mega-menu.js */
-/* NÃO substitua o arquivo inteiro. Versão: CATALOG-DESKTOP-GRID-v3 (4 colunas) */
+/* NÃO substitua o arquivo inteiro. Versão: CATALOG-DESKTOP-GRID-v4 (3 col theme-all) */
 /* NÃO use o patch antigo com flex + 33.333% — ele força 3 colunas via inline style. */
 
 /**
- * Catálogo desktop — grade 4 col (CSS no mega-menu.css CARD-DESKTOP-REDESIGN-v3)
+ * Catálogo desktop — grade 3 col do tema (CSS visual no mega-menu.css PRODUCT-CARD-v2)
  */
 (function () {
   'use strict';

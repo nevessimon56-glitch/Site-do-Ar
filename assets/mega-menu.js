@@ -1106,9 +1106,9 @@
 })();
 
 /**
- * Catálogo desktop — grade 4 col (CATALOG-DESKTOP-GRID-v3)
+ * Catálogo desktop — grade 3 col do theme-all (CATALOG-DESKTOP-GRID-v4)
  * - Converte showcase-search_list → showcase-search_grid (tema usa _list no HTML)
- * - Remove slick e estilos inline antigos (patch JS 33.333% = 3 col)
+ * - Remove slick e estilos inline antigos; NÃO força 4 colunas (CSS só visual)
  * Cole no FINAL do mega-menu.js
  */
 (function () {
