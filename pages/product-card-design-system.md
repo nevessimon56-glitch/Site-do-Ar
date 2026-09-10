@@ -276,11 +276,12 @@ Antes de publicar CSS, validar:
 
 | Arquivo | Função |
 |---------|--------|
-| `pages/product-card-unified-system.css` | Tokens CSS + componentes unificados (referência para colar no `mega-menu.css`) |
+| `assets/mega-menu.css` | Arquivo completo — inclui `PRODUCT-CARD-UNIFIED-v1` no final |
+| `pages/product-card-unified-system.css` | Cópia do bloco unificado (só patch, se preferir colar) |
 | `pages/product-card-design-system.md` | Este documento |
 | `assets/mega-menu.js` | `fixCatalogDesktopGrid` — converte `_list` → `_grid` no desktop |
 
-**Workflow WDNA:** substituir patches separados `CARD-MOBILE-REDESIGN` + `CARD-DESKTOP-REDESIGN` por um único bloco `PRODUCT-CARD-UNIFIED-v1` no final do `mega-menu.css`.
+**Workflow WDNA:** substituir **inteiro** o `mega-menu.css` pelo arquivo do repo (~3027 linhas). Não colar patches antigos `CARD-MOBILE-REDESIGN` / `CARD-DESKTOP-REDESIGN`.
 
 ---
 
