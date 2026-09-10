@@ -298,10 +298,46 @@
   }
 }
 
-/* ── Desktop (≥992): só visual — catálogo 3 col fica no theme-all, sem forçar grid ── */
+/* ── Desktop (≥992): espelho fiel do mobile — só grid diferente ── */
+/* NÃO altera @media (max-width: 991px). Cole no FINAL do mega-menu.css */
 @media (min-width: 992px) {
 
-  /* Catálogo: desfaz layout horizontal _list do theme (não mexe em colunas/largura) */
+  /* Catálogo: grid 4 col (única diferença de layout vs mobile) */
+  .showcase-search.showcase-search_grid .showcase-list,
+  .showcase-search.showcase-search_list .showcase-list {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+  }
+
+  .showcase-search.showcase-search_grid .showcase-list.slick-initialized .slick-track,
+  .showcase-search.showcase-search_list .showcase-list.slick-initialized .slick-track {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    transform: none !important;
+    left: 0 !important;
+    opacity: 1 !important;
+  }
+
+  .showcase-search.showcase-search_grid .showcase-item,
+  .showcase-search.showcase-search_list .showcase-item {
+    float: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 6px 14px !important;
+    margin: 0 0 14px !important;
+    box-sizing: border-box !important;
+    clear: none !important;
+  }
+
+  /* Catálogo: desfaz layout horizontal _list do theme */
   .showcase-search.showcase-search_grid .showcase-product,
   .showcase-search.showcase-search_list .showcase-product {
     display: flex !important;
@@ -345,16 +381,55 @@
     position: static !important;
   }
 
-  /* Selo desconto — ribbon azul (igual mobile) */
+  /* Card base — igual mobile */
+  .showcase-search .showcase-product.card,
+  main.home-main section.showcase .showcase-product.card {
+    position: relative !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Spec pills logo abaixo da imagem (desktop) */
+  .showcase-search .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-product_image.card-image {
+    order: 0 !important;
+  }
+
+  .showcase-search .showcase-spec-wrap,
+  main.home-main section.showcase .showcase-spec-wrap {
+    order: 1 !important;
+    display: block !important;
+    min-height: 40px !important;
+    padding: 0 6px 2px !important;
+  }
+
+  .showcase-search .card-header,
+  main.home-main section.showcase .card-header {
+    order: 2 !important;
+  }
+
+  .showcase-search .card-footer,
+  main.home-main section.showcase .card-footer {
+    order: 3 !important;
+  }
+
+  /* Selo 5% OFF — ribbon azul canto superior esquerdo (igual mobile) */
   .showcase-search .showcase-offer,
   main.home-main section.showcase .showcase-offer {
     top: 0 !important;
     left: 0 !important;
+    right: auto !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
     padding: 3px 7px 4px !important;
     border-radius: 0 0 8px 0 !important;
     background: #1a6eb5 !important;
-    border: 0 !important;
     box-shadow: 0 2px 6px rgba(26, 110, 181, 0.28) !important;
+    z-index: 6 !important;
+    border: 0 !important;
   }
 
   .showcase-search .showcase-offer_text,
@@ -365,8 +440,10 @@
     gap: 2px !important;
     font-size: 9px !important;
     font-weight: 800 !important;
+    line-height: 1 !important;
     color: #fff !important;
     text-transform: uppercase !important;
+    letter-spacing: 0.02em !important;
   }
 
   .showcase-search .showcase-offer_text span:first-child,
@@ -386,7 +463,15 @@
     color: rgba(255, 255, 255, 0.92) !important;
   }
 
-  /* Título: 2 linhas ellipsis (sem altura fixa) */
+  /* Título */
+  .showcase-search .showcase-product .card-header h3,
+  main.home-main section.showcase .showcase-product .card-header h3 {
+    min-height: 2.6em !important;
+    max-height: 2.6em !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
   .showcase-search .showcase-product_link_title,
   main.home-main section.showcase .showcase-product_link_title {
     display: -webkit-box !important;
@@ -394,16 +479,31 @@
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
+    min-height: 2.6em !important;
+    max-height: 2.6em !important;
+    line-height: 1.3 !important;
   }
 
-  /* Badges — paleta mobile */
+  /* Spec pills */
+  .showcase-search .showcase-spec-bar,
+  main.home-main section.showcase .showcase-spec-bar {
+    gap: 3px !important;
+    min-height: 18px !important;
+  }
+
   .showcase-search .showcase-spec-bar__tag,
   main.home-main section.showcase .showcase-spec-bar__tag {
+    height: 18px !important;
+    min-height: 18px !important;
+    padding: 0 5px !important;
+    font-size: 8px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
     border-radius: 4px !important;
-    box-shadow: none !important;
     border: 1px solid #7eb8e8 !important;
     background: #eef6fd !important;
     color: #0d5a9e !important;
+    box-shadow: none !important;
   }
 
   .showcase-search .showcase-spec-bar__tag--procel,
@@ -411,6 +511,8 @@
     border-color: #2e7d32 !important;
     background: #e8f5e9 !important;
     color: #1b5e20 !important;
+    min-width: 18px !important;
+    padding: 0 4px !important;
   }
 
   .showcase-search .showcase-spec-bar__tag--inverter,
@@ -430,9 +532,11 @@
     color: #0d5a9e !important;
   }
 
-  /* Preços */
-  .showcase-search .showcase-product .card-footer .showcase-prices--card,
-  main.home-main section.showcase .showcase-product .card-footer .showcase-prices--card {
+  /* Preços — valores mobile */
+  .showcase-search .showcase-prices--card,
+  main.home-main section.showcase .showcase-prices--card {
+    padding: 4px 4px 2px !important;
+    margin-bottom: 0 !important;
     text-align: left !important;
   }
 
@@ -440,59 +544,66 @@
   .showcase-search del.showcase-prices_strike,
   main.home-main section.showcase .showcase-prices_strike,
   main.home-main section.showcase del.showcase-prices_strike {
+    font-size: 9px !important;
+    line-height: 1.1 !important;
     color: #9aa8b5 !important;
+    margin: 0 0 1px !important;
   }
 
+  .showcase-search .showcase-prices_price,
   .showcase-search .showcase-prices_price b,
   .showcase-search .showcase-prices_price--pix b,
   main.home-main section.showcase .showcase-prices_price b,
   main.home-main section.showcase .showcase-prices_price--pix b {
+    font-size: 21px !important;
+    line-height: 1.05 !important;
     font-weight: 900 !important;
     color: #0a5089 !important;
+    letter-spacing: -0.03em !important;
+    margin: 0 !important;
   }
 
-  /* Pill Pix */
+  /* Pill Pix verde — só texto, sem ícone P */
   .showcase-search .showcase-prices_pix,
   main.home-main section.showcase .showcase-prices_pix {
     display: inline-flex !important;
-    align-items: center !important;
     width: fit-content !important;
-    max-width: 100% !important;
-    border-radius: 999px !important;
+    font-size: 10px !important;
+    padding: 2px 8px !important;
+    margin: 2px 0 0 !important;
+    box-shadow: none !important;
+    border: 1px solid #7bc896 !important;
     background: #edf8f0 !important;
     color: #1a6b32 !important;
-    border: 1px solid #7bc896 !important;
     font-weight: 800 !important;
-    gap: 4px !important;
   }
 
   .showcase-search .showcase-prices_pix::before,
   main.home-main section.showcase .showcase-prices_pix::before {
-    content: 'P' !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 12px !important;
-    height: 12px !important;
-    border-radius: 2px !important;
-    background: #1a6b32 !important;
-    color: #fff !important;
-    font-size: 8px !important;
-    font-weight: 900 !important;
-    line-height: 1 !important;
+    content: none !important;
+    display: none !important;
   }
 
   .showcase-search .showcase-prices_installment,
   main.home-main section.showcase .showcase-prices_installment {
-    color: #5a6f82 !important;
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+    margin: 2px 0 0 !important;
     text-align: left !important;
+    color: #5a6f82 !important;
   }
 
-  /* Botões — catálogo: Comparar + Comprar lado a lado */
+  .showcase-search .showcase-product .card-footer,
+  main.home-main section.showcase .showcase-product .card-footer {
+    padding: 2px 6px 8px !important;
+  }
+
+  /* Catálogo desktop: Comparar + Comprar lado a lado (visível) */
   .showcase-search .showcase-card-actions {
     display: flex !important;
     flex-direction: row !important;
     gap: 6px !important;
+    margin-top: 4px !important;
     width: 100% !important;
   }
 
@@ -500,6 +611,9 @@
     position: static !important;
     flex: 0 0 38% !important;
     max-width: 38% !important;
+    min-height: 32px !important;
+    height: 32px !important;
+    padding: 0 8px !important;
     overflow: visible !important;
     font-size: 11px !important;
     font-weight: 700 !important;
@@ -509,6 +623,7 @@
     border: 2px solid #1a6eb5 !important;
     background: #eef6fd !important;
     box-shadow: 0 1px 3px rgba(26, 110, 181, 0.12) !important;
+    cursor: pointer !important;
   }
 
   .showcase-search .showcase-compare-btn::before {
@@ -526,39 +641,46 @@
   .showcase-search .showcase-card-actions .showcase-product_buy,
   .showcase-search .showcase-product .card-footer > .showcase-product_buy {
     flex: 1 1 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 32px !important;
+    height: 32px !important;
+    padding: 0 10px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
     border-radius: 999px !important;
     background: #1a6eb5 !important;
     border: 0 !important;
     color: #fff !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.04em !important;
-    text-transform: uppercase !important;
     box-shadow: 0 2px 8px rgba(26, 110, 181, 0.28) !important;
   }
 
-  /* Home desktop: Comparar checkbox canto + Comprar full (igual mobile) */
-  main.home-main section.showcase .showcase-product.card {
-    position: relative !important;
-    overflow: hidden !important;
-  }
-
+  /* Home desktop: checkbox Comparar canto + Comprar full (igual mobile) */
   main.home-main section.showcase .showcase-compare-btn {
     position: absolute !important;
     top: 6px !important;
     right: 6px !important;
+    left: auto !important;
     z-index: 8 !important;
     width: 26px !important;
     height: 26px !important;
     min-height: 26px !important;
     max-width: 26px !important;
+    flex: none !important;
+    margin: 0 !important;
     padding: 0 !important;
     border-radius: 6px !important;
     border: 1px solid #cce4f7 !important;
     background: rgba(255, 255, 255, 0.96) !important;
     box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1) !important;
     font-size: 0 !important;
+    line-height: 0 !important;
     color: transparent !important;
     overflow: hidden !important;
+    cursor: pointer !important;
   }
 
   main.home-main section.showcase .showcase-compare-btn::before {
@@ -585,6 +707,7 @@
 
   main.home-main section.showcase .showcase-card-actions {
     display: block !important;
+    margin-top: 4px !important;
     width: 100% !important;
   }
 
@@ -595,200 +718,18 @@
     justify-content: center !important;
     width: 100% !important;
     max-width: 100% !important;
+    min-height: 32px !important;
+    height: 32px !important;
+    padding: 0 10px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
     border-radius: 999px !important;
     background: #1a6eb5 !important;
     border: 0 !important;
     color: #fff !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.04em !important;
-    text-transform: uppercase !important;
     box-shadow: 0 2px 8px rgba(26, 110, 181, 0.28) !important;
   }
 }
-/* ========== PRODUCT-CARD-v2.1 — paridade mobile/desktop + desktop premium ========== */
-/* Cole no FINAL do mega-menu.css */
 
-/* ── 1: Spec pills logo abaixo da imagem (catálogo + home, mobile + desktop) ── */
-.showcase-search .showcase-product.card,
-main.home-main section.showcase .showcase-product.card {
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-.showcase-search .showcase-product_image.card-image,
-main.home-main section.showcase .showcase-product_image.card-image {
-  order: 0 !important;
-}
-
-.showcase-search .showcase-spec-wrap,
-main.home-main section.showcase .showcase-spec-wrap {
-  order: 1 !important;
-  display: block !important;
-  visibility: visible !important;
-  width: 100% !important;
-  min-height: 36px !important;
-  padding: 4px 8px 6px !important;
-  box-sizing: border-box !important;
-}
-
-.showcase-search .showcase-spec-bar,
-main.home-main section.showcase .showcase-spec-bar {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-  gap: 4px !important;
-  min-height: 20px !important;
-}
-
-.showcase-search .card-header,
-main.home-main section.showcase .card-header {
-  order: 2 !important;
-}
-
-.showcase-search .card-footer,
-main.home-main section.showcase .card-footer {
-  order: 3 !important;
-}
-
-/* Duplicatas antigas dentro da imagem — ocultar em ambas as versões */
-.showcase-product_image .showcase-spec-bar,
-.showcase-product_image .showcase-spec-wrap,
-.showcase-product_image .showcase-spec-bar__item,
-.showcase-product_image .showcase-spec-bar__badge,
-.showcase-product_image svg.showcase-spec-bar__svg,
-.card-image .showcase-spec-bar,
-.card-image .showcase-spec-wrap,
-.card-image .showcase-spec-bar__item,
-.card-image .showcase-spec-bar__badge {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  overflow: hidden !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-}
-
-/* ── 2 + 3: Pix pill + selo 5% OFF — tokens iguais mobile/desktop ── */
-.showcase-search .showcase-offer,
-main.home-main section.showcase .showcase-offer {
-  padding: 3px 7px 4px !important;
-  border-radius: 0 0 8px 0 !important;
-  background: #1a6eb5 !important;
-  border: 0 !important;
-  box-shadow: 0 2px 6px rgba(26, 110, 181, 0.28) !important;
-}
-
-.showcase-search .showcase-offer_text,
-main.home-main section.showcase .showcase-offer_text {
-  font-size: 9px !important;
-  font-weight: 800 !important;
-  line-height: 1 !important;
-  letter-spacing: 0.02em !important;
-}
-
-.showcase-search .showcase-offer_text span:first-child,
-main.home-main section.showcase .showcase-offer_text span:first-child {
-  font-size: 10px !important;
-  font-weight: 900 !important;
-}
-
-.showcase-search .showcase-offer_text span:first-child::before,
-main.home-main section.showcase .showcase-offer_text span:first-child::before {
-  content: none !important;
-}
-
-.showcase-search .showcase-prices_pix,
-main.home-main section.showcase .showcase-prices_pix {
-  display: inline-flex !important;
-  align-items: center !important;
-  width: fit-content !important;
-  max-width: 100% !important;
-  gap: 4px !important;
-  padding: 3px 8px 3px 6px !important;
-  border-radius: 999px !important;
-  background: #edf8f0 !important;
-  color: #1a6b32 !important;
-  border: 1px solid #7bc896 !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
-  line-height: 1.2 !important;
-}
-
-.showcase-search .showcase-prices_pix::before,
-main.home-main section.showcase .showcase-prices_pix::before {
-  content: 'P' !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex: 0 0 auto !important;
-  width: 12px !important;
-  height: 12px !important;
-  border-radius: 2px !important;
-  background: #1a6b32 !important;
-  color: #fff !important;
-  font-size: 8px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-}
-
-/* ── 4–6: Desktop premium (≥992, só dispositivos com hover) ── */
-@media (min-width: 992px) {
-
-  .showcase-search .showcase-product.card,
-  main.home-main section.showcase .showcase-product.card {
-    transition: box-shadow 0.22s ease, transform 0.22s ease !important;
-  }
-
-  .showcase-search .showcase-spec-wrap,
-  main.home-main section.showcase .showcase-spec-wrap {
-    min-height: 40px !important;
-    padding: 6px 12px 8px !important;
-  }
-
-  .showcase-search .showcase-product_image.card-image,
-  main.home-main section.showcase .showcase-product_image.card-image {
-    padding: 14px 14px 0 !important;
-  }
-
-  .showcase-search .showcase-product_link__image,
-  main.home-main section.showcase .showcase-product_link__image,
-  .showcase-search .product-hover-wrap,
-  main.home-main section.showcase .product-hover-wrap {
-    padding: 10px !important;
-    box-sizing: border-box !important;
-  }
-
-  .showcase-search .product-hover-wrap img,
-  .showcase-search .showcase-product_link__image > img,
-  main.home-main section.showcase .product-hover-wrap img,
-  main.home-main section.showcase .showcase-product_link__image > img {
-    transition: transform 0.28s ease !important;
-    transform-origin: center center !important;
-  }
-
-  .showcase-search .showcase-prices_price b,
-  .showcase-search .showcase-prices_price--pix b,
-  main.home-main section.showcase .showcase-prices_price b,
-  main.home-main section.showcase .showcase-prices_price--pix b {
-    font-size: 24px !important;
-    line-height: 1.05 !important;
-    letter-spacing: -0.02em !important;
-  }
-}
-
-@media (min-width: 992px) and (hover: hover) {
-
-  .showcase-search .showcase-product.card:hover,
-  main.home-main section.showcase .showcase-product.card:hover {
-    transform: translateY(-3px) !important;
-    box-shadow: 0 10px 28px rgba(44, 119, 187, 0.16) !important;
-  }
-
-  .showcase-search .showcase-product.card:hover .product-hover-wrap img,
-  .showcase-search .showcase-product.card:hover .showcase-product_link__image > img,
-  main.home-main section.showcase .showcase-product.card:hover .product-hover-wrap img,
-  main.home-main section.showcase .showcase-product.card:hover .showcase-product_link__image > img {
-    transform: scale(1.04) !important;
-  }
-}
