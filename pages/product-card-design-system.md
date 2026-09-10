@@ -276,8 +276,9 @@ Antes de publicar CSS, validar:
 
 | Arquivo | Função |
 |---------|--------|
-| `assets/mega-menu.css` | Arquivo completo — inclui `PRODUCT-CARD-UNIFIED-v1` no final |
-| `pages/product-card-unified-system.css` | Cópia do bloco unificado (só patch, se preferir colar) |
+| `assets/mega-menu.css` | Arquivo completo — inclui `PRODUCT-CARD-v2` no final |
+| `pages/product-card-v2-tail.css` | Bloco mobile + desktop (só patch) |
+| `pages/product-card-desktop-redesign-patch.css` | Só desktop ≥992px |
 | `pages/product-card-design-system.md` | Este documento |
 | `assets/mega-menu.js` | `fixCatalogDesktopGrid` — converte `_list` → `_grid` no desktop |
 
