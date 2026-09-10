@@ -3199,6 +3199,22 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
   }
 }
 
+/* Pix mais largo — PIX-PILL-WIDE-v1 */
+.showcase-product.card .card-footer p.showcase-prices_pix {
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+  min-width: 148px !important;
+  justify-content: center !important;
+}
+
+@media (min-width: 992px) {
+  .showcase-product.card .card-footer p.showcase-prices_pix {
+    padding-left: 22px !important;
+    padding-right: 22px !important;
+    min-width: 168px !important;
+  }
+}
+
 /* ========== Último visto + Produtos relacionados — visual do card (PRODUCT-SHOWCASE-CARD-v1) ========== */
 /* Cole no FINAL do assets/mega-menu.css — NÃO mexe no carrossel Slick */
 
