@@ -3400,22 +3400,50 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
     color: rgba(255, 255, 255, 0.92) !important;
   }
 
-  .product-showcase .showcase .showcase-product .card-header h3,
+  /* Título: card-header do carrossel WDNA usa float/altura fixa — reseta no mobile */
+  .product-showcase .showcase .showcase-product .card-header {
+    position: static !important;
+    float: none !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    min-height: 3.4em !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 6px 8px 2px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .product-showcase .showcase .showcase-product .card-header h3 {
+    min-height: 2.8em !important;
+    max-height: 2.8em !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
   .product-showcase .showcase .showcase-product_link_title {
     display: -webkit-box !important;
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    min-height: 2.6em !important;
-    max-height: 2.6em !important;
-    line-height: 1.3 !important;
+    min-height: 2.8em !important;
+    max-height: 2.8em !important;
+    line-height: 1.35 !important;
+    font-size: 11px !important;
+    text-align: center !important;
+    width: 100% !important;
+    float: none !important;
     margin: 0 !important;
   }
 
   .product-showcase .showcase .showcase-spec-wrap {
     min-height: 40px !important;
-    padding: 0 6px 2px !important;
+    padding: 4px 6px 2px !important;
+    margin-top: 0 !important;
+    clear: both !important;
   }
 
   .product-showcase .showcase .showcase-spec-bar {
@@ -3511,6 +3539,9 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
   }
 
   .product-showcase .showcase .showcase-product .card-footer {
+    float: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
     padding: 2px 6px 8px !important;
   }
 
