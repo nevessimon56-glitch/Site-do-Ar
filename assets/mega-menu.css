@@ -3745,6 +3745,8 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
 .showcase-product.card.sda-card--cycle-qf {
   --sda-card-radius: 16px;
   --sda-card-border: #e8eef4;
+  --sda-card-bg: #fff;
+  --sda-image-bg: linear-gradient(165deg, #f8fbfe 0%, #f0f6fc 100%);
   --sda-card-shadow: 0 4px 22px rgba(15, 23, 42, 0.07);
   --sda-pix-bg: #c8ecd2;
   --sda-pix-border: #5ec47a;
@@ -3752,7 +3754,7 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--sda-card-bg);
   border: 1px solid var(--sda-card-border);
   border-radius: var(--sda-card-radius);
   box-shadow: var(--sda-card-shadow);
@@ -3768,6 +3770,9 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
   --sda-tag-neutral-bg: #eef6fd;
   --sda-tag-neutral-border: #7eb8e8;
   --sda-tag-neutral-text: #0d5a9e;
+  --sda-card-bg: linear-gradient(180deg, #f7fbff 0%, #eff6fc 100%);
+  --sda-card-border: #d4e6f4;
+  --sda-image-bg: linear-gradient(165deg, #ffffff 0%, #eef5fc 100%);
 }
 
 .showcase-product.card.sda-card--cycle-qf {
@@ -3779,6 +3784,9 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
   --sda-tag-neutral-bg: #fff8f0;
   --sda-tag-neutral-border: #ffcc80;
   --sda-tag-neutral-text: #bf360c;
+  --sda-card-bg: linear-gradient(180deg, #fffcf8 0%, #fff4ea 100%);
+  --sda-card-border: #fdd9b8;
+  --sda-image-bg: linear-gradient(165deg, #ffffff 0%, #fff0e3 100%);
 }
 
 /* Bordas assimétricas — segmentos parciais, resto neutro */
@@ -3856,7 +3864,7 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
 .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
 .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image {
   position: relative;
-  background: linear-gradient(165deg, #f8fbfe 0%, #f0f6fc 100%);
+  background: var(--sda-image-bg);
   padding: 12px 12px 0;
   overflow: hidden;
 }
@@ -4196,4 +4204,30 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf .showc
 .product-showcase .showcase .showcase-product.card.sda-card--cycle-qf .showcase-prices_price b,
 .product-showcase .showcase .showcase-product.card.sda-card--cycle-qf .showcase-prices_price--pix b {
   color: #bf360c !important;
+}
+
+/* ========== Fundo sutil por ciclo — mobile + catálogo (CYCLE-CARD-TINT-v1) ========== */
+
+.showcase-search .showcase-product.card.sda-card--cycle-frio,
+main.home-main section.showcase .showcase-product.card.sda-card--cycle-frio,
+.product-showcase .showcase .showcase-product.card.sda-card--cycle-frio,
+.showcase-item .showcase-product.card.sda-card--cycle-frio {
+  background: linear-gradient(180deg, #f7fbff 0%, #eff6fc 100%) !important;
+  border-color: #d4e6f4 !important;
+}
+
+.showcase-search .showcase-product.card.sda-card--cycle-qf,
+main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
+.product-showcase .showcase .showcase-product.card.sda-card--cycle-qf,
+.showcase-item .showcase-product.card.sda-card--cycle-qf {
+  background: linear-gradient(180deg, #fffcf8 0%, #fff4ea 100%) !important;
+  border-color: #fdd9b8 !important;
+}
+
+.showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image {
+  background: linear-gradient(165deg, #ffffff 0%, #eef5fc 100%) !important;
+}
+
+.showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image {
+  background: linear-gradient(165deg, #ffffff 0%, #fff0e3 100%) !important;
 }
