@@ -105,6 +105,7 @@
                 </h3>
             </div>
             <div class="card-footer">
+                {% render 'sections/product-compare-data', product: product, pixPrice: pixPriceCard, listPrice: listPriceCard %}
                 {% if product.price.showPrice == false and themeConfig.buyAction.type != 'hide' %}
                     <div class="showcase-prices"></div>
                     {% assign msgChatContact = 'Olá, gostaria de saber preço do produto:%0A%0A'| append: product.title | append: '%0AID: ' | append: product.id %}
