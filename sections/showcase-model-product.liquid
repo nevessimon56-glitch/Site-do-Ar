@@ -3,7 +3,8 @@
   VERSAO: 2026-07-15-v4  (nao usa primaryPrice / tabela Mercado Livre)
   No editor WDNA: substitua TODO o conteudo deste arquivo.
   Preco Pix + parcelas estao INLINE neste arquivo (nao depende de outro).
-  Os icones de spec ficam APENAS em showcase-spec-wrap (abaixo do titulo).
+  Ordem do card: imagem → tags técnicas → título → preços/ações.
+  Os icones de spec ficam APENAS em showcase-spec-wrap (acima do titulo).
   VALIDAR: deve existir "productPricePrimary = product.price" e NAO deve existir "product.primaryPrice"
 {% endcomment %}
 {% assign maximumProducts = 60 %}
@@ -85,6 +86,9 @@
                     {% endif %}
                 </a>
             </div>
+            <div class="showcase-spec-wrap">
+                {% render 'sections/product-spec-icons', product: product %}
+            </div>
             <div class="card-header">
                 <h3>
                     {% assign productTitle = product.title %}
@@ -100,16 +104,21 @@
                     </a>
                 </h3>
             </div>
-            <div class="showcase-spec-wrap">
-                {% render 'sections/product-spec-icons', product: product %}
-            </div>
             <div class="card-footer">
                 {% if product.price.showPrice == false and themeConfig.buyAction.type != 'hide' %}
                     <div class="showcase-prices"></div>
                     {% assign msgChatContact = 'Olá, gostaria de saber preço do produto:%0A%0A'| append: product.title | append: '%0AID: ' | append: product.id %}
-                    <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
-                        Sob consulta
-                    </a>
+                    <div class="showcase-card-actions">
+                        <button type="button"
+                                class="showcase-compare-btn"
+                                data-compare-id="{{ product.id }}"
+                                aria-pressed="false">
+                            Comparar
+                        </button>
+                        <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
+                            Comprar
+                        </a>
+                    </div>
                 {% else %}
                     {% if themeConfig.price.type == 'show' or themeConfig.price.type == 'show-logged' %}
                         {% assign classShowcaseLoginPrice = '' %}
@@ -140,9 +149,17 @@
                             {% endif %}
                         </div>
                     {% endif %}
-                    <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
-                        Comprar
-                    </a>
+                    <div class="showcase-card-actions">
+                        <button type="button"
+                                class="showcase-compare-btn"
+                                data-compare-id="{{ product.id }}"
+                                aria-pressed="false">
+                            Comparar
+                        </button>
+                        <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
+                            Comprar
+                        </a>
+                    </div>
                 {% endif %}
             </div>
         </div>

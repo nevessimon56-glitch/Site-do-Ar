@@ -382,6 +382,7 @@
     scan(scope);
     fixCardInstallments(scope);
     fixWrongWifiTags(scope);
+    applyCardCycleTheme(scope);
   }
 
   function onAuthStateChange() {
@@ -763,6 +764,33 @@
     }
   }
 
+  function applyCardCycleTheme(root) {
+    var cards = getShowcaseCards(root);
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      if (!card.classList || !card.classList.contains('card')) continue;
+
+      card.classList.remove('sda-card--cycle-frio', 'sda-card--cycle-qf');
+
+      if (card.querySelector('.showcase-spec-bar__tag--cycle-qf')) {
+        card.classList.add('sda-card--cycle-qf');
+        continue;
+      }
+      if (card.querySelector('.showcase-spec-bar__tag--cycle-frio')) {
+        card.classList.add('sda-card--cycle-frio');
+        continue;
+      }
+
+      var titleEl = card.querySelector('.showcase-product_link_title, .showcase-product_name, .showcase-product_title, h3 a');
+      var title = titleEl ? String(titleEl.textContent || titleEl.getAttribute('title') || '').toLowerCase() : '';
+      if (/quente\s*[\/\-]?\s*frio|quente e frio|\bq\/f\b/.test(title)) {
+        card.classList.add('sda-card--cycle-qf');
+      } else {
+        card.classList.add('sda-card--cycle-frio');
+      }
+    }
+  }
+
   function nodeHasShowcase(node) {
     if (!node || node.nodeType !== 1) return false;
     if (node.classList && (node.classList.contains('showcase-product') || node.classList.contains('showcase-item') || node.classList.contains('showcase-prices_installment'))) {
@@ -851,6 +879,7 @@
 
   window.cleanupDuplicateSpecBars = cleanupDuplicateSpecBars;
   window.fixWrongWifiTags = fixWrongWifiTags;
+  window.applyCardCycleTheme = applyCardCycleTheme;
 
   window.initProductHoverImage = initProductHoverImage;
   window.refreshThemeShowcaseSliders = refreshThemeShowcaseSliders;
