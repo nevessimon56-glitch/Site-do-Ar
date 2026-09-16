@@ -1039,7 +1039,7 @@ body .header:not(.header-checkout) .search-desktop .btn:hover {
   background-color: #ebebeb !important;
 }
 
-/* --- NAV-FIXED-v13 + NAV-MOBILE-STRIP-v1 — fallback --- */
+/* --- NAV-FIXED-v14 + NAV-MOBILE-STRIP-v2 — fallback --- */
 
 body .header .top-content,
 body .top-content.content {
@@ -1077,6 +1077,38 @@ body .nav-content-fixed-spacer {
   body .header:not(.header-checkout) > .nav-content.hide-lg,
   body .header:not(.header-checkout) > .nav-content.content.hide-lg {
     display: block !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    transition: opacity 0.2s ease;
+  }
+
+  body .header:not(.header-checkout) > .nav-content.sda-mobile-nav-revealed {
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    overflow: hidden !important;
+    pointer-events: auto !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1100 !important;
   }
 
   body.checkout-main .header > .nav-content {
@@ -1087,8 +1119,6 @@ body .nav-content-fixed-spacer {
   body .nav-content.content {
     background: linear-gradient(135deg, #222, #0f0f0f) !important;
     background-color: #141414 !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden !important;
   }
 
   body .nav-content > .container,

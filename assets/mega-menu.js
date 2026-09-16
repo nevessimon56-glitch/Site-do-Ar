@@ -2017,7 +2017,7 @@
   window.addEventListener('load', initHomeShowcaseMobile);
 })();
 
-/* NAV-MOBILE-STRIP-v1 — mobile: só Split Inverter, Piso Teto e Janela */
+/* NAV-MOBILE-STRIP-v2 — mobile: só Split Inverter, Piso Teto e Janela */
 (function () {
   'use strict';
 
@@ -2056,7 +2056,7 @@
     var navContent = document.querySelector('.header > .nav-content');
     if (!navContent) return;
 
-    navContent.classList.remove('sda-mobile-nav-strip--3');
+    navContent.classList.remove('sda-mobile-nav-strip--3', 'sda-mobile-nav-revealed');
     var items = navContent.querySelectorAll('.nav-main > .nav-main_item');
     for (var i = 0; i < items.length; i++) {
       items[i].style.display = '';
@@ -2101,11 +2101,12 @@
   window.addEventListener('resize', initSdaMobileNavStrip);
 })();
 
-/* NAV-FIXED-v13 — barra categorias fixa ao rolar (desktop + mobile) */
+/* NAV-FIXED-v14 — desktop: fixa nav | mobile: revela 3 cats só após rolar */
 window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixedTop() {
   if (window.__SDA_NAV_FIXED_INIT__) return;
   window.__SDA_NAV_FIXED_INIT__ = true;
 
+  var MOBILE_MQ = '(max-width: 991px)';
   var nav = document.querySelector('.header > .nav-content');
   if (!nav) return;
 
@@ -2126,14 +2127,40 @@ window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixe
       || 0;
   }
 
+  function getMobileRevealAt() {
+    var headerContent = document.querySelector('.header:not(.header-checkout) > .header-content');
+    if (headerContent && headerContent.offsetHeight) return headerContent.offsetHeight;
+    return 56;
+  }
+
   function measure() {
     nav.classList.remove('is-fixed-top');
     spacer.style.height = '0';
+
+    if (window.matchMedia(MOBILE_MQ).matches) {
+      return;
+    }
+
+    nav.classList.remove('sda-mobile-nav-revealed');
     fixAt = nav.getBoundingClientRect().top + readScrollY();
     if (!fixAt) fixAt = nav.offsetTop || 0;
   }
 
   function update() {
+    if (window.matchMedia(MOBILE_MQ).matches) {
+      nav.classList.remove('is-fixed-top');
+      spacer.style.height = '0';
+
+      if (readScrollY() >= getMobileRevealAt() - 1) {
+        nav.classList.add('sda-mobile-nav-revealed');
+      } else {
+        nav.classList.remove('sda-mobile-nav-revealed');
+      }
+      return;
+    }
+
+    nav.classList.remove('sda-mobile-nav-revealed');
+
     var navHeight = nav.offsetHeight;
     if (!navHeight) {
       nav.classList.remove('is-fixed-top');
