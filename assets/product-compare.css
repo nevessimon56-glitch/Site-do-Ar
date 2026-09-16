@@ -1039,7 +1039,7 @@ body .header:not(.header-checkout) .search-desktop .btn:hover {
   background-color: #ebebeb !important;
 }
 
-/* --- Banner topo removido + nav fixa ao rolar (NAV-FIXED-v12) — fallback --- */
+/* --- NAV-FIXED-v13 + NAV-MOBILE-STRIP-v1 — fallback --- */
 
 body .header .top-content,
 body .top-content.content {
@@ -1055,41 +1055,116 @@ body .header {
   overflow: visible !important;
 }
 
-@media (min-width: 992px) {
+body .header .nav-content.is-fixed-top,
+body .nav-content.content.is-fixed-top {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 1100 !important;
+}
 
-  body .header .nav-content.is-fixed-top,
-  body .nav-content.content.is-fixed-top {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    z-index: 1100 !important;
-  }
-
-  body .nav-content-fixed-spacer {
-    display: block;
-    width: 100%;
-    height: 0;
-    pointer-events: none;
-  }
+body .nav-content-fixed-spacer {
+  display: block;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
 }
 
 @media (max-width: 991px) {
 
-  body .header:not(.header-checkout) > .header-content.is-fixed-top {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    z-index: 1100 !important;
+  body .header:not(.header-checkout) > .nav-content.hide-lg,
+  body .header:not(.header-checkout) > .nav-content.content.hide-lg {
+    display: block !important;
   }
 
-  body .header-content-fixed-spacer {
-    display: block;
-    width: 100%;
-    height: 0;
-    pointer-events: none;
+  body.checkout-main .header > .nav-content {
+    display: none !important;
+  }
+
+  body .header .nav-content,
+  body .nav-content.content {
+    background: linear-gradient(135deg, #222, #0f0f0f) !important;
+    background-color: #141414 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden !important;
+  }
+
+  body .nav-content > .container,
+  body .header .nav-content > .container {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+    overflow: visible !important;
+  }
+
+  body .nav-content.sda-mobile-nav-strip--3 .nav-main {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body .nav-content.sda-mobile-nav-strip--3 .nav-main_item {
+    min-width: 0 !important;
+    height: auto !important;
+  }
+
+  body .nav-content .nav-main_link {
+    padding: 8px 4px !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  body .nav-content .nav-main-box_link {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    min-height: 0 !important;
+    height: auto !important;
+    text-align: center !important;
+  }
+
+  body .nav-content .nav-main_icon {
+    margin: 0 !important;
+    max-height: 28px !important;
+    height: 28px !important;
+    width: 28px !important;
+  }
+
+  body .nav-content .nav-main_icon img {
+    max-height: 26px !important;
+    max-width: 26px !important;
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+  }
+
+  body .nav-content .nav-main_text {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+    letter-spacing: 0 !important;
+    white-space: normal !important;
+    text-transform: uppercase;
+  }
+
+  body .nav-content .nav-main_link,
+  body .nav-content .nav-main_link:visited,
+  body .nav-content .nav-main_link .nav-main_text {
+    color: #fff !important;
+  }
+
+  body .nav-content .nav-main_arrow,
+  body .nav-content .nav-main_content,
+  body .nav-content .mega-menu-ar__panel {
+    display: none !important;
   }
 }

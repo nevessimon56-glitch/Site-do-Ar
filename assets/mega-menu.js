@@ -2017,13 +2017,107 @@
   window.addEventListener('load', initHomeShowcaseMobile);
 })();
 
-/* NAV-FIXED-v12 — desktop: barra categorias | mobile: header atual (logo/menu) */
+/* NAV-MOBILE-STRIP-v1 — mobile: só Split Inverter, Piso Teto e Janela */
+(function () {
+  'use strict';
+
+  var MOBILE_MQ = '(max-width: 991px)';
+  var KEEP_NAV = [
+    { path: '/split-inverter', label: 'split inverter' },
+    { path: '/piso-teto', label: 'piso teto' },
+    { path: '/janela', label: 'janela' }
+  ];
+
+  function normalizePath(href) {
+    try {
+      var url = new URL(href, window.location.origin);
+      return (url.pathname || '').toLowerCase().replace(/\/+$/, '') || '/';
+    } catch (err) {
+      return (href || '').toLowerCase().split('?')[0].replace(/\/+$/, '') || '/';
+    }
+  }
+
+  function shouldKeepNavItem(item) {
+    var link = item.querySelector(':scope > a.nav-main_link');
+    if (!link) return false;
+
+    var path = normalizePath(link.getAttribute('href') || '');
+    var text = (link.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+    for (var i = 0; i < KEEP_NAV.length; i++) {
+      if (path.indexOf(KEEP_NAV[i].path) !== -1 || text === KEEP_NAV[i].label) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function resetMobileNavStrip() {
+    var navContent = document.querySelector('.header > .nav-content');
+    if (!navContent) return;
+
+    navContent.classList.remove('sda-mobile-nav-strip--3');
+    var items = navContent.querySelectorAll('.nav-main > .nav-main_item');
+    for (var i = 0; i < items.length; i++) {
+      items[i].style.display = '';
+    }
+  }
+
+  function applyMobileNavStrip() {
+    var navContent = document.querySelector('.header > .nav-content');
+    if (!navContent) return;
+
+    var navMain = navContent.querySelector('.nav-main');
+    if (!navMain) return;
+
+    var items = navMain.querySelectorAll(':scope > .nav-main_item');
+    var visible = 0;
+
+    for (var i = 0; i < items.length; i++) {
+      var keep = shouldKeepNavItem(items[i]);
+      items[i].style.display = keep ? '' : 'none';
+      if (keep) visible++;
+    }
+
+    navContent.classList.toggle('sda-mobile-nav-strip--3', visible === 3);
+  }
+
+  function initSdaMobileNavStrip() {
+    if (!window.matchMedia(MOBILE_MQ).matches) {
+      resetMobileNavStrip();
+      return;
+    }
+    applyMobileNavStrip();
+  }
+
+  window.initSdaMobileNavStrip = initSdaMobileNavStrip;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSdaMobileNavStrip);
+  } else {
+    initSdaMobileNavStrip();
+  }
+  window.addEventListener('load', initSdaMobileNavStrip);
+  window.addEventListener('resize', initSdaMobileNavStrip);
+})();
+
+/* NAV-FIXED-v13 — barra categorias fixa ao rolar (desktop + mobile) */
 window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixedTop() {
   if (window.__SDA_NAV_FIXED_INIT__) return;
   window.__SDA_NAV_FIXED_INIT__ = true;
 
-  var DESKTOP_MQ = '(min-width: 992px)';
-  var MOBILE_MQ = '(max-width: 991px)';
+  var nav = document.querySelector('.header > .nav-content');
+  if (!nav) return;
+
+  var spacer = nav.nextElementSibling;
+  if (!spacer || !spacer.classList.contains('nav-content-fixed-spacer')) {
+    spacer = document.createElement('div');
+    spacer.className = 'nav-content-fixed-spacer';
+    spacer.setAttribute('aria-hidden', 'true');
+    nav.parentNode.insertBefore(spacer, nav.nextSibling);
+  }
+
+  var fixAt = 0;
 
   function readScrollY() {
     return window.pageYOffset
@@ -2032,73 +2126,40 @@ window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixe
       || 0;
   }
 
-  function bindFixedBar(opts) {
-    var bar = document.querySelector(opts.selector);
-    if (!bar) return;
-
-    var spacer = bar.nextElementSibling;
-    if (!spacer || !spacer.classList.contains(opts.spacerClass)) {
-      spacer = document.createElement('div');
-      spacer.className = opts.spacerClass;
-      spacer.setAttribute('aria-hidden', 'true');
-      bar.parentNode.insertBefore(spacer, bar.nextSibling);
-    }
-
-    var fixAt = 0;
-
-    function measure() {
-      bar.classList.remove('is-fixed-top');
-      spacer.style.height = '0';
-      fixAt = bar.getBoundingClientRect().top + readScrollY();
-      if (!fixAt) fixAt = bar.offsetTop || 0;
-    }
-
-    function update() {
-      if (!window.matchMedia(opts.mediaQuery).matches) {
-        bar.classList.remove('is-fixed-top');
-        spacer.style.height = '0';
-        return;
-      }
-
-      var barHeight = bar.offsetHeight;
-      if (!barHeight) {
-        bar.classList.remove('is-fixed-top');
-        spacer.style.height = '0';
-        return;
-      }
-
-      if (readScrollY() >= fixAt - 1) {
-        bar.classList.add('is-fixed-top');
-        spacer.style.height = barHeight + 'px';
-      } else {
-        bar.classList.remove('is-fixed-top');
-        spacer.style.height = '0';
-      }
-    }
-
-    function remeasureAndUpdate() {
-      measure();
-      update();
-    }
-
-    window.addEventListener('scroll', update, { passive: true });
-    document.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', remeasureAndUpdate, { passive: true });
-    window.addEventListener('load', remeasureAndUpdate);
-    remeasureAndUpdate();
+  function measure() {
+    nav.classList.remove('is-fixed-top');
+    spacer.style.height = '0';
+    fixAt = nav.getBoundingClientRect().top + readScrollY();
+    if (!fixAt) fixAt = nav.offsetTop || 0;
   }
 
-  bindFixedBar({
-    selector: '.header > .nav-content',
-    mediaQuery: DESKTOP_MQ,
-    spacerClass: 'nav-content-fixed-spacer'
-  });
+  function update() {
+    var navHeight = nav.offsetHeight;
+    if (!navHeight) {
+      nav.classList.remove('is-fixed-top');
+      spacer.style.height = '0';
+      return;
+    }
 
-  bindFixedBar({
-    selector: '.header:not(.header-checkout) > .header-content',
-    mediaQuery: MOBILE_MQ,
-    spacerClass: 'header-content-fixed-spacer'
-  });
+    if (readScrollY() >= fixAt - 1) {
+      nav.classList.add('is-fixed-top');
+      spacer.style.height = navHeight + 'px';
+    } else {
+      nav.classList.remove('is-fixed-top');
+      spacer.style.height = '0';
+    }
+  }
+
+  function remeasureAndUpdate() {
+    measure();
+    update();
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  document.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', remeasureAndUpdate, { passive: true });
+  window.addEventListener('load', remeasureAndUpdate);
+  remeasureAndUpdate();
 };
 
 if (document.readyState === 'loading') {
