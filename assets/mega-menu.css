@@ -4857,8 +4857,8 @@ a.btn.btn-new_user.btn-block:hover {
   }
 }
 
-/* --- Header mobile fixo estilo KaBuM (MOBILE-HEADER-KABUM-v1) --- */
-/* Menu | busca branca central | carrinho — substitui barra de categorias no celular */
+/* --- Header mobile fixo estilo KaBuM (MOBILE-HEADER-KABUM-v2) --- */
+/* Menu | busca branca central | carrinho — busca fica dentro de .navbar-center */
 
 @media (max-width: 991px) {
 
@@ -4900,10 +4900,23 @@ a.btn.btn-new_user.btn-block:hover {
   }
 
   .header:not(.header-checkout) .header-content .navbar > .navbar-section:first-child,
-  .header:not(.header-checkout) .header-content .navbar-center,
   .header:not(.header-checkout) .header-content .header-link_search,
-  .header:not(.header-checkout) .header-content .header-box-account_tel,
-  .header:not(.header-checkout) .header-content .header-box-account-info {
+  .header:not(.header-checkout) .header-content .header-box-account_tel {
+    display: none !important;
+  }
+
+  .header:not(.header-checkout) .header-content .navbar-center {
+    display: block !important;
+    grid-area: search !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .header:not(.header-checkout) .header-content .navbar-center .header-box-account-info,
+  .header:not(.header-checkout) .header-content .navbar-center .header-box_account,
+  .header:not(.header-checkout) .header-content .navbar-center .header-link-account_info {
     display: none !important;
   }
 
@@ -4915,6 +4928,7 @@ a.btn.btn-new_user.btn-block:hover {
   .header:not(.header-checkout) .menu-mobile_link {
     grid-area: menu !important;
     display: flex !important;
+    flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     width: 40px !important;
@@ -4922,13 +4936,38 @@ a.btn.btn-new_user.btn-block:hover {
     min-width: 40px !important;
     padding: 0 !important;
     margin: 0 !important;
+    gap: 0 !important;
   }
 
+  .header:not(.header-checkout) .header-link_menu__mobile .icon-bar,
+  .header:not(.header-checkout) .menu-mobile_link .icon-bar {
+    display: block !important;
+    width: 22px !important;
+    height: 2px !important;
+    margin: 3px 0 !important;
+    border-radius: 2px !important;
+    background-color: #ffffff !important;
+  }
+
+  .header:not(.header-checkout) .header-content .navbar-center .search-desktop.hide-lg,
   .header:not(.header-checkout) .search-desktop.hide-lg {
     display: block !important;
-    grid-area: search !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     width: 100% !important;
     min-width: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .header:not(.header-checkout) .header-content .navbar-center .search-desktop form,
+  .header:not(.header-checkout) .search-desktop.hide-lg form {
+    display: block !important;
+    width: 100% !important;
     margin: 0 !important;
   }
 

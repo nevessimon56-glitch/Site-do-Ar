@@ -2017,7 +2017,7 @@
   window.addEventListener('load', initHomeShowcaseMobile);
 })();
 
-/* MOBILE-HEADER-KABUM-v1 — placeholder da busca mobile */
+/* MOBILE-HEADER-KABUM-v2 — busca mobile visível + placeholder */
 (function () {
   'use strict';
 
@@ -2025,6 +2025,31 @@
 
   function initSdaMobileKabumHeader() {
     var input = document.getElementById('term2');
+    var navbarCenter = document.querySelector('.header:not(.header-checkout) .navbar-center');
+    var searchDesktop = document.querySelector('.header:not(.header-checkout) .search-desktop.hide-lg')
+      || document.querySelector('.header .search-desktop.hide-lg');
+    var isMobile = window.matchMedia(MOBILE_MQ).matches;
+
+    if (navbarCenter) {
+      if (isMobile) {
+        navbarCenter.style.display = 'block';
+      } else {
+        navbarCenter.style.display = '';
+      }
+    }
+
+    if (searchDesktop) {
+      if (isMobile) {
+        searchDesktop.style.display = 'block';
+        searchDesktop.style.visibility = 'visible';
+        searchDesktop.style.opacity = '1';
+      } else {
+        searchDesktop.style.display = '';
+        searchDesktop.style.visibility = '';
+        searchDesktop.style.opacity = '';
+      }
+    }
+
     if (!input) return;
 
     if (window.matchMedia(MOBILE_MQ).matches) {

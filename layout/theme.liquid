@@ -161,11 +161,34 @@
 <script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
 <script>
-  /* MOBILE-HEADER-KABUM-v1 + NAV-FIXED-v16 — fallback se mega-menu.js não publicado */
+  /* MOBILE-HEADER-KABUM-v2 + NAV-FIXED-v16 — fallback se mega-menu.js não publicado */
   window.initSdaMobileKabumHeader = window.initSdaMobileKabumHeader || function initSdaMobileKabumHeader() {
+    var MOBILE_MQ = '(max-width: 991px)';
     var input = document.getElementById('term2');
+    var navbarCenter = document.querySelector('.header:not(.header-checkout) .navbar-center');
+    var searchDesktop = document.querySelector('.header:not(.header-checkout) .search-desktop.hide-lg')
+      || document.querySelector('.header .search-desktop.hide-lg');
+    var isMobile = window.matchMedia(MOBILE_MQ).matches;
+
+    if (navbarCenter) {
+      navbarCenter.style.display = isMobile ? 'block' : '';
+    }
+
+    if (searchDesktop) {
+      if (isMobile) {
+        searchDesktop.style.display = 'block';
+        searchDesktop.style.visibility = 'visible';
+        searchDesktop.style.opacity = '1';
+      } else {
+        searchDesktop.style.display = '';
+        searchDesktop.style.visibility = '';
+        searchDesktop.style.opacity = '';
+      }
+    }
+
     if (!input) return;
-    if (window.matchMedia('(max-width: 991px)').matches) {
+
+    if (isMobile) {
       input.setAttribute('placeholder', 'Busque no Site do Ar');
     } else if (input.getAttribute('data-sda-placeholder-default')) {
       input.setAttribute('placeholder', input.getAttribute('data-sda-placeholder-default'));
