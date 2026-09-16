@@ -1012,31 +1012,34 @@ body .header:not(.header-checkout) .search_link.active .icon-bar:first-child {
   background-color: #ffffff !important;
 }
 
-body .header:not(.header-checkout) .search-desktop .form-input {
-  background-color: #1a1a1a !important;
-  border-color: #333333 !important;
-  color: #ffffff !important;
-}
+@media (min-width: 992px) {
 
-body .header:not(.header-checkout) .search-desktop .form-input::placeholder {
-  color: rgba(255, 255, 255, 0.55) !important;
-}
+  body .header:not(.header-checkout) .search-desktop .form-input {
+    background-color: #1a1a1a !important;
+    border-color: #333333 !important;
+    color: #ffffff !important;
+  }
 
-body .header:not(.header-checkout) .search-desktop .form-input:focus {
-  border-color: #555555 !important;
-}
+  body .header:not(.header-checkout) .search-desktop .form-input::placeholder {
+    color: rgba(255, 255, 255, 0.55) !important;
+  }
 
-body .header:not(.header-checkout) .search-desktop .btn {
-  background-color: #ffffff !important;
-}
+  body .header:not(.header-checkout) .search-desktop .form-input:focus {
+    border-color: #555555 !important;
+  }
 
-body .header:not(.header-checkout) .search-desktop .btn svg {
-  fill: #0a0a0a !important;
-}
+  body .header:not(.header-checkout) .search-desktop .btn {
+    background-color: #ffffff !important;
+  }
 
-body .header:not(.header-checkout) .search-desktop .btn:focus,
-body .header:not(.header-checkout) .search-desktop .btn:hover {
-  background-color: #ebebeb !important;
+  body .header:not(.header-checkout) .search-desktop .btn svg {
+    fill: #0a0a0a !important;
+  }
+
+  body .header:not(.header-checkout) .search-desktop .btn:focus,
+  body .header:not(.header-checkout) .search-desktop .btn:hover {
+    background-color: #ebebeb !important;
+  }
 }
 
 /* --- NAV-FIXED-v16 + MOBILE-HEADER-KABUM-v2 — fallback --- */
@@ -1232,6 +1235,12 @@ body .nav-content-fixed-spacer {
     color: #888888 !important;
   }
 
+  body .header:not(.header-checkout) .search-desktop.hide-lg .form-input:focus {
+    border: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
   body .header:not(.header-checkout) .search-desktop.hide-lg .btn {
     order: 1 !important;
     flex: 0 0 auto !important;
@@ -1252,6 +1261,11 @@ body .nav-content-fixed-spacer {
     fill: #888888 !important;
     width: 18px !important;
     height: 18px !important;
+  }
+
+  body .header:not(.header-checkout) .search-desktop.hide-lg .btn:focus,
+  body .header:not(.header-checkout) .search-desktop.hide-lg .btn:hover {
+    background: transparent !important;
   }
 
   body .header:not(.header-checkout) > .search.close {

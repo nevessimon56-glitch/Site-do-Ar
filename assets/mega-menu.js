@@ -2072,7 +2072,7 @@
   window.addEventListener('resize', initSdaMobileKabumHeader);
 })();
 
-/* NAV-FIXED-v16 — desktop: barra categorias fixa (mobile usa MOBILE-HEADER-KABUM-v1) */
+/* NAV-FIXED-v16 — desktop: barra categorias fixa (mobile usa MOBILE-HEADER-KABUM-v2) */
 window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixedTop() {
   if (window.__SDA_NAV_FIXED_INIT__) return;
   window.__SDA_NAV_FIXED_INIT__ = true;
