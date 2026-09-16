@@ -4652,3 +4652,93 @@ a.btn.btn-new_user.btn-block:hover {
   background: #ebebeb;
   color: #1a1a1a;
 }
+
+/* --- Catálogo: breadcrumb, ordenação, paginação, filtros (theme-all azul → preto) --- */
+
+.search-left,
+.search-left h1,
+.search-left a,
+.search-right,
+.search-right a,
+.search-right b,
+.search-right strong {
+  color: var(--sda-ui-accent) !important;
+}
+
+.search-options .form-label {
+  color: var(--sda-ui-accent) !important;
+}
+
+.search-options .form-select {
+  color: var(--sda-ui-accent) !important;
+}
+
+.search-options-pagination a.search-options-pagination_link:not(.search-options-pagination_link__arrow) {
+  color: var(--sda-ui-accent) !important;
+}
+
+.search-options-pagination a.search-options-pagination_link__arrow {
+  background-color: var(--sda-ui-btn) !important;
+  border-color: var(--sda-ui-btn-border) !important;
+}
+
+.search-options-pagination a.search-options-pagination_link__arrow svg {
+  fill: #fff !important;
+}
+
+.search-options-pagination a.search-options-pagination_link__arrow.disable {
+  background-color: transparent !important;
+  border-color: var(--sda-ui-chip-border) !important;
+  opacity: 0.45;
+}
+
+.search-options-pagination a.search-options-pagination_link__arrow.disable svg {
+  fill: var(--sda-ui-accent-muted) !important;
+}
+
+.search-options.search-options_bottom .search-options-pagination_item.active a.search-options-pagination_link,
+.search-options.search-options_bottom .search-options-pagination_item.active a.search-options-pagination_link:not(.search-options-pagination_link__arrow) {
+  background-color: var(--sda-ui-btn) !important;
+  color: #fff !important;
+}
+
+.search-view_link svg {
+  fill: var(--sda-ui-accent-muted) !important;
+}
+
+.search-filter-title {
+  color: var(--sda-ui-accent) !important;
+}
+
+.search-filter-icon {
+  background-color: var(--sda-ui-btn) !important;
+  border-color: var(--sda-ui-btn-border) !important;
+}
+
+.search-filter-icon svg {
+  fill: #fff !important;
+}
+
+.search-filters-content .form-radio input:checked+.form-icon::before,
+.search-filter-link_category.active .form-radio .form-icon:after {
+  background-color: var(--sda-ui-btn) !important;
+}
+
+.search-filter-variation__button .search-filter-variation_link {
+  color: var(--sda-ui-accent) !important;
+}
+
+.search-filter-price .noUi-target,
+.search-filter-price .noUi-connect,
+.search-filter-price .noUi-handle {
+  background: var(--sda-ui-btn) !important;
+  background-color: var(--sda-ui-btn) !important;
+}
+
+.search-options_mobile .search-option-icon svg {
+  fill: var(--sda-ui-accent-muted) !important;
+}
+
+.search-options_mobile .search-option-title {
+  color: var(--sda-ui-accent) !important;
+}

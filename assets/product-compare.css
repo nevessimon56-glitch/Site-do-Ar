@@ -877,3 +877,93 @@ body a.btn.btn-new_user.btn-block:hover {
     color: #fff !important;
   }
 }
+
+/* --- Catálogo: breadcrumb, ordenação, paginação, filtros (theme-all azul → preto) --- */
+
+body .search-left,
+body .search-left h1,
+body .search-left a,
+body .search-right,
+body .search-right a,
+body .search-right b,
+body .search-right strong {
+  color: #1a1a1a !important;
+}
+
+body .search-options .form-label {
+  color: #1a1a1a !important;
+}
+
+body .search-options .form-select {
+  color: #1a1a1a !important;
+}
+
+body .search-options-pagination a.search-options-pagination_link:not(.search-options-pagination_link__arrow) {
+  color: #1a1a1a !important;
+}
+
+body .search-options-pagination a.search-options-pagination_link__arrow {
+  background-color: #141414 !important;
+  border-color: #0a0a0a !important;
+}
+
+body .search-options-pagination a.search-options-pagination_link__arrow svg {
+  fill: #fff !important;
+}
+
+body .search-options-pagination a.search-options-pagination_link__arrow.disable {
+  background-color: transparent !important;
+  border-color: #cccccc !important;
+  opacity: 0.45;
+}
+
+body .search-options-pagination a.search-options-pagination_link__arrow.disable svg {
+  fill: #1a1a1a !important;
+}
+
+body .search-options.search-options_bottom .search-options-pagination_item.active a.search-options-pagination_link,
+body .search-options.search-options_bottom .search-options-pagination_item.active a.search-options-pagination_link:not(.search-options-pagination_link__arrow) {
+  background-color: #141414 !important;
+  color: #fff !important;
+}
+
+body .search-view_link svg {
+  fill: #1a1a1a !important;
+}
+
+body .search-filter-title {
+  color: #1a1a1a !important;
+}
+
+body .search-filter-icon {
+  background-color: #141414 !important;
+  border-color: #0a0a0a !important;
+}
+
+body .search-filter-icon svg {
+  fill: #fff !important;
+}
+
+body .search-filters-content .form-radio input:checked+.form-icon::before,
+body .search-filter-link_category.active .form-radio .form-icon:after {
+  background-color: #141414 !important;
+}
+
+body .search-filter-variation__button .search-filter-variation_link {
+  color: #1a1a1a !important;
+}
+
+body .search-filter-price .noUi-target,
+body .search-filter-price .noUi-connect,
+body .search-filter-price .noUi-handle {
+  background: #141414 !important;
+  background-color: #141414 !important;
+}
+
+body .search-options_mobile .search-option-icon svg {
+  fill: #1a1a1a !important;
+}
+
+body .search-options_mobile .search-option-title {
+  color: #1a1a1a !important;
+}
