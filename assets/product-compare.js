@@ -1,6 +1,8 @@
 /**
  * ARQUIVO: assets/product-compare.js
- * VERSAO: 2026-09-11-compare-v8 — até 3 produtos, descrição, botão comprar
+ * VERSAO: 2026-09-16-compare-v9-unified
+ * CSS pareado: product-compare.css (só comparador — sem card/nav/tema)
+ * Cards/markup: sections/showcase-model-product.liquid + product-compare-data.liquid
  */
 (function () {
   'use strict';

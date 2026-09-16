@@ -1,15 +1,12 @@
-WDNA — CARD COMPACT v6
-======================
+WDNA — CARDS + COMPARE (separados)
+===================================
 
-Foto volta ao tamanho original (148px desktop / 130px mobile).
-Card fica mais baixo reduzindo padding, título, specs e preços.
-
-Só precisa colar: assets/mega-menu.css
+CARDS (tamanho foto + card compacto) → só mega-menu.css
 https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/mega-menu.css
+Final: PRODUCT-CARD-COMPACT-v6
 
-Final do arquivo: PRODUCT-CARD-COMPACT-v6
-
-Se product-compare.css ainda tiver width:100% ou altura fixa no topo/final, atualize também:
+COMPARE (botões comparar/comprar + painel) → product-compare.css
 https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/product-compare.css
+SEM regras de tamanho de foto/card — removido de propósito.
 
 Publicar tema + aba anônima.

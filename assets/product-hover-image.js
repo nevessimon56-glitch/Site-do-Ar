@@ -1,7 +1,7 @@
 /**
  * ARQUIVO: assets/product-hover-image.js
- * Hover de imagem estilo Nike em todos os cards .showcase-product (site inteiro).
- * Mobile: toque na imagem alterna entre foto 1 e 2.
+ * Backup de hover — DESLIGA se mega-menu.js definiu window.__SDA_HOVER_V2__.
+ * Implementação principal: mega-menu.js + mega-menu.css
  */
 (function () {
   'use strict';

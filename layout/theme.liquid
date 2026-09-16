@@ -78,6 +78,12 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-plugins.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
+    {%- comment -%}
+      Custom CSS (ordem importa):
+      1. mega-menu.css — cards, nav, hover, mega menu
+      2. product-compare.css — só comparador (sem foto/nav/tema)
+      3. product-hover-image.css — shim legado (sem dimensões de imagem)
+    {%- endcomment -%}
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
@@ -157,6 +163,7 @@
     window.currencyStore = {% if store.symbolPrice %}"{{ store.symbolPrice }}"{% else %}null{% endif %};
 </script>
 <script src="{{ scripts.main.src }}"></script>
+{%- comment -%} mega-menu.js define __SDA_HOVER_V2__; product-hover-image.js desliga se já ativo {%- endcomment -%}
 <script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
