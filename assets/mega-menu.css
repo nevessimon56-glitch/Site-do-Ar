@@ -4232,16 +4232,16 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
   background: linear-gradient(165deg, #ffffff 0%, #fff0e3 100%) !important;
 }
 
-/* ========== Tema azul-cinza — nav, mega menu, conta, mobile (GLOBAL-GRAY-BLUE-THEME-v3) ========== */
-/* Substitui GLOBAL-BLACK-THEME-v1/v2. Mantém azul vivo SOMENTE em produtos (.showcase-product). */
+/* ========== Tema cinza — nav, mega menu, conta, mobile (GLOBAL-GRAY-THEME-v4) ========== */
+/* Substitui v1/v2/v3. Mantém azul vivo SOMENTE em produtos (.showcase-product). */
 
 :root {
-  --sda-ui-accent: #4a6278;
-  --sda-ui-accent-2: #3d5366;
-  --sda-ui-accent-deep: #364958;
-  --sda-ui-accent-soft: #eef2f6;
-  --sda-ui-accent-muted: #5c7084;
-  --sda-ui-accent-hover: #566b80;
+  --sda-ui-accent: #52525b;
+  --sda-ui-accent-2: #3f3f46;
+  --sda-ui-accent-deep: #404040;
+  --sda-ui-accent-soft: #f3f4f6;
+  --sda-ui-accent-muted: #71717a;
+  --sda-ui-accent-hover: #646464;
 }
 
 /* --- Barra de navegação desktop --- */
@@ -4249,24 +4249,24 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 
   .header .nav-content,
   .nav-content.content {
-    background: linear-gradient(135deg, #5a7082, #3d5366) !important;
-    background-color: #4a6278 !important;
+    background: linear-gradient(135deg, #71717a, #52525b) !important;
+    background-color: #61656c !important;
     border-top-color: rgba(255, 255, 255, 0.12) !important;
   }
 
   .nav-content .nav-main_content a,
   .nav-content .nav-main_children {
-    color: #3d5366 !important;
+    color: #3f3f46 !important;
   }
 
   .nav-content .nav-main_content li:hover,
   .nav-content .nav-main_content li:focus {
-    background-color: #eef2f6 !important;
+    background-color: #f3f4f6 !important;
   }
 
   .nav-content .nav-main_content li:hover a,
   .nav-content .nav-main_content li:focus a {
-    color: #364958 !important;
+    color: #404040 !important;
   }
 }
 
@@ -4274,95 +4274,95 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 @media (min-width: 992px) {
 
   .mega-menu-ar__promo-banner {
-    box-shadow: 0 2px 10px rgba(61, 83, 102, 0.14);
-    border-color: rgba(74, 98, 120, 0.18);
+    box-shadow: 0 2px 10px rgba(82, 82, 91, 0.14);
+    border-color: rgba(113, 113, 122, 0.2);
   }
 
   .mega-menu-ar__promo-banner a {
-    background: linear-gradient(90deg, #4a6278 0%, #5c7084 50%, #4a6278 100%);
+    background: linear-gradient(90deg, #52525b 0%, #71717a 50%, #52525b 100%);
   }
 
   .mega-menu-ar__section-title--hot {
-    color: #4a6278;
+    color: #52525b;
   }
 
   .mega-menu-ar__offers-label {
-    color: #4a6278;
+    color: #52525b;
   }
 
   .mega-menu-ar__offers-label span {
-    background: linear-gradient(135deg, #f4f7fa 0%, #e8edf2 100%);
-    border-color: #c5d0db;
-    box-shadow: 0 2px 12px rgba(74, 98, 120, 0.12);
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border-color: #d1d5db;
+    box-shadow: 0 2px 12px rgba(113, 113, 122, 0.12);
   }
 
   .mega-menu-ar__offers-label span::before {
-    background: #5a7082;
-    box-shadow: 0 0 0 3px rgba(90, 112, 130, 0.2);
+    background: #71717a;
+    box-shadow: 0 0 0 3px rgba(113, 113, 122, 0.2);
   }
 
   .mega-menu-ar__brand-logo:hover {
-    border-color: #a8b8c8;
-    box-shadow: 0 4px 14px rgba(74, 98, 120, 0.12);
+    border-color: #a1a1aa;
+    box-shadow: 0 4px 14px rgba(113, 113, 122, 0.12);
   }
 
   .mega-menu-ar__col-title {
-    color: #4a6278;
+    color: #52525b;
   }
 
   .mega-menu-ar__links a:hover {
-    color: #566b80;
+    color: #646464;
   }
 
   .mega-menu-ar__ver-tudo,
   .mega-menu-ar__ver-tudo:hover {
-    color: #5a7082;
+    color: #71717a;
   }
 
   .mega-menu-ar__badge:not(.mega-menu-ar__badge--hot):not(.mega-menu-ar__badge--offer):not(.mega-menu-ar__badge--power) {
-    background: #5a7082;
-    box-shadow: 0 4px 12px rgba(74, 98, 120, 0.28);
+    background: #71717a;
+    box-shadow: 0 4px 12px rgba(113, 113, 122, 0.28);
   }
 
   .mega-menu-ar__arrow {
-    color: #4a6278;
+    color: #52525b;
   }
 
   .mega-menu-ar__arrow:hover {
-    background: #5a7082;
+    background: #71717a;
     color: #fff;
   }
 
   .mega-menu-ar__dot.is-active {
-    background: #5a7082;
+    background: #71717a;
   }
 
   .mega-menu-ar__banner-kicker {
-    color: #5c7084;
+    color: #71717a;
   }
 
   .mega-menu-ar__banner-price {
-    color: #3d5366;
+    color: #3f3f46;
   }
 
   .mega-menu-ar__banner-cta {
-    background: linear-gradient(135deg, #5c7084 0%, #4a6278 100%);
-    box-shadow: 0 4px 14px rgba(74, 98, 120, 0.28);
+    background: linear-gradient(135deg, #71717a 0%, #52525b 100%);
+    box-shadow: 0 4px 14px rgba(113, 113, 122, 0.28);
   }
 
   .mega-menu-ar__banner-link:hover .mega-menu-ar__banner-cta {
-    background: linear-gradient(135deg, #4a6278 0%, #364958 100%);
+    background: linear-gradient(135deg, #52525b 0%, #404040 100%);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .mega-menu-ar__banner-wrap {
       box-shadow:
-        0 0 0 1px rgba(90, 112, 130, 0.28),
-        0 10px 28px rgba(74, 98, 120, 0.14);
+        0 0 0 1px rgba(113, 113, 122, 0.28),
+        0 10px 28px rgba(82, 82, 91, 0.14);
     }
 
     .mega-menu-ar__banner-wrap::before {
-      background: linear-gradient(145deg, #7a8fa3 0%, #4a6278 35%, #16a34a 65%, #7a8fa3 100%);
+      background: linear-gradient(145deg, #a1a1aa 0%, #52525b 35%, #16a34a 65%, #a1a1aa 100%);
     }
   }
 }
@@ -4370,24 +4370,24 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 /* --- Header / conta --- */
 .header-account-kicker,
 .header-account-label {
-  color: #4a6278 !important;
+  color: #52525b !important;
 }
 
 /* --- Mobile: discover bar + filtros --- */
 @media (max-width: 991px) {
 
   .mobile-discover-bar__chip {
-    color: #4a6278 !important;
+    color: #52525b !important;
   }
 
   .mobile-discover-bar__chip.is-active {
-    border-color: #5a7082;
-    background: #eef2f6;
-    color: #364958 !important;
+    border-color: #71717a;
+    background: #f3f4f6;
+    color: #404040 !important;
   }
 
   .mobile-catalog-link {
-    color: #4a6278 !important;
+    color: #52525b !important;
   }
 }
 
@@ -4395,26 +4395,26 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 @media (max-width: 991px) {
 
   .mobile-catalog-dock__btn.is-active {
-    background: linear-gradient(135deg, #5a7082, #3d5366);
-    box-shadow: 0 3px 12px rgba(74, 98, 120, 0.28);
+    background: linear-gradient(135deg, #71717a, #52525b);
+    box-shadow: 0 3px 12px rgba(113, 113, 122, 0.28);
   }
 
   .mobile-catalog-dock__btn:not(.is-active):active {
-    background: #eef2f6;
-    color: #4a6278;
+    background: #f3f4f6;
+    color: #52525b;
   }
 
   .mobile-catalog-dock__sheet-title {
-    color: #3d5366;
+    color: #3f3f46;
   }
 
   .mobile-catalog-dock__sheet-link {
-    color: #4a6278 !important;
+    color: #52525b !important;
   }
 
   .mobile-catalog-dock__sheet-link.is-active {
-    background: #eef2f6;
-    color: #364958 !important;
+    background: #f3f4f6;
+    color: #404040 !important;
   }
 }
 
@@ -4422,82 +4422,82 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 @media (max-width: 991px) {
 
   .mobile-account-dock__btn.is-active {
-    background: linear-gradient(135deg, #5a7082, #3d5366);
-    box-shadow: 0 3px 12px rgba(74, 98, 120, 0.28);
+    background: linear-gradient(135deg, #71717a, #52525b);
+    box-shadow: 0 3px 12px rgba(113, 113, 122, 0.28);
   }
 }
 
 /* --- Navegação da conta --- */
 .customer-account-nav--page .customer-account-nav__item.is-active {
-  background: #eef2f6;
-  color: #364958 !important;
+  background: #f3f4f6;
+  color: #404040 !important;
 }
 
 .customer-account-nav--page .customer-account-nav__item.is-active .customer-account-nav__icon {
-  background: rgba(74, 98, 120, 0.12);
+  background: rgba(113, 113, 122, 0.14);
 }
 
 .customer-account-nav__item:hover {
-  background: #f4f7fa;
-  color: #3d5366 !important;
+  background: #f9fafb;
+  color: #3f3f46 !important;
 }
 
 .customer-account-nav__item.is-active {
-  background: linear-gradient(135deg, #5a7082, #3d5366);
-  box-shadow: 0 3px 12px rgba(74, 98, 120, 0.24);
+  background: linear-gradient(135deg, #71717a, #52525b);
+  box-shadow: 0 3px 12px rgba(113, 113, 122, 0.24);
 }
 
 .customer-account-nav__icon {
-  background: rgba(74, 98, 120, 0.1);
+  background: rgba(113, 113, 122, 0.12);
 }
 
 .sidenav-overlay_account .pages-nav .btn-access:hover {
-  border-color: #c5d0db !important;
-  background: #eef2f6 !important;
-  color: #3d5366 !important;
+  border-color: #d1d5db !important;
+  background: #f3f4f6 !important;
+  color: #3f3f46 !important;
 }
 
 /* --- Cancelamento de pedido (sidenav) --- */
 .sidenav-overlay.sidenav-order_cancel .order-cancel-avatar:not(.order-cancel-avatar--store):not(.order-cancel-avatar--success):not(.order-cancel-avatar--warning):not(.avatar_success):not(.avatar_warning) {
-  background: #5a7082;
+  background: #71717a;
 }
 
 .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__input:focus,
 .sidenav-overlay.sidenav-order_cancel .order-cancel-form__textarea:focus {
-  border-color: #5a7082;
-  box-shadow: 0 0 0 3px rgba(90, 112, 130, 0.18);
+  border-color: #71717a;
+  box-shadow: 0 0 0 3px rgba(113, 113, 122, 0.18);
 }
 
 .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn,
 .sidenav-overlay.sidenav-order_cancel .order-cancel-form__submit {
-  background: #5a7082;
+  background: #71717a;
 }
 
 .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn:hover,
 .sidenav-overlay.sidenav-order_cancel .order-cancel-form__submit:hover {
-  background: #4a6278;
+  background: #52525b;
 }
 
 /* --- Comparador: barra/painel (UI) — preços e botões dos cards permanecem azuis --- */
 .product-compare-bar__badge {
-  background: #5a7082;
+  background: #71717a;
 }
 
 .product-compare-bar__btn--ghost {
-  background: #eef2f6;
-  color: #4a6278;
+  background: #f3f4f6;
+  color: #52525b;
 }
 
 .product-compare-bar__btn--primary {
-  background: linear-gradient(135deg, #5a7082, #3d5366);
+  background: linear-gradient(135deg, #71717a, #52525b);
 }
 
 .product-compare-panel__close {
-  background: #eef2f6;
-  color: #4a6278;
+  background: #f3f4f6;
+  color: #52525b;
 }
 
 .product-compare-panel__vs {
-  background: #eef2f6;
-  color: #4a6278;
+  background: #f3f4f6;
+  color: #52525b;
 }
