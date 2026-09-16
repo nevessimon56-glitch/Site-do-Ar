@@ -3,15 +3,24 @@
  * VERSAO: 2026-09-11-compare-v8 — até 3 produtos + comprar + descrição
  */
 
-/* Garante imagem visível nos cards (lazy load) */
+/* Garante imagem visível nos cards (lazy load) — não força width:100% (estourava o card) */
 .showcase-product_link__image > img.product-hover-swap,
 .showcase-product_link__image > img.lazy {
   display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
+  width: auto !important;
+  max-width: 92% !important;
   height: auto !important;
+  margin: 0 auto !important;
   object-fit: contain !important;
   visibility: visible !important;
+}
+
+@media (min-width: 992px) {
+
+  .showcase-product_link__image > img.product-hover-swap,
+  .showcase-product_link__image > img.lazy {
+    max-height: var(--sda-card-img-inner-max, 148px) !important;
+  }
 }
 
 .showcase-product .card-footer .showcase-card-actions {

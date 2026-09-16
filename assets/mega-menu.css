@@ -4987,3 +4987,59 @@ a.btn.btn-new_user.btn-block:hover {
     display: none !important;
   }
 }
+
+/* ========== PRODUCT-CARD-IMG-RESTORE-v1 — tamanho compacto (só cards, pós-revert) ========== */
+/* Causa: width:100% nas imagens + product-compare.css carregando por último. */
+
+:root {
+  --sda-card-img-h: 168px;
+  --sda-card-img-inner-max: 148px;
+}
+
+@media (min-width: 992px) {
+
+  .showcase-search .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-product_image.card-image {
+    height: var(--sda-card-img-h) !important;
+    min-height: var(--sda-card-img-h) !important;
+    max-height: var(--sda-card-img-h) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-search .showcase-product_link__image,
+  .showcase-search.showcase-search_grid .showcase-product_link__image,
+  .showcase-search.showcase-search_list .showcase-product_link__image,
+  main.home-main section.showcase .showcase-product_link__image {
+    height: var(--sda-card-img-h) !important;
+    max-height: var(--sda-card-img-h) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .showcase-search .product-hover-wrap,
+  main.home-main section.showcase .product-hover-wrap {
+    height: var(--sda-card-img-h) !important;
+    max-height: var(--sda-card-img-h) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .showcase-search .showcase-product_link__image img,
+  .showcase-search .product-hover-wrap img,
+  main.home-main section.showcase .showcase-product_link__image img,
+  main.home-main section.showcase .product-hover-wrap img,
+  .product-hover-wrap img.product-hover-img--main,
+  .product-hover-wrap img.product-hover-swap:not(.product-hover-img--hover),
+  .product-hover-wrap img.product-hover-img--hover {
+    width: auto !important;
+    max-width: 92% !important;
+    max-height: var(--sda-card-img-inner-max) !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+}
