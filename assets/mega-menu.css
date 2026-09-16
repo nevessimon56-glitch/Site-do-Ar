@@ -4815,8 +4815,8 @@ a.btn.btn-new_user.btn-block:hover {
   background-color: #ebebeb !important;
 }
 
-/* --- Banner topo removido + nav fixa ao rolar (NAV-FIXED-v9) --- */
-/* Sticky puro falha porque .nav-content fica dentro de <header>. Usar .is-fixed-top + JS. */
+/* --- Banner topo removido + nav fixa ao rolar (NAV-FIXED-v10) --- */
+/* Requer initSdaNavFixedTop() — mega-menu.js ou script inline no theme.liquid */
 
 .header .top-content,
 .top-content.content {

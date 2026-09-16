@@ -161,9 +161,65 @@
 <script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
 <script>
+  /* NAV-FIXED-v10 — fallback se mega-menu.js ainda não publicado */
+  window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixedTop() {
+    if (window.__SDA_NAV_FIXED_INIT__) return;
+    window.__SDA_NAV_FIXED_INIT__ = true;
+    var DESKTOP_MQ = '(min-width: 992px)';
+    var nav = document.querySelector('.header > .nav-content');
+    if (!nav) return;
+    var spacer = nav.nextElementSibling;
+    if (!spacer || !spacer.classList.contains('nav-content-fixed-spacer')) {
+      spacer = document.createElement('div');
+      spacer.className = 'nav-content-fixed-spacer';
+      spacer.setAttribute('aria-hidden', 'true');
+      nav.parentNode.insertBefore(spacer, nav.nextSibling);
+    }
+    var fixAt = 0;
+    function readScrollY() {
+      return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    }
+    function measure() {
+      nav.classList.remove('is-fixed-top');
+      spacer.style.height = '0';
+      fixAt = nav.getBoundingClientRect().top + readScrollY();
+      if (!fixAt) fixAt = nav.offsetTop || 0;
+    }
+    function update() {
+      if (!window.matchMedia(DESKTOP_MQ).matches) {
+        nav.classList.remove('is-fixed-top');
+        spacer.style.height = '0';
+        return;
+      }
+      var navHeight = nav.offsetHeight;
+      if (readScrollY() >= fixAt - 1) {
+        nav.classList.add('is-fixed-top');
+        spacer.style.height = navHeight + 'px';
+      } else {
+        nav.classList.remove('is-fixed-top');
+        spacer.style.height = '0';
+      }
+    }
+    function remeasureAndUpdate() { measure(); update(); }
+    window.addEventListener('scroll', update, { passive: true });
+    document.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', remeasureAndUpdate, { passive: true });
+    remeasureAndUpdate();
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.initSdaNavFixedTop);
+  } else {
+    window.initSdaNavFixedTop();
+  }
+  window.addEventListener('load', window.initSdaNavFixedTop);
+</script>
+<script>
   window.addEventListener('load', function () {
     if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
       window.initMegaMenuAr();
+    }
+    if (typeof window.initSdaNavFixedTop === 'function') {
+      window.initSdaNavFixedTop();
     }
   });
 </script>
