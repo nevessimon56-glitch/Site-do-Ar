@@ -1039,7 +1039,7 @@ body .header:not(.header-checkout) .search-desktop .btn:hover {
   background-color: #ebebeb !important;
 }
 
-/* --- Banner topo removido + nav fixa ao rolar (NAV-FIXED-v11) — fallback --- */
+/* --- Banner topo removido + nav fixa ao rolar (NAV-FIXED-v12) — fallback --- */
 
 body .header .top-content,
 body .top-content.content {
@@ -1055,123 +1055,41 @@ body .header {
   overflow: visible !important;
 }
 
-body .header .nav-content.is-fixed-top,
-body .nav-content.content.is-fixed-top {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  width: 100% !important;
-  z-index: 1100 !important;
-}
+@media (min-width: 992px) {
 
-body .nav-content-fixed-spacer {
-  display: block;
-  width: 100%;
-  height: 0;
-  pointer-events: none;
+  body .header .nav-content.is-fixed-top,
+  body .nav-content.content.is-fixed-top {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1100 !important;
+  }
+
+  body .nav-content-fixed-spacer {
+    display: block;
+    width: 100%;
+    height: 0;
+    pointer-events: none;
+  }
 }
 
 @media (max-width: 991px) {
 
-  body .header:not(.header-checkout) > .nav-content.hide-lg,
-  body .header:not(.header-checkout) > .nav-content.content.hide-lg {
-    display: block !important;
+  body .header:not(.header-checkout) > .header-content.is-fixed-top {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1100 !important;
   }
 
-  body.checkout-main .header > .nav-content {
-    display: none !important;
-  }
-
-  body .header .nav-content,
-  body .nav-content.content {
-    background: linear-gradient(135deg, #222, #0f0f0f) !important;
-    background-color: #141414 !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  body .header .nav-content::-webkit-scrollbar,
-  body .nav-content.content::-webkit-scrollbar {
-    display: none;
-  }
-
-  body .nav-content > .container,
-  body .header .nav-content > .container {
-    max-width: none !important;
-    width: max-content !important;
-    min-width: 100% !important;
-    padding-left: 8px !important;
-    padding-right: 8px !important;
-    overflow: visible !important;
-  }
-
-  body .nav-content .nav-main {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: stretch !important;
-    gap: 0 !important;
-    width: max-content !important;
-    min-width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  body .nav-content .nav-main_item {
-    flex: 0 0 auto !important;
-    height: auto !important;
-  }
-
-  body .nav-content .nav-main_link {
-    padding: 8px 10px !important;
-    height: auto !important;
-    min-height: 0 !important;
-  }
-
-  body .nav-content .nav-main-box_link {
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 6px !important;
-    min-height: 0 !important;
-    height: auto !important;
-  }
-
-  body .nav-content .nav-main_icon {
-    margin: 0 !important;
-    max-height: 28px !important;
-    height: 28px !important;
-    width: 28px !important;
-  }
-
-  body .nav-content .nav-main_icon img {
-    max-height: 26px !important;
-    max-width: 26px !important;
-    filter: brightness(0) invert(1);
-    opacity: 0.95;
-  }
-
-  body .nav-content .nav-main_text {
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    line-height: 1.15 !important;
-    letter-spacing: 0 !important;
-    white-space: nowrap !important;
-  }
-
-  body .nav-content .nav-main_link,
-  body .nav-content .nav-main_link:visited,
-  body .nav-content .nav-main_link .nav-main_text {
-    color: #fff !important;
-  }
-
-  body .nav-content .nav-main_arrow,
-  body .nav-content .nav-main_content,
-  body .nav-content .mega-menu-ar__panel {
-    display: none !important;
+  body .header-content-fixed-spacer {
+    display: block;
+    width: 100%;
+    height: 0;
+    pointer-events: none;
   }
 }

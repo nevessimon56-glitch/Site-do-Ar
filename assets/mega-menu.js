@@ -2017,23 +2017,13 @@
   window.addEventListener('load', initHomeShowcaseMobile);
 })();
 
-/* NAV-FIXED-v11 — barra de categorias fixa após scroll (desktop + mobile) */
+/* NAV-FIXED-v12 — desktop: barra categorias | mobile: header atual (logo/menu) */
 window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixedTop() {
   if (window.__SDA_NAV_FIXED_INIT__) return;
   window.__SDA_NAV_FIXED_INIT__ = true;
 
-  var nav = document.querySelector('.header > .nav-content');
-  if (!nav) return;
-
-  var spacer = nav.nextElementSibling;
-  if (!spacer || !spacer.classList.contains('nav-content-fixed-spacer')) {
-    spacer = document.createElement('div');
-    spacer.className = 'nav-content-fixed-spacer';
-    spacer.setAttribute('aria-hidden', 'true');
-    nav.parentNode.insertBefore(spacer, nav.nextSibling);
-  }
-
-  var fixAt = 0;
+  var DESKTOP_MQ = '(min-width: 992px)';
+  var MOBILE_MQ = '(max-width: 991px)';
 
   function readScrollY() {
     return window.pageYOffset
@@ -2042,42 +2032,73 @@ window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixe
       || 0;
   }
 
-  function measure() {
-    nav.classList.remove('is-fixed-top');
-    spacer.style.height = '0';
-    fixAt = nav.getBoundingClientRect().top + readScrollY();
-    if (!fixAt) fixAt = nav.offsetTop || 0;
-  }
+  function bindFixedBar(opts) {
+    var bar = document.querySelector(opts.selector);
+    if (!bar) return;
 
-  function update() {
-    var navHeight = nav.offsetHeight;
-    if (!navHeight) {
-      nav.classList.remove('is-fixed-top');
-      spacer.style.height = '0';
-      return;
+    var spacer = bar.nextElementSibling;
+    if (!spacer || !spacer.classList.contains(opts.spacerClass)) {
+      spacer = document.createElement('div');
+      spacer.className = opts.spacerClass;
+      spacer.setAttribute('aria-hidden', 'true');
+      bar.parentNode.insertBefore(spacer, bar.nextSibling);
     }
 
-    var shouldFix = readScrollY() >= fixAt - 1;
+    var fixAt = 0;
 
-    if (shouldFix) {
-      nav.classList.add('is-fixed-top');
-      spacer.style.height = navHeight + 'px';
-    } else {
-      nav.classList.remove('is-fixed-top');
+    function measure() {
+      bar.classList.remove('is-fixed-top');
       spacer.style.height = '0';
+      fixAt = bar.getBoundingClientRect().top + readScrollY();
+      if (!fixAt) fixAt = bar.offsetTop || 0;
     }
+
+    function update() {
+      if (!window.matchMedia(opts.mediaQuery).matches) {
+        bar.classList.remove('is-fixed-top');
+        spacer.style.height = '0';
+        return;
+      }
+
+      var barHeight = bar.offsetHeight;
+      if (!barHeight) {
+        bar.classList.remove('is-fixed-top');
+        spacer.style.height = '0';
+        return;
+      }
+
+      if (readScrollY() >= fixAt - 1) {
+        bar.classList.add('is-fixed-top');
+        spacer.style.height = barHeight + 'px';
+      } else {
+        bar.classList.remove('is-fixed-top');
+        spacer.style.height = '0';
+      }
+    }
+
+    function remeasureAndUpdate() {
+      measure();
+      update();
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    document.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', remeasureAndUpdate, { passive: true });
+    window.addEventListener('load', remeasureAndUpdate);
+    remeasureAndUpdate();
   }
 
-  function remeasureAndUpdate() {
-    measure();
-    update();
-  }
+  bindFixedBar({
+    selector: '.header > .nav-content',
+    mediaQuery: DESKTOP_MQ,
+    spacerClass: 'nav-content-fixed-spacer'
+  });
 
-  window.addEventListener('scroll', update, { passive: true });
-  document.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', remeasureAndUpdate, { passive: true });
-  window.addEventListener('load', remeasureAndUpdate);
-  remeasureAndUpdate();
+  bindFixedBar({
+    selector: '.header:not(.header-checkout) > .header-content',
+    mediaQuery: MOBILE_MQ,
+    spacerClass: 'header-content-fixed-spacer'
+  });
 };
 
 if (document.readyState === 'loading') {
