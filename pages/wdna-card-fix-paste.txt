@@ -1,0 +1,40 @@
+WDNA — CORRIGIR TAMANHO DOS CARDS (passo a passo)
+================================================
+
+PROBLEMA: product-compare.css carrega DEPOIS do mega-menu.css e tinha width:100% nas imagens.
+
+PASSO 1 — Abra assets/mega-menu.css no editor WDNA
+  → Apague TODO o conteúdo
+  → Cole o arquivo completo de:
+  https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/mega-menu.css
+  → Salve
+
+PASSO 2 — Abra assets/product-compare.css
+  → Apague TODO o conteúdo
+  → Cole o arquivo completo de:
+  https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/product-compare.css
+  → Salve
+
+PASSO 3 — No mega-menu.css, APAGUE se encontrar blocos colados manualmente:
+  - PRODUCT-CARD-IMG-COMPACT-v2 / v3 / v4
+  - MOBILE-HEADER-KABUM
+  - mega-menu-wdna-corrected (arquivo inteiro duplicado)
+  - NAV-FIXED-v11 duplicado
+
+PASSO 4 — No product-compare.css, APAGUE se encontrar no FINAL:
+  - NAV-STICKY-v8
+  - NAV-FIXED-v10
+  - NAV-FIXED-v15 (duplicado)
+  Mantenha só UM bloco NAV-FIXED-v15 se existir no arquivo oficial.
+
+PASSO 5 — Tema → PUBLICAR (não só salvar)
+
+PASSO 6 — No celular/PC: abrir site em aba anônima ou limpar cache
+
+RESULTADO ESPERADO DESKTOP: imagem do produto ~148px de altura, card compacto.
+MOBILE: bloco original do tema (carousel / grid 2 col) — não alterado pelo RESTORE-v1.
+
+Se ainda falhar: confirme que theme.liquid carrega nesta ordem:
+  1. mega-menu.css
+  2. product-compare.css
+  3. product-hover-image.css

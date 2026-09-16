@@ -1219,3 +1219,40 @@ body .nav-content-fixed-spacer {
     display: none !important;
   }
 }
+
+/* --- PRODUCT-CARD-IMG-RESTORE-v1 — fallback (este arquivo carrega por último) --- */
+
+@media (min-width: 992px) {
+
+  body .showcase-search .showcase-product_image.card-image,
+  body main.home-main section.showcase .showcase-product_image.card-image {
+    height: var(--sda-card-img-h, 168px) !important;
+    min-height: var(--sda-card-img-h, 168px) !important;
+    max-height: var(--sda-card-img-h, 168px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  body .showcase-search .showcase-product_link__image,
+  body main.home-main section.showcase .showcase-product_link__image,
+  body .showcase-search .product-hover-wrap,
+  body main.home-main section.showcase .product-hover-wrap {
+    height: var(--sda-card-img-h, 168px) !important;
+    max-height: var(--sda-card-img-h, 168px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  body .showcase-search .showcase-product_link__image img,
+  body .showcase-search .product-hover-wrap img,
+  body main.home-main section.showcase .showcase-product_link__image img,
+  body main.home-main section.showcase .product-hover-wrap img {
+    width: auto !important;
+    max-width: 92% !important;
+    max-height: var(--sda-card-img-inner-max, 148px) !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+}
