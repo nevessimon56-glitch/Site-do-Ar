@@ -1,18 +1,17 @@
-WDNA — TAMANHO DOS CARDS (v3 — pixels, não %)
-==============================================
+WDNA — ALTURA DOS CARDS (v4 — mais baixo)
+=========================================
 
-O 92% esticava na coluna larga do grid. Agora usa limite em PX.
+Só altura da área da imagem — card menos alto.
 
 TAMANHOS:
-  Desktop: área 140px | foto max 120px alt × 118px larg
-  Mobile:  área 112px | foto max 100px alt × 96px larg
+  Desktop: área 100px | foto max 88px de altura
+  Mobile:  área 84px  | foto max 76px de altura
 
 PASSO 1 — assets/mega-menu.css (arquivo inteiro)
   https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/mega-menu.css
-  Final do arquivo: PRODUCT-CARD-SIZE-v3
+  Final: PRODUCT-CARD-SIZE-v4
 
-PASSO 2 — assets/product-compare.css (só se ainda tiver width:100% no topo)
+PASSO 2 — assets/product-compare.css (se ainda não atualizou)
   https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/product-compare.css
-  Ou apague só o bloco lazy do topo se preferir mexer só no mega-menu.
 
 PASSO 3 — Publicar tema + aba anônima
