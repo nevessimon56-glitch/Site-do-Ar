@@ -853,6 +853,23 @@
 
 
 /* Hover de imagem nos cards de produto — wrap isolado, 2a imagem só no hover */
+/* PRODUCT-CARD-IMG-COMPACT-v2 — tamanho compacto (168px / 148px) */
+
+:root {
+  --sda-card-img-h: 168px;
+  --sda-card-img-inner-max: 148px;
+}
+
+.showcase-search .showcase-product_image.card-image,
+main.home-main section.showcase .showcase-product_image.card-image {
+  height: var(--sda-card-img-h) !important;
+  min-height: var(--sda-card-img-h) !important;
+  max-height: var(--sda-card-img-h) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
 
 .showcase-product_image.card-image {
   position: relative;
@@ -881,8 +898,12 @@
 
 .product-hover-wrap {
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  height: var(--sda-card-img-h);
+  max-height: var(--sda-card-img-h);
   overflow: hidden;
   line-height: 0;
 }
@@ -893,8 +914,9 @@
   position: relative !important;
   top: auto !important;
   left: auto !important;
-  width: 100% !important;
-  max-width: 100% !important;
+  width: auto !important;
+  max-width: 92% !important;
+  max-height: var(--sda-card-img-inner-max) !important;
   height: auto !important;
   margin: 0 auto;
   z-index: 1;
@@ -907,14 +929,15 @@
 .product-hover-wrap img.product-hover-img--hover {
   display: none !important;
   position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  width: auto !important;
+  max-width: 92% !important;
+  max-height: var(--sda-card-img-inner-max) !important;
+  height: auto !important;
   margin: 0 auto;
   object-fit: contain;
   z-index: 2;
@@ -923,9 +946,24 @@
   pointer-events: none;
 }
 
+.showcase-search .showcase-product_link__image > img,
+.showcase-search .showcase-product_link__image > img.lazy,
+main.home-main section.showcase .showcase-product_link__image > img,
+main.home-main section.showcase .showcase-product_link__image > img.lazy {
+  width: auto !important;
+  max-width: 92% !important;
+  max-height: var(--sda-card-img-inner-max) !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  object-fit: contain !important;
+}
+
 .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--hover,
 .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--hover {
   display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-height: var(--sda-card-img-inner-max) !important;
 }
 
 .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--main,
@@ -3147,15 +3185,27 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
 .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--hover,
 .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--hover,
 .showcase-product.has-hover-image:hover .product-hover-img--alt,
-.showcase-product.has-hover-image.is-img-hover .product-hover-img--alt {
+.showcase-product.has-hover-image.is-img-hover .product-hover-img--alt,
+.showcase-search .showcase-product.card .showcase-product_image .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--hover,
+.showcase-search .showcase-product.card .showcase-product_image .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--hover,
+main.home-main section.showcase .showcase-product.card .showcase-product_image .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--hover,
+main.home-main section.showcase .showcase-product.card .showcase-product_image .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--hover {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  max-height: 100% !important;
-  overflow: hidden !important;
+  max-height: var(--sda-card-img-inner-max, 148px) !important;
+  overflow: visible !important;
   font-size: inherit !important;
   line-height: normal !important;
   text-indent: 0 !important;
+}
+
+.showcase-search .showcase-product.card .showcase-product_image .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--main,
+.showcase-search .showcase-product.card .showcase-product_image .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--main,
+main.home-main section.showcase .showcase-product.card .showcase-product_image .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--main,
+main.home-main section.showcase .showcase-product.card .showcase-product_image .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--main {
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 /* ========== Pill Pix + spec tags — destaque igual versão antiga (PIX-PILL-PROMO-v1) ========== */
