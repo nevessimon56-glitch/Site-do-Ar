@@ -967,3 +967,74 @@ body .search-options_mobile .search-option-icon svg {
 body .search-options_mobile .search-option-title {
   color: #1a1a1a !important;
 }
+
+/* --- Header principal invertido (HEADER-INVERT-v8) — fallback --- */
+
+body .header:not(.header-checkout) {
+  background-color: #0a0a0a !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+body .header:not(.header-checkout) .header-content,
+body .header:not(.header-checkout) .header-content .navbar {
+  background-color: #0a0a0a !important;
+}
+
+body .header:not(.header-checkout) .account_link,
+body .header:not(.header-checkout) a.account_link,
+body .header:not(.header-checkout) .header-link_text,
+body .header:not(.header-checkout) .header-link_text .account_link,
+body .header:not(.header-checkout) .header-link_text a {
+  color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .header-account-kicker,
+body .header:not(.header-checkout) .header-account-label {
+  color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .header-link svg,
+body .header:not(.header-checkout) .header .icon-ssl svg {
+  fill: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .header-link_menu__mobile .icon-bar,
+body .header:not(.header-checkout) .header-link_menu__mobile.active .icon-bar {
+  background-color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .search_link .icon-bar:first-child {
+  border-color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .search_link .icon-bar:last-child,
+body .header:not(.header-checkout) .search_link.active .icon-bar:first-child {
+  background-color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .search-desktop .form-input {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+  color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .search-desktop .form-input::placeholder {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+body .header:not(.header-checkout) .search-desktop .form-input:focus {
+  border-color: #555555 !important;
+}
+
+body .header:not(.header-checkout) .search-desktop .btn {
+  background-color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .search-desktop .btn svg {
+  fill: #0a0a0a !important;
+}
+
+body .header:not(.header-checkout) .search-desktop .btn:focus,
+body .header:not(.header-checkout) .search-desktop .btn:hover {
+  background-color: #ebebeb !important;
+}

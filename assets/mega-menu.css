@@ -4742,3 +4742,75 @@ a.btn.btn-new_user.btn-block:hover {
 .search-options_mobile .search-option-title {
   color: var(--sda-ui-accent) !important;
 }
+
+/* --- Header principal invertido (HEADER-INVERT-v8) — fundo preto, texto/ícones brancos --- */
+/* Não altera checkout nem footer. Logo claro permanece legível no fundo escuro. */
+
+.header:not(.header-checkout) {
+  background-color: #0a0a0a !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.header:not(.header-checkout) .header-content,
+.header:not(.header-checkout) .header-content .navbar {
+  background-color: #0a0a0a !important;
+}
+
+.header:not(.header-checkout) .account_link,
+.header:not(.header-checkout) a.account_link,
+.header:not(.header-checkout) .header-link_text,
+.header:not(.header-checkout) .header-link_text .account_link,
+.header:not(.header-checkout) .header-link_text a {
+  color: #ffffff !important;
+}
+
+.header:not(.header-checkout) .header-account-kicker,
+.header:not(.header-checkout) .header-account-label {
+  color: #ffffff !important;
+}
+
+.header:not(.header-checkout) .header-link svg,
+.header:not(.header-checkout) .header .icon-ssl svg {
+  fill: #ffffff !important;
+}
+
+.header:not(.header-checkout) .header-link_menu__mobile .icon-bar,
+.header:not(.header-checkout) .header-link_menu__mobile.active .icon-bar {
+  background-color: #ffffff !important;
+}
+
+.header:not(.header-checkout) .search_link .icon-bar:first-child {
+  border-color: #ffffff !important;
+}
+
+.header:not(.header-checkout) .search_link .icon-bar:last-child,
+.header:not(.header-checkout) .search_link.active .icon-bar:first-child {
+  background-color: #ffffff !important;
+}
+
+.header:not(.header-checkout) .search-desktop .form-input {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+  color: #ffffff !important;
+}
+
+.header:not(.header-checkout) .search-desktop .form-input::placeholder {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.header:not(.header-checkout) .search-desktop .form-input:focus {
+  border-color: #555555 !important;
+}
+
+.header:not(.header-checkout) .search-desktop .btn {
+  background-color: #ffffff !important;
+}
+
+.header:not(.header-checkout) .search-desktop .btn svg {
+  fill: #0a0a0a !important;
+}
+
+.header:not(.header-checkout) .search-desktop .btn:focus,
+.header:not(.header-checkout) .search-desktop .btn:hover {
+  background-color: #ebebeb !important;
+}
