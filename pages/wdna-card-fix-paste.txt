@@ -1,44 +1,24 @@
-WDNA — CORRIGIR TAMANHO DOS CARDS (passo a passo)
-================================================
+WDNA — CORRIGIR TAMANHO DOS CARDS (desktop + mobile)
+=====================================================
 
-PROBLEMA: bloco .product-hover-wrap img com width:100% !important estourava o card.
-          product-compare.css carrega DEPOIS do mega-menu.css — corrigido nos dois arquivos.
+Escopo: SOMENTE tamanho da imagem nos cards. Sem header, badge, tema.
 
-CORREÇÃO NA ORIGEM (HOVER-IMG-SIZE-v1): procure no mega-menu.css por width:100% neste bloco
-  .product-hover-wrap img.product-hover-img--main — deve ser width:auto + max-height:148px
+TAMANHOS:
+  Desktop (≥992px): área 168px, imagem max 148px
+  Mobile  (≤991px): área 140px, imagem max 130px
 
-PASSO 1 — Abra assets/mega-menu.css no editor WDNA
-  → Apague TODO o conteúdo
-  → Cole o arquivo completo de:
+PASSO 1 — assets/mega-menu.css
+  Apague TODO → cole:
   https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/mega-menu.css
-  → Salve
+  Confirme no final: bloco PRODUCT-CARD-SIZE-v2
 
-PASSO 2 — Abra assets/product-compare.css
-  → Apague TODO o conteúdo
-  → Cole o arquivo completo de:
+PASSO 2 — assets/product-compare.css
+  Apague TODO → cole:
   https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/product-compare.css
-  → Salve
+  Confirme no final: bloco PRODUCT-CARD-SIZE-v2
 
-PASSO 3 — No mega-menu.css, APAGUE se encontrar blocos colados manualmente:
-  - PRODUCT-CARD-IMG-COMPACT-v2 / v3 / v4
-  - MOBILE-HEADER-KABUM
-  - mega-menu-wdna-corrected (arquivo inteiro duplicado)
-  - NAV-FIXED-v11 duplicado
+PASSO 3 — Apague blocos colados manualmente (se existirem):
+  mega-menu.css: PRODUCT-CARD-IMG-COMPACT, MOBILE-HEADER-KABUM, RESTORE-v1 duplicado
+  product-compare.css: NAV duplicados no final
 
-PASSO 4 — No product-compare.css, APAGUE se encontrar no FINAL:
-  - NAV-STICKY-v8
-  - NAV-FIXED-v10
-  - NAV-FIXED-v15 (duplicado)
-  Mantenha só UM bloco NAV-FIXED-v15 se existir no arquivo oficial.
-
-PASSO 5 — Tema → PUBLICAR (não só salvar)
-
-PASSO 6 — No celular/PC: abrir site em aba anônima ou limpar cache
-
-RESULTADO ESPERADO DESKTOP: imagem do produto ~148px de altura, card compacto.
-MOBILE: bloco original do tema (carousel / grid 2 col) — não alterado pelo RESTORE-v1.
-
-Se ainda falhar: confirme que theme.liquid carrega nesta ordem:
-  1. mega-menu.css
-  2. product-compare.css
-  3. product-hover-image.css
+PASSO 4 — Tema → PUBLICAR + aba anônima
