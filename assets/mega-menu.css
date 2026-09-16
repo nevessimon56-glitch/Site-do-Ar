@@ -4815,8 +4815,8 @@ a.btn.btn-new_user.btn-block:hover {
   background-color: #ebebeb !important;
 }
 
-/* --- Banner topo removido + nav fixa ao rolar (NAV-FIXED-v14) --- */
-/* Mobile: NAV-MOBILE-STRIP-v2 — 3 cats, oculta no topo, aparece ao rolar */
+/* --- Banner topo removido + nav fixa ao rolar (NAV-FIXED-v15) --- */
+/* Mobile: NAV-MOBILE-STRIP-v3 — 3 cats, oculta no topo, aparece ao rolar */
 
 .header .top-content,
 .top-content.content {
@@ -4871,12 +4871,17 @@ a.btn.btn-new_user.btn-block:hover {
     transition: opacity 0.2s ease;
   }
 
+  .header:not(.header-checkout) > .nav-content.hide-lg.sda-mobile-nav-revealed,
+  .header:not(.header-checkout) > .nav-content.content.hide-lg.sda-mobile-nav-revealed,
   .header:not(.header-checkout) > .nav-content.sda-mobile-nav-revealed {
+    display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     height: auto !important;
-    min-height: 0 !important;
+    min-height: 52px !important;
     max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
     border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
     overflow: hidden !important;
     pointer-events: auto !important;
@@ -4886,6 +4891,24 @@ a.btn.btn-new_user.btn-block:hover {
     right: 0 !important;
     width: 100% !important;
     z-index: 1100 !important;
+  }
+
+  .header:not(.header-checkout) > .nav-content.sda-mobile-nav-revealed .nav-main > .nav-main_item:first-child,
+  .header:not(.header-checkout) > .nav-content.sda-mobile-nav-strip--3 .nav-main > .nav-main_item:first-child {
+    display: none !important;
+  }
+
+  .header:not(.header-checkout) > .nav-content.sda-mobile-nav-revealed .nav-main,
+  .header:not(.header-checkout) > .nav-content.sda-mobile-nav-strip--3 .nav-main {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
 
   body.checkout-main .header > .nav-content {
@@ -4907,19 +4930,8 @@ a.btn.btn-new_user.btn-block:hover {
     overflow: visible !important;
   }
 
-  .nav-content.sda-mobile-nav-strip--3 .nav-main {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 0 !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  .nav-content.sda-mobile-nav-strip--3 .nav-main_item {
+  .nav-content.sda-mobile-nav-strip--3 .nav-main_item,
+  .nav-content.sda-mobile-nav-revealed .nav-main_item {
     min-width: 0 !important;
     height: auto !important;
   }
