@@ -4232,16 +4232,16 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
   background: linear-gradient(165deg, #ffffff 0%, #fff0e3 100%) !important;
 }
 
-/* ========== Tema cinza — nav, mega menu, conta, mobile (GLOBAL-GRAY-THEME-v4) ========== */
-/* Substitui v1/v2/v3. Mantém azul vivo SOMENTE em produtos (.showcase-product). */
+/* ========== Tema preto suave — nav, mega menu, conta, mobile (GLOBAL-CHARCOAL-THEME-v5) ========== */
+/* Preto mais claro (carvão). Substitui v1–v4. Produtos mantêm azul vivo (.showcase-product). */
 
 :root {
-  --sda-ui-accent: #52525b;
-  --sda-ui-accent-2: #3f3f46;
-  --sda-ui-accent-deep: #404040;
-  --sda-ui-accent-soft: #f3f4f6;
-  --sda-ui-accent-muted: #71717a;
-  --sda-ui-accent-hover: #646464;
+  --sda-ui-accent: #454545;
+  --sda-ui-accent-2: #333333;
+  --sda-ui-accent-deep: #2a2a2a;
+  --sda-ui-accent-soft: #f0f0f0;
+  --sda-ui-accent-muted: #5c5c5c;
+  --sda-ui-accent-hover: #666666;
 }
 
 /* --- Barra de navegação desktop --- */
@@ -4249,24 +4249,24 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 
   .header .nav-content,
   .nav-content.content {
-    background: linear-gradient(135deg, #71717a, #52525b) !important;
-    background-color: #61656c !important;
+    background: linear-gradient(135deg, #5c5c5c, #404040) !important;
+    background-color: #4a4a4a !important;
     border-top-color: rgba(255, 255, 255, 0.12) !important;
   }
 
   .nav-content .nav-main_content a,
   .nav-content .nav-main_children {
-    color: #3f3f46 !important;
+    color: #333333 !important;
   }
 
   .nav-content .nav-main_content li:hover,
   .nav-content .nav-main_content li:focus {
-    background-color: #f3f4f6 !important;
+    background-color: #f0f0f0 !important;
   }
 
   .nav-content .nav-main_content li:hover a,
   .nav-content .nav-main_content li:focus a {
-    color: #404040 !important;
+    color: #2a2a2a !important;
   }
 }
 
@@ -4274,95 +4274,95 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 @media (min-width: 992px) {
 
   .mega-menu-ar__promo-banner {
-    box-shadow: 0 2px 10px rgba(82, 82, 91, 0.14);
-    border-color: rgba(113, 113, 122, 0.2);
+    box-shadow: 0 2px 10px rgba(64, 64, 64, 0.14);
+    border-color: rgba(74, 74, 74, 0.2);
   }
 
   .mega-menu-ar__promo-banner a {
-    background: linear-gradient(90deg, #52525b 0%, #71717a 50%, #52525b 100%);
+    background: linear-gradient(90deg, #454545 0%, #5c5c5c 50%, #454545 100%);
   }
 
   .mega-menu-ar__section-title--hot {
-    color: #52525b;
+    color: #454545;
   }
 
   .mega-menu-ar__offers-label {
-    color: #52525b;
+    color: #454545;
   }
 
   .mega-menu-ar__offers-label span {
-    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-    border-color: #d1d5db;
-    box-shadow: 0 2px 12px rgba(113, 113, 122, 0.12);
+    background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+    border-color: #d4d4d4;
+    box-shadow: 0 2px 12px rgba(92, 92, 92, 0.12);
   }
 
   .mega-menu-ar__offers-label span::before {
-    background: #71717a;
-    box-shadow: 0 0 0 3px rgba(113, 113, 122, 0.2);
+    background: #5c5c5c;
+    box-shadow: 0 0 0 3px rgba(92, 92, 92, 0.2);
   }
 
   .mega-menu-ar__brand-logo:hover {
-    border-color: #a1a1aa;
-    box-shadow: 0 4px 14px rgba(113, 113, 122, 0.12);
+    border-color: #b0b0b0;
+    box-shadow: 0 4px 14px rgba(92, 92, 92, 0.12);
   }
 
   .mega-menu-ar__col-title {
-    color: #52525b;
+    color: #454545;
   }
 
   .mega-menu-ar__links a:hover {
-    color: #646464;
+    color: #666666;
   }
 
   .mega-menu-ar__ver-tudo,
   .mega-menu-ar__ver-tudo:hover {
-    color: #71717a;
+    color: #5c5c5c;
   }
 
   .mega-menu-ar__badge:not(.mega-menu-ar__badge--hot):not(.mega-menu-ar__badge--offer):not(.mega-menu-ar__badge--power) {
-    background: #71717a;
-    box-shadow: 0 4px 12px rgba(113, 113, 122, 0.28);
+    background: #5c5c5c;
+    box-shadow: 0 4px 12px rgba(92, 92, 92, 0.28);
   }
 
   .mega-menu-ar__arrow {
-    color: #52525b;
+    color: #454545;
   }
 
   .mega-menu-ar__arrow:hover {
-    background: #71717a;
+    background: #5c5c5c;
     color: #fff;
   }
 
   .mega-menu-ar__dot.is-active {
-    background: #71717a;
+    background: #5c5c5c;
   }
 
   .mega-menu-ar__banner-kicker {
-    color: #71717a;
+    color: #5c5c5c;
   }
 
   .mega-menu-ar__banner-price {
-    color: #3f3f46;
+    color: #333333;
   }
 
   .mega-menu-ar__banner-cta {
-    background: linear-gradient(135deg, #71717a 0%, #52525b 100%);
-    box-shadow: 0 4px 14px rgba(113, 113, 122, 0.28);
+    background: linear-gradient(135deg, #5c5c5c 0%, #454545 100%);
+    box-shadow: 0 4px 14px rgba(92, 92, 92, 0.28);
   }
 
   .mega-menu-ar__banner-link:hover .mega-menu-ar__banner-cta {
-    background: linear-gradient(135deg, #52525b 0%, #404040 100%);
+    background: linear-gradient(135deg, #454545 0%, #333333 100%);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .mega-menu-ar__banner-wrap {
       box-shadow:
-        0 0 0 1px rgba(113, 113, 122, 0.28),
-        0 10px 28px rgba(82, 82, 91, 0.14);
+        0 0 0 1px rgba(92, 92, 92, 0.28),
+        0 10px 28px rgba(64, 64, 64, 0.14);
     }
 
     .mega-menu-ar__banner-wrap::before {
-      background: linear-gradient(145deg, #a1a1aa 0%, #52525b 35%, #16a34a 65%, #a1a1aa 100%);
+      background: linear-gradient(145deg, #8a8a8a 0%, #454545 35%, #16a34a 65%, #8a8a8a 100%);
     }
   }
 }
@@ -4370,24 +4370,24 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 /* --- Header / conta --- */
 .header-account-kicker,
 .header-account-label {
-  color: #52525b !important;
+  color: #454545 !important;
 }
 
 /* --- Mobile: discover bar + filtros --- */
 @media (max-width: 991px) {
 
   .mobile-discover-bar__chip {
-    color: #52525b !important;
+    color: #454545 !important;
   }
 
   .mobile-discover-bar__chip.is-active {
-    border-color: #71717a;
-    background: #f3f4f6;
-    color: #404040 !important;
+    border-color: #5c5c5c;
+    background: #f0f0f0;
+    color: #2a2a2a !important;
   }
 
   .mobile-catalog-link {
-    color: #52525b !important;
+    color: #454545 !important;
   }
 }
 
@@ -4395,26 +4395,26 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 @media (max-width: 991px) {
 
   .mobile-catalog-dock__btn.is-active {
-    background: linear-gradient(135deg, #71717a, #52525b);
-    box-shadow: 0 3px 12px rgba(113, 113, 122, 0.28);
+    background: linear-gradient(135deg, #5c5c5c, #404040);
+    box-shadow: 0 3px 12px rgba(92, 92, 92, 0.28);
   }
 
   .mobile-catalog-dock__btn:not(.is-active):active {
-    background: #f3f4f6;
-    color: #52525b;
+    background: #f0f0f0;
+    color: #454545;
   }
 
   .mobile-catalog-dock__sheet-title {
-    color: #3f3f46;
+    color: #333333;
   }
 
   .mobile-catalog-dock__sheet-link {
-    color: #52525b !important;
+    color: #454545 !important;
   }
 
   .mobile-catalog-dock__sheet-link.is-active {
-    background: #f3f4f6;
-    color: #404040 !important;
+    background: #f0f0f0;
+    color: #2a2a2a !important;
   }
 }
 
@@ -4422,82 +4422,82 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 @media (max-width: 991px) {
 
   .mobile-account-dock__btn.is-active {
-    background: linear-gradient(135deg, #71717a, #52525b);
-    box-shadow: 0 3px 12px rgba(113, 113, 122, 0.28);
+    background: linear-gradient(135deg, #5c5c5c, #404040);
+    box-shadow: 0 3px 12px rgba(92, 92, 92, 0.28);
   }
 }
 
 /* --- Navegação da conta --- */
 .customer-account-nav--page .customer-account-nav__item.is-active {
-  background: #f3f4f6;
-  color: #404040 !important;
+  background: #f0f0f0;
+  color: #2a2a2a !important;
 }
 
 .customer-account-nav--page .customer-account-nav__item.is-active .customer-account-nav__icon {
-  background: rgba(113, 113, 122, 0.14);
+  background: rgba(92, 92, 92, 0.14);
 }
 
 .customer-account-nav__item:hover {
-  background: #f9fafb;
-  color: #3f3f46 !important;
+  background: #fafafa;
+  color: #333333 !important;
 }
 
 .customer-account-nav__item.is-active {
-  background: linear-gradient(135deg, #71717a, #52525b);
-  box-shadow: 0 3px 12px rgba(113, 113, 122, 0.24);
+  background: linear-gradient(135deg, #5c5c5c, #404040);
+  box-shadow: 0 3px 12px rgba(92, 92, 92, 0.24);
 }
 
 .customer-account-nav__icon {
-  background: rgba(113, 113, 122, 0.12);
+  background: rgba(92, 92, 92, 0.12);
 }
 
 .sidenav-overlay_account .pages-nav .btn-access:hover {
-  border-color: #d1d5db !important;
-  background: #f3f4f6 !important;
-  color: #3f3f46 !important;
+  border-color: #d4d4d4 !important;
+  background: #f0f0f0 !important;
+  color: #333333 !important;
 }
 
 /* --- Cancelamento de pedido (sidenav) --- */
 .sidenav-overlay.sidenav-order_cancel .order-cancel-avatar:not(.order-cancel-avatar--store):not(.order-cancel-avatar--success):not(.order-cancel-avatar--warning):not(.avatar_success):not(.avatar_warning) {
-  background: #71717a;
+  background: #5c5c5c;
 }
 
 .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__input:focus,
 .sidenav-overlay.sidenav-order_cancel .order-cancel-form__textarea:focus {
-  border-color: #71717a;
-  box-shadow: 0 0 0 3px rgba(113, 113, 122, 0.18);
+  border-color: #5c5c5c;
+  box-shadow: 0 0 0 3px rgba(92, 92, 92, 0.18);
 }
 
 .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn,
 .sidenav-overlay.sidenav-order_cancel .order-cancel-form__submit {
-  background: #71717a;
+  background: #5c5c5c;
 }
 
 .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn:hover,
 .sidenav-overlay.sidenav-order_cancel .order-cancel-form__submit:hover {
-  background: #52525b;
+  background: #454545;
 }
 
 /* --- Comparador: barra/painel (UI) — preços e botões dos cards permanecem azuis --- */
 .product-compare-bar__badge {
-  background: #71717a;
+  background: #5c5c5c;
 }
 
 .product-compare-bar__btn--ghost {
-  background: #f3f4f6;
-  color: #52525b;
+  background: #f0f0f0;
+  color: #454545;
 }
 
 .product-compare-bar__btn--primary {
-  background: linear-gradient(135deg, #71717a, #52525b);
+  background: linear-gradient(135deg, #5c5c5c, #404040);
 }
 
 .product-compare-panel__close {
-  background: #f3f4f6;
-  color: #52525b;
+  background: #f0f0f0;
+  color: #454545;
 }
 
 .product-compare-panel__vs {
-  background: #f3f4f6;
-  color: #52525b;
+  background: #f0f0f0;
+  color: #454545;
 }

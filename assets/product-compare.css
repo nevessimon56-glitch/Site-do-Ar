@@ -651,86 +651,86 @@ body.has-compare-bar.has-mobile-account-dock {
   }
 }
 
-/* ========== Tema cinza — fallback (GLOBAL-GRAY-THEME-v4) ========== */
-/* Substitui v1/v2/v3. Carrega por último e vence o NAV-BAR azul vivo. */
+/* ========== Tema preto suave — fallback (GLOBAL-CHARCOAL-THEME-v5) ========== */
+/* Substitui v1–v4. Carrega por último e vence o NAV-BAR azul vivo. */
 
 @media (min-width: 992px) {
 
   body .header .nav-content,
   body .nav-content.content {
-    background: linear-gradient(135deg, #71717a, #52525b) !important;
-    background-color: #61656c !important;
+    background: linear-gradient(135deg, #5c5c5c, #404040) !important;
+    background-color: #4a4a4a !important;
     border-top-color: rgba(255, 255, 255, 0.12) !important;
   }
 
   body .nav-content .nav-main_content a,
   body .nav-content .nav-main_children {
-    color: #3f3f46 !important;
+    color: #333333 !important;
   }
 
   body .nav-content .nav-main_content li:hover,
   body .nav-content .nav-main_content li:focus {
-    background-color: #f3f4f6 !important;
+    background-color: #f0f0f0 !important;
   }
 
   body .nav-content .nav-main_content li:hover a,
   body .nav-content .nav-main_content li:focus a {
-    color: #404040 !important;
+    color: #2a2a2a !important;
   }
 }
 
 @media (min-width: 992px) {
 
   body .mega-menu-ar__promo-banner a {
-    background: linear-gradient(90deg, #52525b 0%, #71717a 50%, #52525b 100%) !important;
+    background: linear-gradient(90deg, #454545 0%, #5c5c5c 50%, #454545 100%) !important;
   }
 
   body .mega-menu-ar__section-title--hot,
   body .mega-menu-ar__col-title,
   body .mega-menu-ar__ver-tudo {
-    color: #52525b !important;
+    color: #454545 !important;
   }
 
   body .mega-menu-ar__links a:hover {
-    color: #646464 !important;
+    color: #666666 !important;
   }
 
   body .mega-menu-ar__banner-price {
-    color: #3f3f46 !important;
+    color: #333333 !important;
   }
 
   body .mega-menu-ar__banner-cta {
-    background: linear-gradient(135deg, #71717a 0%, #52525b 100%) !important;
+    background: linear-gradient(135deg, #5c5c5c 0%, #454545 100%) !important;
   }
 }
 
 body .header-account-kicker,
 body .header-account-label {
-  color: #52525b !important;
+  color: #454545 !important;
 }
 
 @media (max-width: 991px) {
 
   body .mobile-catalog-dock__btn.is-active,
   body .mobile-account-dock__btn.is-active {
-    background: linear-gradient(135deg, #71717a, #52525b) !important;
+    background: linear-gradient(135deg, #5c5c5c, #404040) !important;
   }
 
   body .mobile-discover-bar__chip.is-active {
-    border-color: #71717a !important;
-    background: #f3f4f6 !important;
-    color: #404040 !important;
+    border-color: #5c5c5c !important;
+    background: #f0f0f0 !important;
+    color: #2a2a2a !important;
   }
 }
 
 body .customer-account-nav__item.is-active {
-  background: linear-gradient(135deg, #71717a, #52525b) !important;
+  background: linear-gradient(135deg, #5c5c5c, #404040) !important;
 }
 
 body .product-compare-bar__badge {
-  background: #71717a !important;
+  background: #5c5c5c !important;
 }
 
 body .product-compare-bar__btn--primary {
-  background: linear-gradient(135deg, #71717a, #52525b) !important;
+  background: linear-gradient(135deg, #5c5c5c, #404040) !important;
 }
