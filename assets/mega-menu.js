@@ -2017,112 +2017,42 @@
   window.addEventListener('load', initHomeShowcaseMobile);
 })();
 
-/* NAV-MOBILE-STRIP-v3 — mobile: só Split Inverter, Piso Teto e Janela */
+/* MOBILE-HEADER-KABUM-v1 — placeholder da busca mobile */
 (function () {
   'use strict';
 
   var MOBILE_MQ = '(max-width: 991px)';
-  var KEEP_NAV = [
-    { path: '/split-inverter', label: 'split inverter' },
-    { path: '/piso-teto', label: 'piso teto' },
-    { path: '/janela', label: 'janela' }
-  ];
 
-  function normalizePath(href) {
-    try {
-      var url = new URL(href, window.location.origin);
-      return (url.pathname || '').toLowerCase().replace(/\/+$/, '') || '/';
-    } catch (err) {
-      return (href || '').toLowerCase().split('?')[0].replace(/\/+$/, '') || '/';
+  function initSdaMobileKabumHeader() {
+    var input = document.getElementById('term2');
+    if (!input) return;
+
+    if (window.matchMedia(MOBILE_MQ).matches) {
+      input.setAttribute('placeholder', 'Busque no Site do Ar');
+    } else if (input.getAttribute('data-sda-placeholder-default')) {
+      input.setAttribute('placeholder', input.getAttribute('data-sda-placeholder-default'));
+    } else if (input.placeholder && input.placeholder !== 'Busque no Site do Ar') {
+      input.setAttribute('data-sda-placeholder-default', input.placeholder);
     }
   }
 
-  function getTopNavItems(navMain) {
-    var items = [];
-    var child = navMain.firstElementChild;
-    while (child) {
-      if (child.classList && child.classList.contains('nav-main_item')) {
-        items.push(child);
-      }
-      child = child.nextElementSibling;
-    }
-    return items;
-  }
-
-  function shouldKeepNavItem(item) {
-    var link = item.querySelector('a.nav-main_link');
-    if (!link) return false;
-
-    var path = normalizePath(link.getAttribute('href') || '');
-    var text = (link.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
-
-    if (text.indexOf('todos os produtos') !== -1 || path.indexOf('todos-os-produtos') !== -1) {
-      return false;
-    }
-
-    for (var i = 0; i < KEEP_NAV.length; i++) {
-      if (path.indexOf(KEEP_NAV[i].path) !== -1 || text === KEEP_NAV[i].label) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function resetMobileNavStrip() {
-    var navContent = document.querySelector('.header > .nav-content');
-    if (!navContent) return;
-
-    navContent.classList.remove('sda-mobile-nav-strip--3', 'sda-mobile-nav-revealed');
-    var items = navContent.querySelectorAll('.nav-main > .nav-main_item');
-    for (var i = 0; i < items.length; i++) {
-      items[i].style.display = '';
-    }
-  }
-
-  function applyMobileNavStrip() {
-    var navContent = document.querySelector('.header > .nav-content');
-    if (!navContent) return;
-
-    var navMain = navContent.querySelector('.nav-main');
-    if (!navMain) return;
-
-    var items = getTopNavItems(navMain);
-    var visible = 0;
-
-    for (var i = 0; i < items.length; i++) {
-      var keep = shouldKeepNavItem(items[i]);
-      items[i].style.display = keep ? '' : 'none';
-      if (keep) visible++;
-    }
-
-    navContent.classList.toggle('sda-mobile-nav-strip--3', visible > 0);
-  }
-
-  function initSdaMobileNavStrip() {
-    if (!window.matchMedia(MOBILE_MQ).matches) {
-      resetMobileNavStrip();
-      return;
-    }
-    applyMobileNavStrip();
-  }
-
-  window.initSdaMobileNavStrip = initSdaMobileNavStrip;
+  window.initSdaMobileKabumHeader = initSdaMobileKabumHeader;
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSdaMobileNavStrip);
+    document.addEventListener('DOMContentLoaded', initSdaMobileKabumHeader);
   } else {
-    initSdaMobileNavStrip();
+    initSdaMobileKabumHeader();
   }
-  window.addEventListener('load', initSdaMobileNavStrip);
-  window.addEventListener('resize', initSdaMobileNavStrip);
+  window.addEventListener('load', initSdaMobileKabumHeader);
+  window.addEventListener('resize', initSdaMobileKabumHeader);
 })();
 
-/* NAV-FIXED-v15 — desktop: fixa nav | mobile: revela 3 cats só após rolar */
+/* NAV-FIXED-v16 — desktop: barra categorias fixa (mobile usa MOBILE-HEADER-KABUM-v1) */
 window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixedTop() {
   if (window.__SDA_NAV_FIXED_INIT__) return;
   window.__SDA_NAV_FIXED_INIT__ = true;
 
-  var MOBILE_MQ = '(max-width: 991px)';
+  var DESKTOP_MQ = '(min-width: 992px)';
   var nav = document.querySelector('.header > .nav-content');
   if (!nav) return;
 
@@ -2143,44 +2073,24 @@ window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixe
       || 0;
   }
 
-  function getMobileRevealAt() {
-    var headerContent = document.querySelector('.header:not(.header-checkout) > .header-content');
-    var headerHeight = headerContent && headerContent.offsetHeight ? headerContent.offsetHeight : 56;
-    return Math.max(48, Math.min(headerHeight, 100));
-  }
-
   function measure() {
     nav.classList.remove('is-fixed-top');
     spacer.style.height = '0';
 
-    if (window.matchMedia(MOBILE_MQ).matches) {
+    if (!window.matchMedia(DESKTOP_MQ).matches) {
       return;
     }
 
-    nav.classList.remove('sda-mobile-nav-revealed');
     fixAt = nav.getBoundingClientRect().top + readScrollY();
     if (!fixAt) fixAt = nav.offsetTop || 0;
   }
 
   function update() {
-    if (window.matchMedia(MOBILE_MQ).matches) {
+    if (!window.matchMedia(DESKTOP_MQ).matches) {
       nav.classList.remove('is-fixed-top');
       spacer.style.height = '0';
-
-      if (typeof window.initSdaMobileNavStrip === 'function') {
-        window.initSdaMobileNavStrip();
-      }
-
-      if (readScrollY() >= getMobileRevealAt() - 1) {
-        nav.classList.add('sda-mobile-nav-revealed');
-        nav.classList.add('sda-mobile-nav-strip--3');
-      } else {
-        nav.classList.remove('sda-mobile-nav-revealed');
-      }
       return;
     }
-
-    nav.classList.remove('sda-mobile-nav-revealed');
 
     var navHeight = nav.offsetHeight;
     if (!navHeight) {
