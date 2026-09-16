@@ -1147,8 +1147,11 @@ body .nav-content-fixed-spacer {
   body .header:not(.header-checkout) .header-content .navbar > .navbar-section:first-child,
   body .header:not(.header-checkout) .header-content .header-link_search,
   body .header:not(.header-checkout) .header-content .header-box-account_tel,
+  body .header:not(.header-checkout) .header-content .header-box_whatsapp,
+  body .header:not(.header-checkout) .header-content .header-link_whatsapp,
   body .header:not(.header-checkout) .header-content .navbar > .navbar-section:last-child > .header-link_search,
-  body .header:not(.header-checkout) .header-content .navbar > .navbar-section:last-child > .header-box-account_tel {
+  body .header:not(.header-checkout) .header-content .navbar > .navbar-section:last-child > .header-box-account_tel,
+  body .header:not(.header-checkout) .header-content .navbar > .navbar-section:last-child > .header-box_whatsapp {
     display: none !important;
   }
 
@@ -1296,6 +1299,7 @@ body .nav-content-fixed-spacer {
     background: transparent !important;
   }
 
+  body .header:not(.header-checkout) .header-content .search.close,
   body .header:not(.header-checkout) > .search.close {
     display: none !important;
   }

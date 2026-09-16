@@ -4925,8 +4925,8 @@ body .header:not(.header-checkout) .search-desktop .btn:hover {
   }
 }
 
-/* --- Header mobile fixo estilo KaBuM (MOBILE-HEADER-KABUM-v3) --- */
-/* Estrutura sections/header.liquid: menu | busca (#term2) | carrinho */
+/* --- Header mobile fixo estilo KaBuM (MOBILE-HEADER-KABUM-v4) --- */
+/* sections/header.liquid: navbar-center > #term2 | última section > cart + menu */
 
 @media (max-width: 991px) {
 
@@ -4994,8 +4994,11 @@ body .header:not(.header-checkout) .search-desktop .btn:hover {
   .header:not(.header-checkout) .header-content .navbar > .navbar-section:first-child,
   .header:not(.header-checkout) .header-content .header-link_search,
   .header:not(.header-checkout) .header-content .header-box-account_tel,
+  .header:not(.header-checkout) .header-content .header-box_whatsapp,
+  .header:not(.header-checkout) .header-content .header-link_whatsapp,
   .header:not(.header-checkout) .header-content .navbar > .navbar-section:last-child > .header-link_search,
-  .header:not(.header-checkout) .header-content .navbar > .navbar-section:last-child > .header-box-account_tel {
+  .header:not(.header-checkout) .header-content .navbar > .navbar-section:last-child > .header-box-account_tel,
+  .header:not(.header-checkout) .header-content .navbar > .navbar-section:last-child > .header-box_whatsapp {
     display: none !important;
   }
 
@@ -5143,6 +5146,7 @@ body .header:not(.header-checkout) .search-desktop .btn:hover {
     background: transparent !important;
   }
 
+  .header:not(.header-checkout) .header-content .search.close,
   .header:not(.header-checkout) > .search.close {
     display: none !important;
   }
