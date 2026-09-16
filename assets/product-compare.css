@@ -651,31 +651,31 @@ body.has-compare-bar.has-mobile-account-dock {
   }
 }
 
-/* ========== Nav azul→laranja — fallback (GLOBAL-BRAND-GRADIENT-THEME-v6) ========== */
-/* Carrega por último. Barra de nav: gradiente marca azul → laranja. */
+/* ========== Tema site preto — fallback (GLOBAL-BLACK-SITE-THEME-v7) ========== */
+/* Carrega por último. Vence theme-custom. Footer e cards de produto intactos. */
 
 @media (min-width: 992px) {
 
   body .header .nav-content,
   body .nav-content.content {
-    background: linear-gradient(to top, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%) !important;
-    background-color: #1a6eb5 !important;
+    background: linear-gradient(135deg, #5c5c5c 0%, #404040 100%) !important;
+    background-color: #404040 !important;
     border-top-color: rgba(255, 255, 255, 0.1) !important;
   }
 
   body .nav-content .nav-main_content a,
   body .nav-content .nav-main_children {
-    color: #1a6eb5 !important;
+    color: #454545 !important;
   }
 
   body .nav-content .nav-main_content li:hover,
   body .nav-content .nav-main_content li:focus {
-    background-color: #fff4ea !important;
+    background-color: #f0f0f0 !important;
   }
 
   body .nav-content .nav-main_content li:hover a,
   body .nav-content .nav-main_content li:focus a {
-    color: #bf360c !important;
+    color: #333333 !important;
   }
 }
 
@@ -713,7 +713,7 @@ body .header-account-label {
 
   body .mobile-catalog-dock__btn.is-active,
   body .mobile-account-dock__btn.is-active {
-    background: linear-gradient(to top, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%) !important;
+    background: linear-gradient(135deg, #5c5c5c 0%, #404040 100%) !important;
   }
 
   body .mobile-discover-bar__chip.is-active {
@@ -733,4 +733,147 @@ body .product-compare-bar__badge {
 
 body .product-compare-bar__btn--primary {
   background: linear-gradient(135deg, #5c5c5c, #404040) !important;
+}
+
+/* --- theme-custom: azul → preto (exceto footer e cards) --- */
+
+body .header .icon-ssl svg,
+body .header-link svg {
+  fill: #5c5c5c !important;
+}
+
+body .header-link_menu__mobile .icon-bar,
+body .header-link_menu__mobile.active .icon-bar {
+  background-color: #5c5c5c !important;
+}
+
+body .search_link .icon-bar:first-child {
+  border-color: #5c5c5c !important;
+}
+
+body .search_link .icon-bar:last-child,
+body .search_link.active .icon-bar:first-child {
+  background-color: #5c5c5c !important;
+}
+
+body .search-desktop .btn {
+  background-color: #404040 !important;
+}
+
+body .search-desktop .btn:focus,
+body .search-desktop .btn:hover {
+  background-color: #333333 !important;
+}
+
+body .sidebar-nav .sidebar-nav-header {
+  background-color: #404040 !important;
+  border-bottom-color: #333333 !important;
+}
+
+body .showcase-products .slider__arrow {
+  border-color: #5c5c5c !important;
+}
+
+body .showcase-products .slider__arrow:focus,
+body .showcase-products .slider__arrow:hover {
+  background-color: #f0f0f0 !important;
+  border-color: #5c5c5c !important;
+}
+
+body .showcase-products .slider__arrow svg,
+body .showcase-products .slider__arrow:focus svg,
+body .showcase-products .slider__arrow:hover svg {
+  fill: #5c5c5c !important;
+}
+
+body a.btn.btn-lg.col-12 {
+  background-color: #404040 !important;
+  border-color: #333333 !important;
+}
+
+body a.btn.btn-lg.col-12:hover {
+  background-color: #333333 !important;
+  border-color: #333333 !important;
+  box-shadow: 0 6px 16px rgba(64, 64, 64, 0.28) !important;
+}
+
+body input.btn.search-filters-btn.search-filters-btn_finish {
+  background-color: #404040 !important;
+  border-color: #333333 !important;
+}
+
+body input.btn.search-filters-btn.search-filters-btn_finish:hover {
+  background-color: #333333 !important;
+  border-color: #333333 !important;
+  box-shadow: 0 6px 16px rgba(64, 64, 64, 0.28) !important;
+}
+
+body .btu-filter-btn {
+  border-color: #d4d4d4 !important;
+  color: #454545 !important;
+}
+
+body .btu-filter-btn:hover {
+  background: #f0f0f0 !important;
+  border-color: #b0b0b0 !important;
+}
+
+body .btu-filter-btn.active {
+  background: #404040 !important;
+  border-color: #333333 !important;
+  color: #fff !important;
+}
+
+body .search-filter_brand .form-checkbox {
+  border-color: #d4d4d4 !important;
+}
+
+body .search-filter_brand .form-checkbox:hover {
+  background: #f0f0f0 !important;
+  border-color: #b0b0b0 !important;
+}
+
+body .search-filter_brand .form-text {
+  color: #454545 !important;
+}
+
+body .search-filter_brand input[type="checkbox"]:checked~.form-text,
+body .search-filter_brand .brand-checked {
+  background: #404040 !important;
+  border-color: #333333 !important;
+  color: #fff !important;
+}
+
+body .search-filter_brand .brand-checked .form-text {
+  color: #fff !important;
+}
+
+body button.btn.btn-login.btn-block,
+body a.btn.btn-new_user.btn-block {
+  background-color: #404040 !important;
+  border-color: #333333 !important;
+}
+
+body button.btn.btn-login.btn-block:hover,
+body a.btn.btn-new_user.btn-block:hover {
+  background-color: #333333 !important;
+  border-color: #333333 !important;
+}
+
+@media (min-width: 992px) {
+  body .search-filters::-webkit-scrollbar-thumb:hover {
+    background: #5c5c5c !important;
+  }
+}
+
+@media (max-width: 991px) {
+  body .mobile-todos-produtos {
+    color: #454545 !important;
+    border-color: #5c5c5c !important;
+  }
+
+  body .mobile-todos-produtos:hover {
+    background: #404040 !important;
+    color: #fff !important;
+  }
 }
