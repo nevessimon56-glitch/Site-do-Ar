@@ -651,31 +651,31 @@ body.has-compare-bar.has-mobile-account-dock {
   }
 }
 
-/* ========== Tema preto suave — fallback (GLOBAL-CHARCOAL-THEME-v5) ========== */
-/* Substitui v1–v4. Carrega por último e vence o NAV-BAR azul vivo. */
+/* ========== Nav azul→laranja — fallback (GLOBAL-BRAND-GRADIENT-THEME-v6) ========== */
+/* Carrega por último. Barra de nav: gradiente marca azul → laranja. */
 
 @media (min-width: 992px) {
 
   body .header .nav-content,
   body .nav-content.content {
-    background: linear-gradient(135deg, #5c5c5c, #404040) !important;
-    background-color: #4a4a4a !important;
-    border-top-color: rgba(255, 255, 255, 0.12) !important;
+    background: linear-gradient(90deg, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%) !important;
+    background-color: #1a6eb5 !important;
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
   }
 
   body .nav-content .nav-main_content a,
   body .nav-content .nav-main_children {
-    color: #333333 !important;
+    color: #1a6eb5 !important;
   }
 
   body .nav-content .nav-main_content li:hover,
   body .nav-content .nav-main_content li:focus {
-    background-color: #f0f0f0 !important;
+    background-color: #fff4ea !important;
   }
 
   body .nav-content .nav-main_content li:hover a,
   body .nav-content .nav-main_content li:focus a {
-    color: #2a2a2a !important;
+    color: #bf360c !important;
   }
 }
 
@@ -713,7 +713,7 @@ body .header-account-label {
 
   body .mobile-catalog-dock__btn.is-active,
   body .mobile-account-dock__btn.is-active {
-    background: linear-gradient(135deg, #5c5c5c, #404040) !important;
+    background: linear-gradient(90deg, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%) !important;
   }
 
   body .mobile-discover-bar__chip.is-active {

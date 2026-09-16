@@ -4232,10 +4232,15 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
   background: linear-gradient(165deg, #ffffff 0%, #fff0e3 100%) !important;
 }
 
-/* ========== Tema preto suave — nav, mega menu, conta, mobile (GLOBAL-CHARCOAL-THEME-v5) ========== */
-/* Preto mais claro (carvão). Substitui v1–v4. Produtos mantêm azul vivo (.showcase-product). */
+/* ========== Tema UI + nav azul→laranja (GLOBAL-BRAND-GRADIENT-THEME-v6) ========== */
+/* Barra de nav: gradiente azul → laranja (marca). Resto carvão. Produtos mantêm azul/laranja. */
 
 :root {
+  --sda-brand-blue: #1a6eb5;
+  --sda-brand-blue-light: #2c8fd6;
+  --sda-brand-orange: #e65100;
+  --sda-brand-orange-light: #f57c00;
+  --sda-nav-gradient: linear-gradient(90deg, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%);
   --sda-ui-accent: #454545;
   --sda-ui-accent-2: #333333;
   --sda-ui-accent-deep: #2a2a2a;
@@ -4244,29 +4249,29 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
   --sda-ui-accent-hover: #666666;
 }
 
-/* --- Barra de navegação desktop --- */
+/* --- Barra de navegação — azul → laranja --- */
 @media (min-width: 992px) {
 
   .header .nav-content,
   .nav-content.content {
-    background: linear-gradient(135deg, #5c5c5c, #404040) !important;
-    background-color: #4a4a4a !important;
-    border-top-color: rgba(255, 255, 255, 0.12) !important;
+    background: var(--sda-nav-gradient) !important;
+    background-color: #1a6eb5 !important;
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
   }
 
   .nav-content .nav-main_content a,
   .nav-content .nav-main_children {
-    color: #333333 !important;
+    color: #1a6eb5 !important;
   }
 
   .nav-content .nav-main_content li:hover,
   .nav-content .nav-main_content li:focus {
-    background-color: #f0f0f0 !important;
+    background-color: #fff4ea !important;
   }
 
   .nav-content .nav-main_content li:hover a,
   .nav-content .nav-main_content li:focus a {
-    color: #2a2a2a !important;
+    color: #bf360c !important;
   }
 }
 
@@ -4395,8 +4400,8 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 @media (max-width: 991px) {
 
   .mobile-catalog-dock__btn.is-active {
-    background: linear-gradient(135deg, #5c5c5c, #404040);
-    box-shadow: 0 3px 12px rgba(92, 92, 92, 0.28);
+    background: var(--sda-nav-gradient);
+    box-shadow: 0 3px 12px rgba(230, 81, 0, 0.28);
   }
 
   .mobile-catalog-dock__btn:not(.is-active):active {
@@ -4422,8 +4427,8 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
 @media (max-width: 991px) {
 
   .mobile-account-dock__btn.is-active {
-    background: linear-gradient(135deg, #5c5c5c, #404040);
-    box-shadow: 0 3px 12px rgba(92, 92, 92, 0.28);
+    background: var(--sda-nav-gradient);
+    box-shadow: 0 3px 12px rgba(230, 81, 0, 0.28);
   }
 }
 
