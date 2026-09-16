@@ -853,22 +853,11 @@
 
 
 /* Hover de imagem nos cards de produto — wrap isolado, 2a imagem só no hover */
-/* PRODUCT-CARD-IMG-COMPACT-v2 — tamanho compacto (168px / 148px) */
+/* PRODUCT-CARD-IMG-COMPACT-v3 — compacto só desktop; mobile usa bloco @767px abaixo */
 
 :root {
   --sda-card-img-h: 168px;
   --sda-card-img-inner-max: 148px;
-}
-
-.showcase-search .showcase-product_image.card-image,
-main.home-main section.showcase .showcase-product_image.card-image {
-  height: var(--sda-card-img-h) !important;
-  min-height: var(--sda-card-img-h) !important;
-  max-height: var(--sda-card-img-h) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-sizing: border-box !important;
 }
 
 .showcase-product_image.card-image {
@@ -898,12 +887,8 @@ main.home-main section.showcase .showcase-product_image.card-image {
 
 .product-hover-wrap {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   width: 100%;
-  height: var(--sda-card-img-h);
-  max-height: var(--sda-card-img-h);
   overflow: hidden;
   line-height: 0;
 }
@@ -916,7 +901,6 @@ main.home-main section.showcase .showcase-product_image.card-image {
   left: auto !important;
   width: auto !important;
   max-width: 92% !important;
-  max-height: var(--sda-card-img-inner-max) !important;
   height: auto !important;
   margin: 0 auto;
   z-index: 1;
@@ -936,7 +920,6 @@ main.home-main section.showcase .showcase-product_image.card-image {
   transform: translate(-50%, -50%) !important;
   width: auto !important;
   max-width: 92% !important;
-  max-height: var(--sda-card-img-inner-max) !important;
   height: auto !important;
   margin: 0 auto;
   object-fit: contain;
@@ -946,30 +929,62 @@ main.home-main section.showcase .showcase-product_image.card-image {
   pointer-events: none;
 }
 
-.showcase-search .showcase-product_link__image > img,
-.showcase-search .showcase-product_link__image > img.lazy,
-main.home-main section.showcase .showcase-product_link__image > img,
-main.home-main section.showcase .showcase-product_link__image > img.lazy {
-  width: auto !important;
-  max-width: 92% !important;
-  max-height: var(--sda-card-img-inner-max) !important;
-  height: auto !important;
-  margin: 0 auto !important;
-  object-fit: contain !important;
-}
-
 .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--hover,
 .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--hover {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  max-height: var(--sda-card-img-inner-max) !important;
 }
 
 .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--main,
 .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--main {
   opacity: 0 !important;
   visibility: hidden !important;
+}
+
+@media (min-width: 992px) {
+
+  .showcase-search .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-product_image.card-image {
+    height: var(--sda-card-img-h) !important;
+    min-height: var(--sda-card-img-h) !important;
+    max-height: var(--sda-card-img-h) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .product-hover-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--sda-card-img-h);
+    max-height: var(--sda-card-img-h);
+  }
+
+  .product-hover-wrap img.product-hover-img--main,
+  .product-hover-wrap img.product-hover-swap:not(.product-hover-img--hover),
+  .product-hover-wrap img.product-hover-img--hover {
+    max-height: var(--sda-card-img-inner-max) !important;
+  }
+
+  .showcase-search .showcase-product_link__image > img,
+  .showcase-search .showcase-product_link__image > img.lazy,
+  main.home-main section.showcase .showcase-product_link__image > img,
+  main.home-main section.showcase .showcase-product_link__image > img.lazy {
+    width: auto !important;
+    max-width: 92% !important;
+    max-height: var(--sda-card-img-inner-max) !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    object-fit: contain !important;
+  }
+
+  .showcase-product_link__image.is-hovering .product-hover-wrap img.product-hover-img--hover,
+  .showcase-product_link__image:hover .product-hover-wrap img.product-hover-img--hover {
+    max-height: var(--sda-card-img-inner-max) !important;
+  }
 }
 
 .showcase-product_link__image img.product-hover-img--main.lazy.loaded,
@@ -4910,8 +4925,8 @@ a.btn.btn-new_user.btn-block:hover {
   }
 }
 
-/* --- Header mobile fixo estilo KaBuM (MOBILE-HEADER-KABUM-v2) --- */
-/* Menu | busca branca central | carrinho — busca fica dentro de .navbar-center */
+/* --- Header mobile fixo estilo KaBuM (MOBILE-HEADER-KABUM-v3) --- */
+/* Estrutura sections/header.liquid: menu | busca (#term2) | carrinho */
 
 @media (max-width: 991px) {
 
@@ -4921,6 +4936,30 @@ a.btn.btn-new_user.btn-block:hover {
 
   body:not(.checkout-main).has-mobile-catalog-dock {
     padding-top: calc(58px + env(safe-area-inset-top, 0px));
+  }
+
+  body .header:not(.header-checkout) .navbar-center,
+  .header:not(.header-checkout) .header-content .navbar-center {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  body .header:not(.header-checkout) .search-desktop.hide-lg .form-input,
+  body .header:not(.header-checkout) .search-desktop.hide-lg .btn {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body .header:not(.header-checkout) .search-desktop.hide-lg .form-input {
+    color: #1a1a1a !important;
+  }
+
+  body .header:not(.header-checkout) .search-desktop.hide-lg .btn svg {
+    fill: #888888 !important;
   }
 
   .header:not(.header-checkout) .header-content {
@@ -4954,7 +4993,9 @@ a.btn.btn-new_user.btn-block:hover {
 
   .header:not(.header-checkout) .header-content .navbar > .navbar-section:first-child,
   .header:not(.header-checkout) .header-content .header-link_search,
-  .header:not(.header-checkout) .header-content .header-box-account_tel {
+  .header:not(.header-checkout) .header-content .header-box-account_tel,
+  .header:not(.header-checkout) .header-content .navbar > .navbar-section:last-child > .header-link_search,
+  .header:not(.header-checkout) .header-content .navbar > .navbar-section:last-child > .header-box-account_tel {
     display: none !important;
   }
 
