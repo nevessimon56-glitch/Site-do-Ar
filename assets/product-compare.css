@@ -1038,3 +1038,25 @@ body .header:not(.header-checkout) .search-desktop .btn:focus,
 body .header:not(.header-checkout) .search-desktop .btn:hover {
   background-color: #ebebeb !important;
 }
+
+/* --- Banner topo removido + nav fixa ao rolar (NAV-STICKY-v8) — fallback --- */
+
+body .header .top-content,
+body .top-content.content {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+@media (min-width: 992px) {
+
+  body .header .nav-content,
+  body .nav-content.content {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+  }
+}
