@@ -2016,3 +2016,54 @@
   }
   window.addEventListener('load', initHomeShowcaseMobile);
 })();
+
+/* NAV-FIXED-v9 — barra de categorias fixa após scroll (desktop) */
+(function initNavFixedTop() {
+  var DESKTOP_MQ = '(min-width: 992px)';
+
+  function setup() {
+    if (!window.matchMedia(DESKTOP_MQ).matches) return;
+
+    var nav = document.querySelector('.header .nav-content');
+    var headerContent = document.querySelector('.header .header-content');
+    if (!nav || !headerContent) return;
+
+    var spacer = nav.nextElementSibling;
+    if (!spacer || !spacer.classList.contains('nav-content-fixed-spacer')) {
+      spacer = document.createElement('div');
+      spacer.className = 'nav-content-fixed-spacer';
+      spacer.setAttribute('aria-hidden', 'true');
+      nav.parentNode.insertBefore(spacer, nav.nextSibling);
+    }
+
+    function update() {
+      if (!window.matchMedia(DESKTOP_MQ).matches) {
+        nav.classList.remove('is-fixed-top');
+        spacer.style.height = '0';
+        return;
+      }
+
+      var navHeight = nav.offsetHeight;
+      var shouldFix = headerContent.getBoundingClientRect().bottom <= 0;
+
+      if (shouldFix) {
+        nav.classList.add('is-fixed-top');
+        spacer.style.height = navHeight + 'px';
+      } else {
+        nav.classList.remove('is-fixed-top');
+        spacer.style.height = '0';
+      }
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setup);
+  } else {
+    setup();
+  }
+  window.addEventListener('load', setup);
+})();

@@ -4815,7 +4815,8 @@ a.btn.btn-new_user.btn-block:hover {
   background-color: #ebebeb !important;
 }
 
-/* --- Banner topo removido + nav fixa ao rolar (NAV-STICKY-v8) --- */
+/* --- Banner topo removido + nav fixa ao rolar (NAV-FIXED-v9) --- */
+/* Sticky puro falha porque .nav-content fica dentro de <header>. Usar .is-fixed-top + JS. */
 
 .header .top-content,
 .top-content.content {
@@ -4829,10 +4830,24 @@ a.btn.btn-new_user.btn-block:hover {
 
 @media (min-width: 992px) {
 
-  .header .nav-content,
-  .nav-content.content {
-    position: sticky !important;
+  .header {
+    overflow: visible !important;
+  }
+
+  .header .nav-content.is-fixed-top,
+  .nav-content.content.is-fixed-top {
+    position: fixed !important;
     top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
     z-index: 1000 !important;
+  }
+
+  .nav-content-fixed-spacer {
+    display: block;
+    width: 100%;
+    height: 0;
+    pointer-events: none;
   }
 }
