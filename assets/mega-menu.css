@@ -4240,7 +4240,7 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf,
   --sda-brand-blue-light: #2c8fd6;
   --sda-brand-orange: #e65100;
   --sda-brand-orange-light: #f57c00;
-  --sda-nav-gradient: linear-gradient(90deg, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%);
+  --sda-nav-gradient: linear-gradient(to top, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%);
   --sda-ui-accent: #454545;
   --sda-ui-accent-2: #333333;
   --sda-ui-accent-deep: #2a2a2a;

@@ -658,7 +658,7 @@ body.has-compare-bar.has-mobile-account-dock {
 
   body .header .nav-content,
   body .nav-content.content {
-    background: linear-gradient(90deg, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%) !important;
+    background: linear-gradient(to top, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%) !important;
     background-color: #1a6eb5 !important;
     border-top-color: rgba(255, 255, 255, 0.1) !important;
   }
@@ -713,7 +713,7 @@ body .header-account-label {
 
   body .mobile-catalog-dock__btn.is-active,
   body .mobile-account-dock__btn.is-active {
-    background: linear-gradient(90deg, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%) !important;
+    background: linear-gradient(to top, #1a6eb5 0%, #2c8fd6 28%, #f57c00 72%, #e65100 100%) !important;
   }
 
   body .mobile-discover-bar__chip.is-active {
