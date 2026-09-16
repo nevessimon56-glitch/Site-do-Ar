@@ -1,24 +1,18 @@
-WDNA — CORRIGIR TAMANHO DOS CARDS (desktop + mobile)
-=====================================================
+WDNA — TAMANHO DOS CARDS (v3 — pixels, não %)
+==============================================
 
-Escopo: SOMENTE tamanho da imagem nos cards. Sem header, badge, tema.
+O 92% esticava na coluna larga do grid. Agora usa limite em PX.
 
 TAMANHOS:
-  Desktop (≥992px): área 168px, imagem max 148px
-  Mobile  (≤991px): área 140px, imagem max 130px
+  Desktop: área 140px | foto max 120px alt × 118px larg
+  Mobile:  área 112px | foto max 100px alt × 96px larg
 
-PASSO 1 — assets/mega-menu.css
-  Apague TODO → cole:
+PASSO 1 — assets/mega-menu.css (arquivo inteiro)
   https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/mega-menu.css
-  Confirme no final: bloco PRODUCT-CARD-SIZE-v2
+  Final do arquivo: PRODUCT-CARD-SIZE-v3
 
-PASSO 2 — assets/product-compare.css
-  Apague TODO → cole:
+PASSO 2 — assets/product-compare.css (só se ainda tiver width:100% no topo)
   https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/product-compare.css
-  Confirme no final: bloco PRODUCT-CARD-SIZE-v2
+  Ou apague só o bloco lazy do topo se preferir mexer só no mega-menu.
 
-PASSO 3 — Apague blocos colados manualmente (se existirem):
-  mega-menu.css: PRODUCT-CARD-IMG-COMPACT, MOBILE-HEADER-KABUM, RESTORE-v1 duplicado
-  product-compare.css: NAV duplicados no final
-
-PASSO 4 — Tema → PUBLICAR + aba anônima
+PASSO 3 — Publicar tema + aba anônima

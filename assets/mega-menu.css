@@ -880,10 +880,12 @@
 }
 
 :root {
-  --sda-card-img-h: 168px;
-  --sda-card-img-inner-max: 148px;
-  --sda-card-img-h-mobile: 140px;
-  --sda-card-img-inner-max-mobile: 130px;
+  --sda-card-img-h: 140px;
+  --sda-card-img-inner-max: 120px;
+  --sda-card-img-w-max: 118px;
+  --sda-card-img-h-mobile: 112px;
+  --sda-card-img-inner-max-mobile: 100px;
+  --sda-card-img-w-max-mobile: 96px;
 }
 
 .product-hover-wrap {
@@ -902,8 +904,8 @@
   top: auto !important;
   left: auto !important;
   width: auto !important;
-  max-width: 92% !important;
-  max-height: var(--sda-card-img-inner-max, 148px) !important;
+  max-width: var(--sda-card-img-w-max, 118px) !important;
+  max-height: var(--sda-card-img-inner-max, 120px) !important;
   height: auto !important;
   margin: 0 auto;
   z-index: 1;
@@ -936,9 +938,9 @@
 
   .showcase-search .showcase-product_image.card-image,
   main.home-main section.showcase .showcase-product_image.card-image {
-    height: var(--sda-card-img-h, 168px) !important;
-    min-height: var(--sda-card-img-h, 168px) !important;
-    max-height: var(--sda-card-img-h, 168px) !important;
+    height: var(--sda-card-img-h, 140px) !important;
+    min-height: var(--sda-card-img-h, 140px) !important;
+    max-height: var(--sda-card-img-h, 140px) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -949,8 +951,8 @@
   main.home-main section.showcase .showcase-product_link__image,
   .showcase-search .product-hover-wrap,
   main.home-main section.showcase .product-hover-wrap {
-    height: var(--sda-card-img-h, 168px) !important;
-    max-height: var(--sda-card-img-h, 168px) !important;
+    height: var(--sda-card-img-h, 140px) !important;
+    max-height: var(--sda-card-img-h, 140px) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -1229,7 +1231,7 @@
     overflow: hidden;
     width: 100%;
     min-height: 0;
-    max-height: var(--sda-card-img-h-mobile, 140px);
+    max-height: var(--sda-card-img-h-mobile, 112px);
     background: linear-gradient(160deg, #f8fafb 0%, #eef4fa 100%);
     border-radius: 8px;
     position: relative;
@@ -1244,7 +1246,7 @@
     width: 100%;
     height: 100%;
     min-height: 0;
-    max-height: var(--sda-card-img-h-mobile, 140px);
+    max-height: var(--sda-card-img-h-mobile, 112px);
     overflow: hidden;
     touch-action: pan-y;
   }
@@ -1264,7 +1266,7 @@
     align-items: center;
     justify-content: center;
     min-height: 0;
-    max-height: var(--sda-card-img-h-mobile, 140px);
+    max-height: var(--sda-card-img-h-mobile, 112px);
     padding: 8px;
     box-sizing: border-box;
   }
@@ -1273,8 +1275,8 @@
   .product-mobile-carousel__img {
     display: block;
     width: auto !important;
-    max-width: 94% !important;
-    max-height: var(--sda-card-img-inner-max-mobile, 130px) !important;
+    max-width: var(--sda-card-img-w-max-mobile, 96px) !important;
+    max-height: var(--sda-card-img-inner-max-mobile, 100px) !important;
     height: auto !important;
     margin: 0 auto !important;
     object-fit: contain !important;
@@ -1335,7 +1337,7 @@
     justify-content: center;
     width: 100% !important;
     min-height: 0;
-    max-height: var(--sda-card-img-h-mobile, 140px);
+    max-height: var(--sda-card-img-h-mobile, 112px);
     overflow: hidden !important;
     line-height: normal !important;
     background: transparent;
@@ -1356,8 +1358,8 @@
     right: auto !important;
     bottom: auto !important;
     width: auto !important;
-    max-width: 92% !important;
-    max-height: var(--sda-card-img-inner-max-mobile, 130px) !important;
+    max-width: var(--sda-card-img-w-max-mobile, 96px) !important;
+    max-height: var(--sda-card-img-inner-max-mobile, 100px) !important;
     height: auto !important;
     margin: 0 auto !important;
     object-fit: contain !important;
@@ -3916,9 +3918,9 @@ main.home-main section.showcase .showcase-product.card .showcase-product_image .
 .showcase-product.card.sda-card--cycle-qf .showcase-product_link__image img,
 .showcase-product.card.sda-card--cycle-frio .product-hover-wrap img,
 .showcase-product.card.sda-card--cycle-qf .product-hover-wrap img {
-  max-height: 150px;
+  max-height: var(--sda-card-img-inner-max, 120px);
   width: auto;
-  max-width: 92%;
+  max-width: var(--sda-card-img-w-max, 118px);
   object-fit: contain;
 }
 
@@ -5022,16 +5024,16 @@ a.btn.btn-new_user.btn-block:hover {
   }
 }
 
-/* ========== PRODUCT-CARD-SIZE-v2 — tamanho dos cards (desktop + mobile, só imagem) ========== */
+/* ========== PRODUCT-CARD-SIZE-v3 — tamanho dos cards (px, não %) ========== */
 
 @media (min-width: 992px) {
 
   .showcase-search .showcase-product_image.card-image,
   main.home-main section.showcase .showcase-product_image.card-image,
   .product-showcase .showcase .showcase-product_image.card-image {
-    height: var(--sda-card-img-h, 168px) !important;
-    min-height: var(--sda-card-img-h, 168px) !important;
-    max-height: var(--sda-card-img-h, 168px) !important;
+    height: var(--sda-card-img-h, 140px) !important;
+    min-height: var(--sda-card-img-h, 140px) !important;
+    max-height: var(--sda-card-img-h, 140px) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -5043,8 +5045,8 @@ a.btn.btn-new_user.btn-block:hover {
   .showcase-search.showcase-search_list .showcase-product_link__image,
   main.home-main section.showcase .showcase-product_link__image,
   .product-showcase .showcase .showcase-product_link__image {
-    height: var(--sda-card-img-h, 168px) !important;
-    max-height: var(--sda-card-img-h, 168px) !important;
+    height: var(--sda-card-img-h, 140px) !important;
+    max-height: var(--sda-card-img-h, 140px) !important;
     min-height: 0 !important;
     display: flex !important;
     align-items: center !important;
@@ -5054,8 +5056,8 @@ a.btn.btn-new_user.btn-block:hover {
   .showcase-search .product-hover-wrap,
   main.home-main section.showcase .product-hover-wrap,
   .product-showcase .showcase .product-hover-wrap {
-    height: var(--sda-card-img-h, 168px) !important;
-    max-height: var(--sda-card-img-h, 168px) !important;
+    height: var(--sda-card-img-h, 140px) !important;
+    max-height: var(--sda-card-img-h, 140px) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -5070,8 +5072,8 @@ a.btn.btn-new_user.btn-block:hover {
   .product-hover-wrap img.product-hover-img--main,
   .product-hover-wrap img.product-hover-swap:not(.product-hover-img--hover) {
     width: auto !important;
-    max-width: 92% !important;
-    max-height: var(--sda-card-img-inner-max, 148px) !important;
+    max-width: var(--sda-card-img-w-max, 118px) !important;
+    max-height: var(--sda-card-img-inner-max, 120px) !important;
     height: auto !important;
     object-fit: contain !important;
   }
@@ -5095,7 +5097,7 @@ a.btn.btn-new_user.btn-block:hover {
   .product-mobile-carousel__track,
   .product-mobile-carousel__slide {
     min-height: 0 !important;
-    max-height: var(--sda-card-img-h-mobile, 140px) !important;
+    max-height: var(--sda-card-img-h-mobile, 112px) !important;
     height: auto !important;
   }
 
@@ -5114,8 +5116,8 @@ a.btn.btn-new_user.btn-block:hover {
   .product-mobile-carousel__slide img,
   .product-mobile-carousel__img {
     width: auto !important;
-    max-width: 92% !important;
-    max-height: var(--sda-card-img-inner-max-mobile, 130px) !important;
+    max-width: var(--sda-card-img-w-max-mobile, 96px) !important;
+    max-height: var(--sda-card-img-inner-max-mobile, 100px) !important;
     height: auto !important;
     object-fit: contain !important;
   }
