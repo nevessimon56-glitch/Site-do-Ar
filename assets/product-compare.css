@@ -651,86 +651,86 @@ body.has-compare-bar.has-mobile-account-dock {
   }
 }
 
-/* ========== Tema preto global — fallback (GLOBAL-BLACK-THEME-v2) ========== */
-/* Cole aqui se mega-menu.css não publicar. Este arquivo carrega POR ÚLTIMO e vence o NAV-BAR azul. */
+/* ========== Tema azul-cinza — fallback (GLOBAL-GRAY-BLUE-THEME-v3) ========== */
+/* Substitui GLOBAL-BLACK-THEME-v2. Carrega por último e vence o NAV-BAR azul vivo. */
 
 @media (min-width: 992px) {
 
   body .header .nav-content,
   body .nav-content.content {
-    background: linear-gradient(135deg, #1a1a1a, #000) !important;
-    background-color: #111 !important;
-    border-top-color: rgba(255, 255, 255, 0.1) !important;
+    background: linear-gradient(135deg, #5a7082, #3d5366) !important;
+    background-color: #4a6278 !important;
+    border-top-color: rgba(255, 255, 255, 0.12) !important;
   }
 
   body .nav-content .nav-main_content a,
   body .nav-content .nav-main_children {
-    color: #111 !important;
+    color: #3d5366 !important;
   }
 
   body .nav-content .nav-main_content li:hover,
   body .nav-content .nav-main_content li:focus {
-    background-color: #f5f5f5 !important;
+    background-color: #eef2f6 !important;
   }
 
   body .nav-content .nav-main_content li:hover a,
   body .nav-content .nav-main_content li:focus a {
-    color: #000 !important;
+    color: #364958 !important;
   }
 }
 
 @media (min-width: 992px) {
 
   body .mega-menu-ar__promo-banner a {
-    background: linear-gradient(90deg, #1a1a1a 0%, #333 50%, #1a1a1a 100%) !important;
+    background: linear-gradient(90deg, #4a6278 0%, #5c7084 50%, #4a6278 100%) !important;
   }
 
   body .mega-menu-ar__section-title--hot,
   body .mega-menu-ar__col-title,
   body .mega-menu-ar__ver-tudo {
-    color: #111 !important;
+    color: #4a6278 !important;
   }
 
   body .mega-menu-ar__links a:hover {
-    color: #000 !important;
+    color: #566b80 !important;
   }
 
   body .mega-menu-ar__banner-price {
-    color: #111 !important;
+    color: #3d5366 !important;
   }
 
   body .mega-menu-ar__banner-cta {
-    background: linear-gradient(135deg, #333 0%, #111 100%) !important;
+    background: linear-gradient(135deg, #5c7084 0%, #4a6278 100%) !important;
   }
 }
 
 body .header-account-kicker,
 body .header-account-label {
-  color: #111 !important;
+  color: #4a6278 !important;
 }
 
 @media (max-width: 991px) {
 
   body .mobile-catalog-dock__btn.is-active,
   body .mobile-account-dock__btn.is-active {
-    background: linear-gradient(135deg, #1a1a1a, #000) !important;
+    background: linear-gradient(135deg, #5a7082, #3d5366) !important;
   }
 
   body .mobile-discover-bar__chip.is-active {
-    border-color: #111 !important;
-    background: #f0f0f0 !important;
-    color: #000 !important;
+    border-color: #5a7082 !important;
+    background: #eef2f6 !important;
+    color: #364958 !important;
   }
 }
 
 body .customer-account-nav__item.is-active {
-  background: linear-gradient(135deg, #1a1a1a, #000) !important;
+  background: linear-gradient(135deg, #5a7082, #3d5366) !important;
 }
 
 body .product-compare-bar__badge {
-  background: #111 !important;
+  background: #5a7082 !important;
 }
 
 body .product-compare-bar__btn--primary {
-  background: linear-gradient(135deg, #1a1a1a, #000) !important;
+  background: linear-gradient(135deg, #5a7082, #3d5366) !important;
 }
