@@ -1,17 +1,10 @@
-WDNA — ALTURA DOS CARDS (v4 — mais baixo)
-=========================================
+WDNA — ALTURA DOS CARDS (v5 — extra curto)
+==========================================
 
-Só altura da área da imagem — card menos alto.
+  Desktop: área 72px | foto max 64px altura
+  Mobile:  área 64px | foto max 56px altura
 
-TAMANHOS:
-  Desktop: área 100px | foto max 88px de altura
-  Mobile:  área 84px  | foto max 76px de altura
+mega-menu.css:
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/mega-menu.css
 
-PASSO 1 — assets/mega-menu.css (arquivo inteiro)
-  https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/mega-menu.css
-  Final: PRODUCT-CARD-SIZE-v4
-
-PASSO 2 — assets/product-compare.css (se ainda não atualizou)
-  https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/fix-product-cards-ed4c/assets/product-compare.css
-
-PASSO 3 — Publicar tema + aba anônima
+Publicar tema + aba anônima.
