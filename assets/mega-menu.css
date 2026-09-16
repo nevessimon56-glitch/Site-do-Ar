@@ -4987,3 +4987,15 @@ a.btn.btn-new_user.btn-block:hover {
     display: none !important;
   }
 }
+
+/* --- Badge quantidade carrinho — laranja (HEADER-CART-BADGE-v1) --- */
+
+.header:not(.header-checkout) .header-link_cart .cart_quantity,
+.header:not(.header-checkout) .cart_link .cart_quantity,
+.header:not(.header-checkout) [data-cart-quantity].cart_quantity,
+.header:not(.header-checkout) .header-link_cart [data-cart-quantity] {
+  background-color: #f97316 !important;
+  background: #f97316 !important;
+  border-color: #ea580c !important;
+  color: #ffffff !important;
+}
