@@ -1,7 +1,11 @@
 WDNA — CORRIGIR TAMANHO DOS CARDS (passo a passo)
 ================================================
 
-PROBLEMA: product-compare.css carrega DEPOIS do mega-menu.css e tinha width:100% nas imagens.
+PROBLEMA: bloco .product-hover-wrap img com width:100% !important estourava o card.
+          product-compare.css carrega DEPOIS do mega-menu.css — corrigido nos dois arquivos.
+
+CORREÇÃO NA ORIGEM (HOVER-IMG-SIZE-v1): procure no mega-menu.css por width:100% neste bloco
+  .product-hover-wrap img.product-hover-img--main — deve ser width:auto + max-height:148px
 
 PASSO 1 — Abra assets/mega-menu.css no editor WDNA
   → Apague TODO o conteúdo
