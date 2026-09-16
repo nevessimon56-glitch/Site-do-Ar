@@ -79,6 +79,7 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
@@ -114,6 +115,7 @@
 {% render 'sections/check-cookie'%}
 {% render 'sections/sidenav-overlay-cart', cart: cart, store: store, themeConfig: themeConfig %}
 {% render 'sections/mega-menu-ar' %}
+{% render 'sections/product-compare-panel' %}
 {% block content %}{% endblock %}
 {% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
 <script>
@@ -156,11 +158,116 @@
 </script>
 <script src="{{ scripts.main.src }}"></script>
 <script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
+<script>
+  /* MOBILE-HEADER-KABUM-v2 + NAV-FIXED-v16 — fallback se mega-menu.js não publicado */
+  window.initSdaMobileKabumHeader = window.initSdaMobileKabumHeader || function initSdaMobileKabumHeader() {
+    var MOBILE_MQ = '(max-width: 991px)';
+    var input = document.getElementById('term2');
+    var navbarCenter = document.querySelector('.header:not(.header-checkout) .navbar-center');
+    var searchDesktop = document.querySelector('.header:not(.header-checkout) .search-desktop.hide-lg')
+      || document.querySelector('.header .search-desktop.hide-lg');
+    var isMobile = window.matchMedia(MOBILE_MQ).matches;
+
+    if (navbarCenter) {
+      navbarCenter.style.display = isMobile ? 'block' : '';
+    }
+
+    if (searchDesktop) {
+      if (isMobile) {
+        searchDesktop.style.display = 'block';
+        searchDesktop.style.visibility = 'visible';
+        searchDesktop.style.opacity = '1';
+      } else {
+        searchDesktop.style.display = '';
+        searchDesktop.style.visibility = '';
+        searchDesktop.style.opacity = '';
+      }
+    }
+
+    if (!input) return;
+
+    if (isMobile) {
+      input.setAttribute('placeholder', 'Busque no Site do Ar');
+    } else if (input.getAttribute('data-sda-placeholder-default')) {
+      input.setAttribute('placeholder', input.getAttribute('data-sda-placeholder-default'));
+    } else if (input.placeholder && input.placeholder !== 'Busque no Site do Ar') {
+      input.setAttribute('data-sda-placeholder-default', input.placeholder);
+    }
+  };
+  window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixedTop() {
+    if (window.__SDA_NAV_FIXED_INIT__) return;
+    window.__SDA_NAV_FIXED_INIT__ = true;
+    var DESKTOP_MQ = '(min-width: 992px)';
+    var nav = document.querySelector('.header > .nav-content');
+    if (!nav) return;
+    var spacer = nav.nextElementSibling;
+    if (!spacer || !spacer.classList.contains('nav-content-fixed-spacer')) {
+      spacer = document.createElement('div');
+      spacer.className = 'nav-content-fixed-spacer';
+      spacer.setAttribute('aria-hidden', 'true');
+      nav.parentNode.insertBefore(spacer, nav.nextSibling);
+    }
+    var fixAt = 0;
+    function readScrollY() {
+      return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    }
+    function measure() {
+      nav.classList.remove('is-fixed-top');
+      spacer.style.height = '0';
+      if (!window.matchMedia(DESKTOP_MQ).matches) return;
+      fixAt = nav.getBoundingClientRect().top + readScrollY();
+      if (!fixAt) fixAt = nav.offsetTop || 0;
+    }
+    function update() {
+      if (!window.matchMedia(DESKTOP_MQ).matches) {
+        nav.classList.remove('is-fixed-top');
+        spacer.style.height = '0';
+        return;
+      }
+      var navHeight = nav.offsetHeight;
+      if (!navHeight) {
+        nav.classList.remove('is-fixed-top');
+        spacer.style.height = '0';
+        return;
+      }
+      if (readScrollY() >= fixAt - 1) {
+        nav.classList.add('is-fixed-top');
+        spacer.style.height = navHeight + 'px';
+      } else {
+        nav.classList.remove('is-fixed-top');
+        spacer.style.height = '0';
+      }
+    }
+    function remeasureAndUpdate() { measure(); update(); }
+    window.addEventListener('scroll', update, { passive: true });
+    document.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', remeasureAndUpdate, { passive: true });
+    window.addEventListener('load', remeasureAndUpdate);
+    remeasureAndUpdate();
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.initSdaMobileKabumHeader);
+    document.addEventListener('DOMContentLoaded', window.initSdaNavFixedTop);
+  } else {
+    window.initSdaMobileKabumHeader();
+    window.initSdaNavFixedTop();
+  }
+  window.addEventListener('load', window.initSdaMobileKabumHeader);
+  window.addEventListener('load', window.initSdaNavFixedTop);
+  window.addEventListener('resize', window.initSdaMobileKabumHeader);
+</script>
 <script>
   window.addEventListener('load', function () {
     if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
       window.initMegaMenuAr();
+    }
+    if (typeof window.initSdaMobileKabumHeader === 'function') {
+      window.initSdaMobileKabumHeader();
+    }
+    if (typeof window.initSdaNavFixedTop === 'function') {
+      window.initSdaNavFixedTop();
     }
   });
 </script>

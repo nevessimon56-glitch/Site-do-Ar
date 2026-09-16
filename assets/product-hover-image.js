@@ -6,6 +6,8 @@
 (function () {
   'use strict';
 
+  if (window.__SDA_HOVER_V2__) return;
+
   var HOVER_CLASS = 'has-hover-image';
   var TOUCH_CLASS = 'is-img-hover';
   var PROCESSED = 'data-hover-ready';
