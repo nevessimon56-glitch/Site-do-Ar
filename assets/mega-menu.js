@@ -2017,12 +2017,11 @@
   window.addEventListener('load', initHomeShowcaseMobile);
 })();
 
-/* NAV-FIXED-v10 — barra de categorias fixa após scroll (desktop) */
+/* NAV-FIXED-v11 — barra de categorias fixa após scroll (desktop + mobile) */
 window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixedTop() {
   if (window.__SDA_NAV_FIXED_INIT__) return;
   window.__SDA_NAV_FIXED_INIT__ = true;
 
-  var DESKTOP_MQ = '(min-width: 992px)';
   var nav = document.querySelector('.header > .nav-content');
   if (!nav) return;
 
@@ -2051,13 +2050,13 @@ window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixe
   }
 
   function update() {
-    if (!window.matchMedia(DESKTOP_MQ).matches) {
+    var navHeight = nav.offsetHeight;
+    if (!navHeight) {
       nav.classList.remove('is-fixed-top');
       spacer.style.height = '0';
       return;
     }
 
-    var navHeight = nav.offsetHeight;
     var shouldFix = readScrollY() >= fixAt - 1;
 
     if (shouldFix) {

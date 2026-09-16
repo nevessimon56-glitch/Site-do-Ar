@@ -161,11 +161,10 @@
 <script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
 <script>
-  /* NAV-FIXED-v10 — fallback se mega-menu.js ainda não publicado */
+  /* NAV-FIXED-v11 — fallback se mega-menu.js ainda não publicado (desktop + mobile) */
   window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixedTop() {
     if (window.__SDA_NAV_FIXED_INIT__) return;
     window.__SDA_NAV_FIXED_INIT__ = true;
-    var DESKTOP_MQ = '(min-width: 992px)';
     var nav = document.querySelector('.header > .nav-content');
     if (!nav) return;
     var spacer = nav.nextElementSibling;
@@ -186,12 +185,12 @@
       if (!fixAt) fixAt = nav.offsetTop || 0;
     }
     function update() {
-      if (!window.matchMedia(DESKTOP_MQ).matches) {
+      var navHeight = nav.offsetHeight;
+      if (!navHeight) {
         nav.classList.remove('is-fixed-top');
         spacer.style.height = '0';
         return;
       }
-      var navHeight = nav.offsetHeight;
       if (readScrollY() >= fixAt - 1) {
         nav.classList.add('is-fixed-top');
         spacer.style.height = navHeight + 'px';
@@ -204,6 +203,7 @@
     window.addEventListener('scroll', update, { passive: true });
     document.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', remeasureAndUpdate, { passive: true });
+    window.addEventListener('load', remeasureAndUpdate);
     remeasureAndUpdate();
   };
   if (document.readyState === 'loading') {
