@@ -5756,3 +5756,36 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   border-color: #c2410c !important;
   color: #ffffff !important;
 }
+
+/* ========== Header — acentos laranja (HEADER-ACCENT-ORANGE-v1) ========== */
+/* "Entre ou Cadastre-se" + "Fale conosco" — vence .header a:hover verde #61bb47 */
+
+.header:not(.header-checkout) .header-box-account-info .header-link_text .account_link:last-child,
+.header:not(.header-checkout) .header-link-account_info .header-link_text .account_link:last-child,
+.header:not(.header-checkout) .header-box-account_tel .header-link_text .account_link:first-child,
+.header:not(.header-checkout) .header-link-account_tel .header-link_text .account_link:first-child {
+  color: #f97316 !important;
+}
+
+.header:not(.header-checkout) .header-box-account-info .header-link_text .account_link:last-child:hover,
+.header:not(.header-checkout) .header-box-account-info .header-link_text .account_link:last-child:focus,
+.header:not(.header-checkout) .header-link-account_info .header-link_text .account_link:last-child:hover,
+.header:not(.header-checkout) .header-link-account_info .header-link_text .account_link:last-child:focus,
+.header:not(.header-checkout) .header-box-account_tel .header-link_text .account_link:first-child:hover,
+.header:not(.header-checkout) .header-box-account_tel .header-link_text .account_link:first-child:focus,
+.header:not(.header-checkout) .header-link-account_tel .header-link_text .account_link:first-child:hover,
+.header:not(.header-checkout) .header-link-account_tel .header-link_text .account_link:first-child:focus,
+.header:not(.header-checkout) .header-link_account.header-link-account_info:hover .header-link_text .account_link:last-child,
+.header:not(.header-checkout) .header-link_account.header-link-account_tel:hover .header-link_text .account_link:first-child,
+.header:not(.header-checkout) .header-box_account.header-box-account-info:hover .account_link:last-child,
+.header:not(.header-checkout) .header-box_account.header-box-account_tel:hover .account_link:first-child {
+  color: #ea580c !important;
+  opacity: 1 !important;
+}
+
+.header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg,
+.header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg,
+.header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg,
+.header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg {
+  fill: #f97316 !important;
+}
