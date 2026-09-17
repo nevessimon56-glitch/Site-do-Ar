@@ -1,0 +1,27 @@
+RESTAURAR CSS — estado original (16/set, antes das correções de card)
+Commit: df04533 — revert antes do badge laranja / KaBuM / compact
+
+=== ASSETS (cole INTEIRO no WDNA) ===
+
+1. mega-menu.css
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/df04533/assets/mega-menu.css
+
+2. product-compare.css
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/df04533/assets/product-compare.css
+
+3. product-hover-image.css
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/df04533/assets/product-hover-image.css
+
+=== OPCIONAL (se alterou também) ===
+
+4. theme.liquid
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/df04533/layout/theme.liquid
+
+5. mega-menu.js
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/df04533/assets/mega-menu.js
+
+=== REMOVER no WDNA se existir ===
+- mega-menu-wdna-corrected.css (arquivo extra)
+- Blocos colados: PRODUCT-CARD-*, MOBILE-HEADER-KABUM, HEADER-CART-BADGE
+
+Publicar tema + aba anônima.

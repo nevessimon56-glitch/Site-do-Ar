@@ -1,0 +1,53 @@
+WDNA — Header laranja (solução que FUNCIONA de verdade)
+========================================================
+
+Por que theme-custom + product-hover-image não funcionaram?
+-----------------------------------------------------------
+Verifiquei o site live (sitedoar.com.br) em 17/09/2026:
+
+  • theme-custom-1789134677817.css  → cart_quantity AINDA #61bb47 (verde)
+  • product-hover-image-1789643069777.css → SEM patch HEADER-ORANGE (só hover de imagem)
+  • mega-menu → só regras de carrinho, SEM "Fale conosco" / "Entre ou Cadastre-se"
+
+Ou seja: as edições não foram publicadas no arquivo certo, ou o WDNA manteve versão antiga.
+
+---
+
+SOLUÇÃO RECOMENDADA — colar no theme.liquid (1 lugar só)
+----------------------------------------------------------
+No WDNA: Tema → layout → theme.liquid
+
+Procure a linha do product-hover-image.css (por volta da linha 89).
+Logo DEPOIS dela, cole o bloco abaixo (antes dos preload de fontes):
+
+    <style id="header-orange-inline-v5">
+    ... (copiar de layout/theme.liquid no GitHub, bloco HEADER-ORANGE-INLINE-v5)
+    </style>
+
+Raw do theme.liquid completo:
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/layout/theme.liquid
+
+Salvar → Publicar tema → aba anônima + Ctrl+F5.
+
+Por que funciona?
+  • <style> inline carrega DEPOIS de todos os <link> CSS
+  • body + !important vence theme-all (.header a:hover verde) e theme-custom
+
+---
+
+Comportamento esperado
+----------------------
+| Elemento              | Normal    | Hover     |
+|-----------------------|-----------|-----------|
+| Olá visitante         | #101010   | #101010   |
+| Entre ou Cadastre-se   | #101010   | #f97316   |
+| Fale conosco          | #101010   | #f97316   |
+| Ícones conta/tel/cart | #4b96d4   | #f97316   |
+| Badge carrinho        | #f97316   | #ea580c   |
+
+---
+
+Opcional (limpeza)
+------------------
+Depois que o inline funcionar, pode remover duplicatas HEADER-CART-ORANGE-v2
+no final do mega-menu.css (estão 2x iguais no live).

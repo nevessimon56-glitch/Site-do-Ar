@@ -1,0 +1,76 @@
+SITE DO AR — TEMA UNIFICADO (WDNA)
+===================================
+Branch: cursor/theme-unified-ed4c
+Data: 16/set/2026
+
+Cada arquivo tem UM papel. Cole INTEIRO no editor WDNA. Publicar tema.
+
+═══════════════════════════════════════════════════════════════
+1. ASSETS — CSS (ordem no theme.liquid)
+═══════════════════════════════════════════════════════════════
+
+mega-menu.css — cards, nav, hover, mega menu, tema preto
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/assets/mega-menu.css
+Final do arquivo: PRODUCT-CARD-COMPACT-v6
+
+product-compare.css — SÓ comparador (botões, barra, painel)
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/assets/product-compare.css
+NÃO tem nav, tema preto nem tamanho de foto.
+
+product-hover-image.css — shim legado (quase vazio, não mexe em altura)
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/assets/product-hover-image.css
+
+═══════════════════════════════════════════════════════════════
+2. ASSETS — JS
+═══════════════════════════════════════════════════════════════
+
+mega-menu.js — menu, nav fixa, hover nos cards (__SDA_HOVER_V2__)
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/assets/mega-menu.js
+
+product-compare.js — comparador até 3 produtos
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/assets/product-compare.js
+
+product-hover-image.js — backup (desliga se mega-menu.js carregou)
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/assets/product-hover-image.js
+
+═══════════════════════════════════════════════════════════════
+3. LAYOUT
+═══════════════════════════════════════════════════════════════
+
+theme.liquid — ordem de CSS/JS e fallbacks de nav
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/layout/theme.liquid
+
+═══════════════════════════════════════════════════════════════
+4. PASTA pages/ — NÃO COLAR NO WDNA
+═══════════════════════════════════════════════════════════════
+
+Arquivos em pages/*.css e pages/*.js são RASCUNHOS / patches antigos.
+Eles NÃO existem no tema WDNA. Tudo já foi consolidado em mega-menu.css.
+Não cole patches duplicados — causam conflito.
+
+═══════════════════════════════════════════════════════════════
+5. LIMPAR NO WDNA (se existir)
+═══════════════════════════════════════════════════════════════
+
+- mega-menu-wdna-corrected.css (arquivo extra)
+- Blocos colados à mão: PRODUCT-CARD-IMG-COMPACT, MOBILE-HEADER-KABUM,
+  HEADER-CART-BADGE, NAV duplicados no final do compare.css
+- width:100% no topo do product-compare.css (versão antiga)
+
+═══════════════════════════════════════════════════════════════
+6. COMO OS ARQUIVOS SE CONVERSAM
+═══════════════════════════════════════════════════════════════
+
+Cards (foto + altura compacta)     → mega-menu.css
+Hover 2ª imagem                     → mega-menu.js + mega-menu.css
+Comparar / Comprar no card          → product-compare.css + product-compare.js
+Nav preta + fixa ao rolar           → mega-menu.css + mega-menu.js
+Painel comparador                   → sections/product-compare-panel.liquid + compare.js
+
+Ordem CSS: theme-all → mega-menu → compare → hover-shim
+O compare NÃO altera tamanho da foto (proposital).
+
+Mobile 2 colunas: mega-menu.js aplica showcase-search_grid--mobile-2col
++ CSS MOBILE-GRID-2COL-RESTORE-v1 no final do mega-menu.css
+
+Publicar tema → aba anônima → testar catálogo + home + comparar.

@@ -1,0 +1,59 @@
+WDNA — PATCH FINAL DOS CARDS (após Ctrl+Z / baseline restaurado)
+================================================================
+
+1) CSS — cole NO FINAL do assets/mega-menu.css (não substitua o arquivo inteiro)
+
+   Arquivo pronto: pages/wdna-patch-final-cards.css
+   GitHub raw:
+   https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/pages/wdna-patch-final-cards.css
+
+   O que corrige:
+   - Card encolhe ao conteúdo (sem espaço vazio abaixo do COMPRAR)
+   - Texto e preços sem sobreposição (catálogo + Promoção + Mais Vendidos)
+   - Selo 5% OFF colado na quina superior esquerda
+   - Imagem ~94px (maior que antes, sem estourar o card)
+   - Mais Vendidos continua CARROSSEL tns (só uniformiza o card por dentro)
+
+2) JS — se você também reverteu o mega-menu.js, confira estes 2 trechos:
+
+   A) Dentro de bindLink (hover de imagem), no bloco isTouchOnly():
+      /* Mais Vendidos (tns): só 1 foto — carrossel interno quebra tamanho entre cards */
+      if (link.closest('.showcase-products_carousel')) {
+        ensureImgSrc(img);
+        link.setAttribute(PROCESSED, '1');
+        return;
+      }
+
+   B) No FINAL do mega-menu.js — grade 2 col só na Promoção (NÃO no carrossel):
+
+   (function () {
+     'use strict';
+     var MOBILE_MQ = '(max-width: 991px)';
+     var GRID_CLASS = 'showcase-home_grid--mobile-2col';
+     function isMobile() { return window.matchMedia(MOBILE_MQ).matches; }
+     function isHomePage() {
+       var p = (window.location.pathname || '').toLowerCase().replace(/\/+$/, '') || '/';
+       if (p === '/') return true;
+       return !!document.querySelector('main.home-main');
+     }
+     function applyHomeGridVitrines() {
+       if (!isMobile() || !isHomePage()) return;
+       var blocks = document.querySelectorAll('main.home-main section.showcase .showcase-products_grid');
+       for (var i = 0; i < blocks.length; i++) {
+         if (!blocks[i].querySelector('.showcase-item')) continue;
+         blocks[i].classList.add(GRID_CLASS);
+         blocks[i].setAttribute('data-mobile-grid', '2col');
+       }
+     }
+     window.applyHomeGridVitrines = applyHomeGridVitrines;
+     if (document.readyState === 'loading') {
+       document.addEventListener('DOMContentLoaded', applyHomeGridVitrines);
+     } else {
+       applyHomeGridVitrines();
+     }
+     window.addEventListener('load', applyHomeGridVitrines);
+   })();
+
+3) Publicar tema WDNA → abrir home e catálogo em aba anônima no celular.
+
+   NÃO cole blocos MOBILE-CAROUSEL-GRID — eles convertem Mais Vendidos em grade.

@@ -1,81 +1,127 @@
 /**
  * ARQUIVO: assets/product-hover-image.css
- * Cards da vitrine: uma foto visível, hover troca para a segunda.
+ * VERSAO: 2026-09-16-hover-shim-v1
+ *
+ * Hover de imagem nos cards é controlado por:
+ *   - JS: mega-menu.js (window.__SDA_HOVER_V2__ = true)
+ *   - CSS: mega-menu.css (HOVER-IMG-SIZE-v1, HOVER-IMG-FIX-v1, PRODUCT-CARD-COMPACT-v6)
+ *
+ * Este arquivo existe só por compatibilidade (theme.liquid ainda o carrega).
+ * Não define altura nem width de imagem — evita conflito com mega-menu.css.
  */
 
-.showcase-product_image.card-image {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-}
-
-.showcase-product_link__image {
-  display: block;
-  width: 100%;
-  text-align: center;
-}
-
-.showcase-product_link__image .product-hover-wrap {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-}
-
-.showcase-product_link__image .product-hover-img {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  max-height: 200px;
-  height: auto;
-  margin: 0 auto;
-  object-fit: contain;
-  transition: opacity 0.3s ease;
-}
-
-.showcase-product_link__image .product-hover-img--main {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  opacity: 1;
-  transform: translate(-50%, -50%);
-}
-
-.showcase-product_link__image .product-hover-img--alt {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-.showcase-product.has-hover-image:hover .product-hover-img--main,
-.showcase-product.has-hover-image.is-img-hover .product-hover-img--main {
-  opacity: 0;
-}
-
-.showcase-product.has-hover-image:hover .product-hover-img--alt,
-.showcase-product.has-hover-image.is-img-hover .product-hover-img--alt {
+/* Ponte legado: classe --alt usada em markup antigo → mesma regra que --hover */
+.showcase-product.has-hover-image.is-img-hover .product-hover-img--alt,
+.showcase-product.has-hover-image:hover .product-hover-img--alt {
   opacity: 1;
 }
 
-.showcase-product_link__image > img.lazy:not(.product-hover-img) {
-  display: block;
-  max-width: 100%;
-  max-height: 200px;
-  margin: 0 auto;
-  object-fit: contain;
+.showcase-product.has-hover-image.is-img-hover .product-hover-img--main,
+.showcase-product.has-hover-image:hover .product-hover-img--main {
+  opacity: 0;
 }
 
-@media (hover: none) and (pointer: coarse) {
-  .showcase-product.has-hover-image .product-hover-img--alt {
-    pointer-events: none;
-  }
+/* ========== Header laranja — carrega POR ÚLTIMO (HEADER-ORANGE-v4) ========== */
+/*
+ * Verde vem de theme-custom.css (.cart_quantity #61bb47) e theme-all.css (.header a:hover).
+ * Este arquivo é o último CSS no theme.liquid — override definitivo.
+ */
+
+/* Carrinho — badge laranja (vence theme-custom.css) */
+body .header:not(.header-checkout) .header-link_cart .cart_quantity,
+body .header:not(.header-checkout) .cart_link .cart_quantity,
+body .header:not(.header-checkout) .cart_quantity,
+body .header:not(.header-checkout) [data-cart-quantity].cart_quantity,
+body .header:not(.header-checkout) .header-link_cart [data-cart-quantity] {
+  background-color: #f97316 !important;
+  background: #f97316 !important;
+  border-color: #ea580c !important;
+  color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .header-link_cart svg,
+body .header:not(.header-checkout) .header-link_cart .icon_cart,
+body .header:not(.header-checkout) .cart_link svg {
+  fill: #4b96d4 !important;
+}
+
+body .header:not(.header-checkout) .header a.header-link_cart:hover,
+body .header:not(.header-checkout) .header a.header-link_cart:focus,
+body .header:not(.header-checkout) .header a.cart_link:hover,
+body .header:not(.header-checkout) .header a.cart_link:focus,
+body .header:not(.header-checkout) .header-link_cart:hover,
+body .header:not(.header-checkout) .header-link_cart:focus,
+body .header:not(.header-checkout) .cart_link:hover,
+body .header:not(.header-checkout) .cart_link:focus {
+  color: #f97316 !important;
+  opacity: 1 !important;
+}
+
+body .header:not(.header-checkout) .header-link_cart:hover svg,
+body .header:not(.header-checkout) .header-link_cart:focus svg,
+body .header:not(.header-checkout) .header-link_cart:hover .icon_cart,
+body .header:not(.header-checkout) .header-link_cart:focus .icon_cart,
+body .header:not(.header-checkout) .cart_link:hover svg,
+body .header:not(.header-checkout) .cart_link:focus svg {
+  fill: #f97316 !important;
+}
+
+body .header:not(.header-checkout) .header-link_cart:hover .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:focus .cart_quantity,
+body .header:not(.header-checkout) .cart_link:hover .cart_quantity,
+body .header:not(.header-checkout) .cart_link:focus .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:hover [data-cart-quantity],
+body .header:not(.header-checkout) .header-link_cart:focus [data-cart-quantity] {
+  background-color: #ea580c !important;
+  background: #ea580c !important;
+  border-color: #c2410c !important;
+  color: #ffffff !important;
+}
+
+/* Conta + telefone — normal escuro, hover laranja nos acentos (vence .header a:hover verde) */
+body .header:not(.header-checkout) .header-box_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
+body .header:not(.header-checkout) .header-link_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
+  color: #101010 !important;
+}
+
+body .header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_icon svg {
+  fill: #4b96d4 !important;
+}
+
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:focus,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
+body .header:not(.header-checkout) .header a.account_link:hover,
+body .header:not(.header-checkout) .header a.account_link:focus {
+  color: #101010 !important;
+  opacity: 1 !important;
+}
+
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:hover,
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:focus,
+body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:hover,
+body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:focus,
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_text a.account_link:last-child,
+body .header:not(.header-checkout) .header-box-account-info:hover .header-link_text a.account_link:last-child {
+  color: #f97316 !important;
+}
+
+body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:hover,
+body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:focus,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:hover,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:focus,
+body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_text a.account_link:first-child,
+body .header:not(.header-checkout) .header-box-account_tel:hover .header-link_text a.account_link:first-child {
+  color: #f97316 !important;
+}
+
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg {
+  fill: #f97316 !important;
 }
