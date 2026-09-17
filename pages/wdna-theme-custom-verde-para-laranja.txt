@@ -13,7 +13,19 @@ Por isso colar só no mega-menu.css muitas vezes NÃO vence o theme-custom.
 
 ---
 
-OPÇÃO A (recomendada) — publicar product-hover-image.css do GitHub
+OPÇÃO A (recomendada) — inline no theme.liquid (HEADER-ORANGE-INLINE-v5)
+------------------------------------------------------------------------
+Um único lugar, publica e funciona. Ver guia:
+  pages/wdna-header-orange-inline-paste.txt
+
+No WDNA: Tema → layout → theme.liquid → colar <style> após product-hover-image.css
+
+Raw:
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/layout/theme.liquid
+
+---
+
+OPÇÃO B — publicar product-hover-image.css do GitHub
 -----------------------------------------------------------------
 Arquivo: assets/product-hover-image.css (já inclui HEADER-ORANGE-v4 no final)
 
@@ -24,7 +36,7 @@ No WDNA: Tema → assets → product-hover-image.css → colar/substituir → Pu
 
 ---
 
-OPÇÃO B — editar theme-custom.css na raiz do verde
+OPÇÃO C — editar theme-custom.css na raiz do verde
 --------------------------------------------------
 No WDNA: Tema → assets → theme-custom.css
 
