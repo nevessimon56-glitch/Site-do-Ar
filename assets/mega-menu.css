@@ -891,7 +891,7 @@
 
 :root {
   --sda-card-img-inner-max: 148px;
-  --sda-card-img-inner-max-mobile: 130px;
+  --sda-card-img-inner-max-mobile: 100px;
 }
 
 .product-hover-wrap {
@@ -5092,20 +5092,23 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   }
 }
 
-/* ========== MOBILE-GRID-2COL-RESTORE-v1 — 2 cards por linha (catálogo + home Promoção) ========== */
+/* ========== MOBILE-CARD-SHORT-v2 — 2 colunas + cards mais baixos (catálogo = home) ========== */
 
 @media (max-width: 991px) {
 
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-list,
+  /* Catálogo: 2 cards por linha (CSS puro — não depende só do JS) */
+  .showcase-search .showcase-list,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-list {
     display: flex !important;
     flex-wrap: wrap !important;
     margin-left: -4px !important;
     margin-right: -4px !important;
     width: calc(100% + 8px) !important;
+    transform: none !important;
+    left: auto !important;
   }
 
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-item,
+  .showcase-search .showcase-item,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-item {
     float: none !important;
     display: flex !important;
@@ -5113,12 +5116,14 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
     width: calc(50% - 8px) !important;
     max-width: calc(50% - 8px) !important;
     flex: 0 0 calc(50% - 8px) !important;
-    margin: 0 4px 12px !important;
+    margin: 0 4px 8px !important;
+    padding: 0 !important;
     box-sizing: border-box !important;
     clear: none !important;
+    min-width: 0 !important;
   }
 
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-product,
+  .showcase-search .showcase-product,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product {
     display: flex !important;
     flex-direction: column !important;
@@ -5126,18 +5131,103 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
     width: 100% !important;
   }
 
-  /* Restaura visual mobile (CARD-MOBILE-REDESIGN) — vence COMPACT-v6 se colado no WDNA */
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_image.card-image,
+  /* Imagem mais baixa */
+  .showcase-search .showcase-product_image.card-image,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_image.card-image {
-    padding: 8px 8px 0 !important;
+    padding: 4px 4px 0 !important;
+    flex-shrink: 0 !important;
   }
 
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-header h3,
+  .showcase-search .showcase-product_link__image,
+  .showcase-search .product-hover-wrap,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link__image,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .product-hover-wrap {
+    min-height: 0 !important;
+    max-height: 108px !important;
+    height: auto !important;
+  }
+
+  .showcase-search .showcase-product_link__image img:not(.product-hover-img--hover),
+  .showcase-search .product-hover-wrap img:not(.product-hover-img--hover),
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link__image img:not(.product-hover-img--hover),
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .product-hover-wrap img:not(.product-hover-img--hover),
+  .showcase-search .product-mobile-carousel__slide img,
+  .showcase-search .product-mobile-carousel__img {
+    max-height: var(--sda-card-img-inner-max-mobile, 100px) !important;
+  }
+
+  /* Título e specs compactos */
+  .showcase-search .showcase-product .card-header,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-header {
+    padding: 2px 6px 0 !important;
+    margin: 0 !important;
+  }
+
+  .showcase-search .showcase-product .card-header h3,
+  .showcase-search .showcase-product_link_title,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-header h3,
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link_title,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link_title {
-    min-height: 2.6em !important;
-    max-height: 2.6em !important;
-    line-height: 1.3 !important;
+    min-height: 2.2em !important;
+    max-height: 2.2em !important;
+    line-height: 1.25 !important;
+    font-size: 11px !important;
+  }
+
+  .showcase-search .showcase-spec-wrap,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-wrap {
+    min-height: 0 !important;
+    padding: 0 4px 1px !important;
+  }
+
+  .showcase-search .showcase-spec-bar,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-bar {
+    min-height: 0 !important;
+    gap: 3px !important;
+  }
+
+  .showcase-search .showcase-spec-bar__tag,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-bar__tag {
+    height: 18px !important;
+    min-height: 18px !important;
+    padding: 0 5px !important;
+    font-size: 8px !important;
+  }
+
+  /* Preços e rodapé */
+  .showcase-search .showcase-product .card-footer,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-footer {
+    padding: 2px 6px 6px !important;
+    margin-top: auto !important;
+  }
+
+  .showcase-search .showcase-prices_price b,
+  .showcase-search .showcase-prices_price--pix b,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_price b,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_price--pix b {
+    font-size: 18px !important;
+    line-height: 1.05 !important;
+  }
+
+  .showcase-search .showcase-prices_pix,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_pix {
+    padding: 3px 8px !important;
+    margin: 2px 0 4px !important;
+    font-size: 10px !important;
+  }
+
+  .showcase-search .showcase-prices_installment,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_installment {
+    font-size: 8px !important;
+    margin: 0 !important;
+  }
+
+  .showcase-search .showcase-card-actions .showcase-product_buy,
+  .showcase-search .showcase-product .card-footer > .showcase-product_buy,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions .showcase-product_buy,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-footer > .showcase-product_buy {
+    min-height: 28px !important;
+    height: 28px !important;
+    padding: 0 8px !important;
+    font-size: 10px !important;
   }
 }
