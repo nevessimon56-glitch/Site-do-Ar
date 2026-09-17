@@ -87,6 +87,100 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
+    {%- comment -%}
+      HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
+      Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
+    {%- endcomment -%}
+    <style id="header-orange-inline-v5">
+/* Badge carrinho laranja (vence theme-custom #61bb47) */
+body .header:not(.header-checkout) .header-link_cart .cart_quantity,
+body .header:not(.header-checkout) .cart_link .cart_quantity,
+body .header:not(.header-checkout) .cart_quantity,
+body .header:not(.header-checkout) [data-cart-quantity].cart_quantity,
+body .header:not(.header-checkout) .header-link_cart [data-cart-quantity] {
+  background-color: #f97316 !important;
+  background: #f97316 !important;
+  border-color: #ea580c !important;
+  color: #ffffff !important;
+}
+body .header:not(.header-checkout) .header-link_cart svg,
+body .header:not(.header-checkout) .header-link_cart .icon_cart,
+body .header:not(.header-checkout) .cart_link svg {
+  fill: #4b96d4 !important;
+}
+body .header:not(.header-checkout) .header a.header-link_cart:hover,
+body .header:not(.header-checkout) .header a.header-link_cart:focus,
+body .header:not(.header-checkout) .header a.cart_link:hover,
+body .header:not(.header-checkout) .header a.cart_link:focus,
+body .header:not(.header-checkout) .header-link_cart:hover,
+body .header:not(.header-checkout) .header-link_cart:focus,
+body .header:not(.header-checkout) .cart_link:hover,
+body .header:not(.header-checkout) .cart_link:focus {
+  color: #f97316 !important;
+  opacity: 1 !important;
+}
+body .header:not(.header-checkout) .header-link_cart:hover svg,
+body .header:not(.header-checkout) .header-link_cart:focus svg,
+body .header:not(.header-checkout) .header-link_cart:hover .icon_cart,
+body .header:not(.header-checkout) .header-link_cart:focus .icon_cart,
+body .header:not(.header-checkout) .cart_link:hover svg,
+body .header:not(.header-checkout) .cart_link:focus svg {
+  fill: #f97316 !important;
+}
+body .header:not(.header-checkout) .header-link_cart:hover .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:focus .cart_quantity,
+body .header:not(.header-checkout) .cart_link:hover .cart_quantity,
+body .header:not(.header-checkout) .cart_link:focus .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:hover [data-cart-quantity],
+body .header:not(.header-checkout) .header-link_cart:focus [data-cart-quantity] {
+  background-color: #ea580c !important;
+  background: #ea580c !important;
+  border-color: #c2410c !important;
+  color: #ffffff !important;
+}
+/* Conta + telefone — normal escuro, hover laranja (vence .header a:hover verde) */
+body .header:not(.header-checkout) .header-box_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
+body .header:not(.header-checkout) .header-link_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
+  color: #101010 !important;
+}
+body .header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_icon svg {
+  fill: #4b96d4 !important;
+}
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:focus,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
+body .header:not(.header-checkout) .header a.account_link:hover,
+body .header:not(.header-checkout) .header a.account_link:focus {
+  color: #101010 !important;
+  opacity: 1 !important;
+}
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:hover,
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:focus,
+body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:hover,
+body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:focus,
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_text a.account_link:last-child,
+body .header:not(.header-checkout) .header-box-account-info:hover .header-link_text a.account_link:last-child {
+  color: #f97316 !important;
+}
+body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:hover,
+body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:focus,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:hover,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:focus,
+body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_text a.account_link:first-child,
+body .header:not(.header-checkout) .header-box-account_tel:hover .header-link_text a.account_link:first-child {
+  color: #f97316 !important;
+}
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg {
+  fill: #f97316 !important;
+}
+    </style>
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-semibold.woff2" type="font/woff2" crossorigin="anonymous">
