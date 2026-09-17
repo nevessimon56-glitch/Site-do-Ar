@@ -5715,9 +5715,10 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
 /* Mais Vendidos (.showcase-products_carousel) = carrossel tns — NÃO converter em grid.
    Só estilos internos do card (v5/v6/v7); slide/largura ficam com o theme.js. */
 
-/* ========== Carrinho — badge + hover laranja (HEADER-CART-ORANGE-v2) ========== */
-/* Vence theme-all: .cart_quantity #61bb47 e .header a:hover verde */
+/* ========== Header — laranja SÓ no hover (HEADER-ORANGE-HOVER-v3) ========== */
+/* Badge carrinho = laranja sempre. Texto/ícones = normal; hover = laranja (não verde #61bb47). */
 
+/* --- Carrinho: badge sempre laranja --- */
 .header:not(.header-checkout) .header-link_cart .cart_quantity,
 .header:not(.header-checkout) .cart_link .cart_quantity,
 .header:not(.header-checkout) [data-cart-quantity].cart_quantity,
@@ -5728,6 +5729,18 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   color: #ffffff !important;
 }
 
+/* Ícone carrinho — azul normal */
+.header:not(.header-checkout) .header-link_cart svg,
+.header:not(.header-checkout) .header-link_cart .icon_cart,
+.header:not(.header-checkout) .cart_link svg {
+  fill: #4b96d4 !important;
+}
+
+/* Carrinho — hover laranja (vence .header a:hover verde) */
+.header:not(.header-checkout) .header a.header-link_cart:hover,
+.header:not(.header-checkout) .header a.header-link_cart:focus,
+.header:not(.header-checkout) .header a.cart_link:hover,
+.header:not(.header-checkout) .header a.cart_link:focus,
 .header:not(.header-checkout) .header-link_cart:hover,
 .header:not(.header-checkout) .header-link_cart:focus,
 .header:not(.header-checkout) .cart_link:hover,
@@ -5736,12 +5749,12 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   opacity: 1 !important;
 }
 
+.header:not(.header-checkout) .header-link_cart:hover svg,
+.header:not(.header-checkout) .header-link_cart:focus svg,
 .header:not(.header-checkout) .header-link_cart:hover .icon_cart,
 .header:not(.header-checkout) .header-link_cart:focus .icon_cart,
-.header:not(.header-checkout) .cart_link:hover svg.icon_cart,
-.header:not(.header-checkout) .cart_link:focus svg.icon_cart,
-.header:not(.header-checkout) .header-link_cart:hover svg,
-.header:not(.header-checkout) .header-link_cart:focus svg {
+.header:not(.header-checkout) .cart_link:hover svg,
+.header:not(.header-checkout) .cart_link:focus svg {
   fill: #f97316 !important;
 }
 
@@ -5757,32 +5770,52 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   color: #ffffff !important;
 }
 
-/* ========== Header — acentos laranja (HEADER-ACCENT-ORANGE-v1) ========== */
-/* "Entre ou Cadastre-se" + "Fale conosco" — vence .header a:hover verde #61bb47 */
-
-.header:not(.header-checkout) .header-box-account-info .header-link_text .account_link:last-child,
-.header:not(.header-checkout) .header-link-account_info .header-link_text .account_link:last-child,
-.header:not(.header-checkout) .header-box-account_tel .header-link_text .account_link:first-child,
-.header:not(.header-checkout) .header-link-account_tel .header-link_text .account_link:first-child {
-  color: #f97316 !important;
+/* --- Conta + telefone: texto escuro normal --- */
+.header:not(.header-checkout) .header-box_account .header-link_text .account_link,
+.header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
+.header:not(.header-checkout) .header-link_account .header-link_text .account_link,
+.header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
+  color: #101010 !important;
 }
 
-.header:not(.header-checkout) .header-box-account-info .header-link_text .account_link:last-child:hover,
-.header:not(.header-checkout) .header-box-account-info .header-link_text .account_link:last-child:focus,
-.header:not(.header-checkout) .header-link-account_info .header-link_text .account_link:last-child:hover,
-.header:not(.header-checkout) .header-link-account_info .header-link_text .account_link:last-child:focus,
-.header:not(.header-checkout) .header-box-account_tel .header-link_text .account_link:first-child:hover,
-.header:not(.header-checkout) .header-box-account_tel .header-link_text .account_link:first-child:focus,
-.header:not(.header-checkout) .header-link-account_tel .header-link_text .account_link:first-child:hover,
-.header:not(.header-checkout) .header-link-account_tel .header-link_text .account_link:first-child:focus,
-.header:not(.header-checkout) .header-link_account.header-link-account_info:hover .header-link_text .account_link:last-child,
-.header:not(.header-checkout) .header-link_account.header-link-account_tel:hover .header-link_text .account_link:first-child,
-.header:not(.header-checkout) .header-box_account.header-box-account-info:hover .account_link:last-child,
-.header:not(.header-checkout) .header-box_account.header-box-account_tel:hover .account_link:first-child {
-  color: #ea580c !important;
+/* Ícones conta/telefone — azul normal */
+.header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
+.header:not(.header-checkout) .header-link-account_tel .header-link_icon svg {
+  fill: #4b96d4 !important;
+}
+
+/* Mata verde do tema no hover genérico (Olá visitante + telefone ficam escuros) */
+.header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
+.header:not(.header-checkout) .header-box_account .header-link_text a.account_link:focus,
+.header:not(.header-checkout) .header-link_account .header-link_text a.account_link:hover,
+.header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
+.header:not(.header-checkout) .header a.account_link:hover,
+.header:not(.header-checkout) .header a.account_link:focus {
+  color: #101010 !important;
   opacity: 1 !important;
 }
 
+/* Hover laranja — Entre ou Cadastre-se */
+.header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:hover,
+.header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:focus,
+.header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:hover,
+.header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:focus,
+.header:not(.header-checkout) .header-link-account_info:hover .header-link_text a.account_link:last-child,
+.header:not(.header-checkout) .header-box-account-info:hover .header-link_text a.account_link:last-child {
+  color: #f97316 !important;
+}
+
+/* Hover laranja — Fale conosco */
+.header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:hover,
+.header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:focus,
+.header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:hover,
+.header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:focus,
+.header:not(.header-checkout) .header-link-account_tel:hover .header-link_text a.account_link:first-child,
+.header:not(.header-checkout) .header-box-account_tel:hover .header-link_text a.account_link:first-child {
+  color: #f97316 !important;
+}
+
+/* Ícones — laranja só no hover do bloco */
 .header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg,
 .header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg,
 .header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg,
