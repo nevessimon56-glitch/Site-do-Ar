@@ -1,0 +1,44 @@
+WDNA — O verde NÃO está só no mega-menu.css
+=============================================
+
+Ordem de carregamento (layout/theme.liquid):
+
+  1. theme-all.css      → .header a:hover { color: #61bb47 }  (verde no hover)
+  2. theme-custom.css   → .cart_quantity { background: #61bb47 }  (badge verde)
+  3. mega-menu.css
+  4. product-compare.css
+  5. product-hover-image.css  ← ÚLTIMO (override definitivo)
+
+Por isso colar só no mega-menu.css muitas vezes NÃO vence o theme-custom.
+
+---
+
+OPÇÃO A (recomendada) — publicar product-hover-image.css do GitHub
+-----------------------------------------------------------------
+Arquivo: assets/product-hover-image.css (já inclui HEADER-ORANGE-v4 no final)
+
+Raw:
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/theme-unified-ed4c/assets/product-hover-image.css
+
+No WDNA: Tema → assets → product-hover-image.css → colar/substituir → Publicar
+
+---
+
+OPÇÃO B — editar theme-custom.css na raiz do verde
+--------------------------------------------------
+No WDNA: Tema → assets → theme-custom.css
+
+Procure (Ctrl+F): #61bb47
+
+Troque na regra .cart_quantity:
+
+  DE:   background-color: #61bb47;
+  PARA: background-color: #f97316;
+
+(Há uma segunda .cart_quantity dentro de @media — troque também se existir.)
+
+Salve e publique.
+
+---
+
+Depois: aba anônima + Ctrl+F5 para limpar cache.
