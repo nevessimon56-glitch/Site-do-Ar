@@ -1,8 +1,9 @@
 /**
  * ARQUIVO: assets/mega-menu.js
- * VERSAO: 2026-07-28-js-account-nav-v3
- * IMPORTANTE: este arquivo deve conter JAVASCRIPT, não CSS.
- * O CSS fica em assets/mega-menu.css
+ * VERSAO: 2026-09-16-mega-menu-unified
+ * CSS pareado: assets/mega-menu.css (cards, nav, hover)
+ * Define window.__SDA_HOVER_V2__ — product-hover-image.js desliga se ativo.
+ * Comparador: product-compare.js (não duplicar aqui).
  */
 (function () {
   'use strict';
