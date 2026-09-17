@@ -5548,3 +5548,71 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
     max-height: 74px !important;
   }
 }
+
+/* ========== MOBILE-OFFER-IMG-v6 — selo 5% na esquina + foto um pouco maior ========== */
+
+@media (max-width: 991px) {
+
+  :root {
+    --sda-card-img-inner-max-mobile: 94px;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_image.card-image,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_image,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_image,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_image,
+  .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
+  .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image {
+    position: relative !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-product_image .showcase-offer,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-offer,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-product_image .showcase-offer,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-offer,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-product_image .showcase-offer,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-offer,
+  .showcase-product.card.sda-card--cycle-frio .showcase-product_image .showcase-offer,
+  .showcase-product.card.sda-card--cycle-qf .showcase-product_image .showcase-offer {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    margin: 0 !important;
+    padding: 4px 8px 5px !important;
+    border-radius: 0 0 10px 0 !important;
+    z-index: 10 !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link__image,
+  .showcase-search.showcase-search_grid--mobile-2col .product-hover-wrap,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link__image,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .product-hover-wrap,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image,
+  main.home-main section.showcase .showcase-products_carousel .product-hover-wrap {
+    min-height: 0 !important;
+    max-height: 100px !important;
+    height: auto !important;
+    padding: 6px 4px 2px !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link__image img:not(.product-hover-img--hover),
+  .showcase-search.showcase-search_grid--mobile-2col .product-hover-wrap img:not(.product-hover-img--hover),
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link__image img:not(.product-hover-img--hover),
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .product-hover-wrap img:not(.product-hover-img--hover),
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image img:not(.product-hover-img--hover),
+  main.home-main section.showcase .showcase-products_carousel .product-hover-wrap img:not(.product-hover-img--hover),
+  .showcase-search.showcase-search_grid--mobile-2col .product-mobile-carousel__slide img,
+  .showcase-search.showcase-search_grid--mobile-2col .product-mobile-carousel__img,
+  main.home-main section.showcase .product-mobile-carousel__slide img,
+  main.home-main section.showcase .product-mobile-carousel__img {
+    max-height: var(--sda-card-img-inner-max-mobile, 94px) !important;
+    max-width: 96% !important;
+  }
+}
