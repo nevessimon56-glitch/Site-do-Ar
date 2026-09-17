@@ -5712,30 +5712,47 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
 
 }
 
-/* ========== MOBILE-CAROUSEL-PROTECT-v8 — Mais Vendidos permanece carrossel tns ========== */
-/* NÃO aplicar grid 2 col nem display:flex/wrap na .showcase-list do carrossel. */
-/* Só estiliza conteúdo interno do card; largura/slide = theme.js (tns). */
+/* Mais Vendidos (.showcase-products_carousel) = carrossel tns — NÃO converter em grid.
+   Só estilos internos do card (v5/v6/v7); slide/largura ficam com o theme.js. */
 
-@media (max-width: 991px) {
+/* ========== Carrinho — badge + hover laranja (HEADER-CART-ORANGE-v2) ========== */
+/* Vence theme-all: .cart_quantity #61bb47 e .header a:hover verde */
 
-  main.home-main section.showcase .showcase-products_carousel .showcase-list,
-  main.home-main section.showcase .showcase-products_carousel .showcase-slider,
-  main.home-main section.showcase .showcase-products_carousel .tns-outer,
-  main.home-main section.showcase .showcase-products_carousel .tns-inner,
-  main.home-main section.showcase .showcase-products_carousel .tns-slider {
-    display: block !important;
-    flex-wrap: nowrap !important;
-    width: auto !important;
-    max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
+.header:not(.header-checkout) .header-link_cart .cart_quantity,
+.header:not(.header-checkout) .cart_link .cart_quantity,
+.header:not(.header-checkout) [data-cart-quantity].cart_quantity,
+.header:not(.header-checkout) .header-link_cart [data-cart-quantity] {
+  background-color: #f97316 !important;
+  background: #f97316 !important;
+  border-color: #ea580c !important;
+  color: #ffffff !important;
+}
 
-  main.home-main section.showcase .showcase-products_carousel .showcase-slider .showcase-item,
-  main.home-main section.showcase .showcase-products_carousel .tns-item {
-    float: none !important;
-    clear: none !important;
-    min-width: 0 !important;
-    height: auto !important;
-  }
+.header:not(.header-checkout) .header-link_cart:hover,
+.header:not(.header-checkout) .header-link_cart:focus,
+.header:not(.header-checkout) .cart_link:hover,
+.header:not(.header-checkout) .cart_link:focus {
+  color: #f97316 !important;
+  opacity: 1 !important;
+}
+
+.header:not(.header-checkout) .header-link_cart:hover .icon_cart,
+.header:not(.header-checkout) .header-link_cart:focus .icon_cart,
+.header:not(.header-checkout) .cart_link:hover svg.icon_cart,
+.header:not(.header-checkout) .cart_link:focus svg.icon_cart,
+.header:not(.header-checkout) .header-link_cart:hover svg,
+.header:not(.header-checkout) .header-link_cart:focus svg {
+  fill: #f97316 !important;
+}
+
+.header:not(.header-checkout) .header-link_cart:hover .cart_quantity,
+.header:not(.header-checkout) .header-link_cart:focus .cart_quantity,
+.header:not(.header-checkout) .cart_link:hover .cart_quantity,
+.header:not(.header-checkout) .cart_link:focus .cart_quantity,
+.header:not(.header-checkout) .header-link_cart:hover [data-cart-quantity],
+.header:not(.header-checkout) .header-link_cart:focus [data-cart-quantity] {
+  background-color: #ea580c !important;
+  background: #ea580c !important;
+  border-color: #c2410c !important;
+  color: #ffffff !important;
 }
