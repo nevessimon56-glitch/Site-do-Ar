@@ -651,6 +651,12 @@
 
     if (isTouchOnly()) {
       link.classList.remove('is-hovering');
+      /* Mais Vendidos (tns): só 1 foto — carrossel interno quebra tamanho entre cards */
+      if (link.closest('.showcase-products_carousel')) {
+        ensureImgSrc(img);
+        link.setAttribute(PROCESSED, '1');
+        return;
+      }
       urlOk(hoverSrc, function (ok) {
         if (ok) setupMobileCarousel(link, img, hoverSrc);
         else link.setAttribute(PROCESSED, '1');
