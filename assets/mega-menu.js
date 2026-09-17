@@ -2016,7 +2016,7 @@
 
 })();
 /* ==========================================================
-   HOME MOBILE — grade só em vitrine grid (Promoção); carrossel intacto (tns)
+   HOME MOBILE — grade 2 col: Promoção + Mais Vendidos (tns → grid)
    Alvo: main.home-main — NÃO mexe em .showcase-search
    ========================================================== */
 
@@ -2036,14 +2036,75 @@
     return !!document.querySelector('main.home-main');
   }
 
+  function clearCarouselInlineStyles(list, slider) {
+    var nodes = [list, slider];
+    var listProps = ['display', 'width', 'max-width', 'transform', 'left', 'opacity', 'visibility'];
+    for (var n = 0; n < nodes.length; n++) {
+      if (!nodes[n]) continue;
+      for (var p = 0; p < listProps.length; p++) {
+        nodes[n].style.removeProperty(listProps[p]);
+      }
+    }
+    if (!slider) return;
+    var items = slider.querySelectorAll('.showcase-item');
+    var itemProps = ['width', 'max-width', 'min-width', 'flex', 'display', 'float', 'clear', 'margin-left', 'margin-right', 'transform', 'opacity', 'visibility'];
+    for (var i = 0; i < items.length; i++) {
+      items[i].classList.remove('tns-item', 'tns-slide-active', 'tns-slide-cloned');
+      for (var k = 0; k < itemProps.length; k++) {
+        items[i].style.removeProperty(itemProps[k]);
+      }
+    }
+  }
+
+  function destroyHomeCarouselTns(block) {
+    var slider = block.querySelector('.showcase-slider');
+    if (!slider) return;
+
+    if (slider.tns && typeof slider.tns.destroy === 'function') {
+      try {
+        slider.tns.destroy();
+      } catch (e) {}
+    }
+
+    var outer = block.querySelector('.tns-outer');
+    if (outer && outer.parentNode) {
+      var track = outer.querySelector('.tns-slider') || outer.querySelector('.showcase-slider');
+      if (track) {
+        var moved = track.querySelectorAll('.showcase-item, .tns-item');
+        for (var m = 0; m < moved.length; m++) {
+          moved[m].classList.remove('tns-item', 'tns-slide-active', 'tns-slide-cloned');
+          slider.appendChild(moved[m]);
+        }
+      }
+      outer.parentNode.insertBefore(slider, outer);
+      outer.parentNode.removeChild(outer);
+    }
+
+    slider.classList.remove('tns-slider');
+    var list = block.querySelector('.showcase-list');
+    clearCarouselInlineStyles(list, slider);
+  }
+
+  function applyHomeCarouselGrid(block) {
+    if (!block || !block.querySelector('.showcase-item')) return;
+    destroyHomeCarouselTns(block);
+    block.classList.add(GRID_CLASS);
+    block.setAttribute('data-mobile-grid', '2col');
+  }
+
   function applyHomeGridVitrines() {
     if (!isMobile() || !isHomePage()) return;
 
-    var blocks = document.querySelectorAll('main.home-main section.showcase .showcase-products_grid');
-    for (var i = 0; i < blocks.length; i++) {
-      if (!blocks[i].querySelector('.showcase-item')) continue;
-      blocks[i].classList.add(GRID_CLASS);
-      blocks[i].setAttribute('data-mobile-grid', '2col');
+    var grids = document.querySelectorAll('main.home-main section.showcase .showcase-products_grid');
+    for (var i = 0; i < grids.length; i++) {
+      if (!grids[i].querySelector('.showcase-item')) continue;
+      grids[i].classList.add(GRID_CLASS);
+      grids[i].setAttribute('data-mobile-grid', '2col');
+    }
+
+    var carousels = document.querySelectorAll('main.home-main section.showcase .showcase-products_carousel');
+    for (var c = 0; c < carousels.length; c++) {
+      applyHomeCarouselGrid(carousels[c]);
     }
   }
 
@@ -2060,6 +2121,9 @@
     initHomeShowcaseMobile();
   }
   window.addEventListener('load', initHomeShowcaseMobile);
+  window.matchMedia(MOBILE_MQ).addEventListener('change', initHomeShowcaseMobile);
+  window.setTimeout(initHomeShowcaseMobile, 400);
+  window.setTimeout(initHomeShowcaseMobile, 1500);
 })();
 
 /* NAV-MOBILE-STRIP-v3 — mobile: só Split Inverter, Piso Teto e Janela */
