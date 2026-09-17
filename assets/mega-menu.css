@@ -891,7 +891,7 @@
 
 :root {
   --sda-card-img-inner-max: 148px;
-  --sda-card-img-inner-max-mobile: 100px;
+  --sda-card-img-inner-max-mobile: 76px;
 }
 
 .product-hover-wrap {
@@ -5092,12 +5092,12 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   }
 }
 
-/* ========== MOBILE-CARD-SHORT-v2 — 2 colunas + cards mais baixos (catálogo = home) ========== */
+/* ========== MOBILE-CARD-SHORT-v3 — 2 colunas + altura extra compacta (vence CARD-MOBILE-REDESIGN) ========== */
 
 @media (max-width: 991px) {
 
-  /* Catálogo: 2 cards por linha (CSS puro — não depende só do JS) */
   .showcase-search .showcase-list,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-list,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-list {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -5109,6 +5109,7 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   }
 
   .showcase-search .showcase-item,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-item,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-item {
     float: none !important;
     display: flex !important;
@@ -5116,7 +5117,7 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
     width: calc(50% - 8px) !important;
     max-width: calc(50% - 8px) !important;
     flex: 0 0 calc(50% - 8px) !important;
-    margin: 0 4px 8px !important;
+    margin: 0 4px 6px !important;
     padding: 0 !important;
     box-sizing: border-box !important;
     clear: none !important;
@@ -5124,6 +5125,7 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   }
 
   .showcase-search .showcase-product,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product {
     display: flex !important;
     flex-direction: column !important;
@@ -5131,103 +5133,145 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
     width: 100% !important;
   }
 
-  /* Imagem mais baixa */
   .showcase-search .showcase-product_image.card-image,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_image.card-image,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_image.card-image {
-    padding: 4px 4px 0 !important;
+    padding: 2px 2px 0 !important;
     flex-shrink: 0 !important;
   }
 
   .showcase-search .showcase-product_link__image,
   .showcase-search .product-hover-wrap,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link__image,
+  .showcase-search.showcase-search_grid--mobile-2col .product-hover-wrap,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link__image,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .product-hover-wrap {
     min-height: 0 !important;
-    max-height: 108px !important;
+    max-height: 82px !important;
     height: auto !important;
   }
 
   .showcase-search .showcase-product_link__image img:not(.product-hover-img--hover),
   .showcase-search .product-hover-wrap img:not(.product-hover-img--hover),
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link__image img:not(.product-hover-img--hover),
+  .showcase-search.showcase-search_grid--mobile-2col .product-hover-wrap img:not(.product-hover-img--hover),
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link__image img:not(.product-hover-img--hover),
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .product-hover-wrap img:not(.product-hover-img--hover),
   .showcase-search .product-mobile-carousel__slide img,
   .showcase-search .product-mobile-carousel__img {
-    max-height: var(--sda-card-img-inner-max-mobile, 100px) !important;
+    max-height: var(--sda-card-img-inner-max-mobile, 76px) !important;
   }
 
-  /* Título e specs compactos */
   .showcase-search .showcase-product .card-header,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-header,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-header {
-    padding: 2px 6px 0 !important;
+    padding: 1px 4px 0 !important;
     margin: 0 !important;
   }
 
   .showcase-search .showcase-product .card-header h3,
   .showcase-search .showcase-product_link_title,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-header h3,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link_title,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-header h3,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link_title {
-    min-height: 2.2em !important;
-    max-height: 2.2em !important;
-    line-height: 1.25 !important;
-    font-size: 11px !important;
-  }
-
-  .showcase-search .showcase-spec-wrap,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-wrap {
-    min-height: 0 !important;
-    padding: 0 4px 1px !important;
-  }
-
-  .showcase-search .showcase-spec-bar,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-bar {
-    min-height: 0 !important;
-    gap: 3px !important;
-  }
-
-  .showcase-search .showcase-spec-bar__tag,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-bar__tag {
-    height: 18px !important;
-    min-height: 18px !important;
-    padding: 0 5px !important;
-    font-size: 8px !important;
-  }
-
-  /* Preços e rodapé */
-  .showcase-search .showcase-product .card-footer,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-footer {
-    padding: 2px 6px 6px !important;
-    margin-top: auto !important;
-  }
-
-  .showcase-search .showcase-prices_price b,
-  .showcase-search .showcase-prices_price--pix b,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_price b,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_price--pix b {
-    font-size: 18px !important;
-    line-height: 1.05 !important;
-  }
-
-  .showcase-search .showcase-prices_pix,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_pix {
-    padding: 3px 8px !important;
-    margin: 2px 0 4px !important;
+    min-height: 2em !important;
+    max-height: 2em !important;
+    line-height: 1.2 !important;
     font-size: 10px !important;
   }
 
-  .showcase-search .showcase-prices_installment,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_installment {
-    font-size: 8px !important;
+  .showcase-search .showcase-spec-wrap,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-wrap,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-wrap {
+    min-height: 0 !important;
+    padding: 0 3px 0 !important;
+  }
+
+  .showcase-search .showcase-spec-bar,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-bar,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-bar {
+    min-height: 0 !important;
+    gap: 2px !important;
+  }
+
+  .showcase-search .showcase-spec-bar__tag,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-bar__tag,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-bar__tag {
+    height: 16px !important;
+    min-height: 16px !important;
+    padding: 0 4px !important;
+    font-size: 7px !important;
+  }
+
+  .showcase-search .showcase-product .card-footer,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-footer,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-footer {
+    padding: 1px 4px 4px !important;
+    margin-top: auto !important;
+  }
+
+  .showcase-search .showcase-prices--card,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices--card,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices--card {
+    padding: 0 0 2px !important;
     margin: 0 !important;
+  }
+
+  .showcase-search .showcase-prices_strike,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_strike,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_strike {
+    font-size: 8px !important;
+    margin: 0 0 1px !important;
+    line-height: 1 !important;
+  }
+
+  .showcase-search .showcase-prices_price,
+  .showcase-search .showcase-prices_price b,
+  .showcase-search .showcase-prices_price--pix b,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_price,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_price b,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_price--pix b,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_price b,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_price--pix b {
+    font-size: 16px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+  }
+
+  .showcase-search .showcase-prices_pix,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_pix,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_pix {
+    padding: 2px 6px !important;
+    margin: 1px 0 2px !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  .showcase-search .showcase-prices_installment,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_installment,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_installment {
+    font-size: 7px !important;
+    line-height: 1.1 !important;
+    margin: 0 !important;
+  }
+
+  .showcase-search .showcase-card-actions,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions {
+    margin-top: 2px !important;
+    padding-top: 0 !important;
   }
 
   .showcase-search .showcase-card-actions .showcase-product_buy,
   .showcase-search .showcase-product .card-footer > .showcase-product_buy,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-product_buy,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-footer > .showcase-product_buy,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions .showcase-product_buy,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-footer > .showcase-product_buy {
-    min-height: 28px !important;
-    height: 28px !important;
-    padding: 0 8px !important;
-    font-size: 10px !important;
+    min-height: 26px !important;
+    height: 26px !important;
+    padding: 0 6px !important;
+    font-size: 9px !important;
   }
 }
