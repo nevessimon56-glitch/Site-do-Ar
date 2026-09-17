@@ -5712,56 +5712,30 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
 
 }
 
-/* ========== MOBILE-CAROUSEL-GRID-v8 — Mais Vendidos em 2 colunas (igual Promoção) ========== */
+/* ========== MOBILE-CAROUSEL-PROTECT-v8 — Mais Vendidos permanece carrossel tns ========== */
+/* NÃO aplicar grid 2 col nem display:flex/wrap na .showcase-list do carrossel. */
+/* Só estiliza conteúdo interno do card; largura/slide = theme.js (tns). */
 
 @media (max-width: 991px) {
 
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .showcase-list,
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .showcase-slider,
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .tns-outer,
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .tns-inner {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: -4px !important;
-    margin-right: -4px !important;
-    transform: none !important;
-    left: auto !important;
-    overflow: visible !important;
-    box-sizing: border-box !important;
+  main.home-main section.showcase .showcase-products_carousel .showcase-list,
+  main.home-main section.showcase .showcase-products_carousel .showcase-slider,
+  main.home-main section.showcase .showcase-products_carousel .tns-outer,
+  main.home-main section.showcase .showcase-products_carousel .tns-inner,
+  main.home-main section.showcase .showcase-products_carousel .tns-slider {
+    display: block !important;
+    flex-wrap: nowrap !important;
+    width: auto !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .showcase-item,
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .tns-item {
+  main.home-main section.showcase .showcase-products_carousel .showcase-slider .showcase-item,
+  main.home-main section.showcase .showcase-products_carousel .tns-item {
     float: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    width: calc(50% - 8px) !important;
-    max-width: calc(50% - 8px) !important;
-    flex: 0 0 calc(50% - 8px) !important;
-    margin: 0 4px 8px !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
     clear: none !important;
     min-width: 0 !important;
     height: auto !important;
-    align-self: flex-start !important;
-  }
-
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .showcase-product,
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .showcase-product.card {
-    width: 100% !important;
-    height: auto !important;
-    flex: 0 1 auto !important;
-  }
-
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .controls,
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .slider__arrow,
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .tns-controls,
-  main.home-main section.showcase .showcase-products_carousel.showcase-home_grid--mobile-2col .tns-nav {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
   }
 }
