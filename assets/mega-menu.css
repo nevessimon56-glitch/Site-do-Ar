@@ -5332,3 +5332,219 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
     padding-bottom: 4px !important;
   }
 }
+
+/* ========== MOBILE-CARD-FIX-v5 — catálogo + home + mais vendidos (texto + altura do card) ========== */
+
+@media (max-width: 991px) {
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-header,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-footer,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-header,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-footer,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product .card-header,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product .card-footer {
+    position: static !important;
+    float: none !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    clear: both !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin-top: 0 !important;
+    flex-shrink: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-header,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-header,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product .card-header {
+    padding: 3px 6px 2px !important;
+    margin: 0 !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-header h3,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link_title,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-header h3,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link_title,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product .card-header h3,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_link_title,
+  .showcase-product.card.sda-card--cycle-frio .showcase-product_link_title,
+  .showcase-product.card.sda-card--cycle-qf .showcase-product_link_title {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    min-height: 0 !important;
+    max-height: 2.5em !important;
+    line-height: 1.25 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    margin: 0 !important;
+    float: none !important;
+    width: 100% !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-wrap,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-wrap,
+  main.home-main section.showcase .showcase-products_carousel .showcase-spec-wrap,
+  .showcase-product.card.sda-card--cycle-frio .showcase-spec-wrap,
+  .showcase-product.card.sda-card--cycle-qf .showcase-spec-wrap {
+    min-height: 0 !important;
+    padding: 2px 4px 0 !important;
+    margin: 0 !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-bar,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-bar,
+  main.home-main section.showcase .showcase-products_carousel .showcase-spec-bar {
+    min-height: 0 !important;
+    gap: 3px !important;
+    margin: 0 !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-bar__tag,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-bar__tag,
+  main.home-main section.showcase .showcase-products_carousel .showcase-spec-bar__tag {
+    height: 17px !important;
+    min-height: 17px !important;
+    padding: 0 5px !important;
+    font-size: 8px !important;
+    line-height: 1 !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-footer,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-footer,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product .card-footer {
+    padding: 0 6px 6px !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices--card,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices--card,
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices--card,
+  .showcase-product.card.sda-card--cycle-frio .showcase-prices--card,
+  .showcase-product.card.sda-card--cycle-qf .showcase-prices--card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 2px !important;
+    padding: 2px 0 0 !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_strike,
+  .showcase-search.showcase-search_grid--mobile-2col del.showcase-prices_strike,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_strike,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col del.showcase-prices_strike,
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices_strike,
+  main.home-main section.showcase .showcase-products_carousel del.showcase-prices_strike,
+  .showcase-product.card.sda-card--cycle-frio .showcase-prices_strike,
+  .showcase-product.card.sda-card--cycle-qf .showcase-prices_strike {
+    display: block !important;
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_price,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_price b,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_price--pix,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_price--pix b,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_price b,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_price--pix b,
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices_price b,
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices_price--pix b,
+  .showcase-product.card.sda-card--cycle-frio .showcase-prices_price b,
+  .showcase-product.card.sda-card--cycle-frio .showcase-prices_price--pix b,
+  .showcase-product.card.sda-card--cycle-qf .showcase-prices_price b,
+  .showcase-product.card.sda-card--cycle-qf .showcase-prices_price--pix b {
+    display: block !important;
+    font-size: 17px !important;
+    line-height: 1.1 !important;
+    font-weight: 900 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_pix,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_pix,
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices_pix,
+  .showcase-product.card.sda-card--cycle-frio .showcase-prices_pix,
+  .showcase-product.card.sda-card--cycle-qf .showcase-prices_pix {
+    display: inline-flex !important;
+    font-size: 10px !important;
+    line-height: 1.15 !important;
+    padding: 3px 8px !important;
+    margin: 1px 0 2px !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-prices_installment,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-prices_installment,
+  main.home-main section.showcase .showcase-products_carousel .showcase-prices_installment,
+  .showcase-product.card.sda-card--cycle-frio .showcase-prices_installment,
+  .showcase-product.card.sda-card--cycle-qf .showcase-prices_installment {
+    font-size: 8px !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions,
+  main.home-main section.showcase .showcase-products_carousel .showcase-card-actions,
+  .showcase-product.card.sda-card--cycle-frio .showcase-card-actions,
+  .showcase-product.card.sda-card--cycle-qf .showcase-card-actions {
+    margin: 2px 0 0 !important;
+    padding: 0 6px 4px !important;
+    gap: 4px !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-product_buy,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product .card-footer > .showcase-product_buy,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions .showcase-product_buy,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product .card-footer > .showcase-product_buy,
+  main.home-main section.showcase .showcase-products_carousel .showcase-card-actions .showcase-product_buy,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product .card-footer > .showcase-product_buy {
+    min-height: 28px !important;
+    height: 28px !important;
+    padding: 0 8px !important;
+    font-size: 10px !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_image.card-image,
+  .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
+  .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image {
+    padding: 4px 4px 0 !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-slider .showcase-item,
+  main.home-main section.showcase .showcase-products_carousel .tns-item {
+    height: auto !important;
+    min-height: 0 !important;
+    align-self: flex-start !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image,
+  main.home-main section.showcase .showcase-products_carousel .product-hover-wrap {
+    max-height: 80px !important;
+    min-height: 0 !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image img:not(.product-hover-img--hover),
+  main.home-main section.showcase .showcase-products_carousel .product-hover-wrap img:not(.product-hover-img--hover) {
+    max-height: 74px !important;
+  }
+}
