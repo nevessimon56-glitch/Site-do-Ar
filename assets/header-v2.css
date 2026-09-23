@@ -66,11 +66,8 @@
   text-transform: uppercase;
 }
 
-.header-v2 .header-utility__links a {
-  /* inherits from grouped rule above */
-}
-
-.header-v2 .header-utility__links a:hover {
+.header-v2 .header-utility__links a:hover,
+.header-v2 .header-utility__account:hover {
   opacity: 0.85;
   color: #fff;
 }
@@ -98,6 +95,10 @@
   width: 14px;
   height: 14px;
   display: block;
+}
+
+.header-v2 .header-utility__icon svg circle,
+.header-v2 .header-utility__icon svg path {
   fill: none !important;
   stroke: #fff !important;
   stroke-width: 1.6;
