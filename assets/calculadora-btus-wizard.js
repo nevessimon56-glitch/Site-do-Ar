@@ -394,15 +394,19 @@
   }
 
   function findSiteFooter() {
-    var candidates = document.querySelectorAll('footer, .footer, #footer');
+    var candidates = document.querySelectorAll(
+      'body > footer, body > .footer, footer.footer, #footer, .store-footer, .rodape, .main-footer, footer, .footer'
+    );
     var i;
+    var best = null;
     for (i = 0; i < candidates.length; i++) {
       var el = candidates[i];
       if (!el || !root) continue;
       if (el === root || root.contains(el)) continue;
-      return el;
+      if (el.closest && (el.closest('.sidenav-overlay') || el.closest('.card-footer'))) continue;
+      best = el;
     }
-    return null;
+    return best;
   }
 
   function markPageActive() {
@@ -461,6 +465,9 @@
 
     showStep(1);
     bindDelegation();
+    if (typeof window.sdaBtuApplyLayoutFix === 'function') {
+      window.sdaBtuApplyLayoutFix();
+    }
     window.__sdaBtuWizardReady = true;
   }
 

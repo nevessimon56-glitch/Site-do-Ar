@@ -1,38 +1,16 @@
 {% layout 'theme' %}
 
 {% block head %}
-<style>
-  body.sda-btu-page #sda-calculadora .step-card { display: none !important; }
-  body.sda-btu-page #sda-calculadora .step-card.active { display: block !important; }
-  body.sda-btu-page #sda-calculadora .result:not(.show) { display: none !important; }
-  body.sda-btu-page #sda-calculadora {
-    display: block !important;
-    clear: both !important;
-    position: relative !important;
-    z-index: 5 !important;
-    margin-bottom: 96px !important;
-    padding-bottom: 64px !important;
-    width: 100% !important;
-    max-width: 1060px;
-    margin-left: auto !important;
-    margin-right: auto !important;
+<script>
+(function(){
+  function mark(){
+    document.documentElement.classList.add('sda-btu-page','sda-btu-active');
+    if(document.body)document.body.classList.add('sda-btu-page','sda-btu-active');
   }
-  body.sda-btu-page .footer,
-  body.sda-btu-page footer {
-    position: relative !important;
-    bottom: auto !important;
-    top: auto !important;
-    transform: none !important;
-    z-index: 1 !important;
-    margin-top: 24px !important;
-  }
-  body.sda-btu-page main,
-  body.sda-btu-page .page-content,
-  body.sda-btu-page .container {
-    overflow: visible !important;
-  }
-</style>
-<script>document.body.classList.add('sda-btu-page','sda-btu-active');</script>
+  mark();
+  document.addEventListener('DOMContentLoaded',mark);
+})();
+</script>
 {% endblock %}
 
 {% block content %}

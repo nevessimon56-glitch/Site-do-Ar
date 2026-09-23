@@ -1,4 +1,4 @@
-<!-- VERSAO: 2026-09-03-calculadora-btus-etapas-v9-cdn -->
+<!-- VERSAO: 2026-09-03-calculadora-btus-etapas-v10-cdn -->
 <p></p>
 <!-- NÃO cole no theme.liquid — só página adicional Calculadora BTUs -->
 <p></p>
@@ -360,6 +360,24 @@
     <details class="result-details"><summary>Ver detalhamento do c&#225;lculo</summary><div class="breakdown" id="sda-breakdown"></div></details>
   </section>
 </div>
+<script>
+(function(){
+  var root=document.getElementById("sda-calculadora");
+  if(!root)return;
+  if(document.body)document.body.classList.add("sda-btu-active");
+  if(document.documentElement)document.documentElement.classList.add("sda-btu-active");
+  var cards=root.querySelectorAll(".step-card");
+  for(var i=0;i<cards.length;i++){
+    var n=parseInt(cards[i].getAttribute("data-step"),10);
+    if(n===1)cards[i].classList.add("active");
+    else cards[i].classList.remove("active");
+  }
+  var bar=document.getElementById("sda-progressBar");
+  var txt=document.getElementById("sda-progressText");
+  if(bar)bar.style.width="33.33%";
+  if(txt)txt.textContent="Etapa 1 de 3";
+})();
+</script>
 
 <style>
 .sda-calc .hero-logo {

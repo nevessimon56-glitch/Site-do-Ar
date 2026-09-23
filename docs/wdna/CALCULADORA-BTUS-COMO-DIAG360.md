@@ -23,8 +23,11 @@ Arquivo: **`docs/wdna/calculadora-btus-etapas-pagina-completa.html`**
 ## Etapa 3 ao abrir / footer em cima
 
 - O tema WDNA pode forçar `section { display: block !important }`, exibindo **todas** as etapas (parece “pular” para a 3).
-- A v9 do HTML inclui CSS com `!important` + script **inline** logo após `#sda-calculadora` que força **Etapa 1** antes do CDN carregar.
-- Se ainda falhar: no admin WDNA, associe o template **`page.calculadora-btus`** à página (como o Diagnóstico usa `page.diagnostico`).
+- A v10 do HTML inclui CSS com `!important` + script **inline** logo após `#sda-calculadora` que força **Etapa 1** antes do CDN carregar.
+- **Footer sobre a calculadora:** o template da página **não basta** — é preciso **publicar o tema** com `layout/theme.liquid` atualizado, que carrega:
+  - `assets/calculadora-btus-page.css`
+  - `assets/calculadora-btus-layout.js` (mede sobreposição e empurra o rodapé para baixo)
+- No admin WDNA: template **`page.calculadora-btus`** na página + tema publicado.
 
 ## URL do script (atual)
 
