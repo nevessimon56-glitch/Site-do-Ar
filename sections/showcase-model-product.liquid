@@ -20,6 +20,22 @@
     {% if product.primaryPrice %}
         {% assign productPricePrimary = product.primaryPrice %}
     {% endif %}
+    {% assign favImage = '' %}
+    {% if product.medias[0].path != blank %}
+        {% assign favImage = product.medias[0].path | imgUrl: 250 %}
+    {% endif %}
+    {% assign favPriceLabel = '' %}
+    {% if productPricePrimary.price %}
+        {% assign favPriceLabel = productPricePrimary.price | money %}
+    {% endif %}
+    {% assign productTitle = product.title %}
+    {% if product.multiple > 1 %}
+        {% assign productTitle = productTitle | append: ' - ' | append: product.multiple %}
+        {% if product.unitName %}
+            {% assign productUnitName = product.unitName | downcase %}
+            {% assign productTitle = productTitle | append: ' ' | append: productUnitName | append: 's' %}
+        {% endif %}
+    {% endif %}
     {% if product.secondaryPrice %}
         {% assign productPriceSecond = product.secondaryPrice %}
     {% endif %}
@@ -38,6 +54,9 @@
                 {% endif %}
             {% endif %}
             <div class="showcase-product_image card-image">
+                <button type="button" class="showcase-favorite-btn" data-favorite-toggle data-product-id="{{ product.id }}" data-product-url="{{ product.url }}" data-product-title="{{ productTitle | replace: '"', '&quot;' }}" data-product-image="{{ favImage }}" data-product-price="{{ favPriceLabel }}" aria-label="Favoritar produto" title="Favoritar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"/></svg>
+                </button>
                 {% if themeConfig.price.type != 'hide' %}
                     {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
                         {% assign classBtnBuy = '' %}
@@ -67,14 +86,6 @@
             </div>
             <div class="card-header">
                 <h3>
-                    {% assign productTitle = product.title %}
-                    {% if product.multiple > 1 %}
-                        {% assign productTitle = productTitle | append: ' - ' | append: product.multiple %}
-                        {% if product.unitName %}
-                            {% assign productUnitName = product.unitName | downcase %}
-                            {% assign productTitle = productTitle | append: ' ' | append: productUnitName | append: 's' %}
-                        {% endif %}
-                    {% endif %}
                     <a class="showcase-product_link showcase-product_link_title" href="{{ product.url }}" title="{{ productTitle }}">
                         {{ productTitle }}
                     </a>

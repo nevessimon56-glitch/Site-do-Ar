@@ -1,0 +1,26 @@
+{% assign iconSecurity = '<svg width="512" height="512" x="0" y="0" viewBox="0 0 512 512"><path d="m286 180c0-16.542-13.458-30-30-30s-30 13.458-30 30v30h60z"></path><path d="m183.155 240c8.97 88.2 44.157 120 72.845 120s63.875-31.8 72.845-120zm87.845 75c0 8.284-6.716 15-15 15s-15-6.716-15-15v-30c0-8.284 6.716-15 15-15s15 6.716 15 15z"></path><path d="m470.184 61.595-210-61c-2.732-.794-5.636-.794-8.368 0l-210 61c-6.408 1.862-10.816 7.732-10.816 14.405v141.597c0 135.25 89.412 256.265 220.879 293.826 2.704.772 5.559.767 8.241 0 129.444-36.983 220.88-156.465 220.88-293.826v-141.597c0-6.673-4.408-12.543-10.816-14.405zm-110.106 164.324c-3.277 53.395-15.2 95.101-35.439 123.959-18.146 25.873-42.523 40.122-68.639 40.122s-50.493-14.249-68.639-40.122c-20.239-28.858-32.163-70.563-35.439-123.959-.253-4.13 1.21-8.181 4.045-11.196 2.835-3.014 6.789-4.723 10.927-4.723h29.106v-30c0-33.084 26.916-60 60-60s60 26.916 60 60v30h29.106c4.138 0 8.092 1.709 10.927 4.723 2.835 3.015 4.299 7.066 4.045 11.196z"></path></svg>' %}
+<header class="header header-checkout">
+    <div class="header-content content">
+        <div class="container">
+            <div class="navbar">
+                <div class="navbar-section">
+                    <a class="logo" href="/" title="{{ store.name }}">
+                        <h1>{{ store.name }}</h1>
+                        {% if theme.logo.path %}
+                            <picture>
+                                <img class="lazy" data-src="{{ theme.logo.path | imgUrl: 260 }}" alt="{% if theme.logo.title and theme.logo.title != '' %}{{ theme.logo.title }}{% else %}{{ store.name }}{% endif %}">
+                            </picture>
+                        {% else %}
+                            {{ themeConfig.icons.image }}
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="navbar-section">
+                    <div class="header-link header-link_ssl" href="javascript:void(0)" title="Site Seguro">
+                        <div class="icon-ssl">{{ iconSecurity }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

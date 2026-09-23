@@ -79,6 +79,7 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/header-v2.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
@@ -156,6 +157,7 @@
 </script>
 <script src="{{ scripts.main.src }}"></script>
 <script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/favorites.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
 <script>
   window.addEventListener('load', function () {
@@ -177,6 +179,10 @@
                 this.data.isLogged = !!customer;
                 if(customer){
                     this.data.user = customer.name || '';
+                }
+                window.__SITE_DOAR_CUSTOMER__ = customer || null;
+                if (window.SiteDoarFavorites && typeof window.SiteDoarFavorites.mergeGuestOnLogin === 'function') {
+                    window.SiteDoarFavorites.mergeGuestOnLogin();
                 }
                 if (this.data.isLogged) {
                     var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
@@ -213,6 +219,10 @@
         }
     }
     const customer = {{ customer | json }};
+    window.__SITE_DOAR_CUSTOMER__ = customer || null;
+    if (customer && window.SiteDoarFavorites && typeof window.SiteDoarFavorites.mergeGuestOnLogin === 'function') {
+        window.SiteDoarFavorites.mergeGuestOnLogin();
+    }
     if (typeof mb_track !== 'undefined') {
         mb_track('setRecoveryUrl', 'https://{{ store.url }}/checkout');
     }
