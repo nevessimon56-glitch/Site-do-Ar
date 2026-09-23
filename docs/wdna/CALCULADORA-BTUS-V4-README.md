@@ -1,4 +1,16 @@
-# Calculadora BTUs v4 (página adicional)
+# Calculadora BTUs — por etapas (recomendado)
+
+Arquivo para colar na **página adicional** (HTML + CSS + script inline):
+
+**`docs/wdna/calculadora-btus-etapas-pagina-completa.html`**
+
+- 3 etapas: Medidas → Uso → Construção/clima → **Calcular BTUs**
+- Visual DM Sans (mesma linha do v4)
+- Mesma fórmula e catálogo do v4
+
+---
+
+# Calculadora BTUs v4 (tudo numa tela)
 
 ## Layout
 

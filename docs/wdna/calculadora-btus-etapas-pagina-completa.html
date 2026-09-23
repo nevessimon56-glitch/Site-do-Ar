@@ -1,0 +1,819 @@
+<!-- CALCULADORA BTUs — Site do Ar | 3 ETAPAS | cole na página adicional WDNA -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap');
+
+  .sda-calc--steps *, .sda-calc--steps *::before, .sda-calc--steps *::after { box-sizing: border-box; }
+
+  .sda-calc--steps {
+    --sda-blue: #1565C0;
+    --sda-blue-light: #1E88E5;
+    --sda-blue-dark: #0D47A1;
+    --sda-border: #dde3ec;
+    --sda-muted: #5a6a7a;
+    --sda-text: #1a1f2e;
+    --sda-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--sda-text);
+    max-width: 780px;
+    margin: 0 auto 48px;
+    padding: 0 16px;
+  }
+
+  .sda-calc--steps .hero {
+    background: linear-gradient(135deg, #1976D2 0%, #42A5F5 50%, #64B5F6 100%);
+    padding: 40px 24px 56px;
+    text-align: center;
+    border-radius: var(--sda-radius);
+    margin-bottom: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sda-calc--steps .hero-logo { display: block; margin: 0 auto 16px; width: 150px; }
+  .sda-calc--steps .hero-logo img { width: 100%; height: auto; display: block; }
+
+  .sda-calc--steps .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(24px, 4.5vw, 34px);
+    font-weight: 400;
+    color: #fff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .sda-calc--steps .hero p {
+    color: rgba(255,255,255,.88);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+
+  .sda-calc--steps .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 14px;
+  }
+
+  .sda-calc--steps .progress {
+    flex: 1;
+    height: 8px;
+    background: #dbeaf6;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .sda-calc--steps .progress-bar {
+    width: 33.33%;
+    height: 100%;
+    background: linear-gradient(90deg, #F57C00, #FFB74D);
+    transition: width .25s ease;
+  }
+
+  .sda-calc--steps .progress-text {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sda-blue-dark);
+    min-width: 88px;
+    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+
+  .sda-calc--steps .sda-step {
+    display: none;
+    background: #fff;
+    border: 1px solid var(--sda-border);
+    border-radius: var(--sda-radius);
+    padding: 24px 28px 22px;
+    box-shadow: 0 2px 16px rgba(0,0,0,.06);
+    margin-bottom: 12px;
+  }
+
+  .sda-calc--steps .sda-step.active { display: block; animation: sdaStepIn .25s ease; }
+
+  @keyframes sdaStepIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .sda-calc--steps .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--sda-blue-dark);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sda-calc--steps .card-title .num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--sda-blue);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sda-calc--steps .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .sda-calc--steps .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .sda-calc--steps .form-group.is-invalid input { border-color: #C62828; background: #fff8f7; }
+
+  .sda-calc--steps .form-group label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--sda-muted);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  .sda-calc--steps .form-group input,
+  .sda-calc--steps .form-group select {
+    height: 44px;
+    border: 1.5px solid var(--sda-border);
+    border-radius: 8px;
+    padding: 0 14px;
+    font: inherit;
+    font-size: 15px;
+    width: 100%;
+    appearance: none;
+    background: #fff;
+  }
+
+  .sda-calc--steps .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235a6a7a' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  .sda-calc--steps .hint { font-size: 12px; color: var(--sda-muted); line-height: 1.4; }
+
+  .sda-calc--steps .error-msg {
+    display: none;
+    background: #FFEBEE;
+    border: 1px solid #EF9A9A;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #C62828;
+    margin-top: 12px;
+  }
+
+  .sda-calc--steps .error-msg.show { display: block; }
+
+  .sda-calc--steps .step-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .sda-calc--steps .btn {
+    min-height: 48px;
+    border-radius: 10px;
+    padding: 0 20px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+  }
+
+  .sda-calc--steps .btn-primary {
+    color: #fff;
+    background: linear-gradient(135deg, var(--sda-blue), var(--sda-blue-light));
+    margin-left: auto;
+  }
+
+  .sda-calc--steps .btn-secondary {
+    color: var(--sda-blue);
+    background: #fff;
+    border: 1.5px solid #b8cbe0;
+  }
+
+  .sda-calc--steps .btn-orange {
+    color: #fff;
+    background: linear-gradient(135deg, #F57C00, #FFB74D);
+    margin-left: auto;
+  }
+
+  .sda-calc--steps .result-box {
+    display: none;
+    background: linear-gradient(135deg, #E3F2FD 0%, #E8F5E9 100%);
+    border: 1.5px solid #90CAF9;
+    border-radius: var(--sda-radius);
+    padding: 24px 28px;
+    margin-top: 16px;
+  }
+
+  .sda-calc--steps .result-box.show { display: block; }
+
+  .sda-calc--steps .result-btus {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 7vw, 52px);
+    color: var(--sda-blue-dark);
+    line-height: 1;
+    margin: 8px 0;
+  }
+
+  .sda-calc--steps .result-btus span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    color: var(--sda-blue);
+    margin-left: 6px;
+  }
+
+  .sda-calc--steps .result-sub { font-size: 14px; color: var(--sda-muted); margin-bottom: 16px; }
+
+  .sda-calc--steps .info-grid,
+  .sda-calc--steps .rec-cards,
+  .sda-calc--steps .breakdown-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .sda-calc--steps .info-item,
+  .sda-calc--steps .breakdown-item,
+  .sda-calc--steps .rec-card {
+    background: #fff;
+    border: 1px solid var(--sda-border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .sda-calc--steps .rec-card { text-align: center; }
+  .sda-calc--steps .rec-tag { display: inline-block; font-size: 10px; font-weight: 700; color: #fff; background: var(--sda-blue); padding: 2px 8px; border-radius: 99px; margin-bottom: 6px; }
+  .sda-calc--steps .rec-tag.recomendado { background: #2E7D32; }
+  .sda-calc--steps .rec-tag.minimo { background: #F57C00; }
+  .sda-calc--steps .rec-btus { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--sda-blue-dark); }
+  .sda-calc--steps .rec-label { font-size: 11px; color: var(--sda-muted); margin: 4px 0 8px; }
+  .sda-calc--steps .rec-link { display: inline-block; background: var(--sda-blue); color: #fff; text-decoration: none; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 6px; }
+
+  .sda-calc--steps .breakdown-title,
+  .sda-calc--steps .rec-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sda-muted);
+    text-transform: uppercase;
+    margin: 16px 0 8px;
+    letter-spacing: .04em;
+  }
+
+  .sda-calc--steps .breakdown-item { display: flex; justify-content: space-between; font-size: 12px; gap: 8px; }
+  .sda-calc--steps .tip-box { margin-top: 14px; padding: 12px 14px; background: #FFF8E1; border: 1px solid #FFE082; border-radius: 8px; font-size: 13px; color: #5D4037; }
+
+  @media (max-width: 520px) {
+    .sda-calc--steps .sda-step { padding: 18px 14px; }
+    .sda-calc--steps .step-actions { flex-wrap: wrap; }
+    .sda-calc--steps .btn { flex: 1; }
+  }
+</style>
+
+<div class="sda-calc sda-calc--steps" id="sda-calculadora-etapas">
+  <div class="hero">
+    <a href="/" class="hero-logo" title="Site do Ar">
+      <img src="https://salescdn.net/maT0h6neqzha7hneLLSUgCnCdII=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1778871926257.webp" alt="Site do Ar">
+    </a>
+    <h1>Calcule os BTUs ideais</h1>
+    <p>Três etapas rápidas — mesmo dimensionamento completo da versão anterior.</p>
+  </div>
+
+  <div class="progress-wrap" aria-label="Progresso">
+    <div class="progress"><div class="progress-bar" id="sda-progressBar"></div></div>
+    <div class="progress-text" id="sda-progressText">Etapa 1 de 3</div>
+  </div>
+
+  <section class="sda-step active" data-step="1">
+    <div class="card-title"><span class="num">1</span> Medidas do ambiente</div>
+    <div class="form-grid">
+      <div class="form-group"><label for="sda-comp">Comprimento (m)</label><input type="number" id="sda-comp" placeholder="Ex: 4" min="0.1" step="0.1"></div>
+      <div class="form-group"><label for="sda-larg">Largura (m)</label><input type="number" id="sda-larg" placeholder="Ex: 3" min="0.1" step="0.1"></div>
+      <div class="form-group"><label for="sda-pe">Altura do teto (m)</label><input type="number" id="sda-pe" value="2.6" min="1.5" step="0.1"><span class="hint">Padrão 2,60 m — acima de 3 m há acréscimo.</span></div>
+    </div>
+    <div class="error-msg" id="sda-error-step1" role="alert"></div>
+    <div class="step-actions"><span></span><button type="button" class="btn btn-primary" data-sda-next>Continuar</button></div>
+  </section>
+
+  <section class="sda-step" data-step="2">
+    <div class="card-title"><span class="num">2</span> Uso do ambiente</div>
+    <div class="form-grid">
+      <div class="form-group"><label for="sda-sol">Insolação</label><select id="sda-sol"><option value="sem_sol">Sem sol direto</option><option value="sol_manha" selected>Sol pela manhã</option><option value="sol_tarde">Sol à tarde (forte)</option></select></div>
+      <div class="form-group"><label for="sda-uso">Tipo de uso</label><select id="sda-uso"><option value="quarto">Quarto</option><option value="sala" selected>Sala / Escritório</option><option value="cozinha">Cozinha</option><option value="comercio">Comércio</option></select></div>
+      <div class="form-group"><label for="sda-pessoas">Pessoas</label><input type="number" id="sda-pessoas" value="2" min="1" max="50"></div>
+      <div class="form-group"><label for="sda-equip">Equipamentos</label><select id="sda-equip"><option value="0">Nenhum</option><option value="600">Poucos</option><option value="1500" selected>Moderado</option><option value="3000">Muitos</option></select></div>
+      <div class="form-group"><label for="sda-horas">Horas de uso</label><select id="sda-horas"><option value="noite">Só à noite</option><option value="tarde_noite" selected>Tarde e noite</option><option value="dia_todo">Dia todo</option><option value="comercial">Comercial</option></select></div>
+      <div class="form-group"><label for="sda-ciclo">Ciclo</label><select id="sda-ciclo"><option value="frio" selected>Só frio</option><option value="quente_frio">Quente e frio</option></select></div>
+    </div>
+    <div class="error-msg" id="sda-error-step2" role="alert"></div>
+    <div class="step-actions"><button type="button" class="btn btn-secondary" data-sda-prev>Voltar</button><button type="button" class="btn btn-primary" data-sda-next>Continuar</button></div>
+  </section>
+
+  <section class="sda-step" data-step="3">
+    <div class="card-title"><span class="num">3</span> Construção e clima</div>
+    <div class="form-grid">
+      <div class="form-group"><label for="sda-andar">Andar</label><select id="sda-andar"><option value="intermediario" selected>Intermediário</option><option value="terreo">Térreo</option><option value="cobertura">Cobertura</option></select></div>
+      <div class="form-group"><label for="sda-janelas">Janelas</label><select id="sda-janelas"><option value="poucas">Poucas</option><option value="moderadas" selected>Moderadas</option><option value="muitas">Muitas</option></select></div>
+      <div class="form-group"><label for="sda-isol">Isolamento</label><select id="sda-isol"><option value="bom">Bom</option><option value="regular" selected>Regular</option><option value="ruim">Ruim</option></select></div>
+      <div class="form-group"><label for="sda-layout">Layout</label><select id="sda-layout"><option value="fechado" selected>Fechado</option><option value="planta_aberta">Planta aberta</option><option value="mezanino">Mezanino</option></select></div>
+      <div class="form-group"><label for="sda-clima">Clima</label><select id="sda-clima"><option value="ameno">Ameno</option><option value="quente" selected>Quente</option><option value="muito_quente">Muito quente</option><option value="frio_inverno">Frio no inverno</option></select></div>
+      <div class="form-group"><label for="sda-umidade">Umidade</label><select id="sda-umidade"><option value="normal" selected>Normal</option><option value="alta">Alta</option><option value="muito_alta">Muito alta</option></select></div>
+    </div>
+    <div class="error-msg" id="sda-error-step3" role="alert"></div>
+    <div class="step-actions"><button type="button" class="btn btn-secondary" data-sda-prev>Voltar</button><button type="button" class="btn btn-orange" data-sda-calc>Calcular BTUs</button></div>
+  </section>
+
+  <div class="result-box" id="sda-resultBox">
+    <div class="result-header">Resultado do cálculo</div>
+    <div class="result-btus" id="sda-resultNum">—<span>BTUs/h</span></div>
+    <div class="result-sub" id="sda-resultSub"></div>
+    <div class="info-grid" id="sda-infoGrid"></div>
+    <div class="breakdown-title">Detalhamento</div>
+    <div class="breakdown-list" id="sda-breakdown"></div>
+    <div class="rec-title">Equipamentos recomendados</div>
+    <div class="rec-cards" id="sda-recCards"></div>
+    <div class="tip-box" id="sda-tipBox"></div>
+    <div class="step-actions" style="margin-top:16px"><button type="button" class="btn btn-secondary" id="sda-reset">Refazer cálculo</button></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var root = document.getElementById('sda-calculadora-etapas');
+  if (!root || root.getAttribute('data-sda-steps-ready') === '1') return;
+  root.setAttribute('data-sda-steps-ready', '1');
+
+  var SDA_CATALOG = [
+    { btu: 9000, label: '9.000', tipo: 'Split Inverter', url: '/split-inverter/9000-btus' },
+    { btu: 12000, label: '12.000', tipo: 'Split Inverter', url: '/split-inverter/12000-Btus' },
+    { btu: 18000, label: '18.000', tipo: 'Split Inverter', url: '/split-inverter/18000-Btus' },
+    { btu: 24000, label: '24.000', tipo: 'Split Inverter', url: '/split-inverter/24000-Btus' },
+    { btu: 30000, label: '30.000', tipo: 'Split Inverter', url: '/split-inverter/30000-Btus' },
+    { btu: 36000, label: '36.000', tipo: 'Piso Teto', url: '/Piso-Teto/36000-Btus' },
+    { btu: 46000, label: '46.000', tipo: 'Piso Teto', url: '/Piso-Teto/46000-Btus' },
+    { btu: 48000, label: '48.000', tipo: 'Piso Teto', url: '/Piso-Teto/48000-Btus' },
+    { btu: 56000, label: '56.000', tipo: 'Piso Teto', url: '/Piso-Teto/56000-btus' },
+  ];
+
+  var FAT_SOL = { sem_sol: 1.0, sol_manha: 1.1, sol_tarde: 1.25 };
+  var FAT_USO = { quarto: 1.0, sala: 1.1, cozinha: 1.2, comercio: 1.5 };
+  var FAT_ANDAR = { terreo: 1.05, intermediario: 1.0, cobertura: 1.15 };
+  var FAT_JANELAS = { poucas: 1.0, moderadas: 1.08, muitas: 1.18 };
+  var FAT_ISOL = { bom: 0.95, regular: 1.0, ruim: 1.12 };
+  var FAT_LAYOUT = { fechado: 1.0, planta_aberta: 1.15, mezanino: 1.2 };
+  var FAT_CLIMA = { ameno: 1.0, quente: 1.08, muito_quente: 1.15, frio_inverno: 1.0 };
+  var FAT_HORAS = { noite: 1.0, tarde_noite: 1.05, dia_todo: 1.1, comercial: 1.15 };
+  var FAT_UMID = { normal: 1.0, alta: 1.05, muito_alta: 1.1 };
+
+  var LABELS = {
+    sol: { sem_sol: 'Sem sol', sol_manha: 'Sol manhã', sol_tarde: 'Sol tarde' },
+    uso: { quarto: 'Quarto', sala: 'Sala', cozinha: 'Cozinha', comercio: 'Comércio' },
+    andar: { terreo: 'Térreo', intermediario: 'Intermediário', cobertura: 'Cobertura' },
+    janelas: { poucas: 'Poucas janelas', moderadas: 'Janelas moderadas', muitas: 'Muitas janelas' },
+    isol: { bom: 'Isolamento bom', regular: 'Isolamento regular', ruim: 'Isolamento ruim' },
+    layout: { fechado: 'Fechado', planta_aberta: 'Planta aberta', mezanino: 'Mezanino' },
+    clima: { ameno: 'Clima ameno', quente: 'Clima quente', muito_quente: 'Muito quente', frio_inverno: 'Frio no inverno' },
+    horas: { noite: 'Uso noturno', tarde_noite: 'Tarde/noite', dia_todo: 'Dia todo', comercial: 'Uso comercial' },
+    umid: { normal: 'Umidade normal', alta: 'Umidade alta', muito_alta: 'Umidade muito alta' },
+  };
+
+  var step = 1;
+  var TOTAL_STEPS = 3;
+
+  function el(id) {
+    return document.getElementById(id);
+  }
+
+  function val(id, def) {
+    var node = el(id);
+    if (!node) return def;
+    var v = node.value;
+    return v === '' || v == null ? def : v;
+  }
+
+  function parseDim(id) {
+    var raw = String(val(id, ''))
+      .trim()
+      .replace(/\s/g, '')
+      .replace(',', '.');
+    var n = parseFloat(raw);
+    return isFinite(n) ? n : NaN;
+  }
+
+  function fmt(n) {
+    try {
+      return n.toLocaleString('pt-BR');
+    } catch (e) {
+      return String(n);
+    }
+  }
+
+  function pct(fator) {
+    var diff = Math.round((fator - 1) * 100);
+    if (diff === 0) return '0%';
+    return (diff > 0 ? '+' : '') + diff + '%';
+  }
+
+  function fatPe(altura) {
+    return altura > 3 ? altura / 2.6 : 1.0;
+  }
+
+  function calcBtus(params) {
+    var base = params.area * 600;
+    var fSol = FAT_SOL[params.sol] || 1.1;
+    var fUso = FAT_USO[params.uso] || 1.1;
+    var fPe = fatPe(params.pe);
+    var fAndar = FAT_ANDAR[params.andar] || 1.0;
+    var fJan = FAT_JANELAS[params.janelas] || 1.0;
+    var fIsol = FAT_ISOL[params.isol] || 1.0;
+    var fLayout = FAT_LAYOUT[params.layout] || 1.0;
+    var fClima = FAT_CLIMA[params.clima] || 1.0;
+    var fHoras = FAT_HORAS[params.horas] || 1.0;
+    var fUmid = FAT_UMID[params.umid] || 1.0;
+    var fatorTotal = fSol * fUso * fPe * fAndar * fJan * fIsol * fLayout * fClima * fHoras * fUmid;
+    var btus = base * fatorTotal;
+    var extraPessoas = params.pessoas > 1 ? (params.pessoas - 1) * 600 : 0;
+    var extraEquip = params.equip || 0;
+    btus += extraPessoas + extraEquip;
+    return {
+      btus: Math.ceil(btus / 500) * 500,
+      base: base,
+      fatorTotal: fatorTotal,
+      extras: extraPessoas + extraEquip,
+      fatores: {
+        sol: fSol,
+        uso: fUso,
+        pe: fPe,
+        andar: fAndar,
+        janelas: fJan,
+        isol: fIsol,
+        layout: fLayout,
+        clima: fClima,
+        horas: fHoras,
+        umid: fUmid,
+      },
+    };
+  }
+
+  function findIdealIndex(rawBtu) {
+    for (var i = 0; i < SDA_CATALOG.length; i++) {
+      if (rawBtu <= SDA_CATALOG[i].btu) return i;
+    }
+    return SDA_CATALOG.length - 1;
+  }
+
+  function catalogEntry(idx) {
+    if (idx < 0) return SDA_CATALOG[0];
+    if (idx >= SDA_CATALOG.length) return SDA_CATALOG[SDA_CATALOG.length - 1];
+    return SDA_CATALOG[idx];
+  }
+
+  function errBox(n) {
+    return el('sda-error-step' + n);
+  }
+
+  function hideErrors() {
+    for (var s = 1; s <= TOTAL_STEPS; s++) {
+      var box = errBox(s);
+      if (box) {
+        box.classList.remove('show');
+        box.style.display = 'none';
+      }
+    }
+  }
+
+  function showError(n, msg) {
+    hideErrors();
+    var box = errBox(n);
+    if (box) {
+      box.textContent = msg;
+      box.classList.add('show');
+      box.style.display = 'block';
+    }
+  }
+
+  function markInvalid(id, bad) {
+    var input = el(id);
+    if (input && input.closest('.form-group')) {
+      input.closest('.form-group').classList.toggle('is-invalid', bad);
+    }
+  }
+
+  function validateStep(n) {
+    if (n !== 1) return true;
+    var comp = parseDim('sda-comp');
+    var larg = parseDim('sda-larg');
+    markInvalid('sda-comp', !(comp > 0));
+    markInvalid('sda-larg', !(larg > 0));
+    if (!(comp > 0) && !(larg > 0)) {
+      showError(1, 'Informe o comprimento e a largura do ambiente para continuar.');
+      return false;
+    }
+    if (!(comp > 0)) {
+      showError(1, 'Informe o comprimento do ambiente para continuar.');
+      return false;
+    }
+    if (!(larg > 0)) {
+      showError(1, 'Informe a largura do ambiente para continuar.');
+      return false;
+    }
+    hideErrors();
+    return true;
+  }
+
+  function showStep(n) {
+    step = n;
+    var panels = root.querySelectorAll('.sda-step');
+    for (var i = 0; i < panels.length; i++) {
+      var sn = parseInt(panels[i].getAttribute('data-step'), 10);
+      panels[i].classList.toggle('active', sn === n);
+    }
+    var bar = el('sda-progressBar');
+    var txt = el('sda-progressText');
+    if (bar) bar.style.width = (n / TOTAL_STEPS) * 100 + '%';
+    if (txt) txt.textContent = 'Etapa ' + n + ' de ' + TOTAL_STEPS;
+    hideErrors();
+    var result = el('sda-resultBox');
+    if (result) {
+      result.classList.remove('show');
+      result.style.display = 'none';
+    }
+    window.scrollTo({ top: root.getBoundingClientRect().top + window.scrollY - 16, behavior: 'smooth' });
+  }
+
+  function renderRecCard(tagClass, tagLabel, entry, sublabel) {
+    return (
+      '<div class="rec-card">' +
+      '<span class="rec-tag ' +
+      tagClass +
+      '">' +
+      tagLabel +
+      '</span>' +
+      '<div class="rec-btus">' +
+      entry.label +
+      '</div>' +
+      '<div class="rec-label">' +
+      sublabel +
+      '<br>' +
+      entry.tipo +
+      '</div>' +
+      '<a class="rec-link" href="' +
+      entry.url +
+      '">Ver modelos</a>' +
+      '</div>'
+    );
+  }
+
+  function calculate() {
+    if (!validateStep(1)) {
+      showStep(1);
+      return;
+    }
+
+    var comp = parseDim('sda-comp');
+    var larg = parseDim('sda-larg');
+    var pe = parseFloat(val('sda-pe', '2.6')) || 2.6;
+    var sol = val('sda-sol', 'sol_manha');
+    var uso = val('sda-uso', 'sala');
+    var pessoas = parseInt(val('sda-pessoas', '1'), 10) || 1;
+    var equip = parseInt(val('sda-equip', '0'), 10) || 0;
+    var andar = val('sda-andar', 'intermediario');
+    var janelas = val('sda-janelas', 'moderadas');
+    var isol = val('sda-isol', 'regular');
+    var layout = val('sda-layout', 'fechado');
+    var clima = val('sda-clima', 'quente');
+    var horas = val('sda-horas', 'tarde_noite');
+    var ciclo = val('sda-ciclo', 'frio');
+    var umid = val('sda-umidade', 'normal');
+
+    var area = comp * larg;
+    var result = calcBtus({
+      area: area,
+      sol: sol,
+      uso: uso,
+      pe: pe,
+      pessoas: pessoas,
+      equip: equip,
+      andar: andar,
+      janelas: janelas,
+      isol: isol,
+      layout: layout,
+      clima: clima,
+      horas: horas,
+      umid: umid,
+    });
+    var btus = result.btus;
+    var idealIdx = findIdealIndex(btus);
+    var minEntry = catalogEntry(idealIdx - 1);
+    var recEntry = catalogEntry(idealIdx);
+    var maxEntry = catalogEntry(idealIdx + 1);
+
+    var resultNum = el('sda-resultNum');
+    var resultSub = el('sda-resultSub');
+    var infoGrid = el('sda-infoGrid');
+    var breakdown = el('sda-breakdown');
+    var recCards = el('sda-recCards');
+    var tip = el('sda-tipBox');
+    var boxEl = el('sda-resultBox');
+
+    if (resultNum) resultNum.innerHTML = fmt(btus) + '<span>BTUs/h</span>';
+    if (resultSub) {
+      resultSub.textContent =
+        'Ambiente de ' +
+        area.toFixed(1).replace('.', ',') +
+        ' m² · ' +
+        pessoas +
+        ' pessoa' +
+        (pessoas > 1 ? 's' : '') +
+        ' · fator combinado ×' +
+        result.fatorTotal.toFixed(2);
+    }
+
+    if (infoGrid) {
+      infoGrid.innerHTML =
+        '<div class="info-item"><div class="info-val">' +
+        area.toFixed(1).replace('.', ',') +
+        ' m²</div><div class="info-key">Área total</div></div>' +
+        '<div class="info-item"><div class="info-val">' +
+        fmt(Math.round(result.base)) +
+        '</div><div class="info-key">Carga base (600 BTU/m²)</div></div>' +
+        '<div class="info-item"><div class="info-val">' +
+        fmt(recEntry.btu) +
+        '</div><div class="info-key">Capacidade sugerida</div></div>' +
+        '<div class="info-item"><div class="info-val">' +
+        recEntry.tipo +
+        '</div><div class="info-key">Linha indicada</div></div>';
+    }
+
+    if (breakdown) {
+      var f = result.fatores;
+      var html = '';
+      html +=
+        '<div class="breakdown-item"><span>Insolação · ' +
+        (LABELS.sol[sol] || sol) +
+        '</span><span>' +
+        pct(f.sol) +
+        '</span></div>';
+      html +=
+        '<div class="breakdown-item"><span>Uso · ' +
+        (LABELS.uso[uso] || uso) +
+        '</span><span>' +
+        pct(f.uso) +
+        '</span></div>';
+      if (pe > 3) {
+        html +=
+          '<div class="breakdown-item"><span>Pé-direito · ' +
+          pe.toFixed(1).replace('.', ',') +
+          ' m</span><span>' +
+          pct(f.pe) +
+          '</span></div>';
+      }
+      html +=
+        '<div class="breakdown-item"><span>' +
+        (LABELS.andar[andar] || andar) +
+        '</span><span>' +
+        pct(f.andar) +
+        '</span></div>';
+      html +=
+        '<div class="breakdown-item"><span>' +
+        (LABELS.janelas[janelas] || janelas) +
+        '</span><span>' +
+        pct(f.janelas) +
+        '</span></div>';
+      html +=
+        '<div class="breakdown-item"><span>' +
+        (LABELS.isol[isol] || isol) +
+        '</span><span>' +
+        pct(f.isol) +
+        '</span></div>';
+      html +=
+        '<div class="breakdown-item"><span>' +
+        (LABELS.layout[layout] || layout) +
+        '</span><span>' +
+        pct(f.layout) +
+        '</span></div>';
+      html +=
+        '<div class="breakdown-item"><span>' +
+        (LABELS.clima[clima] || clima) +
+        '</span><span>' +
+        pct(f.clima) +
+        '</span></div>';
+      html +=
+        '<div class="breakdown-item"><span>' +
+        (LABELS.horas[horas] || horas) +
+        '</span><span>' +
+        pct(f.horas) +
+        '</span></div>';
+      html +=
+        '<div class="breakdown-item"><span>' +
+        (LABELS.umid[umid] || umid) +
+        '</span><span>' +
+        pct(f.umid) +
+        '</span></div>';
+      if (result.extras > 0) {
+        html +=
+          '<div class="breakdown-item"><span>Pessoas + equipamentos</span><span>+' +
+          fmt(result.extras) +
+          ' BTU</span></div>';
+      }
+      breakdown.innerHTML = html;
+    }
+
+    if (recCards) {
+      recCards.innerHTML =
+        renderRecCard('minimo', 'Mínimo', minEntry, 'Para ambientes menores') +
+        renderRecCard('recomendado', 'Recomendado', recEntry, 'Ideal para o seu cálculo') +
+        renderRecCard('folga', 'Com folga', maxEntry, 'Margem extra de potência');
+    }
+
+    if (tip) {
+      var tips = [];
+      if (ciclo === 'quente_frio' || clima === 'frio_inverno') {
+        tips.push('<strong>Quente/Frio:</strong> prefira modelos com ciclo reversível para aquecer no inverno.');
+      }
+      if (btus > 30000 && recEntry.tipo === 'Piso Teto') {
+        tips.push(
+          '<strong>Acima de 30.000 BTUs:</strong> split hi-wall não existe nesta faixa — use <strong>Piso Teto</strong>.'
+        );
+      } else if (layout !== 'fechado') {
+        tips.push('<strong>Planta aberta:</strong> considere instalar o aparelho centralizado ou usar mais de uma unidade.');
+      } else if (horas === 'comercial' || horas === 'dia_todo') {
+        tips.push('<strong>Uso intenso:</strong> inverter na faixa recomendada reduz consumo e desgaste.');
+      } else {
+        tips.push('<strong>Dica:</strong> subdimensionar força o aparelho e aumenta a conta de luz.');
+      }
+      tip.innerHTML = tips.join(' ');
+    }
+
+    if (boxEl) {
+      boxEl.classList.add('show');
+      boxEl.style.display = 'block';
+      boxEl.style.visibility = 'visible';
+      boxEl.style.opacity = '1';
+      boxEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function resetAll() {
+    hideErrors();
+    var boxEl = el('sda-resultBox');
+    if (boxEl) {
+      boxEl.classList.remove('show');
+      boxEl.style.display = 'none';
+    }
+    var pe = el('sda-pe');
+    var pessoas = el('sda-pessoas');
+    if (pe) pe.value = '2.6';
+    if (pessoas) pessoas.value = '2';
+    showStep(1);
+  }
+
+  root.querySelectorAll('[data-sda-next]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (!validateStep(step)) return;
+      showStep(Math.min(TOTAL_STEPS, step + 1));
+    });
+  });
+
+  root.querySelectorAll('[data-sda-prev]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      showStep(Math.max(1, step - 1));
+    });
+  });
+
+  root.querySelectorAll('[data-sda-calc]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      calculate();
+    });
+  });
+
+  var resetBtn = el('sda-reset');
+  if (resetBtn) resetBtn.addEventListener('click', resetAll);
+
+  root.querySelectorAll('input, select').forEach(function (field) {
+    field.addEventListener('input', function () {
+      var g = this.closest('.form-group');
+      if (g) g.classList.remove('is-invalid');
+    });
+  });
+
+  showStep(1);
+})();
+
+</script>
