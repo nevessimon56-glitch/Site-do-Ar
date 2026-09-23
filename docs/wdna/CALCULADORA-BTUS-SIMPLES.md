@@ -1,26 +1,29 @@
-# Calculadora BTUs — simples + visual (recomendado)
+# Calculadora BTUs — use o **original v4**
 
-**Um arquivo só** na página adicional WDNA: funciona sem pastas, CDN ou arquivos no tema.
+A WDNA costuma **remover o `<script>` inline**. Por isso o arquivo de colagem traz o **HTML/CSS original** + uma linha **jsDelivr** no final (mesmo JavaScript do v4).
 
-## Arquivo
+## Arquivo para colar (único)
 
-`docs/wdna/calculadora-btus-simples.html`  
-Versão no topo do arquivo: **`v7-result-box`** (mesma lógica de resultado do v4 original)
+**`docs/wdna/calculadora-btus-simples.html`**
 
-- **Funcional:** uma tela, botão **Calcular BTUs**, JS inline (`window.sdaCalcular`).
-- **Visual:** hero azul/laranja Site do Ar, 3 blocos numerados, resultado em destaque.
+(Cópia fiel de `calculadora-btus-v4-pagina-completa.html` + script externo de backup.)
 
-## WDNA
+Link direto no GitHub (branch do PR):
 
-1. Copie **todo** o HTML do arquivo.
-2. Cole na página adicional Calculadora BTUs (substitua o conteúdo).
-3. Salve. Template da página pode ser o **padrão** (não precisa `page.calculadora-btus`).
+https://github.com/nevessimon56-glitch/Site-do-Ar/blob/cursor/header-favoritos-v2-e52b/docs/wdna/calculadora-btus-simples.html
+
+1. Abra o link → **Raw** / copiar arquivo inteiro.
+2. WDNA → página **Calculadora Btus** → modo HTML → **apague tudo** → cole → salve.
+
+## Como funciona (original)
+
+- Botão: `onclick="return sdaCalcular(event)"`
+- Resultado: `#sda-resultBox` com classe **`result-box`** + **`show`**
+- Erro: **`error-msg`**
+- Cards **Ver modelos** com URLs do catálogo (`/split-inverter/9000-btus`, etc.)
 
 ## Teste
 
-F12 → `window.__sdaCalcProReady` deve ser `true` e `typeof window.sdaCalcular` deve ser `"function"`.
-
-Se o botão não responder:
-
-1. Veja se trechos `(function () {` aparecem **como texto** na página — a WDNA quebrou o `<script>` (often dentro de `<p>`). Recole o HTML v6 ou use o fallback jsDelivr no final do arquivo.
-2. Com campos vazios, deve aparecer mensagem vermelha pedindo comprimento/largura (isso também prova que o JS rodou).
+- Comprimento **4**, largura **3** → **Calcular BTUs Necessarios**
+- F12: `typeof sdaCalcular` → `"function"`
+- Código-fonte da página publicada: deve existir `calculadora-btus.js?v=orig` **ou** o bloco `<script>(function () {` antes do `</script>`
