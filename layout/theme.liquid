@@ -486,6 +486,12 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
                     openSideNavOverlay('.sidenav-overlay_account', true);
                 }
             },
+            utilityGreeting: function utilityGreeting() {
+                if (!this.data.user) return 'Olá';
+                var parts = String(this.data.user).trim().split(' ');
+                var first = parts[0] || '';
+                return first ? ('Olá, ' + first) : 'Olá';
+            },
             checkLoginLogged: function checkLoginLogged() {
                 if (this.data.isLogged) {
                     var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
