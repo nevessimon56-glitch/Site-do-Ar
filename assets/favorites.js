@@ -255,6 +255,72 @@
     return escapeHtml(str).replace(/'/g, '&#39;');
   }
 
+  var HEART_BTN_SVG =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"/></svg>';
+
+  function extractProductIdFromCard(card) {
+    var buyBtn = card.querySelector('[onclick*="handleAddToCart"]');
+    if (buyBtn) {
+      var onclick = buyBtn.getAttribute('onclick') || '';
+      var m = onclick.match(/handleAddToCart\s*\(\s*['"]([^'"]+)['"]/);
+      if (m && m[1]) return String(m[1]);
+    }
+    var link = card.querySelector('a.showcase-product_link[href], a.showcase-product_link__image[href]');
+    if (link) {
+      var href = link.getAttribute('href') || '';
+      var m2 = href.match(/-p(\d+)\/?$/i) || href.match(/\/p(\d+)\/?$/i);
+      if (m2 && m2[1]) return String(m2[1]);
+    }
+    return '';
+  }
+
+  function injectFavoriteButtons(root) {
+    var scope = root && root.querySelectorAll ? root : document;
+    var cards = scope.querySelectorAll ? scope.querySelectorAll('.showcase-product.card') : [];
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      if (card.getAttribute('data-favorite-injected') === '1') continue;
+      if (card.querySelector('[data-favorite-toggle]')) {
+        card.setAttribute('data-favorite-injected', '1');
+        continue;
+      }
+      var imgWrap = card.querySelector('.showcase-product_image.card-image, .showcase-product_image, .card-image');
+      if (!imgWrap) continue;
+
+      var id = extractProductIdFromCard(card);
+      if (!id) continue;
+
+      var titleEl = card.querySelector('.showcase-product_link_title, a.showcase-product_link.showcase-product_link_title');
+      var linkEl = card.querySelector('a.showcase-product_link__image, a.showcase-product_link[href]');
+      var imgEl = card.querySelector('img[data-src], img[src]');
+      var priceEl = card.querySelector('.showcase-prices_price b, .showcase-prices_price');
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'showcase-favorite-btn';
+      btn.setAttribute('data-favorite-toggle', '');
+      btn.setAttribute('data-product-id', id);
+      btn.setAttribute('data-product-url', linkEl ? linkEl.getAttribute('href') || '' : '');
+      btn.setAttribute('data-product-title', titleEl ? titleEl.textContent.trim() : '');
+      btn.setAttribute(
+        'data-product-image',
+        imgEl ? imgEl.getAttribute('data-src') || imgEl.getAttribute('src') || '' : ''
+      );
+      btn.setAttribute('data-product-price', priceEl ? priceEl.textContent.trim() : '');
+      btn.setAttribute('aria-label', 'Favoritar produto');
+      btn.setAttribute('title', 'Favoritar');
+      btn.innerHTML = HEART_BTN_SVG;
+
+      imgWrap.insertBefore(btn, imgWrap.firstChild);
+      card.setAttribute('data-favorite-injected', '1');
+    }
+  }
+
+  function bootFavoriteButtons() {
+    injectFavoriteButtons(document);
+    syncToggleButtons();
+  }
+
   function onDocumentClick(e) {
     var btn = e.target.closest('[data-favorite-toggle]');
     if (!btn) return;
@@ -290,6 +356,7 @@
     remove: removeProduct,
     mergeGuestOnLogin: onLoginMerge,
     refresh: refreshUI,
+    injectButtons: bootFavoriteButtons,
   };
 
   document.addEventListener('click', onDocumentClick);
@@ -298,9 +365,33 @@
     setTimeout(onLoginMerge, 100);
   });
 
+  var injectTimer;
+  function scheduleInject() {
+    clearTimeout(injectTimer);
+    injectTimer = setTimeout(bootFavoriteButtons, 80);
+  }
+
+  if (typeof MutationObserver !== 'undefined') {
+    var mo = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        if (mutations[i].addedNodes && mutations[i].addedNodes.length) {
+          scheduleInject();
+          break;
+        }
+      }
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+      mo.observe(document.body, { childList: true, subtree: true });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     onLoginMerge();
+    bootFavoriteButtons();
     refreshUI();
   });
-  window.addEventListener('load', refreshUI);
+  window.addEventListener('load', function () {
+    bootFavoriteButtons();
+    refreshUI();
+  });
 })();
