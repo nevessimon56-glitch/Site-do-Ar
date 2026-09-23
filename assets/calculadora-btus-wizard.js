@@ -394,19 +394,23 @@
         var resetBtn = t.id === 'sda-reset' ? t : t.closest ? t.closest('#sda-reset') : null;
         if (nextBtn) {
           e.preventDefault();
+          e.stopImmediatePropagation();
           goNext(e);
         } else if (prevBtn) {
           e.preventDefault();
+          e.stopImmediatePropagation();
           goPrev(e);
         } else if (calcBtn) {
           e.preventDefault();
+          e.stopImmediatePropagation();
           calculate();
         } else if (resetBtn) {
           e.preventDefault();
+          e.stopImmediatePropagation();
           resetCalc(e);
         }
       },
-      false
+      true
     );
   }
 
@@ -453,19 +457,6 @@
     (document.head || document.body || document.documentElement).appendChild(st);
   }
 
-  /** WDNA: calculadora depois do footer ou presa em container estreito → footer sobrepõe */
-  function ensurePlacement() {
-    if (!root) return;
-    var footer = findSiteFooter();
-    var body = document.body;
-    if (!footer || !footer.parentNode || !body) return;
-    if (root.contains(footer)) return;
-    var pos = footer.compareDocumentPosition(root);
-    if (pos & Node.DOCUMENT_POSITION_FOLLOWING) {
-      footer.parentNode.insertBefore(root, footer);
-    }
-  }
-
   function init() {
     root = document.getElementById('sda-calculadora');
     if (!root) return;
@@ -474,7 +465,6 @@
 
     injectCriticalStyles();
     markPageActive();
-    ensurePlacement();
 
     showStep(1);
     bindDelegation();

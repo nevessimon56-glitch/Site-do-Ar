@@ -1,4 +1,4 @@
-<!-- VERSAO: 2026-09-03-calculadora-btus-etapas-v12-cdn -->
+<!-- VERSAO: 2026-09-03-calculadora-btus-etapas-v13-cdn -->
 <p></p>
 <!-- NÃO cole no theme.liquid — só página adicional Calculadora BTUs -->
 <p></p>
@@ -392,6 +392,7 @@
   var txt=document.getElementById("sda-progressText");
   if(bar)bar.style.width="33.33%";
   if(txt)txt.textContent="Etapa 1 de 3";
+  if(typeof window.sdaBtuApplyLayoutFix==="function")window.sdaBtuApplyLayoutFix();
 })();
 </script>
 
@@ -576,15 +577,15 @@
 }
 </style>
 <p>
-<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-layout.js?v=3"></script>
-<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=9"></script>
+<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-layout.js?v=4"></script>
+<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=10"></script>
 <script>
 (function(){
   setTimeout(function(){
     if(typeof window.sdaBtuApplyLayoutFix==="function")window.sdaBtuApplyLayoutFix();
     if(!window.__sdaBtuWizardReady){
       var s=document.createElement("script");
-      s.src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=9";
+      s.src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=10";
       document.body.appendChild(s);
     }
   },2000);

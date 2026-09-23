@@ -72,8 +72,27 @@ html.sda-btu-page #sda-btu-footer-spacer {
 
 html:has(#sda-calculadora) body,
 html.sda-btu-page body {
+  display: block !important;
+  flex-direction: unset !important;
   padding-bottom: 0 !important;
   min-height: 0 !important;
+}
+
+/* Slot vazio da página adicional depois que a calculadora sobe no DOM */
+html:has(#sda-calculadora) .page-content:not(:has(#sda-calculadora)),
+html:has(#sda-calculadora) .page:not(:has(#sda-calculadora)),
+html.sda-btu-page .page-content:not(:has(#sda-calculadora)) {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+html:has(#sda-calculadora) #sda-calculadora,
+html.sda-btu-page #sda-calculadora {
+  order: unset !important;
 }
 
 html:has(#sda-calculadora) footer,

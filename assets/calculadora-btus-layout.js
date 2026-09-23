@@ -1,10 +1,9 @@
 /**
- * Calculadora BTUs — layout vs rodapé WDNA (v3: sem reparent, sem faixa branca gigante).
+ * Calculadora BTUs — layout WDNA v4: calculadora sempre ANTES do rodapé no DOM.
  */
 (function () {
   'use strict';
 
-  var SPACER_ID = 'sda-btu-footer-spacer';
   var MARK = 'data-sda-btu-layout';
   var scheduled = false;
 
@@ -20,25 +19,15 @@
     if (el.closest('.card-footer')) return true;
     if (el.closest('#diag360pop')) return true;
     if (el.closest('#diag360backdrop')) return true;
-    if (el.id === SPACER_ID) return true;
     return false;
   }
 
-  function findStoreFooter(root) {
-    var selectors = [
-      'body > footer',
-      'body > .footer',
-      'footer.footer',
-      '#footer',
-      '.store-footer',
-      '.footer-store',
-      '.rodape',
-      '.main-footer',
-      'section.footer',
-      '.footer-infos',
-      '.infos-footer',
-      '.footer-container',
-    ].join(',');
+  /** Último bloco grande do body (theme-schema / rodapé WDNA) */
+  function findMainFooter(root) {
+    var body = document.body;
+    if (!body) return null;
+    var selectors =
+      'footer, .footer, #footer, .store-footer, .footer-store, .rodape, .main-footer, [class*="footer-store"]';
     var nodes = document.querySelectorAll(selectors);
     var i;
     var best = null;
@@ -48,54 +37,48 @@
       if (root && (el === root || root.contains(el))) continue;
       best = el;
     }
-    return best;
+    if (best) return best;
+
+    for (i = body.children.length - 1; i >= 0; i--) {
+      var kid = body.children[i];
+      if (!kid || kid.nodeType !== 1) continue;
+      if (kid.tagName === 'SCRIPT' || kid.tagName === 'STYLE' || kid.tagName === 'LINK') continue;
+      if (kid.id === 'diag360pop' || kid.id === 'diag360backdrop') continue;
+      if (root && (kid === root || kid.contains(root))) continue;
+      if (kid.offsetHeight < 80) continue;
+      return kid;
+    }
+    return null;
   }
 
   function markPage() {
-    var html = document.documentElement;
-    if (html && html.classList) {
-      html.classList.add('sda-btu-page', 'sda-btu-active');
-      html.setAttribute(MARK, '3');
-    }
-    if (document.body && document.body.classList) {
-      document.body.classList.add('sda-btu-page', 'sda-btu-active');
-    }
+    document.documentElement.classList.add('sda-btu-page', 'sda-btu-active');
+    document.documentElement.setAttribute(MARK, '4');
+    if (document.body) document.body.classList.add('sda-btu-page', 'sda-btu-active');
   }
 
-  function ensureSpacer(footer) {
-    if (!footer || !footer.parentNode) return null;
-    var sp = document.getElementById(SPACER_ID);
-    if (!sp) {
-      sp = document.createElement('div');
-      sp.id = SPACER_ID;
-      sp.setAttribute('aria-hidden', 'true');
-      footer.parentNode.insertBefore(sp, footer);
-    } else if (sp.nextElementSibling !== footer) {
-      footer.parentNode.insertBefore(sp, footer);
-    }
-    return sp;
+  function fixDomOrder(root, footer) {
+    if (!root || !footer || !footer.parentNode) return false;
+    if (footer === root || footer.contains(root)) return false;
+    footer.parentNode.insertBefore(root, footer);
+    return true;
   }
 
-  function pinBlockStatic(el) {
+  function pinFooterStatic(el) {
     if (!el || !el.style) return;
     el.style.setProperty('position', 'static', 'important');
     el.style.setProperty('bottom', 'auto', 'important');
     el.style.setProperty('top', 'auto', 'important');
     el.style.setProperty('transform', 'none', 'important');
-    el.style.setProperty('float', 'none', 'important');
   }
 
-  function unwrapFixedAncestors(root, footer) {
+  function unwrapAncestors(root) {
     var el = root ? root.parentElement : null;
-    while (el && el !== document.body && el !== footer) {
+    while (el && el !== document.body) {
       try {
         var st = window.getComputedStyle(el);
-        if (
-          st &&
-          (st.overflow === 'hidden' || st.overflowY === 'hidden' || st.maxHeight !== 'none')
-        ) {
+        if (st && (st.overflow === 'hidden' || st.overflowY === 'hidden' || st.maxHeight !== 'none')) {
           el.style.setProperty('overflow', 'visible', 'important');
-          el.style.setProperty('overflow-y', 'visible', 'important');
           el.style.setProperty('max-height', 'none', 'important');
           el.style.setProperty('height', 'auto', 'important');
         }
@@ -106,53 +89,28 @@
     }
   }
 
-  function measureAndPad(root, footer, spacer) {
-    if (!root) return;
-    if (footer) pinBlockStatic(footer);
-
-    var rootRect = root.getBoundingClientRect();
-    var footRect = footer
-      ? footer.getBoundingClientRect()
-      : { top: rootRect.bottom + 999, height: 0 };
-    var overlap = Math.ceil(rootRect.bottom - footRect.top + 8);
-    var clearance = overlap > 4 ? Math.min(overlap + 16, 120) : 0;
-
-    if (spacer) {
-      spacer.style.height = clearance ? clearance + 'px' : '0px';
-      spacer.style.minHeight = clearance ? clearance + 'px' : '0px';
-      spacer.style.display = clearance ? 'block' : 'none';
-    }
-
-    document.documentElement.style.setProperty('--sda-btu-clearance', clearance + 'px');
-    document.documentElement.style.setProperty('--sda-btu-spacer-h', clearance + 'px');
-
-    if (document.body && document.body.style) {
-      if (clearance > 0) {
-        document.body.style.setProperty('padding-bottom', clearance + 'px', 'important');
-      } else {
-        document.body.style.removeProperty('padding-bottom');
-      }
-    }
-
-    root.style.removeProperty('margin-bottom');
-
-    window.sdaBtuLayoutState = {
-      version: 3,
-      clearance: clearance,
-      overlap: overlap,
-      footer: footer ? footer.className || footer.tagName : null,
-    };
-  }
-
   function applyLayoutFix() {
     var root = calcRoot();
     if (!root) return;
     markPage();
-    unwrapFixedAncestors(root, null);
-    var footer = findStoreFooter(root);
-    if (footer) ensureSpacer(footer);
-    var spacer = document.getElementById(SPACER_ID);
-    measureAndPad(root, footer, spacer);
+    unwrapAncestors(root);
+    var footer = findMainFooter(root);
+    var moved = footer ? fixDomOrder(root, footer) : false;
+    if (footer) pinFooterStatic(footer);
+    if (document.body && document.body.style) {
+      document.body.style.removeProperty('padding-bottom');
+    }
+    var oldSp = document.getElementById('sda-btu-footer-spacer');
+    if (oldSp && oldSp.parentNode) oldSp.parentNode.removeChild(oldSp);
+
+    window.sdaBtuLayoutState = {
+      version: 4,
+      moved: moved,
+      footer: footer ? (footer.className || footer.tagName) : null,
+      calcBeforeFooter: footer
+        ? !!(footer.compareDocumentPosition(root) & Node.DOCUMENT_POSITION_PRECEDING)
+        : null,
+    };
   }
 
   function scheduleFix() {
@@ -171,7 +129,8 @@
     applyLayoutFix();
     window.addEventListener('resize', scheduleFix);
     window.addEventListener('load', scheduleFix);
-    setTimeout(scheduleFix, 400);
+    setTimeout(applyLayoutFix, 300);
+    setTimeout(applyLayoutFix, 1000);
   }
 
   if (document.readyState === 'loading') {
