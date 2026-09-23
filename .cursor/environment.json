@@ -1,6 +1,6 @@
 {
   "name": "Site do Ar — Tray/WDNA theme",
-  "install": "node --check assets/favorites.js && node --check assets/mega-menu.js && node --check assets/product-hover-image.js && echo 'asset JS syntax OK'",
+  "install": "for f in assets/*.js; do [ -e \"$f\" ] || continue; node --check \"$f\" || exit 1; done; echo 'asset JS syntax OK'",
   "terminals": [
     {
       "name": "preview",
