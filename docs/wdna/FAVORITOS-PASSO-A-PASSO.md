@@ -7,7 +7,8 @@
 | Coração no card | `sections/showcase-model-product.liquid` | v4 (Pix/specs/comparar) + botão canto superior direito |
 | Fallback automático | `assets/favorites.js` | Coloca o coração em **qualquer** `.showcase-product.card` (ex.: template `v3-site-price` da loja) |
 | Visual | `assets/favorites.css` | Estilo do coração + página de favoritos |
-| Lógica | `assets/favorites.js` | Salvar/remover, contador no header, `/pagina/favoritos` |
+| Lógica | `assets/favorites.js` | Salvar/remover, contador no header, painel lateral + `/pagina/favoritos` |
+| Painel | `sections/sidenav-overlay-favorites.liquid` | Lista ao clicar **Favoritos** no header (como o carrinho) |
 | Tema | `layout/theme.liquid` | Carrega CSS/JS + merge ao logar |
 | Página | `templates/page.favoritos.liquid` + `sections/favoritos-page.liquid` | Lista de favoritos |
 
@@ -15,7 +16,9 @@
 
 1. `assets/favorites.css`
 2. `assets/favorites.js`
-3. `layout/theme.liquid` (se ainda não publicou a versão com favoritos)
+3. `layout/theme.liquid` (render do painel + CSS/JS)
+4. `sections/sidenav-overlay-favorites.liquid`
+5. `sections/header.liquid` (botão abre o painel)
 
 **Teste:** abra a home, deve aparecer o coração no canto do card. Clique → contador **Favoritos** no header sobe.
 
@@ -35,6 +38,7 @@ Se a vitrine usar outro template (`data-showcase-tpl="v3-site-price"`), o **Pass
 ## Passo 4 — Testar fluxo
 
 - [ ] Clicar no coração → fica vermelho (`is-active`)
+- [ ] Header **Favoritos** abre painel com os produtos salvos
 - [ ] Header **Favoritos** mostra contador
 - [ ] `/pagina/favoritos` lista o produto
 - [ ] Remover na página ou clicar de novo no coração

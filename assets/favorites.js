@@ -201,6 +201,84 @@
     setList(list);
   }
 
+  var PANEL_REMOVE_ICON =
+    '<svg class="icon_close" x="0px" y="0px" viewBox="0 0 512.001 512.001" aria-hidden="true">' +
+    '<path d="M284.286,256.002L506.143,34.144c7.811-7.811,7.811-20.475,0-28.285c-7.811-7.81-20.475-7.811-28.285,0L256,227.717L34.143,5.859c-7.811-7.811-20.475-7.811-28.285,0c-7.81,7.811-7.811,20.475,0,28.285l221.857,221.857L5.858,477.859c-7.811,7.811-7.811,20.475,0,28.285c3.905,3.905,9.024,5.857,14.143,5.857c5.119,0,10.237-1.952,14.143-5.857L256,284.287l221.857,221.857c3.905,3.905,9.024,5.857,14.143,5.857s10.237-1.952,14.143-5.857c7.811-7.811,7.811-20.475,0-28.285L284.286,256.002z"/></svg>';
+
+  function buildPanelItemHtml(p) {
+    return (
+      '<section class="cart-section favorites-panel__item" data-favorite-id="' +
+      escapeAttr(p.id) +
+      '">' +
+      '<div class="cart-image float-left">' +
+      '<a class="cart-image_link" href="' +
+      escapeAttr(p.url) +
+      '" title="' +
+      escapeAttr(p.title) +
+      '">' +
+      (p.image
+        ? '<picture><img src="' +
+          escapeAttr(p.image) +
+          '" alt="' +
+          escapeAttr(p.title) +
+          '" loading="lazy"></picture>'
+        : '') +
+      '</a>' +
+      '</div>' +
+      '<div class="cart-product float-right">' +
+      '<div class="columns">' +
+      '<div class="cart-product_header col-12 column">' +
+      '<a class="cart-product_title float-left" href="' +
+      escapeAttr(p.url) +
+      '" title="' +
+      escapeAttr(p.title) +
+      '">' +
+      escapeHtml(p.title) +
+      '</a>' +
+      '<a class="btn-cartItem_delete float-right" href="javascript:void(0)" data-favorite-remove="' +
+      escapeAttr(p.id) +
+      '" aria-label="Remover dos favoritos">' +
+      PANEL_REMOVE_ICON +
+      '</a>' +
+      '</div>' +
+      (p.price
+        ? '<div class="cart-product_prices col-12 column">' +
+          '<div class="cart-product_price"><p class="cart-price_total favorites-panel__price">' +
+          escapeHtml(p.price) +
+          '</p></div></div>'
+        : '') +
+      '<div class="col-12 column favorites-panel__view">' +
+      '<a class="btn btn-sm col-12" href="' +
+      escapeAttr(p.url) +
+      '">Ver produto</a>' +
+      '</div>' +
+      '</div></div></section>'
+    );
+  }
+
+  function renderFavoritesPanel() {
+    var listEl = document.getElementById('favoritos-panel-list');
+    var emptyEl = document.getElementById('favoritos-panel-empty');
+    var footerEl = document.getElementById('favoritos-panel-footer');
+    if (!listEl) return;
+
+    var list = getList();
+    listEl.innerHTML = '';
+
+    if (!list.length) {
+      if (emptyEl) emptyEl.hidden = false;
+      if (footerEl) footerEl.hidden = true;
+      return;
+    }
+
+    if (emptyEl) emptyEl.hidden = true;
+    if (footerEl) footerEl.hidden = false;
+
+    list.forEach(function (p) {
+      listEl.insertAdjacentHTML('beforeend', buildPanelItemHtml(p));
+    });
+  }
+
   function renderFavoritesPage() {
     var root = document.getElementById('favoritos-page-grid');
     var empty = document.getElementById('favoritos-page-empty');
@@ -238,7 +316,6 @@
     root.querySelectorAll('[data-favorite-remove]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         removeProduct(btn.getAttribute('data-favorite-remove'));
-        renderFavoritesPage();
       });
     });
   }
@@ -333,6 +410,16 @@
     updateBadges();
     syncToggleButtons();
     renderFavoritesPage();
+    renderFavoritesPanel();
+  }
+
+  function openFavoritesPanel() {
+    renderFavoritesPanel();
+    if (typeof openSideNavOverlay === 'function') {
+      openSideNavOverlay('.sidenav-overlay_favorites', false);
+    } else {
+      window.location.href = '/pagina/favoritos';
+    }
   }
 
   function onLoginMerge() {
@@ -342,6 +429,13 @@
       loadServerIntoLocal();
     }
     refreshUI();
+  }
+
+  function onPanelClick(e) {
+    var removeBtn = e.target.closest('[data-favorite-remove]');
+    if (!removeBtn || !removeBtn.closest('.sidenav-overlay_favorites')) return;
+    e.preventDefault();
+    removeProduct(removeBtn.getAttribute('data-favorite-remove'));
   }
 
   window.SiteDoarFavorites = {
@@ -357,9 +451,13 @@
     mergeGuestOnLogin: onLoginMerge,
     refresh: refreshUI,
     injectButtons: bootFavoriteButtons,
+    openPanel: openFavoritesPanel,
   };
 
+  window.openFavoritesPanel = openFavoritesPanel;
+
   document.addEventListener('click', onDocumentClick);
+  document.addEventListener('click', onPanelClick);
   document.addEventListener('sitedoar-favorites-change', refreshUI);
   document.addEventListener('change-customer-login', function () {
     setTimeout(onLoginMerge, 100);

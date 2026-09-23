@@ -227,3 +227,39 @@
     gap: 14px;
   }
 }
+
+/* —— Painel lateral (header → Favoritos) —— */
+.sidenav-overlay_favorites .favorites-panel__body {
+  padding-bottom: 8px;
+}
+
+.sidenav-overlay_favorites .favorites-panel__empty .text {
+  text-align: center;
+  color: #64748b;
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.sidenav-overlay_favorites .favorites-panel__empty .cart-section_empty {
+  padding: 24px 16px;
+}
+
+.sidenav-overlay_favorites .favorites-panel__price {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--fav-blue);
+}
+
+.sidenav-overlay_favorites .favorites-panel__view {
+  margin-top: 8px;
+}
+
+.sidenav-overlay_favorites .favorites-panel__view .btn {
+  font-size: 12px;
+  padding: 8px 10px;
+}
+
+.sidenav-overlay_favorites .favorites-panel__footer .btn {
+  margin-top: 0;
+}

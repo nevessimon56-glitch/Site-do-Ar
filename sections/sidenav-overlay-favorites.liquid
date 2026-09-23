@@ -1,0 +1,31 @@
+{% comment %}
+  Painel lateral de favoritos (mesmo padrão do carrinho WDNA).
+  Lista preenchida via assets/favorites.js → renderFavoritesPanel()
+{% endcomment %}
+<div class="sidenav-overlay sidenav-overlay_favorites" id="sidenav-overlay-favorites">
+  <div class="sidenav-container">
+    <div class="sidenav-header">
+      <a class="btn-sidenav-close float-right" href="javascript:void(0)" aria-label="Fechar" onclick="closeSideNavOverlay()">
+        <svg class="icon_close" x="0px" y="0px" viewBox="0 0 512.001 512.001" aria-hidden="true">
+          <path d="M284.286,256.002L506.143,34.144c7.811-7.811,7.811-20.475,0-28.285c-7.811-7.81-20.475-7.811-28.285,0L256,227.717L34.143,5.859c-7.811-7.811-20.475-7.811-28.285,0c-7.81,7.811-7.811,20.475,0,28.285l221.857,221.857L5.858,477.859c-7.811,7.811-7.811,20.475,0,28.285c3.905,3.905,9.024,5.857,14.143,5.857c5.119,0,10.237-1.952,14.143-5.857L256,284.287l221.857,221.857c3.905,3.905,9.024,5.857,14.143,5.857s10.237-1.952,14.143-5.857c7.811-7.811,7.811-20.475,0-28.285L284.286,256.002z"/>
+        </svg>
+      </a>
+      <div class="sidenav-title">Meus favoritos</div>
+    </div>
+
+    <div class="sidenav-body favorites-panel__body">
+      <div id="favoritos-panel-empty" class="favorites-panel__empty" hidden>
+        <section class="cart-section cart-section_empty">
+          <p class="text">Você ainda não favoritou nenhum produto.</p>
+          <p class="text">Toque no coração nos cards para salvar aqui.</p>
+          <a class="btn btn-lg col-12" href="/" title="Continuar comprando">Continuar comprando</a>
+        </section>
+      </div>
+      <div id="favoritos-panel-list" class="favorites-panel__list" aria-live="polite"></div>
+    </div>
+
+    <div class="sidenav-footer favorites-panel__footer" id="favoritos-panel-footer" hidden>
+      <a class="btn btn-lg col-12" href="/pagina/favoritos" title="Ver todos os favoritos">Ver página completa</a>
+    </div>
+  </div>
+</div>

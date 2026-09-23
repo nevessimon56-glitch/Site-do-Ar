@@ -7,7 +7,7 @@
 {% assign iconHeadset = '<svg class="header-utility__svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5a8 8 0 0 1 16 0"/><path d="M4 11.5V14a2.5 2.5 0 0 0 2.5 2.5H7v-5H4z"/><path d="M20 11.5V14A2.5 2.5 0 0 1 17.5 16.5H17v-5h3z"/><path d="M10 19.5h4"/><path d="M12 16.5v3"/></svg>' %}
 {% assign iconBoxUtility = '<svg class="header-utility__svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 20 8v8l-8 4-8-4V8l8-4z"/><path d="M12 4v12"/><path d="M4 8l8 4 8-4"/><path d="M8.5 10.5v5.8"/></svg>' %}
 {% assign iconBoxOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 3l8 4.5V18l-8 4.5L4 18V7.5z"/><path d="M4 7.5 12 12l8-4.5M12 12v10.5"/></svg>' %}
-{% assign iconUser = '<svg class="header-utility__svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.25"/><path d="M6 20v-0.5c0-3 2.7-4.5 6-4.5s6 1.5 6 4.5V20"/></svg>' %}
+{% assign iconUser = '<svg class="header-utility__svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="3"/><path d="M5.5 19.5v-1c0-2.8 2.9-4.5 6.5-4.5s6.5 1.7 6.5 4.5v1"/></svg>' %}
 {% assign iconHeartOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.2-3.9-6.2-8.6c0-2.4 1.9-4.3 4.2-4.3 1.4 0 2.7.7 3.5 1.8.8-1.1 2.1-1.8 3.5-1.8 2.3 0 4.2 1.9 4.2 4.3 0 4.7-6.2 8.6-6.2 8.6z"/></svg>' %}
 {% assign iconCartOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 9.2h11.3L21 7H7"/><circle cx="10" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>' %}
 {% assign iconHome = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' %}
@@ -74,7 +74,7 @@
                         <span class="header-v2-action__icon">{{ iconBoxOutline }}</span>
                         <span class="header-v2-action__label">Meus pedidos</span>
                     </a>
-                    <a class="header-v2-action" href="/pagina/favoritos" title="Favoritos">
+                    <a class="header-v2-action" href="javascript:void(0)" title="Favoritos" onclick="openFavoritesPanel()">
                         <span class="header-v2-action__icon">{{ iconHeartOutline }}</span>
                         <span class="header-v2-action__label">Favoritos</span>
                         <span class="header-v2-action__badge" data-favorites-count data-count="0">0</span>
@@ -93,7 +93,7 @@
                 </div>
 
                 <div class="navbar-section header-v2-mobile-tools show-lg">
-                    <a class="header-v2-action header-v2-action--compact" href="/pagina/favoritos" title="Favoritos">
+                    <a class="header-v2-action header-v2-action--compact" href="javascript:void(0)" title="Favoritos" onclick="openFavoritesPanel()">
                         <span class="header-v2-action__icon">{{ iconHeartOutline }}</span>
                         <span class="header-v2-action__badge" data-favorites-count data-count="0">0</span>
                     </a>
@@ -253,7 +253,7 @@
                     </li>
                     <li class="nav-mobile_item">
                         <div class="nav-mobile_link" aria-expanded="false">
-                            <p><a href="/pagina/favoritos" title="Favoritos"><div class="nav-mobile-box_link"><div class="nav-mobile_text">Favoritos</div></div></a></p>
+                            <p><a href="javascript:void(0)" title="Favoritos" onclick="openFavoritesPanel()"><div class="nav-mobile-box_link"><div class="nav-mobile_text">Favoritos</div></div></a></p>
                         </div>
                     </li>
                     <li class="nav-mobile_item">
