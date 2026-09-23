@@ -1,3 +1,4 @@
+<!-- CALCULADORA BTUs — 3 ETAPAS | visual laranja/navy | cole TUDO na página adicional WDNA (modo HTML) -->
 <!-- CALCULADORA BTUs — Site do Ar | Cole TODO este arquivo no conteúdo HTML da página adicional WDNA -->
 
 <style>
@@ -264,7 +265,7 @@
     <div class="progress-text" id="sda-progressText">Etapa 1 de 3</div>
   </div>
 
-  <form id="sda-form" novalidate>
+  <div id="sda-form" class="sda-calc-form">
     <section class="step-card active" data-step="1">
       <div class="step-head"><span class="step-num">1</span><div><h2>Medidas do ambiente</h2><p>Começamos pelo tamanho do espaço.</p></div></div>
       <div class="grid">
@@ -273,7 +274,7 @@
         <div class="field"><label for="sda-pe">Altura do teto (m)</label><input type="text" id="sda-pe" value="2,6" inputmode="decimal" autocomplete="off"><span class="hint">Padrão: 2,60 m. Acima de 3 m, aplicamos acréscimo.</span></div>
       </div>
       <div class="error" id="sda-error-step1" role="alert"></div>
-      <div class="step-actions"><span></span><button type="button" class="btn btn-primary" data-next>Continuar</button></div>
+      <div class="step-actions"><span></span><button type="button" class="btn btn-primary" data-next onclick="return sdaWizardNext(event)">Continuar</button></div>
     </section>
 
     <section class="step-card" data-step="2">
@@ -286,7 +287,7 @@
         <div class="field"><label for="sda-ciclo">Ciclo desejado</label><select id="sda-ciclo"><option value="frio" selected>Só refrigeração (Frio)</option><option value="quente_frio">Quente e Frio</option></select></div>
       </div>
       <div class="error" id="sda-error-step2" role="alert"></div>
-      <div class="step-actions"><button type="button" class="btn btn-secondary" data-prev>Voltar</button><button type="button" class="btn btn-primary" data-next>Continuar</button></div>
+      <div class="step-actions"><button type="button" class="btn btn-secondary" data-prev onclick="return sdaWizardPrev(event)">Voltar</button><button type="button" class="btn btn-primary" data-next onclick="return sdaWizardNext(event)">Continuar</button></div>
     </section>
 
     <section class="step-card" data-step="3">
@@ -301,9 +302,9 @@
         <div class="field"><label for="sda-umidade">Umidade do ambiente</label><select id="sda-umidade"><option value="normal" selected>Normal</option><option value="alta">Alta (cozinha, lavanderia, litoral)</option><option value="muito_alta">Muito alta (banheiro sem exaustão)</option></select></div>
       </div>
       <div class="error" id="sda-error" role="alert"></div>
-      <div class="step-actions"><button type="button" class="btn btn-secondary" data-prev>Voltar</button><button type="button" class="btn btn-orange" data-calc-submit>Calcular BTUs</button></div>
+      <div class="step-actions"><button type="button" class="btn btn-secondary" data-prev onclick="return sdaWizardPrev(event)">Voltar</button><button type="button" class="btn btn-orange" data-calc-submit onclick="return sdaWizardCalc(event)">Calcular BTUs</button></div>
     </section>
-  </form>
+  </div>
 
   <section class="result" id="sda-resultBox" aria-live="polite">
     <div class="result-main">
@@ -314,7 +315,7 @@
       <div class="info-grid" id="sda-infoGrid"></div>
       <div class="recs-title">Opções compatíveis</div><div class="rec-grid" id="sda-recCards"></div>
       <div class="tip" id="sda-tipBox"></div>
-      <div class="result-actions"><button type="button" class="btn btn-secondary" id="sda-reset">Refazer cálculo</button><a class="btn btn-primary" id="sda-whatsapp" href="https://wa.me/5519984176960" target="_blank" rel="noopener">Falar com especialista</a></div>
+      <div class="result-actions"><button type="button" class="btn btn-secondary" id="sda-reset" onclick="return sdaWizardReset(event)">Refazer cálculo</button><a class="btn btn-primary" id="sda-whatsapp" href="https://wa.me/5519984176960" target="_blank" rel="noopener">Falar com especialista</a></div>
     </div>
     <details class="result-details"><summary>Ver detalhamento do cálculo</summary><div class="breakdown" id="sda-breakdown"></div></details>
   </section>
@@ -500,14 +501,15 @@
   .sda-calc .step-card[data-step="3"] .field select { font-size:13px; }
 }
 </style>
-
 <script>
 (function () {
   'use strict';
 
-  var root = document.getElementById('sda-calculadora');
-  if (!root || root.getAttribute('data-sda-ready') === '1') return;
-  root.setAttribute('data-sda-ready', '1');
+  if (window.__SDA_BTU_WIZARD__) return;
+
+  var root = null;
+  var step = 1;
+  var TOTAL = 3;
 
   var catalog = [
     { btu: 9000, label: '9.000', tipo: 'Split Inverter', url: '/split-inverter/9000-btus' },
@@ -545,8 +547,6 @@
     umid: { normal: 'Umidade normal', alta: 'Umidade alta', muito_alta: 'Umidade muito alta' },
   };
 
-  var step = 1;
-
   function get(id) {
     return document.getElementById(id);
   }
@@ -583,9 +583,13 @@
   }
 
   function hideAllErrors() {
-    for (var s = 1; s <= 3; s++) {
+    var s;
+    for (s = 1; s <= TOTAL; s++) {
       var el = errorElForStep(s);
-      if (el) el.classList.remove('show');
+      if (el) {
+        el.classList.remove('show');
+        el.style.display = 'none';
+      }
     }
   }
 
@@ -595,29 +599,38 @@
     if (el) {
       el.textContent = msg;
       el.classList.add('show');
-      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      el.style.display = 'block';
     }
   }
 
   function showStep(n) {
+    if (!root) return;
     step = n;
     var cards = root.querySelectorAll('.step-card');
-    for (var ci = 0; ci < cards.length; ci++) {
+    var ci;
+    for (ci = 0; ci < cards.length; ci++) {
       var sn = parseInt(cards[ci].getAttribute('data-step'), 10);
       if (sn === n) cards[ci].classList.add('active');
       else cards[ci].classList.remove('active');
     }
     var bar = get('sda-progressBar');
     var txt = get('sda-progressText');
-    if (bar) bar.style.width = (n / 3) * 100 + '%';
-    if (txt) txt.textContent = 'Etapa ' + n + ' de 3';
+    if (bar) bar.style.width = (n / TOTAL) * 100 + '%';
+    if (txt) txt.textContent = 'Etapa ' + n + ' de ' + TOTAL;
     hideAllErrors();
-    window.scrollTo({ top: root.getBoundingClientRect().top + window.scrollY - 12, behavior: 'smooth' });
+    try {
+      window.scrollTo({ top: root.getBoundingClientRect().top + window.scrollY - 12, behavior: 'smooth' });
+    } catch (e) {
+      window.scrollTo(0, root.offsetTop - 12);
+    }
   }
 
   function markField(id, bad) {
     var el = get(id);
-    if (el && el.closest('.field')) el.closest('.field').classList.toggle('invalid', bad);
+    if (el && el.closest) {
+      var field = el.closest('.field');
+      if (field) field.classList.toggle('invalid', bad);
+    }
   }
 
   function validate(n) {
@@ -627,13 +640,9 @@
       var l = parseNum('sda-larg', NaN);
       markField('sda-comp', !(c > 0));
       markField('sda-larg', !(l > 0));
-      if (!(c > 0) && !(l > 0)) {
-        msg = 'Informe o comprimento e a largura do ambiente para continuar.';
-      } else if (!(c > 0)) {
-        msg = 'Informe o comprimento do ambiente para continuar.';
-      } else if (!(l > 0)) {
-        msg = 'Informe a largura do ambiente para continuar.';
-      }
+      if (!(c > 0) && !(l > 0)) msg = 'Informe o comprimento e a largura do ambiente para continuar.';
+      else if (!(c > 0)) msg = 'Informe o comprimento do ambiente para continuar.';
+      else if (!(l > 0)) msg = 'Informe a largura do ambiente para continuar.';
     }
     if (msg) {
       showError(n, msg);
@@ -646,13 +655,13 @@
   function calculate() {
     if (!validate(1)) {
       showStep(1);
-      return;
+      return false;
     }
     var comp = parseNum('sda-comp', 0);
     var larg = parseNum('sda-larg', 0);
     var pe = parseNum('sda-pe', 2.6);
-    var pessoas = Math.max(1, parseInt(val('sda-pessoas') || '1', 10));
-    var equip = parseInt(val('sda-equip') || '0', 10);
+    var pessoas = Math.max(1, parseInt(val('sda-pessoas') || '1', 10) || 1);
+    var equip = parseInt(val('sda-equip') || '0', 10) || 0;
     var area = comp * larg;
     var p = {
       sol: val('sda-sol'),
@@ -666,9 +675,12 @@
       umid: val('sda-umidade'),
     };
     var fs = {};
-    Object.keys(factors).forEach(function (k) {
-      fs[k] = factors[k][p[k]] || 1;
-    });
+    var fk;
+    for (fk in factors) {
+      if (Object.prototype.hasOwnProperty.call(factors, fk)) {
+        fs[fk] = factors[fk][p[fk]] || 1;
+      }
+    }
     fs.pe = pe > 3 ? pe / 2.6 : 1;
     var combined =
       fs.sol * fs.uso * fs.pe * fs.andar * fs.janelas * fs.isol * fs.layout * fs.clima * fs.horas * fs.umid;
@@ -676,7 +688,8 @@
     var extras = (pessoas > 1 ? (pessoas - 1) * 600 : 0) + equip;
     var load = Math.ceil((base * combined + extras) / 500) * 500;
     var idx = -1;
-    for (var ii = 0; ii < catalog.length; ii++) {
+    var ii;
+    for (ii = 0; ii < catalog.length; ii++) {
       if (catalog[ii].btu >= load) {
         idx = ii;
         break;
@@ -686,6 +699,7 @@
     var rec = entry(idx);
     var min = entry(idx - 1);
     var max = entry(idx + 1);
+
     var resultNum = get('sda-resultNum');
     var resultSub = get('sda-resultSub');
     var recBtu = get('sda-recommendationBtu');
@@ -708,6 +722,7 @@
           ? 'A capacidade calculada coincide com uma opção comercial.'
           : 'A carga calculada fica entre capacidades comerciais; recomendamos a próxima faixa para evitar subdimensionamento.';
     }
+
     var infoGrid = get('sda-infoGrid');
     if (infoGrid) {
       infoGrid.innerHTML =
@@ -719,6 +734,7 @@
         rec.tipo +
         '</div><div class="info-key">Linha indicada</div></div>';
     }
+
     var keys = [
       ['sol', 'Insolação'],
       ['uso', 'Uso'],
@@ -733,29 +749,29 @@
     ];
     var breakdown = get('sda-breakdown');
     if (breakdown) {
-      breakdown.innerHTML =
-        keys
-          .filter(function (x) {
-            return x[0] !== 'pe' || pe > 3;
-          })
-          .map(function (x) {
-            var label =
-              x[0] === 'pe' ? 'Pé-direito acima de 3 m' : labels[x[0]][p[x[0]]] || p[x[0]];
-            return (
-              '<div class="breakdown-item"><span>' +
-              x[1] +
-              ' · ' +
-              label +
-              '</span><span>' +
-              pct(fs[x[0]]) +
-              '</span></div>'
-            );
-          })
-          .join('') +
+      var html = '';
+      var xi;
+      for (xi = 0; xi < keys.length; xi++) {
+        var key = keys[xi][0];
+        if (key === 'pe' && pe <= 3) continue;
+        var label =
+          key === 'pe' ? 'Pé-direito acima de 3 m' : labels[key][p[key]] || p[key];
+        html +=
+          '<div class="breakdown-item"><span>' +
+          keys[xi][1] +
+          ' · ' +
+          label +
+          '</span><span>' +
+          pct(fs[key]) +
+          '</span></div>';
+      }
+      html +=
         '<div class="breakdown-item"><span>Pessoas + equipamentos</span><span>+' +
         fmt(extras) +
         ' BTU</span></div>';
+      breakdown.innerHTML = html;
     }
+
     function card(tag, e, cls, desc) {
       return (
         '<div class="rec-card ' +
@@ -780,6 +796,7 @@
         card('Recomendado', rec, 'recommended', 'Faixa indicada para o cálculo') +
         card('Com folga', max, '', 'Margem extra de potência');
     }
+
     var tip =
       'Evite escolher abaixo da recomendação: um aparelho subdimensionado trabalha mais e pode aumentar o consumo.';
     if (p.layout !== 'fechado') {
@@ -790,6 +807,7 @@
     }
     var tipBox = get('sda-tipBox');
     if (tipBox) tipBox.textContent = tip;
+
     var wa = get('sda-whatsapp');
     if (wa) {
       wa.href =
@@ -802,70 +820,97 @@
             ' m² e gostaria de ajuda para escolher o aparelho.'
         );
     }
+
     var resultBox = get('sda-resultBox');
     if (resultBox) {
       resultBox.classList.remove('cycle-hot', 'cycle-cold');
       resultBox.classList.add(val('sda-ciclo') === 'quente_frio' ? 'cycle-hot' : 'cycle-cold');
       resultBox.classList.add('show');
-      resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
-  var nextButtons = root.querySelectorAll('[data-next]');
-  for (var ni = 0; ni < nextButtons.length; ni++) {
-    nextButtons[ni].addEventListener('click', function () {
-      if (!validate(step)) return;
-      showStep(Math.min(3, step + 1));
-    });
-  }
-
-  var prevButtons = root.querySelectorAll('[data-prev]');
-  for (var pi = 0; pi < prevButtons.length; pi++) {
-    prevButtons[pi].addEventListener('click', function () {
-      showStep(Math.max(1, step - 1));
-    });
-  }
-
-  var formEl = get('sda-form');
-  if (formEl) {
-    formEl.addEventListener('submit', function (e) {
-      e.preventDefault();
-      calculate();
-    });
-  }
-
-  var calcBtn = root.querySelector('[data-calc-submit]');
-  if (calcBtn) {
-    calcBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-      calculate();
-    });
-  }
-
-  var resetBtn = get('sda-reset');
-  if (resetBtn) {
-    resetBtn.addEventListener('click', function () {
-      var resultBox = get('sda-resultBox');
-      if (resultBox) resultBox.classList.remove('show');
-      if (formEl && formEl.reset) formEl.reset();
-      var pe = get('sda-pe');
-      var pessoas = get('sda-pessoas');
-      if (pe) pe.value = '2,6';
-      if (pessoas) pessoas.value = '2';
-      showStep(1);
-    });
-  }
-
-  var allFields = root.querySelectorAll('input,select');
-  for (var fi = 0; fi < allFields.length; fi++) {
-    allFields[fi].addEventListener('input', function () {
-      if (!this.value) return;
-      var parent = this.parentNode;
-      while (parent && !(' ' + parent.className + ' ').match(/ field /)) {
-        parent = parent.parentNode;
+      resultBox.style.display = 'block';
+      try {
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e2) {
+        resultBox.scrollIntoView();
       }
-      if (parent) parent.classList.remove('invalid');
-    });
+    }
+    return false;
+  }
+
+  function goNext(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    if (!validate(step)) return false;
+    showStep(Math.min(TOTAL, step + 1));
+    return false;
+  }
+
+  function goPrev(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    showStep(Math.max(1, step - 1));
+    return false;
+  }
+
+  function resetCalc(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    var resultBox = get('sda-resultBox');
+    if (resultBox) {
+      resultBox.classList.remove('show');
+      resultBox.style.display = 'none';
+    }
+    var pe = get('sda-pe');
+    var pessoas = get('sda-pessoas');
+    if (pe) pe.value = '2,6';
+    if (pessoas) pessoas.value = '2';
+    showStep(1);
+    return false;
+  }
+
+  function bindDelegation() {
+    document.addEventListener(
+      'click',
+      function (e) {
+        if (!root) return;
+        var t = e.target;
+        if (!t || !root.contains(t)) return;
+        var nextBtn = t.closest ? t.closest('[data-next]') : null;
+        var prevBtn = t.closest ? t.closest('[data-prev]') : null;
+        var calcBtn = t.closest ? t.closest('[data-calc-submit]') : null;
+        var resetBtn = t.id === 'sda-reset' ? t : t.closest ? t.closest('#sda-reset') : null;
+        if (nextBtn) {
+          e.preventDefault();
+          goNext(e);
+        } else if (prevBtn) {
+          e.preventDefault();
+          goPrev(e);
+        } else if (calcBtn) {
+          e.preventDefault();
+          calculate();
+        } else if (resetBtn) {
+          e.preventDefault();
+          resetCalc(e);
+        }
+      },
+      false
+    );
+  }
+
+  function init() {
+    root = document.getElementById('sda-calculadora');
+    if (!root) return;
+    if (window.__SDA_BTU_WIZARD__) return;
+    window.__SDA_BTU_WIZARD__ = true;
+    showStep(1);
+    bindDelegation();
+  }
+
+  window.sdaWizardNext = goNext;
+  window.sdaWizardPrev = goPrev;
+  window.sdaWizardCalc = calculate;
+  window.sdaWizardReset = resetCalc;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 })();
 
