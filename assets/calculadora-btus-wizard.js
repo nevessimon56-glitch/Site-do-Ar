@@ -399,14 +399,8 @@
     if (window.__SDA_BTU_WIZARD__) return;
     window.__SDA_BTU_WIZARD__ = true;
 
-    /* WDNA: conteúdo às vezes fica dentro de wrapper que quebra clique/script */
-    if (root.parentNode && root.parentNode !== document.body) {
-      try {
-        document.body.appendChild(root);
-      } catch (moveErr) {
-        /* mantém no lugar se não puder mover */
-      }
-    }
+    /* NÃO mover para document.body (Diagnóstico 360 faz isso no overlay fullscreen).
+       Na calculadora, appendChild colocava o bloco DEPOIS do footer da loja. */
 
     showStep(1);
     bindDelegation();

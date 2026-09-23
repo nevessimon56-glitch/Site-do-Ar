@@ -8,7 +8,7 @@
 | **JS externo** no jsDelivr | Script **inline** gigante (WDNA corta ou não executa) |
 | `<script src="...">` dentro de `<p>...</p>` | JS solto ou só `<script>` sem src |
 | Fallback se CDN falhar (`__diag360Ready`) | Sem flag / sem retry |
-| JS move `#diag360-overlay` para `document.body` | Calculadora presa no wrapper da página |
+| JS move `#diag360-overlay` para `document.body` (overlay tela cheia) | **Calculadora NÃO move** — fica no conteúdo da página, acima do footer |
 
 ## O que colar no WDNA
 
