@@ -8,8 +8,18 @@
   display: none !important;
 }
 
+@font-face {
+  font-family: 'Akhand';
+  src: url('https://salescdn.net/static/fonts/akhand2/akhand-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 .header-v2 {
-  --hdr-navy: #152238;
+  --hdr-navy: #0c1f3d;
+  --hdr-utility-text: #ffffff;
+  --hdr-utility-icon: #ffffff;
   --hdr-blue: #4b96d4;
   --hdr-blue-dark: #2c77bb;
   --hdr-orange: #f58220;
