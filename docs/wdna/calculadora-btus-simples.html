@@ -1,5 +1,5 @@
 <!-- CALCULADORA BTUs — uma tela, visual Site do Ar (cole TUDO na página adicional WDNA) -->
-<!-- VERSAO: 2026-09-23-calculadora-btus-simples-v3-fix-resultado -->
+<!-- VERSAO: 2026-09-23-calculadora-btus-simples-v4-ver-modelos -->
 <!-- Sem pastas no tema, sem CDN, sem wizard. Só este HTML. -->
 <meta charset="UTF-8">
 <style>
@@ -98,8 +98,17 @@
   .sda-calc-pro .rec-card.recommended .rec-tag { background:linear-gradient(90deg,var(--orange),var(--orange-2)); }
   .sda-calc-pro .rec-btu { font-size:22px; font-weight:900; color:var(--navy); margin:8px 0 4px; }
   .sda-calc-pro .rec-label { font-size:11px; color:var(--muted); min-height:32px; }
-  .sda-calc-pro .rec-link { display:inline-block; margin-top:8px; padding:7px 10px; border-radius:7px; background:var(--blue); color:#fff!important; font-size:11px; font-weight:800; text-decoration:none; }
-  .sda-calc-pro .rec-card.recommended .rec-link { background:var(--orange); }
+  #sda-calc-app a.rec-link, #sda-calc-app a.btn-shop {
+    display:inline-block!important; margin-top:8px; padding:7px 10px; border-radius:7px;
+    background:var(--blue); color:#fff!important; font-size:11px; font-weight:800; text-decoration:none!important;
+    pointer-events:auto!important; cursor:pointer!important; position:relative; z-index:3;
+  }
+  #sda-calc-app .rec-card.recommended a.rec-link { background:var(--orange); }
+  #sda-calc-app a.btn-shop {
+    min-height:44px; padding:0 20px; line-height:44px; font-size:15px; border-radius:10px;
+    background:linear-gradient(135deg,var(--orange),var(--orange-2)); box-shadow:0 8px 20px rgba(255,121,0,.25);
+  }
+  #sda-calc-app a.btn-shop:hover, #sda-calc-app a.rec-link:hover { filter:brightness(1.06); }
   .sda-calc-pro .tip { margin-top:14px; padding:12px 14px; border-radius:10px; background:#fff6df; border:1px solid #ffc66f; color:#714b00; font-size:13px; }
   .sda-calc-pro .result-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
   .sda-calc-pro .btn-secondary { min-height:44px; padding:0 18px; border-radius:10px; border:0; background:#fff; color:var(--navy); font-weight:800; cursor:pointer; }
@@ -168,7 +177,11 @@
       <p class="recs-title">Op&ccedil;&otilde;es compat&iacute;veis</p>
       <div class="rec-grid" id="sda-recCards"></div>
       <div class="tip" id="sda-tipBox"></div>
-      <div class="result-actions"><button type="button" class="btn-secondary" id="sda-reset">Refazer</button><a class="btn-primary" id="sda-whatsapp" href="https://wa.me/5519984176960" target="_blank" rel="noopener">Falar com especialista</a></div>
+      <div class="result-actions">
+        <a class="btn-primary btn-shop" id="sda-ver-modelos" href="/split-inverter/12000-Btus">Ver modelos recomendados</a>
+        <button type="button" class="btn-secondary" id="sda-reset">Refazer</button>
+        <a class="btn-primary" id="sda-whatsapp" href="https://wa.me/5519984176960" target="_blank" rel="noopener">Falar com especialista</a>
+      </div>
     </div>
     <details><summary>Ver detalhamento</summary><div class="breakdown" id="sda-breakdown"></div></details>
   </section>
@@ -245,7 +258,26 @@
   }
 
   function entry(i) {
-    return catalog[Math.max(0, Math.min(catalog.length - 1, i))];
+    if (i < 0) return catalog[0];
+    if (i >= catalog.length) return catalog[catalog.length - 1];
+    return catalog[i];
+  }
+
+  function shopBase() {
+    var cfg = window.SDA_CALC || {};
+    if (cfg.lojaUrl) return String(cfg.lojaUrl).replace(/\/$/, '');
+    try {
+      if (window.location && window.location.origin && window.location.origin !== 'null') {
+        return String(window.location.origin).replace(/\/$/, '');
+      }
+    } catch (e0) {}
+    return 'https://www.sitedoar.com.br';
+  }
+
+  function productHref(path) {
+    if (!path) return shopBase();
+    if (/^https?:\/\//i.test(path)) return path;
+    return shopBase() + (path.charAt(0) === '/' ? path : '/' + path);
   }
 
   function markField(id, bad) {
@@ -410,6 +442,7 @@
     }
 
     function card(tag, e, cls, desc) {
+      var href = productHref(e.url);
       return (
         '<div class="rec-card ' +
         cls +
@@ -422,7 +455,7 @@
         '<br>' +
         e.tipo +
         '</div><a class="rec-link" href="' +
-        e.url +
+        href +
         '">Ver modelos</a></div>'
       );
     }
@@ -444,6 +477,14 @@
     }
     var tipBox = get('sda-tipBox');
     if (tipBox) tipBox.textContent = tip;
+
+    var shopUrl = productHref(rec.url);
+    var verModelos = get('sda-ver-modelos');
+    if (verModelos) {
+      verModelos.href = shopUrl;
+      verModelos.textContent = 'Ver modelos de ' + rec.label + ' BTUs';
+      verModelos.setAttribute('aria-label', 'Ver modelos de ar condicionado ' + rec.label + ' BTUs');
+    }
 
     var wa = get('sda-whatsapp');
     if (wa) {
