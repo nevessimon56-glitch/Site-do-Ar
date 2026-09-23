@@ -1,4 +1,4 @@
-<!-- VERSAO: 2026-09-03-calculadora-btus-etapas-v10-cdn -->
+<!-- VERSAO: 2026-09-03-calculadora-btus-etapas-v12-cdn -->
 <p></p>
 <!-- NÃO cole no theme.liquid — só página adicional Calculadora BTUs -->
 <p></p>
@@ -21,21 +21,37 @@
     max-width: 1060px;
     margin-left: auto !important;
     margin-right: auto !important;
-    margin-bottom: 96px !important;
-    padding-bottom: 64px !important;
+    margin-bottom: 24px !important;
+    padding-bottom: 32px !important;
     position: relative !important;
     z-index: 5;
   }
   body:has(#sda-calculadora) .footer,
   body:has(#sda-calculadora) footer,
+  body:has(#sda-calculadora) [class*="footer-store"],
   body.sda-btu-active .footer,
   body.sda-btu-active footer {
-    position: relative !important;
+    position: static !important;
     bottom: auto !important;
     top: auto !important;
     transform: none !important;
     z-index: 1;
-    margin-top: 24px !important;
+    margin-top: 32px !important;
+  }
+  html:has(#sda-calculadora) .page-header,
+  html:has(#sda-calculadora) .page-title,
+  html:has(#sda-calculadora) .title-page,
+  html:has(#sda-calculadora) .page-content > h1:first-of-type {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+  html:has(#sda-calculadora) main,
+  html:has(#sda-calculadora) .page-content {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
   }
 </style>
 <!-- CALCULADORA BTUs — 3 ETAPAS | visual laranja/navy | cole TUDO na página adicional WDNA (modo HTML) -->
@@ -314,7 +330,7 @@
         <div class="field"><label for="sda-pe">Altura do teto (m)</label><input type="text" id="sda-pe" value="2,6" inputmode="decimal" autocomplete="off"><span class="hint">Padr&#227;o: 2,60 m. Acima de 3 m, aplicamos acr&#233;scimo.</span></div>
       </div>
       <div class="error" id="sda-error-step1" role="alert"></div>
-      <div class="step-actions"><span></span><button type="button" class="btn btn-primary" data-next onclick="return sdaWizardNext(event)">Continuar</button></div>
+      <div class="step-actions"><span></span><button type="button" class="btn btn-primary" data-next>Continuar</button></div>
     </section>
 
     <section class="step-card" data-step="2">
@@ -327,7 +343,7 @@
         <div class="field"><label for="sda-ciclo">Ciclo desejado</label><select id="sda-ciclo"><option value="frio" selected>S&#243; refrigera&#231;&#227;o (Frio)</option><option value="quente_frio">Quente e Frio</option></select></div>
       </div>
       <div class="error" id="sda-error-step2" role="alert"></div>
-      <div class="step-actions"><button type="button" class="btn btn-secondary" data-prev onclick="return sdaWizardPrev(event)">Voltar</button><button type="button" class="btn btn-primary" data-next onclick="return sdaWizardNext(event)">Continuar</button></div>
+      <div class="step-actions"><button type="button" class="btn btn-secondary" data-prev>Voltar</button><button type="button" class="btn btn-primary" data-next>Continuar</button></div>
     </section>
 
     <section class="step-card" data-step="3">
@@ -342,7 +358,7 @@
         <div class="field"><label for="sda-umidade">Umidade do ambiente</label><select id="sda-umidade"><option value="normal" selected>Normal</option><option value="alta">Alta (cozinha, lavanderia, litoral)</option><option value="muito_alta">Muito alta (banheiro sem exaust&#227;o)</option></select></div>
       </div>
       <div class="error" id="sda-error" role="alert"></div>
-      <div class="step-actions"><button type="button" class="btn btn-secondary" data-prev onclick="return sdaWizardPrev(event)">Voltar</button><button type="button" class="btn btn-orange" data-calc-submit onclick="return sdaWizardCalc(event)">Calcular BTUs</button></div>
+      <div class="step-actions"><button type="button" class="btn btn-secondary" data-prev>Voltar</button><button type="button" class="btn btn-orange" data-calc-submit>Calcular BTUs</button></div>
     </section>
   </div>
 
@@ -355,7 +371,7 @@
       <div class="info-grid" id="sda-infoGrid"></div>
       <div class="recs-title">Op&#231;&#245;es compat&#237;veis</div><div class="rec-grid" id="sda-recCards"></div>
       <div class="tip" id="sda-tipBox"></div>
-      <div class="result-actions"><button type="button" class="btn btn-secondary" id="sda-reset" onclick="return sdaWizardReset(event)">Refazer c&#225;lculo</button><a class="btn btn-primary" id="sda-whatsapp" href="https://wa.me/5519984176960" target="_blank" rel="noopener">Falar com especialista</a></div>
+      <div class="result-actions"><button type="button" class="btn btn-secondary" id="sda-reset">Refazer c&#225;lculo</button><a class="btn btn-primary" id="sda-whatsapp" href="https://wa.me/5519984176960" target="_blank" rel="noopener">Falar com especialista</a></div>
     </div>
     <details class="result-details"><summary>Ver detalhamento do c&#225;lculo</summary><div class="breakdown" id="sda-breakdown"></div></details>
   </section>
@@ -560,13 +576,15 @@
 }
 </style>
 <p>
-<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=8"></script>
+<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-layout.js?v=3"></script>
+<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=9"></script>
 <script>
 (function(){
   setTimeout(function(){
+    if(typeof window.sdaBtuApplyLayoutFix==="function")window.sdaBtuApplyLayoutFix();
     if(!window.__sdaBtuWizardReady){
       var s=document.createElement("script");
-      s.src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=8";
+      s.src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=9";
       document.body.appendChild(s);
     }
   },2000);

@@ -10,6 +10,7 @@
   var root = null;
   var step = 1;
   var TOTAL = 3;
+  var navLock = false;
 
   var catalog = [
     { btu: 9000, label: '9.000', tipo: 'Split Inverter', url: '/split-inverter/9000-btus' },
@@ -336,17 +337,33 @@
     return false;
   }
 
+  function withNavLock(fn) {
+    if (navLock) return false;
+    navLock = true;
+    try {
+      return fn();
+    } finally {
+      setTimeout(function () {
+        navLock = false;
+      }, 350);
+    }
+  }
+
   function goNext(ev) {
     if (ev && ev.preventDefault) ev.preventDefault();
-    if (!validate(step)) return false;
-    showStep(Math.min(TOTAL, step + 1));
-    return false;
+    return withNavLock(function () {
+      if (!validate(step)) return false;
+      showStep(Math.min(TOTAL, step + 1));
+      return false;
+    });
   }
 
   function goPrev(ev) {
     if (ev && ev.preventDefault) ev.preventDefault();
-    showStep(Math.max(1, step - 1));
-    return false;
+    return withNavLock(function () {
+      showStep(Math.max(1, step - 1));
+      return false;
+    });
   }
 
   function resetCalc(ev) {
@@ -427,8 +444,8 @@
       '#sda-calculadora .step-card.active{display:block!important}' +
       '#sda-calculadora .result:not(.show){display:none!important}' +
       'body.sda-btu-active #sda-calculadora,body:has(#sda-calculadora) #sda-calculadora{' +
-      'display:block!important;clear:both!important;position:relative!important;z-index:5!important;' +
-      'margin-bottom:96px!important;padding-bottom:64px!important;width:100%!important}' +
+      'display:block!important;clear:both!important;position:relative!important;z-index:2!important;' +
+      'margin-bottom:24px!important;padding-bottom:32px!important;width:100%!important}' +
       'body.sda-btu-active footer,body.sda-btu-active .footer,' +
       'body:has(#sda-calculadora) footer,body:has(#sda-calculadora) .footer{' +
       'position:relative!important;bottom:auto!important;top:auto!important;' +
@@ -446,10 +463,6 @@
     var pos = footer.compareDocumentPosition(root);
     if (pos & Node.DOCUMENT_POSITION_FOLLOWING) {
       footer.parentNode.insertBefore(root, footer);
-      return;
-    }
-    if (footer.parentNode === body && root.parentNode !== body) {
-      body.insertBefore(root, footer);
     }
   }
 

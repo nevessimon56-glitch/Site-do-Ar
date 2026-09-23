@@ -1,35 +1,16 @@
 /**
- * Calculadora BTUs — layout vs rodapé WDNA (v2)
+ * Calculadora BTUs — layout WDNA (v3: compacto, sem faixa branca)
  */
-html:has(#sda-calculadora),
-html.sda-btu-page {
-  scroll-padding-bottom: 160px;
-}
-
-html:has(#sda-calculadora) body,
-html.sda-btu-page body {
-  display: flex !important;
-  flex-direction: column !important;
-  min-height: 100vh !important;
-  overflow-x: hidden;
-  padding-bottom: var(--sda-btu-clearance, 180px) !important;
-}
-
 html:has(#sda-calculadora) #sda-calculadora,
 html.sda-btu-page #sda-calculadora {
   display: block !important;
-  flex: 1 0 auto !important;
-  order: 2 !important;
   clear: both !important;
   position: relative !important;
-  z-index: 5 !important;
+  z-index: 2 !important;
   width: 100% !important;
   max-width: 1060px;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  margin-bottom: 64px !important;
-  padding-bottom: 80px !important;
-  isolation: isolate;
+  margin: 0 auto 24px !important;
+  padding: 0 16px 32px !important;
 }
 
 html:has(#sda-calculadora) #sda-calculadora .step-card,
@@ -47,77 +28,73 @@ html.sda-btu-page #sda-calculadora .result:not(.show) {
   display: none !important;
 }
 
+/* Título duplicado da página adicional WDNA (caixa “Calculadora Btus” acima) */
+html:has(#sda-calculadora) .page-header,
+html:has(#sda-calculadora) .page-title,
+html:has(#sda-calculadora) .title-page,
+html:has(#sda-calculadora) .page_title,
+html:has(#sda-calculadora) .additional-page-title,
+html:has(#sda-calculadora) .page-content > h1:first-of-type,
+html:has(#sda-calculadora) main > .title,
+html:has(#sda-calculadora) main > h1:first-of-type,
+html.sda-btu-page .page-header,
+html.sda-btu-page .page-title,
+html.sda-btu-page .title-page,
+html.sda-btu-page .page-content > h1:first-of-type {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
 html:has(#sda-calculadora) main,
 html:has(#sda-calculadora) .page,
 html:has(#sda-calculadora) .page-content,
 html:has(#sda-calculadora) .container,
-html:has(#sda-calculadora) .content,
-html:has(#sda-calculadora) [class*="page-content"],
-html:has(#sda-calculadora) [class*="PageContent"],
-html:has(#sda-calculadora) [class*="additional-page"],
 html.sda-btu-page main,
-html.sda-btu-page .page,
 html.sda-btu-page .page-content,
 html.sda-btu-page .container {
   overflow: visible !important;
   height: auto !important;
-  min-height: 0 !important;
   max-height: none !important;
-  flex: 1 0 auto !important;
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
 }
 
 html:has(#sda-calculadora) #sda-btu-footer-spacer,
 html.sda-btu-page #sda-btu-footer-spacer {
-  display: block !important;
-  flex: 0 0 auto !important;
-  order: 98 !important;
-  width: 100% !important;
-  clear: both !important;
-  min-height: var(--sda-btu-spacer-h, 120px);
-  height: var(--sda-btu-spacer-h, 120px);
-  pointer-events: none;
+  display: none;
+  height: 0;
+  min-height: 0;
 }
 
-html:has(#sda-calculadora) body > footer,
-html:has(#sda-calculadora) body > .footer,
+html:has(#sda-calculadora) body,
+html.sda-btu-page body {
+  padding-bottom: 0 !important;
+  min-height: 0 !important;
+}
+
 html:has(#sda-calculadora) footer,
 html:has(#sda-calculadora) .footer,
 html:has(#sda-calculadora) #footer,
 html:has(#sda-calculadora) .store-footer,
 html:has(#sda-calculadora) .footer-store,
-html:has(#sda-calculadora) .rodape,
-html:has(#sda-calculadora) .main-footer,
-html:has(#sda-calculadora) .footer-infos,
-html:has(#sda-calculadora) .infos-footer,
-html:has(#sda-calculadora) .footer-container,
-html:has(#sda-calculadora) [class*="footer-store"],
-html.sda-btu-page body > footer,
-html.sda-btu-page body > .footer,
 html.sda-btu-page footer,
-html.sda-btu-page .footer,
-html.sda-btu-page #footer {
+html.sda-btu-page .footer {
   position: static !important;
   bottom: auto !important;
   top: auto !important;
-  left: auto !important;
-  right: auto !important;
   transform: none !important;
-  float: none !important;
-  flex: 0 0 auto !important;
-  order: 99 !important;
+  margin-top: 16px !important;
   z-index: 1 !important;
-  margin-top: 32px !important;
-  width: 100% !important;
 }
 
 @media (max-width: 680px) {
   html:has(#sda-calculadora) .sda-calc .step-actions,
   html.sda-btu-page .sda-calc .step-actions {
-    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  }
-
-  html:has(#sda-calculadora) body,
-  html.sda-btu-page body {
-    padding-bottom: calc(var(--sda-btu-clearance, 200px) + env(safe-area-inset-bottom, 0px)) !important;
+    position: relative !important;
+    bottom: auto !important;
   }
 }

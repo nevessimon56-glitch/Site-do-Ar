@@ -91,7 +91,7 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/favorites.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
-    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/calculadora-btus-page.css' | themeAssetUrl }}?v=2">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/calculadora-btus-page.css' | themeAssetUrl }}?v=3">
     {%- comment -%}
       HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
       Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
@@ -272,18 +272,7 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
 {% render 'sections/product-compare-panel' %}
 {% block content %}{% endblock %}
 {% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
-<script src="{{ 'assets/calculadora-btus-layout.js' | themeAssetUrl }}?v=2"></script>
-<style id="sda-btu-theme-footer-v2">
-  html:has(#sda-calculadora) body { min-height: 100vh !important; }
-  html:has(#sda-calculadora) #sda-calculadora { margin-bottom: 80px !important; padding-bottom: 72px !important; }
-  html:has(#sda-calculadora) footer,
-  html:has(#sda-calculadora) .footer,
-  html:has(#sda-calculadora) [class*="footer-store"],
-  html:has(#sda-calculadora) [class*="Footer"]:not(.card-footer) {
-    position: static !important;
-    margin-top: 24px !important;
-  }
-</style>
+<script src="{{ 'assets/calculadora-btus-layout.js' | themeAssetUrl }}?v=3"></script>
 <script>
     window.onunload = function(){};
     window.onload = function() {
