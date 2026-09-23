@@ -398,8 +398,19 @@
     if (!root) return;
     if (window.__SDA_BTU_WIZARD__) return;
     window.__SDA_BTU_WIZARD__ = true;
+
+    /* WDNA: conteúdo às vezes fica dentro de wrapper que quebra clique/script */
+    if (root.parentNode && root.parentNode !== document.body) {
+      try {
+        document.body.appendChild(root);
+      } catch (moveErr) {
+        /* mantém no lugar se não puder mover */
+      }
+    }
+
     showStep(1);
     bindDelegation();
+    window.__sdaBtuWizardReady = true;
   }
 
   window.sdaWizardNext = goNext;
