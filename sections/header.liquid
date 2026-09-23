@@ -38,22 +38,6 @@
         </div>
     </div>
 
-    {% if themeConfig.store.bannerTop.link or themeConfig.store.bannerTop.image or themeConfig.store.bannerTop.image.desktop or themeConfig.store.bannerTop.image.mobile %}
-    <div class="top-content content" style="background-color: {{ themeConfig.store.bannerTop.backgroundColor }};">
-        <a href="{{ themeConfig.store.bannerTop.link }}" title="{{ themeConfig.store.bannerTop.title }}">
-            {% if themeConfig.store.bannerTop.image %}
-                <img class="hide-lg" style="max-width: 100%;" src="{{ themeConfig.store.bannerTop.image }}" alt="{{ themeConfig.store.bannerTop.title }}"/>
-            {% endif %}
-            {% if themeConfig.store.bannerTop.image.desktop %}
-                <img class="hide-lg" style="max-width: 100%;" src="{{ themeConfig.store.bannerTop.image.desktop }}" alt="{{ themeConfig.store.bannerTop.title }}"/>
-            {% endif %}
-            {% if themeConfig.store.bannerTop.image.mobile %}
-                <img class="show-lg" style="max-width: 100%;" src="{{ themeConfig.store.bannerTop.image.mobile }}" alt="{{ themeConfig.store.bannerTop.title }}"/>
-            {% endif %}
-        </a>
-    </div>
-    {% endif %}
-
     <div class="header-content content">
         <div class="container">
             <div class="navbar header-v2-navbar">

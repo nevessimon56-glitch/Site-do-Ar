@@ -3,6 +3,11 @@
  * Faixa utilitária + busca central + atalhos + barra de navegação
  */
 
+/* Banner themeConfig (Conforto e Economia) — desligado no header v2 */
+.header.header-v2 > .top-content {
+  display: none !important;
+}
+
 .header-v2 {
   --hdr-navy: #1c2b4a;
   --hdr-blue: #2c77bb;
