@@ -1,7 +1,8 @@
+<script>
 (function () {
   'use strict';
-  if (window.__SDA_CALC_SIMPLE_V6) return;
-  window.__SDA_CALC_SIMPLE_V6 = true;
+  if (window.__SDA_CALC_READY) return;
+  window.__SDA_CALC_READY = true;
   window.SDA_CALC = window.SDA_CALC || { lojaUrl: 'https://www.sitedoar.com.br' };
 
   var root = null;
@@ -46,7 +47,10 @@
     var n = parseFloat(String(v(id)).replace(/\s/g, '').replace(',', '.').trim());
     return isFinite(n) ? n : def;
   }
-  function fmt(n) { return Math.round(n).toLocaleString('pt-BR'); }
+  function fmt(n) {
+    try { return Math.round(n).toLocaleString('pt-BR'); }
+    catch (eF) { return String(Math.round(n)); }
+  }
   function pct(f) { var n = Math.round((f - 1) * 100); return n === 0 ? '0%' : (n > 0 ? '+' : '') + n + '%'; }
   function entry(i) {
     if (i < 0) return catalog[0];
@@ -76,17 +80,28 @@
   }
   function hideResult(box) {
     if (!box) return;
-    box.classList.remove('sda-show');
-    box.hidden = true;
+    box.classList.remove('show', 'cycle-hot', 'cycle-cold');
     box.style.display = 'none';
+    box.style.visibility = 'hidden';
+    box.style.opacity = '0';
   }
   function showResult(box, cycle) {
     if (!box) return;
-    box.hidden = false;
-    box.classList.remove('cycle-hot', 'cycle-cold', 'sda-show');
-    box.classList.add(cycle === 'quente_frio' ? 'cycle-hot' : 'cycle-cold', 'sda-show');
-    box.style.setProperty('display', 'block', 'important');
-    try { box.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e1) { box.scrollIntoView(); }
+    box.classList.remove('cycle-hot', 'cycle-cold');
+    box.classList.add(cycle === 'quente_frio' ? 'cycle-hot' : 'cycle-cold', 'show');
+    box.style.display = 'block';
+    box.style.visibility = 'visible';
+    box.style.opacity = '1';
+    try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e1) { box.scrollIntoView(); }
+  }
+  function showCalcError(msg) {
+    var err = $('sda-error');
+    if (err) {
+      err.textContent = msg;
+      err.classList.add('show');
+      err.style.display = 'block';
+    }
+    hideResult($('sda-resultBox'));
   }
   function cardHtml(tag, e, cls, desc) {
     var href = productHref(e.url);
@@ -99,7 +114,7 @@
     );
   }
 
-  function calculate(ev) {
+  function sdaCalcular(ev) {
     if (ev && ev.preventDefault) ev.preventDefault();
     try {
       var err = $('sda-error');
@@ -110,17 +125,16 @@
       fieldInvalid('sda-larg', !(larg > 0));
       if (!(comp > 0) || !(larg > 0)) {
         var msg = !(comp > 0) && !(larg > 0)
-          ? 'Informe o comprimento e a largura do ambiente.'
+          ? 'Por favor, preencha o comprimento e a largura do ambiente.'
           : (!(comp > 0) ? 'Informe o comprimento do ambiente.' : 'Informe a largura do ambiente.');
-        if (err) {
-          err.textContent = msg;
-          err.className = 'error show';
-          err.style.setProperty('display', 'block', 'important');
-        }
-        hideResult(box);
+        showCalcError(msg);
         return false;
       }
-      if (err) { err.className = 'error'; err.style.display = 'none'; err.textContent = ''; }
+      if (err) {
+        err.classList.remove('show');
+        err.style.display = 'none';
+        err.textContent = '';
+      }
 
       var pe = num('sda-pe', 2.6);
       var pessoas = Math.max(1, parseInt(v('sda-pessoas'), 10) || 1);
@@ -200,8 +214,8 @@
       showResult(box, v('sda-ciclo'));
       return false;
     } catch (err2) {
-      var errEl = $('sda-error');
-      if (errEl) { errEl.textContent = 'Erro ao calcular. Recarregue a p\u00e1gina.'; errEl.className = 'error show'; }
+      showCalcError('Erro ao calcular. Recarregue a p\u00e1gina e tente novamente.');
+      if (typeof console !== 'undefined' && console.error) console.error('sdaCalcular:', err2);
       return false;
     }
   }
@@ -210,7 +224,7 @@
     if (ev && ev.preventDefault) ev.preventDefault();
     hideResult($('sda-resultBox'));
     var err = $('sda-error');
-    if (err) { err.className = 'error'; err.textContent = ''; }
+    if (err) { err.classList.remove('show'); err.style.display = 'none'; err.textContent = ''; }
     fieldInvalid('sda-comp', false);
     fieldInvalid('sda-larg', false);
     if (root && root.scrollIntoView) {
@@ -225,7 +239,7 @@
     if (!btn) return false;
     if (!root) root = $('sda-calc-app');
     bound = true;
-    btn.onclick = function (e) { if (e) e.preventDefault(); calculate(e); return false; };
+    btn.onclick = function (e) { if (e) e.preventDefault(); sdaCalcular(e); return false; };
     var reset = $('sda-reset');
     if (reset) reset.onclick = function (e) { if (e) e.preventDefault(); resetCalc(e); return false; };
     var scope = root || document;
@@ -274,16 +288,3 @@
     if (init()) return;
     var tries = 0;
     var iv = setInterval(function () {
-      tries += 1;
-      if (init() || tries > 48) clearInterval(iv);
-    }, 250);
-  }
-
-  window.sdaCalcular = calculate;
-  window.sdaCalcReset = resetCalc;
-  attachDocClick();
-  boot();
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  setTimeout(boot, 400);
-  setTimeout(boot, 1500);
-})();
