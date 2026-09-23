@@ -45,7 +45,7 @@ Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 - Logo + corações / carrinho / busca / menu numa linha (sem barra de busca fixa no topo).
 - Busca abre pelo ícone de lupa (`openSearch`).
 - Faixa de categorias (Split / Piso / Janela) aparece ao rolar a página (`sda-mobile-nav-revealed` no `theme.liquid`).
-- Republicar **`assets/header-v2.css`** e **`assets/mega-menu.css`** após ajustes de vitrine.
+- Republicar só **`assets/header-v2.css`** (mobile do header). **Não substitua** o `mega-menu.css` da loja — veja `docs/wdna/MEGA-MENU-CSS-NAO-SUBSTITUIR.md`.
 
 ## Testar
 
