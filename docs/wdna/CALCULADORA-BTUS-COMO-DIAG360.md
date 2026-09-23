@@ -32,7 +32,7 @@ Arquivo: **`docs/wdna/calculadora-btus-etapas-pagina-completa.html`**
 ## URL do script (atual)
 
 ```
-https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=7
+https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=8
 ```
 
 Quando fizer merge na `main`, troque no HTML `@cursor/header-favoritos-v2-e52b` por `@main` (como preferir no Diagnóstico com `@cursor/fix-diagnostico-360-ed4c`).
