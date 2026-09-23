@@ -1,4 +1,4 @@
-<!-- CALCULADORA BTUs WDNA v5-pronto — cole TUDO no HTML da página adicional (modo HTML / código) -->
+<!-- CALCULADORA BTUs WDNA v6-fix-botao — cole TUDO no HTML da página adicional (modo HTML / código) -->
 <style>
   body.sda-btu-active #sda-calc-app,
   body:has(#sda-calc-app) #sda-calc-app,
@@ -63,12 +63,13 @@
   #sda-calc-app #sda-error { display:none!important; margin:12px 0; padding:12px 14px; border-radius:10px;
     background:#fff1f0; border:1px solid #f1b4ae; color:#b3261e; font-size:14px; }
   #sda-calc-app #sda-error.show { display:block!important; }
-  .sda-calc-pro .actions { text-align:center; margin:8px 0 20px; }
+  .sda-calc-pro .actions { text-align:center; margin:8px 0 20px; position:relative; z-index:5; pointer-events:auto!important; }
   .sda-calc-pro .btn-calc {
     min-height:52px; padding:0 32px; border:0; border-radius:13px; cursor:pointer;
     font-weight:800; font-size:16px; color:#fff;
     background:linear-gradient(135deg,var(--orange),var(--orange-2));
     box-shadow:0 10px 24px rgba(255,121,0,.28);
+    pointer-events:auto!important; position:relative; z-index:6;
   }
   .sda-calc-pro .btn-calc:hover { filter:brightness(1.05); }
   #sda-calc-app #sda-resultBox {
@@ -176,7 +177,7 @@
   </div>
 
   <div class="error" id="sda-error" role="alert"></div>
-  <div class="actions"><button type="button" class="btn-calc" id="sda-btn-calc">Calcular BTUs</button></div>
+  <div class="actions"><button type="button" class="btn-calc" id="sda-btn-calc" onclick="if(window.sdaCalcular){window.sdaCalcular(event);}return false;">Calcular BTUs</button></div>
 
   <section id="sda-resultBox" aria-live="polite" hidden>
     <div class="result-main">
@@ -201,6 +202,8 @@
 <script>
 (function () {
   'use strict';
+  if (window.__SDA_CALC_SIMPLE_V6) return;
+  window.__SDA_CALC_SIMPLE_V6 = true;
   window.SDA_CALC = window.SDA_CALC || { lojaUrl: 'https://www.sitedoar.com.br' };
 
   var root = null;
@@ -311,7 +314,11 @@
         var msg = !(comp > 0) && !(larg > 0)
           ? 'Informe o comprimento e a largura do ambiente.'
           : (!(comp > 0) ? 'Informe o comprimento do ambiente.' : 'Informe a largura do ambiente.');
-        if (err) { err.textContent = msg; err.className = 'error show'; err.style.display = 'block'; }
+        if (err) {
+          err.textContent = msg;
+          err.className = 'error show';
+          err.style.setProperty('display', 'block', 'important');
+        }
         hideResult(box);
         return false;
       }
@@ -415,29 +422,54 @@
   }
 
   function bind() {
-    if (bound) return;
+    if (bound) return true;
     var btn = $('sda-btn-calc');
-    var reset = $('sda-reset');
-    if (!btn) return;
+    if (!btn) return false;
+    if (!root) root = $('sda-calc-app');
     bound = true;
     btn.onclick = function (e) { if (e) e.preventDefault(); calculate(e); return false; };
+    var reset = $('sda-reset');
     if (reset) reset.onclick = function (e) { if (e) e.preventDefault(); resetCalc(e); return false; };
-    var inputs = root ? root.querySelectorAll('input') : [];
+    var scope = root || document;
+    var inputs = scope.querySelectorAll ? scope.querySelectorAll('#sda-calc-app input, #sda-comp, #sda-larg') : [];
     for (var j = 0; j < inputs.length; j++) {
       inputs[j].oninput = function () { fieldInvalid(this.id, false); };
     }
+    return true;
+  }
+
+  function markPage() {
+    document.documentElement.classList.add('sda-btu-page', 'sda-btu-active');
+    if (document.body) document.body.classList.add('sda-btu-page', 'sda-btu-active');
   }
 
   function init() {
     root = $('sda-calc-app');
     if (!root) return false;
-    if (root.getAttribute('data-sda-ready') === '1') return true;
-    root.setAttribute('data-sda-ready', '1');
-    document.documentElement.classList.add('sda-btu-page', 'sda-btu-active');
-    if (document.body) document.body.classList.add('sda-btu-page', 'sda-btu-active');
-    bind();
+    markPage();
+    if (!bind()) return false;
     window.__sdaCalcProReady = true;
     return true;
+  }
+
+  function attachDocClick() {
+    if (window.__SDA_CALC_DOC_CLICK) return;
+    window.__SDA_CALC_DOC_CLICK = true;
+    document.addEventListener(
+      'click',
+      function (ev) {
+        var t = ev.target;
+        if (!t || !t.closest) return;
+        if (t.id === 'sda-btn-calc' || t.closest('#sda-btn-calc')) {
+          ev.preventDefault();
+          if (window.sdaCalcular) window.sdaCalcular(ev);
+        } else if (t.id === 'sda-reset' || t.closest('#sda-reset')) {
+          ev.preventDefault();
+          if (window.sdaCalcReset) window.sdaCalcReset(ev);
+        }
+      },
+      true
+    );
   }
 
   function boot() {
@@ -451,8 +483,12 @@
 
   window.sdaCalcular = calculate;
   window.sdaCalcReset = resetCalc;
+  attachDocClick();
   boot();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   setTimeout(boot, 400);
+  setTimeout(boot, 1500);
 })();
 </script>
+<!-- Se o botão não fizer nada: confira se o código acima NÃO aparece como texto na página. Fallback (fora de <p>): -->
+<!-- <script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-simples.js?v=6"></script> -->

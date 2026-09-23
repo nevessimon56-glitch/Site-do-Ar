@@ -5,7 +5,7 @@
 ## Arquivo
 
 `docs/wdna/calculadora-btus-simples.html`  
-Versão no topo do arquivo: **`v5-pronto`** (WDNA: resultado visível + Ver modelos)
+Versão no topo do arquivo: **`v6-fix-botao`** (corrige botão Calcular na WDNA)
 
 - **Funcional:** uma tela, botão **Calcular BTUs**, JS inline (`window.sdaCalcular`).
 - **Visual:** hero azul/laranja Site do Ar, 3 blocos numerados, resultado em destaque.
@@ -18,4 +18,9 @@ Versão no topo do arquivo: **`v5-pronto`** (WDNA: resultado visível + Ver mode
 
 ## Teste
 
-F12 → `window.__sdaCalcProReady` deve ser `true`.
+F12 → `window.__sdaCalcProReady` deve ser `true` e `typeof window.sdaCalcular` deve ser `"function"`.
+
+Se o botão não responder:
+
+1. Veja se trechos `(function () {` aparecem **como texto** na página — a WDNA quebrou o `<script>` (often dentro de `<p>`). Recole o HTML v6 ou use o fallback jsDelivr no final do arquivo.
+2. Com campos vazios, deve aparecer mensagem vermelha pedindo comprimento/largura (isso também prova que o JS rodou).
