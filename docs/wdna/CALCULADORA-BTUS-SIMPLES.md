@@ -1,19 +1,21 @@
-# Calculadora BTUs — versão simples (recomendada)
+# Calculadora BTUs — simples + visual (recomendado)
 
-**Um único arquivo** para colar na página adicional WDNA. Igual à calculadora **original**: uma tela, cartões azuis, botão **Calcular BTUs**.
+**Um arquivo só** na página adicional WDNA: funciona sem pastas, CDN ou arquivos no tema.
 
 ## Arquivo
 
-`docs/wdna/calculadora-btus-simples.html`
+`docs/wdna/calculadora-btus-simples.html`  
+Versão no topo: **`calculadora-btus-simples-v2-visual`**
 
-1. Abra o arquivo no GitHub e copie **tudo** (do primeiro comentário até o final do `</script>`).
-2. WDNA → Página adicional Calculadora BTUs → conteúdo HTML → **substituir tudo** e salvar.
-3. Template da página: pode ser o **padrão** da loja (não precisa `page.calculadora-btus`).
-4. **Não** suba JS/CSS no tema para esta versão.
-5. **Não** use junto `calculadora-btus-wizard.js`, `single.js` ou HTML de 3 etapas.
+- **Funcional:** uma tela, botão **Calcular BTUs**, JS inline (`window.sdaCalcular`).
+- **Visual:** hero azul/laranja Site do Ar, 3 blocos numerados, resultado em destaque.
+
+## WDNA
+
+1. Copie **todo** o HTML do arquivo.
+2. Cole na página adicional Calculadora BTUs (substitua o conteúdo).
+3. Salve. Template da página pode ser o **padrão** (não precisa `page.calculadora-btus`).
 
 ## Teste
 
-Console (F12): `typeof window.sdaCalcular` → `"function"`.
-
-Preencha comprimento e largura → **Calcular BTUs Necessários** → resultado abaixo.
+F12 → `window.__sdaCalcProReady` deve ser `true`.
