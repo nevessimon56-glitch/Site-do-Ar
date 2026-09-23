@@ -40,12 +40,15 @@ Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 - Tentativa de sync com `/ajax/wishlist` e `/ajax/favorites` (silenciosa se a API não existir).
 - Contador no header: `[data-favorites-count]`.
 
-## Mobile (≤991px)
+## Mobile (≤991px) — layout mock
 
-- Logo + corações / carrinho / busca / menu numa linha (sem barra de busca fixa no topo).
-- Busca abre pelo ícone de lupa (`openSearch`).
-- Faixa de categorias (Split / Piso / Janela) aparece ao rolar a página (`sda-mobile-nav-revealed` no `theme.liquid`).
-- Republicar só **`assets/header-v2.css`** (mobile do header). **Não substitua** o `mega-menu.css` da loja — veja `docs/wdna/MEGA-MENU-CSS-NAO-SUBSTITUIR.md`.
+1. Faixa utilitária (Atendimento + conta)
+2. Logo + lupa (caixa) + carrinho + menu
+3. Busca em **pill** full width (`Busque por produto…`)
+4. Nav horizontal scroll: **Compre por ambiente** (laranja) + itens do menu
+
+Publicar: **`assets/header-v2.css`**, **`sections/header.liquid`**, **`layout/theme.liquid`**.  
+**Não substitua** o `mega-menu.css` da loja — veja `docs/wdna/MEGA-MENU-CSS-NAO-SUBSTITUIR.md`.
 
 ## Testar
 
