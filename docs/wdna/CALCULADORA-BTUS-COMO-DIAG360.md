@@ -20,10 +20,16 @@ Arquivo: **`docs/wdna/calculadora-btus-etapas-pagina-completa.html`**
 2. **Não** cole o `.js` no corpo da página.
 3. Aguarde alguns minutos após push no GitHub para o jsDelivr atualizar.
 
+## Etapa 3 ao abrir / footer em cima
+
+- O tema WDNA pode forçar `section { display: block !important }`, exibindo **todas** as etapas (parece “pular” para a 3).
+- A v9 do HTML inclui CSS com `!important` + script **inline** logo após `#sda-calculadora` que força **Etapa 1** antes do CDN carregar.
+- Se ainda falhar: no admin WDNA, associe o template **`page.calculadora-btus`** à página (como o Diagnóstico usa `page.diagnostico`).
+
 ## URL do script (atual)
 
 ```
-https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js
+https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=7
 ```
 
 Quando fizer merge na `main`, troque no HTML `@cursor/header-favoritos-v2-e52b` por `@main` (como preferir no Diagnóstico com `@cursor/fix-diagnostico-360-ed4c`).

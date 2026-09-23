@@ -1,4 +1,4 @@
-<!-- VERSAO: 2026-09-03-calculadora-btus-etapas-v8-cdn -->
+<!-- VERSAO: 2026-09-03-calculadora-btus-etapas-v9-cdn -->
 <p></p>
 <!-- NÃO cole no theme.liquid — só página adicional Calculadora BTUs -->
 <p></p>
@@ -7,7 +7,12 @@
 
 <meta charset="UTF-8">
 <style>
-  /* Ordem correta: calculadora acima do footer da loja */
+  /* Etapas: tema WDNA costuma forçar section { display:block !important } */
+  #sda-calculadora .step-card { display: none !important; }
+  #sda-calculadora .step-card.active { display: block !important; }
+  #sda-calculadora .result:not(.show) { display: none !important; }
+  /* Footer abaixo da calculadora (com ou sem JS) */
+  body:has(#sda-calculadora) #sda-calculadora,
   body.sda-btu-active #sda-calculadora,
   body.sda-btu-active .sda-calc {
     display: block !important;
@@ -16,13 +21,21 @@
     max-width: 1060px;
     margin-left: auto !important;
     margin-right: auto !important;
+    margin-bottom: 96px !important;
+    padding-bottom: 64px !important;
     position: relative !important;
-    z-index: 2;
+    z-index: 5;
   }
+  body:has(#sda-calculadora) .footer,
+  body:has(#sda-calculadora) footer,
   body.sda-btu-active .footer,
   body.sda-btu-active footer {
     position: relative !important;
+    bottom: auto !important;
+    top: auto !important;
+    transform: none !important;
     z-index: 1;
+    margin-top: 24px !important;
   }
 </style>
 <!-- CALCULADORA BTUs — 3 ETAPAS | visual laranja/navy | cole TUDO na página adicional WDNA (modo HTML) -->
@@ -529,13 +542,13 @@
 }
 </style>
 <p>
-<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=6"></script>
+<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=7"></script>
 <script>
 (function(){
   setTimeout(function(){
     if(!window.__sdaBtuWizardReady){
       var s=document.createElement("script");
-      s.src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=6";
+      s.src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=7";
       document.body.appendChild(s);
     }
   },2000);

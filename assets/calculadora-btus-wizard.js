@@ -394,22 +394,58 @@
   }
 
   function findSiteFooter() {
-    return (
-      document.querySelector('footer') ||
-      document.querySelector('.footer') ||
-      document.querySelector('#footer') ||
-      document.querySelector('[class*="footer"]')
-    );
+    var candidates = document.querySelectorAll('footer, .footer, #footer');
+    var i;
+    for (i = 0; i < candidates.length; i++) {
+      var el = candidates[i];
+      if (!el || !root) continue;
+      if (el === root || root.contains(el)) continue;
+      return el;
+    }
+    return null;
   }
 
-  /** WDNA / JS antigo: calculadora depois do footer no DOM → footer aparece em cima */
+  function markPageActive() {
+    if (document.body && document.body.classList) {
+      document.body.classList.add('sda-btu-active');
+    }
+    if (document.documentElement && document.documentElement.classList) {
+      document.documentElement.classList.add('sda-btu-active');
+    }
+  }
+
+  function injectCriticalStyles() {
+    if (document.getElementById('sda-btu-critical-css')) return;
+    var st = document.createElement('style');
+    st.id = 'sda-btu-critical-css';
+    st.textContent =
+      '#sda-calculadora .step-card{display:none!important}' +
+      '#sda-calculadora .step-card.active{display:block!important}' +
+      '#sda-calculadora .result:not(.show){display:none!important}' +
+      'body.sda-btu-active #sda-calculadora,body:has(#sda-calculadora) #sda-calculadora{' +
+      'display:block!important;clear:both!important;position:relative!important;z-index:5!important;' +
+      'margin-bottom:96px!important;padding-bottom:64px!important;width:100%!important}' +
+      'body.sda-btu-active footer,body.sda-btu-active .footer,' +
+      'body:has(#sda-calculadora) footer,body:has(#sda-calculadora) .footer{' +
+      'position:relative!important;bottom:auto!important;top:auto!important;' +
+      'transform:none!important;z-index:1!important;margin-top:24px!important}';
+    (document.head || document.body || document.documentElement).appendChild(st);
+  }
+
+  /** WDNA: calculadora depois do footer ou presa em container estreito → footer sobrepõe */
   function ensurePlacement() {
     if (!root) return;
     var footer = findSiteFooter();
-    if (!footer || !footer.parentNode) return;
+    var body = document.body;
+    if (!footer || !footer.parentNode || !body) return;
+    if (root.contains(footer)) return;
     var pos = footer.compareDocumentPosition(root);
     if (pos & Node.DOCUMENT_POSITION_FOLLOWING) {
       footer.parentNode.insertBefore(root, footer);
+      return;
+    }
+    if (footer.parentNode === body && root.parentNode !== body) {
+      body.insertBefore(root, footer);
     }
   }
 
@@ -419,10 +455,8 @@
     if (window.__SDA_BTU_WIZARD__) return;
     window.__SDA_BTU_WIZARD__ = true;
 
-    if (document.body && document.body.classList) {
-      document.body.classList.add('sda-btu-active');
-    }
-
+    injectCriticalStyles();
+    markPageActive();
     ensurePlacement();
 
     showStep(1);
