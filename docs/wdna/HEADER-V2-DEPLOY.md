@@ -4,13 +4,14 @@
 
 | # | Arquivo no WDNA | Ação |
 |---|-----------------|------|
-| 1 | `assets/header-v2.css` | Criar/substituir |
-| 2 | `assets/favorites.js` | Criar/substituir |
-| 3 | `layout/theme.liquid` | Substituir (links CSS/JS + merge favoritos no login) |
-| 4 | `sections/header.liquid` | **Substituir todo** o header padrão |
-| 5 | `sections/showcase-model-product.liquid` | Substituir (botão coração) |
-| 6 | `sections/favoritos-page.liquid` | Criar |
-| 7 | `templates/page.favoritos.liquid` | Criar |
+| 1 | `assets/header-v2.css` | Criar/substituir (layout do header) |
+| 2 | `assets/favorites.css` | Criar/substituir (**obrigatório** com o JS) |
+| 3 | `assets/favorites.js` | Criar/substituir |
+| 4 | `layout/theme.liquid` | Substituir (links CSS/JS + merge favoritos no login) |
+| 5 | `sections/header.liquid` | **Substituir todo** o header padrão |
+| 6 | `sections/showcase-model-product.liquid` | Substituir (botão coração) |
+| 7 | `sections/favoritos-page.liquid` | Criar |
+| 8 | `templates/page.favoritos.liquid` | Criar |
 
 Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 
