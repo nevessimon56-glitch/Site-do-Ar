@@ -97,6 +97,10 @@
   color: #fff;
 }
 
+.header-v2 .header-utility__account [x-cloak] {
+  display: none !important;
+}
+
 /* —— Faixa principal —— */
 .header-v2 .header-content {
   background: #fff;

@@ -242,6 +242,7 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     {%- endfor -%}
     {% block head %}{% endblock %}
 </head>
+<script>window.__SITE_DOAR_CUSTOMER__ = {{ customer | json }};</script>
 <body x-data="setupStore()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
 {%- for script in scripts.content -%}
     {{ script.code }}
@@ -441,6 +442,15 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     function setupStore() {
         return {
             data: { isLogged: null, user: '' },
+            init: function initStore() {
+                var c = window.__SITE_DOAR_CUSTOMER__;
+                if (c) {
+                    this.changeCustomerLogin(c);
+                } else {
+                    this.data.isLogged = false;
+                    this.data.user = '';
+                }
+            },
             headerLogout: function headerLogout() {
                 StoreSDK.request.post('/ajax/logout').then((res) => {
                     window.location.href = window.location.href
@@ -448,8 +458,10 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
             },
             changeCustomerLogin: function changeCustomerLogin(customer) {
                 this.data.isLogged = !!customer;
-                if(customer){
-                    this.data.user = customer.name || '';
+                if (customer) {
+                    this.data.user = customer.name || customer.fantasyName || '';
+                } else {
+                    this.data.user = '';
                 }
                 window.__SITE_DOAR_CUSTOMER__ = customer || null;
                 if (window.SiteDoarFavorites && typeof window.SiteDoarFavorites.mergeGuestOnLogin === 'function') {
@@ -489,8 +501,8 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
             },
         }
     }
-    const customer = {{ customer | json }};
-    window.__SITE_DOAR_CUSTOMER__ = customer || null;
+    window.__SITE_DOAR_CUSTOMER__ = {{ customer | json }} || null;
+    const customer = window.__SITE_DOAR_CUSTOMER__;
     if (typeof mb_track !== 'undefined') {
         mb_track('setRecoveryUrl', 'https://{{ store.url }}/checkout');
     }

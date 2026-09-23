@@ -31,9 +31,12 @@
                 </li>
             </ul>
             {% if themeConfig.account.type != 'disabled' %}
-                <button type="button" class="header-utility__account" title="Entre ou cadastre-se" onclick="openSideNavOverlay('.sidenav-overlay_account', true)">
+                <button type="button" class="header-utility__account" onclick="openSideNavOverlay('.sidenav-overlay_account', true)"
+                    x-bind:title="data.isLogged ? (data.user ? 'Olá, ' + data.user : 'Minha conta') : 'Entre ou cadastre-se'">
                     <span class="header-utility__icon">{{ iconUser }}</span>
-                    <span class="header-utility__label">Entre ou cadastre-se</span>
+                    <span class="header-utility__label" x-show="data.isLogged" x-cloak
+                        x-text="data.user ? ('Olá, ' + data.user.trim().split(/\\s+/)[0]) : 'Olá'"></span>
+                    <span class="header-utility__label" x-show="!data.isLogged" x-cloak>Entre ou cadastre-se</span>
                 </button>
             {% endif %}
         </div>
