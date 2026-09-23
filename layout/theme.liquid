@@ -344,8 +344,28 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     if (document.querySelector('.header.header-v2')) {
       navContent.classList.remove('sda-mobile-nav-strip--3', 'sda-mobile-nav-revealed');
       var allItems = navContent.querySelectorAll('.nav-main_item');
+      var mobileNavShown = 0;
+      var mobileNavMax = 6;
       for (var vi = 0; vi < allItems.length; vi++) {
-        allItems[vi].style.display = '';
+        var item = allItems[vi];
+        item.classList.remove('nav-main_item--nav-hidden-mobile');
+        var link = item.querySelector('a.nav-main_link');
+        var label = (link && link.textContent ? link.textContent : '').replace(/\s+/g, ' ').trim().toLowerCase();
+        var hide =
+          label.indexOf('todos os produtos') !== -1 ||
+          (link && link.getAttribute('href') || '').toLowerCase().indexOf('todos-os-produtos') !== -1;
+        if (hide) {
+          item.classList.add('nav-main_item--nav-hidden-mobile');
+          item.style.display = 'none';
+          continue;
+        }
+        if (mobileNavShown >= mobileNavMax) {
+          item.classList.add('nav-main_item--nav-hidden-mobile');
+          item.style.display = 'none';
+          continue;
+        }
+        item.style.display = '';
+        mobileNavShown++;
       }
       return;
     }

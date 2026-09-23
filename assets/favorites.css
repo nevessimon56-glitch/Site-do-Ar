@@ -421,3 +421,37 @@
   border-top: 1px solid var(--fav-border);
   padding-top: 12px;
 }
+
+/* —— Mobile: coração à esquerda, abaixo do selo 5% OFF (comparar fica no canto direito) —— */
+@media (max-width: 991px) {
+  .showcase-product.card .showcase-product_image .showcase-favorite-btn,
+  .showcase-product.card .showcase-product_image [data-favorite-toggle],
+  .showcase-product.card .card-image .showcase-favorite-btn {
+    top: 28px;
+    right: auto;
+    left: 6px;
+    width: 30px;
+    height: 30px;
+    z-index: 7;
+  }
+
+  .showcase-product.card .showcase-product_image .showcase-favorite-btn svg,
+  .showcase-product.card .showcase-product_image [data-favorite-toggle] svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Card sem selo de desconto */
+  .showcase-product.card .showcase-product_image:not(:has(.showcase-offer)) .showcase-favorite-btn,
+  .showcase-product.card .showcase-product_image:not(:has(.showcase-offer)) [data-favorite-toggle] {
+    top: 8px;
+  }
+
+  /* Dois selos (ex.: promo + frete) */
+  .showcase-product.card .showcase-product_image:has(.showcase-offer ~ .showcase-offer) .showcase-favorite-btn,
+  .showcase-product.card .showcase-product_image:has(.showcase-offer ~ .showcase-tag) .showcase-favorite-btn,
+  .showcase-product.card .showcase-product_image:has(.showcase-offer ~ .showcase-offer) [data-favorite-toggle],
+  .showcase-product.card .showcase-product_image:has(.showcase-offer ~ .showcase-tag) [data-favorite-toggle] {
+    top: 44px;
+  }
+}
