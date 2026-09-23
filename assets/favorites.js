@@ -207,52 +207,40 @@
 
   function buildPanelItemHtml(p) {
     return (
-      '<section class="cart-section favorites-panel__item" data-favorite-id="' +
+      '<article class="favorites-panel__item" data-favorite-id="' +
       escapeAttr(p.id) +
       '">' +
-      '<div class="cart-image float-left">' +
-      '<a class="cart-image_link" href="' +
+      '<a class="favorites-panel__thumb" href="' +
       escapeAttr(p.url) +
       '" title="' +
       escapeAttr(p.title) +
       '">' +
       (p.image
-        ? '<picture><img src="' +
+        ? '<img src="' +
           escapeAttr(p.image) +
           '" alt="' +
           escapeAttr(p.title) +
-          '" loading="lazy"></picture>'
+          '" loading="lazy">'
         : '') +
       '</a>' +
-      '</div>' +
-      '<div class="cart-product float-right">' +
-      '<div class="columns">' +
-      '<div class="cart-product_header col-12 column">' +
-      '<a class="cart-product_title float-left" href="' +
+      '<div class="favorites-panel__info">' +
+      '<div class="favorites-panel__head">' +
+      '<a class="favorites-panel__title" href="' +
       escapeAttr(p.url) +
-      '" title="' +
-      escapeAttr(p.title) +
       '">' +
       escapeHtml(p.title) +
       '</a>' +
-      '<a class="btn-cartItem_delete float-right" href="javascript:void(0)" data-favorite-remove="' +
+      '<button type="button" class="favorites-panel__remove" data-favorite-remove="' +
       escapeAttr(p.id) +
       '" aria-label="Remover dos favoritos">' +
       PANEL_REMOVE_ICON +
-      '</a>' +
+      '</button>' +
       '</div>' +
-      (p.price
-        ? '<div class="cart-product_prices col-12 column">' +
-          '<div class="cart-product_price"><p class="cart-price_total favorites-panel__price">' +
-          escapeHtml(p.price) +
-          '</p></div></div>'
-        : '') +
-      '<div class="col-12 column favorites-panel__view">' +
-      '<a class="btn btn-sm col-12" href="' +
+      (p.price ? '<p class="favorites-panel__price">' + escapeHtml(p.price) + '</p>' : '') +
+      '<a class="favorites-panel__cta" href="' +
       escapeAttr(p.url) +
       '">Ver produto</a>' +
-      '</div>' +
-      '</div></div></section>'
+      '</div></article>'
     );
   }
 
@@ -306,7 +294,7 @@
           '<h3 class="favoritos-card__title"><a href="' + escapeAttr(p.url) + '">' + escapeHtml(p.title) + '</a></h3>' +
           (p.price ? '<p class="favoritos-card__price">' + escapeHtml(p.price) + '</p>' : '') +
           '<div class="favoritos-card__actions">' +
-            '<a class="btn btn-primary" href="' + escapeAttr(p.url) + '">Ver produto</a>' +
+            '<a class="favoritos-card__cta" href="' + escapeAttr(p.url) + '">Ver produto</a>' +
             '<button type="button" class="favoritos-card__remove" data-favorite-remove="' + escapeAttr(p.id) + '">Remover</button>' +
           '</div>' +
         '</div>';
