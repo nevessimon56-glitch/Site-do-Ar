@@ -341,6 +341,14 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     }
     var navContent = document.querySelector('.header > .nav-content');
     if (!navContent) return;
+    if (document.querySelector('.header.header-v2')) {
+      navContent.classList.remove('sda-mobile-nav-strip--3', 'sda-mobile-nav-revealed');
+      var allItems = navContent.querySelectorAll('.nav-main_item');
+      for (var vi = 0; vi < allItems.length; vi++) {
+        allItems[vi].style.display = '';
+      }
+      return;
+    }
     var navMain = navContent.querySelector('.nav-main');
     if (!navMain) return;
     var items = [];
@@ -397,6 +405,10 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
         nav.classList.remove('is-fixed-top');
         spacer.style.height = '0';
         if (typeof window.initSdaMobileNavStrip === 'function') window.initSdaMobileNavStrip();
+        if (document.querySelector('.header.header-v2')) {
+          nav.classList.remove('sda-mobile-nav-revealed', 'sda-mobile-nav-strip--3');
+          return;
+        }
         if (readScrollY() >= getMobileRevealAt() - 1) {
           nav.classList.add('sda-mobile-nav-revealed', 'sda-mobile-nav-strip--3');
         } else {

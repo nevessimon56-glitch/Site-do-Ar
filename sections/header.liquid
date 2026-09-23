@@ -58,10 +58,10 @@
                 </div>
 
                 <div class="header-v2-search search-desktop hide-lg">
-                    <form id="myForm2" method="POST" action="">
+                    <form id="myForm2Desktop" method="POST" action="">
                         <div class="input-group">
-                            <input type="search" id="term2" class="form-input" placeholder="Busque por produto, marca ou modelo" autocomplete="off">
-                            <button class="btn" type="button" title="Buscar" onclick="alterForm2()">
+                            <input type="search" id="term2Desktop" class="form-input" placeholder="Busque por produto, marca ou modelo" autocomplete="off">
+                            <button class="btn" type="button" title="Buscar" onclick="alterForm2Desktop()">
                                 {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
                             </button>
                         </div>
@@ -93,9 +93,8 @@
                 </div>
 
                 <div class="navbar-section header-v2-mobile-tools show-lg">
-                    <a class="header-v2-action header-v2-action--compact" href="javascript:void(0)" title="Favoritos" onclick="openFavoritesPanel()">
-                        <span class="header-v2-action__icon">{{ iconHeartOutline }}</span>
-                        <span class="header-v2-action__badge" data-favorites-count data-count="0">0</span>
+                    <a class="header-v2-mobile-search-btn" href="javascript:void(0)" title="Busca" onclick="headerV2FocusMobileSearch()">
+                        {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
                     </a>
                     {% if themeConfig.cart.type == 'default' %}
                         <a class="header-link header-link_cart cart_link" href="javascript:void(0)" title="Carrinho" {% if themeConfig.buyAction.type == "login" %}@click="openSideNavOverlayCartB2B()"{% else %}onclick="openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true})"{% endif %}>
@@ -107,18 +106,24 @@
                             <span class="cart_quantity" data-cart-quantity>{{ cartQtdMobile }}</span>
                         </a>
                     {% endif %}
-                    <a class="header-link header-link_search search_link" href="javascript:void(0)" title="Busca" onclick="openSearch()">
-                        <div class="icon-search">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </div>
-                    </a>
                     <a class="header-link header-link_menu__mobile menu-mobile_link" href="javascript:void(0)" title="Menu Mobile" onclick="openNavMobile()">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
                 </div>
+            </div>
+
+            <div class="header-v2-search-pill show-lg">
+                <form id="myForm2" method="POST" action="" class="header-v2-search-pill__form">
+                    <label class="header-v2-search-pill__field">
+                        <span class="header-v2-search-pill__icon" aria-hidden="true">
+                            {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
+                        </span>
+                        <input type="search" id="term2" class="form-input header-v2-search-pill__input" placeholder="Busque por produto, marca ou modelo" autocomplete="off" onkeydown="if (event.key === 'Enter') { event.preventDefault(); alterForm2(); }">
+                    </label>
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                </form>
             </div>
 
             <div class="search close">
@@ -135,11 +140,12 @@
         </div>
     </div>
 
-    <div class="nav-content content hide-lg header-v2-nav-row">
-        <div class="container header-v2-nav-inner">
+    <div class="nav-content content header-v2-nav-row">
+        <div class="container header-v2-nav-inner header-v2-nav-inner--scroll">
             <a class="header-v2-cta-ambiente" href="/pagina/calculadora-btus" title="Compre por ambiente">
                 {{ iconHome }}
                 <span class="header-v2-cta-ambiente__text">Compre por ambiente</span>
+                <span class="header-v2-cta-ambiente__chev" aria-hidden="true">▾</span>
             </a>
             <nav class="nav-main">
                 {% for menuItem in menu.items limit: 7 %}
@@ -347,13 +353,41 @@
         }
 
         function alterForm2() {
-            var input = document.getElementById("term2").value;
+            var inputEl = document.getElementById('term2');
+            var formEl = document.getElementById('myForm2');
+            if (!inputEl || !formEl) return;
+            var input = inputEl.value;
             if (input.length > 0) {
-                document.getElementById("myForm2").action = '/busca/' + encodeURI(input).replace(/\//g, '%2f');
-                document.getElementById("myForm2").submit();
+                formEl.action = '/busca/' + encodeURI(input).replace(/\//g, '%2f');
+                formEl.submit();
             } else {
                 window.location.href = window.location.protocol + '//' + window.location.host + '/busca/';
             }
+        }
+
+        function alterForm2Desktop() {
+            var inputEl = document.getElementById('term2Desktop');
+            var formEl = document.getElementById('myForm2Desktop');
+            if (!inputEl || !formEl) return;
+            var input = inputEl.value;
+            if (input.length > 0) {
+                formEl.action = '/busca/' + encodeURI(input).replace(/\//g, '%2f');
+                formEl.submit();
+            } else {
+                window.location.href = window.location.protocol + '//' + window.location.host + '/busca/';
+            }
+        }
+
+        function headerV2FocusMobileSearch() {
+            var input = document.getElementById('term2');
+            if (!input) {
+                openSearch();
+                return;
+            }
+            input.focus();
+            try {
+                input.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (e) {}
         }
     </script>
 </header>
