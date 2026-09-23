@@ -4,7 +4,7 @@
 
 | Peça | Arquivo | Função |
 |------|---------|--------|
-| Coração no card | `sections/showcase-model-product.liquid` | Botão no canto superior direito (ideal) |
+| Coração no card | `sections/showcase-model-product.liquid` | v4 (Pix/specs/comparar) + botão canto superior direito |
 | Fallback automático | `assets/favorites.js` | Coloca o coração em **qualquer** `.showcase-product.card` (ex.: template `v3-site-price` da loja) |
 | Visual | `assets/favorites.css` | Estilo do coração + página de favoritos |
 | Lógica | `assets/favorites.js` | Salvar/remover, contador no header, `/pagina/favoritos` |
