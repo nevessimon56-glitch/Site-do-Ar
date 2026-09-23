@@ -1,16 +1,13 @@
 /**
- * Calculadora BTUs — wizard 3 etapas (#sda-calculadora, data-next/prev/calc)
- * Compatível WDNA: delegação de clique + funções globais de fallback.
+ * Calculadora BTUs — página única (layout laranja/navy, sem wizard).
+ * Use com #sda-calculadora.sda-calc-single — NÃO carregar calculadora-btus-wizard.js junto.
  */
 (function () {
   'use strict';
 
-  if (window.__SDA_BTU_WIZARD__ || window.__SDA_BTU_SINGLE__) return;
+  if (window.__SDA_BTU_SINGLE__) return;
 
   var root = null;
-  var step = 1;
-  var TOTAL = 3;
-  var navLock = false;
 
   var catalog = [
     { btu: 9000, label: '9.000', tipo: 'Split Inverter', url: '/split-inverter/9000-btus' },
@@ -79,53 +76,6 @@
     return catalog[Math.max(0, Math.min(catalog.length - 1, i))];
   }
 
-  function errorElForStep(n) {
-    return get('sda-error-step' + n) || get('sda-error');
-  }
-
-  function hideAllErrors() {
-    var s;
-    for (s = 1; s <= TOTAL; s++) {
-      var el = errorElForStep(s);
-      if (el) {
-        el.classList.remove('show');
-        el.style.display = 'none';
-      }
-    }
-  }
-
-  function showError(stepNum, msg) {
-    hideAllErrors();
-    var el = errorElForStep(stepNum);
-    if (el) {
-      el.textContent = msg;
-      el.classList.add('show');
-      el.style.display = 'block';
-    }
-  }
-
-  function showStep(n) {
-    if (!root) return;
-    step = n;
-    var cards = root.querySelectorAll('.step-card');
-    var ci;
-    for (ci = 0; ci < cards.length; ci++) {
-      var sn = parseInt(cards[ci].getAttribute('data-step'), 10);
-      if (sn === n) cards[ci].classList.add('active');
-      else cards[ci].classList.remove('active');
-    }
-    var bar = get('sda-progressBar');
-    var txt = get('sda-progressText');
-    if (bar) bar.style.width = (n / TOTAL) * 100 + '%';
-    if (txt) txt.textContent = 'Etapa ' + n + ' de ' + TOTAL;
-    hideAllErrors();
-    try {
-      window.scrollTo({ top: root.getBoundingClientRect().top + window.scrollY - 12, behavior: 'smooth' });
-    } catch (e) {
-      window.scrollTo(0, root.offsetTop - 12);
-    }
-  }
-
   function markField(id, bad) {
     var el = get(id);
     if (el && el.closest) {
@@ -134,30 +84,43 @@
     }
   }
 
-  function validate(n) {
-    var msg = '';
-    if (n === 1) {
-      var c = parseNum('sda-comp', NaN);
-      var l = parseNum('sda-larg', NaN);
-      markField('sda-comp', !(c > 0));
-      markField('sda-larg', !(l > 0));
-      if (!(c > 0) && !(l > 0)) msg = 'Informe o comprimento e a largura do ambiente para continuar.';
-      else if (!(c > 0)) msg = 'Informe o comprimento do ambiente para continuar.';
-      else if (!(l > 0)) msg = 'Informe a largura do ambiente para continuar.';
+  function showError(msg) {
+    var el = get('sda-error');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    el.style.display = 'block';
+  }
+
+  function hideError() {
+    var el = get('sda-error');
+    if (el) {
+      el.classList.remove('show');
+      el.style.display = 'none';
     }
+  }
+
+  function validate() {
+    var c = parseNum('sda-comp', NaN);
+    var l = parseNum('sda-larg', NaN);
+    markField('sda-comp', !(c > 0));
+    markField('sda-larg', !(l > 0));
+    var msg = '';
+    if (!(c > 0) && !(l > 0)) msg = 'Informe o comprimento e a largura do ambiente.';
+    else if (!(c > 0)) msg = 'Informe o comprimento do ambiente.';
+    else if (!(l > 0)) msg = 'Informe a largura do ambiente.';
     if (msg) {
-      showError(n, msg);
+      showError(msg);
       return false;
     }
-    hideAllErrors();
+    hideError();
     return true;
   }
 
-  function calculate() {
-    if (!validate(1)) {
-      showStep(1);
-      return false;
-    }
+  function calculate(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    if (!validate()) return false;
+
     var comp = parseNum('sda-comp', 0);
     var larg = parseNum('sda-larg', 0);
     var pe = parseNum('sda-pe', 2.6);
@@ -337,35 +300,6 @@
     return false;
   }
 
-  function withNavLock(fn) {
-    if (navLock) return false;
-    navLock = true;
-    try {
-      return fn();
-    } finally {
-      setTimeout(function () {
-        navLock = false;
-      }, 350);
-    }
-  }
-
-  function goNext(ev) {
-    if (ev && ev.preventDefault) ev.preventDefault();
-    return withNavLock(function () {
-      if (!validate(step)) return false;
-      showStep(Math.min(TOTAL, step + 1));
-      return false;
-    });
-  }
-
-  function goPrev(ev) {
-    if (ev && ev.preventDefault) ev.preventDefault();
-    return withNavLock(function () {
-      showStep(Math.max(1, step - 1));
-      return false;
-    });
-  }
-
   function resetCalc(ev) {
     if (ev && ev.preventDefault) ev.preventDefault();
     var resultBox = get('sda-resultBox');
@@ -373,95 +307,55 @@
       resultBox.classList.remove('show');
       resultBox.style.display = 'none';
     }
-    var pe = get('sda-pe');
-    var pessoas = get('sda-pessoas');
-    if (pe) pe.value = '2,6';
-    if (pessoas) pessoas.value = '2';
-    showStep(1);
+    hideError();
+    markField('sda-comp', false);
+    markField('sda-larg', false);
+    try {
+      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e3) {
+      root.scrollIntoView();
+    }
     return false;
   }
 
-  function bindDelegation() {
+  function markPageActive() {
+    document.documentElement.classList.add('sda-btu-page', 'sda-btu-active');
+    if (document.body) document.body.classList.add('sda-btu-page', 'sda-btu-active');
+  }
+
+  function bind() {
     document.addEventListener(
       'click',
       function (e) {
         if (!root) return;
         var t = e.target;
         if (!t || !root.contains(t)) return;
-        var nextBtn = t.closest ? t.closest('[data-next]') : null;
-        var prevBtn = t.closest ? t.closest('[data-prev]') : null;
-        var calcBtn = t.closest ? t.closest('[data-calc-submit]') : null;
-        var resetBtn = t.id === 'sda-reset' ? t : t.closest ? t.closest('#sda-reset') : null;
-        if (nextBtn) {
+        if (t.closest && t.closest('[data-calc-submit]')) {
           e.preventDefault();
-          e.stopImmediatePropagation();
-          goNext(e);
-        } else if (prevBtn) {
+          calculate(e);
+        } else if (t.id === 'sda-reset' || (t.closest && t.closest('#sda-reset'))) {
           e.preventDefault();
-          e.stopImmediatePropagation();
-          goPrev(e);
-        } else if (calcBtn) {
-          e.preventDefault();
-          e.stopImmediatePropagation();
-          calculate();
-        } else if (resetBtn) {
-          e.preventDefault();
-          e.stopImmediatePropagation();
           resetCalc(e);
         }
       },
-      true
+      false
     );
-  }
-
-  function markPageActive() {
-    if (document.body && document.body.classList) {
-      document.body.classList.add('sda-btu-active');
-    }
-    if (document.documentElement && document.documentElement.classList) {
-      document.documentElement.classList.add('sda-btu-active');
-    }
-  }
-
-  function injectCriticalStyles() {
-    if (document.getElementById('sda-btu-critical-css')) return;
-    var st = document.createElement('style');
-    st.id = 'sda-btu-critical-css';
-    st.textContent =
-      '#sda-calculadora .step-card{display:none!important}' +
-      '#sda-calculadora .step-card.active{display:block!important}' +
-      '#sda-calculadora .result:not(.show){display:none!important}' +
-      'body.sda-btu-active #sda-calculadora,body:has(#sda-calculadora) #sda-calculadora{' +
-      'display:block!important;clear:both!important;position:relative!important;z-index:2!important;' +
-      'margin-bottom:24px!important;padding-bottom:32px!important;width:100%!important}' +
-      'body.sda-btu-active footer,body.sda-btu-active .footer,' +
-      'body:has(#sda-calculadora) footer,body:has(#sda-calculadora) .footer{' +
-      'position:relative!important;bottom:auto!important;top:auto!important;' +
-      'transform:none!important;z-index:1!important;margin-top:24px!important}';
-    (document.head || document.body || document.documentElement).appendChild(st);
   }
 
   function init() {
     root = document.getElementById('sda-calculadora');
-    if (!root) return;
-    if (window.__SDA_BTU_WIZARD__) return;
-    window.__SDA_BTU_WIZARD__ = true;
-
-    injectCriticalStyles();
+    if (!root || !root.classList.contains('sda-calc-single')) return;
+    window.__SDA_BTU_SINGLE__ = true;
     markPageActive();
-
-    showStep(1);
-    bindDelegation();
+    bind();
     if (typeof window.sdaBtuApplyLayoutFix === 'function') {
       window.sdaBtuApplyLayoutFix();
     }
-    window.__sdaBtuWizardReady = true;
+    window.__sdaBtuSingleReady = true;
   }
 
-  window.sdaWizardNext = goNext;
-  window.sdaWizardPrev = goPrev;
-  window.sdaWizardCalc = calculate;
-  window.sdaWizardReset = resetCalc;
+  window.sdaBtuCalcular = calculate;
+  window.sdaBtuReset = resetCalc;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
