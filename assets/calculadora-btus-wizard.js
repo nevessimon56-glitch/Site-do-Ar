@@ -36,9 +36,9 @@
   };
 
   var labels = {
-    sol: { sem_sol: 'Sem sol direto', sol_manha: 'Sol pela manhã', sol_tarde: 'Sol à tarde' },
-    uso: { quarto: 'Quarto', sala: 'Sala/escritório', cozinha: 'Cozinha', comercio: 'Comércio' },
-    andar: { terreo: 'Térreo', intermediario: 'Andar intermediário', cobertura: 'Cobertura' },
+    sol: { sem_sol: 'Sem sol direto', sol_manha: 'Sol pela manh\u00e3', sol_tarde: 'Sol \u00e0 tarde' },
+    uso: { quarto: 'Quarto', sala: 'Sala/escrit\u00f3rio', cozinha: 'Cozinha', comercio: 'Com\u00e9rcio' },
+    andar: { terreo: 'T\u00e9rreo', intermediario: 'Andar intermedi\u00e1rio', cobertura: 'Cobertura' },
     janelas: { poucas: 'Poucas janelas', moderadas: 'Janelas moderadas', muitas: 'Muitas janelas' },
     isol: { bom: 'Isolamento bom', regular: 'Isolamento regular', ruim: 'Isolamento ruim' },
     layout: { fechado: 'Ambiente fechado', planta_aberta: 'Planta aberta', mezanino: 'Mezanino' },
@@ -207,9 +207,9 @@
     if (resultNum) resultNum.innerHTML = fmt(load) + ' <span>BTUs/h</span>';
     if (resultSub) {
       resultSub.textContent =
-        'Carga térmica estimada para ' +
+        'Carga t\u00e9rmica estimada para ' +
         area.toFixed(1).replace('.', ',') +
-        ' m² · ' +
+        ' m\u00b2 \u00b7 ' +
         pessoas +
         ' pessoa' +
         (pessoas > 1 ? 's' : '') +
@@ -219,8 +219,8 @@
     if (recText) {
       recText.textContent =
         load === rec.btu
-          ? 'A capacidade calculada coincide com uma opção comercial.'
-          : 'A carga calculada fica entre capacidades comerciais; recomendamos a próxima faixa para evitar subdimensionamento.';
+          ? 'A capacidade calculada coincide com uma op\u00e7\u00e3o comercial.'
+          : 'A carga calculada fica entre capacidades comerciais; recomendamos a pr\u00f3xima faixa para evitar subdimensionamento.';
     }
 
     var infoGrid = get('sda-infoGrid');
@@ -228,7 +228,7 @@
       infoGrid.innerHTML =
         '<div class="info-item"><div class="info-val">' +
         area.toFixed(1).replace('.', ',') +
-        ' m²</div><div class="info-key">Área total</div></div><div class="info-item"><div class="info-val">' +
+        ' m\u00b2</div><div class="info-key">\u00c1rea total</div></div><div class="info-item"><div class="info-val">' +
         fmt(Math.round(base)) +
         '</div><div class="info-key">Carga base</div></div><div class="info-item"><div class="info-val">' +
         rec.tipo +
@@ -236,9 +236,9 @@
     }
 
     var keys = [
-      ['sol', 'Insolação'],
+      ['sol', 'Insola\u00e7\u00e3o'],
       ['uso', 'Uso'],
-      ['pe', 'Pé-direito'],
+      ['pe', 'P\u00e9-direito'],
       ['andar', 'Andar'],
       ['janelas', 'Janelas'],
       ['isol', 'Isolamento'],
@@ -255,11 +255,11 @@
         var key = keys[xi][0];
         if (key === 'pe' && pe <= 3) continue;
         var label =
-          key === 'pe' ? 'Pé-direito acima de 3 m' : labels[key][p[key]] || p[key];
+          key === 'pe' ? 'P\u00e9-direito acima de 3 m' : labels[key][p[key]] || p[key];
         html +=
           '<div class="breakdown-item"><span>' +
           keys[xi][1] +
-          ' · ' +
+          ' \u00b7 ' +
           label +
           '</span><span>' +
           pct(fs[key]) +
@@ -292,18 +292,18 @@
     var recCards = get('sda-recCards');
     if (recCards) {
       recCards.innerHTML =
-        card('Mínimo', min, '', 'Para ambientes menores') +
-        card('Recomendado', rec, 'recommended', 'Faixa indicada para o cálculo') +
-        card('Com folga', max, '', 'Margem extra de potência');
+        card('M\u00ednimo', min, '', 'Para ambientes menores') +
+        card('Recomendado', rec, 'recommended', 'Faixa indicada para o c\u00e1lculo') +
+        card('Com folga', max, '', 'Margem extra de pot\u00eancia');
     }
 
     var tip =
-      'Evite escolher abaixo da recomendação: um aparelho subdimensionado trabalha mais e pode aumentar o consumo.';
+      'Evite escolher abaixo da recomenda\u00e7\u00e3o: um aparelho subdimensionado trabalha mais e pode aumentar o consumo.';
     if (p.layout !== 'fechado') {
-      tip = 'Planta aberta: considere a posição do aparelho e a possibilidade de mais de uma unidade.';
+      tip = 'Planta aberta: considere a posi\u00e7\u00e3o do aparelho e a possibilidade de mais de uma unidade.';
     }
     if (p.clima === 'frio_inverno' || val('sda-ciclo') === 'quente_frio') {
-      tip = 'Como há necessidade de aquecimento, prefira um modelo com ciclo quente e frio.';
+      tip = 'Como h\u00e1 necessidade de aquecimento, prefira um modelo com ciclo quente e frio.';
     }
     var tipBox = get('sda-tipBox');
     if (tipBox) tipBox.textContent = tip;
@@ -313,11 +313,11 @@
       wa.href =
         'https://wa.me/5519984176960?text=' +
         encodeURIComponent(
-          'Olá! Calculei ' +
+          'Ol\u00e1! Calculei ' +
             rec.label +
             ' BTUs para um ambiente de ' +
             area.toFixed(1) +
-            ' m² e gostaria de ajuda para escolher o aparelho.'
+            ' m\u00b2 e gostaria de ajuda para escolher o aparelho.'
         );
     }
 
