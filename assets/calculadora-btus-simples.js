@@ -1,4 +1,3 @@
-<script>
 (function () {
   'use strict';
   window.SDA_CALC = window.SDA_CALC || { lojaUrl: 'https://www.sitedoar.com.br' };
@@ -268,26 +267,6 @@
     return true;
   }
 
-  function attachDocClick() {
-    if (window.__SDA_CALC_DOC_CLICK) return;
-    window.__SDA_CALC_DOC_CLICK = true;
-    document.addEventListener(
-      'click',
-      function (ev) {
-        var t = ev.target;
-        if (!t || !t.closest) return;
-        if (t.id === 'sda-btn-calc' || t.closest('#sda-btn-calc')) {
-          ev.preventDefault();
-          if (window.sdaCalcular) window.sdaCalcular(ev);
-        } else if (t.id === 'sda-reset' || t.closest('#sda-reset')) {
-          ev.preventDefault();
-          if (window.sdaCalcReset) window.sdaCalcReset(ev);
-        }
-      },
-      true
-    );
-  }
-
   function boot() {
     if (init()) return;
     var tries = 0;
@@ -313,7 +292,9 @@
 
   if (simpleAlreadyInit) return;
   window.__SDA_CALC_SIMPLE_INIT = true;
-  attachDocClick();
   boot();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else bind();
+  setTimeout(boot, 400);
+  setTimeout(boot, 1500);
+})();
