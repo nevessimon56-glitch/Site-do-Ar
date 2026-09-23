@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meus favoritos — Preview local (dev)</title>
+
+  <!--
+    Dev-only preview of the favorites page (templates/page.favoritos.liquid +
+    sections/favoritos-page.liquid). Renders from localStorage via favorites.js.
+  -->
+  <link rel="stylesheet" href="/assets/favorites.css">
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #1c2b4a; background: #fff; }
+    .harness-banner { background: #2c77bb; color: #fff; padding: 6px 16px; font-size: 12px; font-weight: 600; }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+    .topbar { padding: 12px 0; }
+    .topbar a { color: #2c77bb; font-weight: 700; text-decoration: none; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="harness-banner">DEV PREVIEW — página de favoritos renderizada pelo favorites.js real.</div>
+  <div class="container topbar"><a href="/.cursor/preview/index.html">&larr; Voltar para a vitrine</a></div>
+
+  <!-- sections/favoritos-page.liquid -->
+  <div class="favoritos-page content">
+    <div class="container">
+      <h1 class="favoritos-page__title">Meus favoritos</h1>
+      <p class="favoritos-page__subtitle">Produtos que você salvou para comparar ou comprar depois.</p>
+
+      <div id="favoritos-page-empty" class="favoritos-page__empty" hidden>
+        <p>Você ainda não favoritou nenhum produto.</p>
+        <a class="btn btn-primary" href="/.cursor/preview/index.html">Ver catálogo</a>
+      </div>
+
+      <ul id="favoritos-page-grid" class="favoritos-page__grid" aria-live="polite"></ul>
+    </div>
+  </div>
+
+  <script src="/assets/favorites.js" defer></script>
+</body>
+</html>
