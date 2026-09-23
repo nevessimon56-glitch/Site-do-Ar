@@ -5,7 +5,7 @@
 ## Arquivo
 
 `docs/wdna/calculadora-btus-simples.html`  
-Versão no topo: **`calculadora-btus-simples-v2-visual`**
+Versão no topo do arquivo: **`v5-pronto`** (WDNA: resultado visível + Ver modelos)
 
 - **Funcional:** uma tela, botão **Calcular BTUs**, JS inline (`window.sdaCalcular`).
 - **Visual:** hero azul/laranja Site do Ar, 3 blocos numerados, resultado em destaque.
