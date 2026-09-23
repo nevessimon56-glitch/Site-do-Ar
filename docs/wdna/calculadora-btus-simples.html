@@ -1,4 +1,4 @@
-<!-- CALCULADORA BTUs WDNA v7-result-box (igual lógica v4 original) — cole TUDO na página adicional -->
+<!-- CALCULADORA BTUs WDNA v8-scroll-fix (lógica v4) — cole TUDO na página adicional -->
 <style>
   body.sda-btu-active #sda-calc-app,
   body:has(#sda-calc-app) #sda-calc-app,
@@ -202,9 +202,8 @@
 <script>
 (function () {
   'use strict';
-  if (window.__SDA_CALC_READY) return;
-  window.__SDA_CALC_READY = true;
   window.SDA_CALC = window.SDA_CALC || { lojaUrl: 'https://www.sitedoar.com.br' };
+  var simpleAlreadyInit = window.__SDA_CALC_SIMPLE_INIT === true;
 
   var root = null;
   var bound = false;
@@ -293,7 +292,12 @@
     box.style.display = 'block';
     box.style.visibility = 'visible';
     box.style.opacity = '1';
-    try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e1) { box.scrollIntoView(); }
+    if (box.scrollIntoView) {
+      try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+      catch (e1) {
+        try { box.scrollIntoView(); } catch (e2) {}
+      }
+    }
   }
   function showCalcError(msg) {
     var err = $('sda-error');
@@ -496,12 +500,25 @@
 
   window.sdaCalcular = sdaCalcular;
   window.sdaCalcReset = resetCalc;
-  attachDocClick();
+
+  if (!window.__SDA_CALC_CLICK_BOUND) {
+    window.__SDA_CALC_CLICK_BOUND = true;
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t) return;
+      if (t.id === 'sda-btn-calc' || (t.closest && t.closest('#sda-btn-calc'))) {
+        sdaCalcular(e);
+      }
+    });
+  }
+
+  if (simpleAlreadyInit) return;
+  window.__SDA_CALC_SIMPLE_INIT = true;
   boot();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else bind();
   setTimeout(boot, 400);
   setTimeout(boot, 1500);
 })();
 </script>
-<!-- Se o botão não fizer nada: confira se o código acima NÃO aparece como texto na página. Fallback (fora de <p>): -->
-<!-- <script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-simples.js?v=7"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-simples.js?v=8"></script>

@@ -1,9 +1,8 @@
 <script>
 (function () {
   'use strict';
-  if (window.__SDA_CALC_READY) return;
-  window.__SDA_CALC_READY = true;
   window.SDA_CALC = window.SDA_CALC || { lojaUrl: 'https://www.sitedoar.com.br' };
+  var simpleAlreadyInit = window.__SDA_CALC_SIMPLE_INIT === true;
 
   var root = null;
   var bound = false;
@@ -92,7 +91,12 @@
     box.style.display = 'block';
     box.style.visibility = 'visible';
     box.style.opacity = '1';
-    try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e1) { box.scrollIntoView(); }
+    if (box.scrollIntoView) {
+      try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+      catch (e1) {
+        try { box.scrollIntoView(); } catch (e2) {}
+      }
+    }
   }
   function showCalcError(msg) {
     var err = $('sda-error');
@@ -288,3 +292,28 @@
     if (init()) return;
     var tries = 0;
     var iv = setInterval(function () {
+      tries += 1;
+      if (init() || tries > 48) clearInterval(iv);
+    }, 250);
+  }
+
+  window.sdaCalcular = sdaCalcular;
+  window.sdaCalcReset = resetCalc;
+
+  if (!window.__SDA_CALC_CLICK_BOUND) {
+    window.__SDA_CALC_CLICK_BOUND = true;
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t) return;
+      if (t.id === 'sda-btn-calc' || (t.closest && t.closest('#sda-btn-calc'))) {
+        sdaCalcular(e);
+      }
+    });
+  }
+
+  if (simpleAlreadyInit) return;
+  window.__SDA_CALC_SIMPLE_INIT = true;
+  attachDocClick();
+  boot();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else bind();
