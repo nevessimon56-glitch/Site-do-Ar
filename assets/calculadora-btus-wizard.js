@@ -393,14 +393,37 @@
     );
   }
 
+  function findSiteFooter() {
+    return (
+      document.querySelector('footer') ||
+      document.querySelector('.footer') ||
+      document.querySelector('#footer') ||
+      document.querySelector('[class*="footer"]')
+    );
+  }
+
+  /** WDNA / JS antigo: calculadora depois do footer no DOM → footer aparece em cima */
+  function ensurePlacement() {
+    if (!root) return;
+    var footer = findSiteFooter();
+    if (!footer || !footer.parentNode) return;
+    var pos = footer.compareDocumentPosition(root);
+    if (pos & Node.DOCUMENT_POSITION_FOLLOWING) {
+      footer.parentNode.insertBefore(root, footer);
+    }
+  }
+
   function init() {
     root = document.getElementById('sda-calculadora');
     if (!root) return;
     if (window.__SDA_BTU_WIZARD__) return;
     window.__SDA_BTU_WIZARD__ = true;
 
-    /* NÃO mover para document.body (Diagnóstico 360 faz isso no overlay fullscreen).
-       Na calculadora, appendChild colocava o bloco DEPOIS do footer da loja. */
+    if (document.body && document.body.classList) {
+      document.body.classList.add('sda-btu-active');
+    }
+
+    ensurePlacement();
 
     showStep(1);
     bindDelegation();

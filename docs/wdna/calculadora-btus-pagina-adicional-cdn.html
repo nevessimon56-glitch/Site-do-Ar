@@ -6,6 +6,25 @@
 <p></p>
 
 <meta charset="UTF-8">
+<style>
+  /* Ordem correta: calculadora acima do footer da loja */
+  body.sda-btu-active #sda-calculadora,
+  body.sda-btu-active .sda-calc {
+    display: block !important;
+    clear: both !important;
+    width: 100% !important;
+    max-width: 1060px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    position: relative !important;
+    z-index: 2;
+  }
+  body.sda-btu-active .footer,
+  body.sda-btu-active footer {
+    position: relative !important;
+    z-index: 1;
+  }
+</style>
 <!-- CALCULADORA BTUs — 3 ETAPAS | visual laranja/navy | cole TUDO na página adicional WDNA (modo HTML) -->
 <!-- CALCULADORA BTUs — Site do Ar | Cole TODO este arquivo no conteúdo HTML da página adicional WDNA -->
 
@@ -510,13 +529,13 @@
 }
 </style>
 <p>
-<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=6"></script>
 <script>
 (function(){
   setTimeout(function(){
     if(!window.__sdaBtuWizardReady){
       var s=document.createElement("script");
-      s.src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?r=2";
+      s.src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/calculadora-btus-wizard.js?v=6";
       document.body.appendChild(s);
     }
   },2000);
