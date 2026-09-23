@@ -40,10 +40,18 @@ Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 - Tentativa de sync com `/ajax/wishlist` e `/ajax/favorites` (silenciosa se a API não existir).
 - Contador no header: `[data-favorites-count]`.
 
+## Mobile (≤991px)
+
+- Logo + corações / carrinho / busca / menu numa linha (sem barra de busca fixa no topo).
+- Busca abre pelo ícone de lupa (`openSearch`).
+- Faixa de categorias (Split / Piso / Janela) aparece ao rolar a página (`sda-mobile-nav-revealed` no `theme.liquid`).
+- Republicar **`assets/header-v2.css`** e **`assets/mega-menu.css`** após ajustes de vitrine.
+
 ## Testar
 
 - [ ] Faixa azul: Atendimento, Meus pedidos, Entre ou cadastre-se  
 - [ ] Busca, logo, Meus pedidos / Favoritos / Carrinho (desktop)  
+- [ ] Mobile: header sem sobreposição; lupa abre busca; cards 2 col alinhados  
 - [ ] Compre por ambiente + menu + Ofertas da semana  
 - [ ] Mega menu Ar-condicionado  
 - [ ] Coração na vitrine + contador + `/pagina/favoritos`  
