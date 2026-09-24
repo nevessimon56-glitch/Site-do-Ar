@@ -339,10 +339,6 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
       window.initMegaMenuAr();
     }
-    if (window.SiteDoarFavorites && typeof window.SiteDoarFavorites.mergeGuestOnLogin === 'function') {
-      window.SiteDoarFavorites.mergeGuestOnLogin();
-      window.SiteDoarFavorites.refresh();
-    }
   });
 </script>
 <script>
@@ -444,10 +440,17 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     var el = document.querySelector('.loading-main.loading');
     if (el) el.classList.remove('loading');
   }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(sdaHideStuckLoader, 50);
+    });
+  } else {
+    setTimeout(sdaHideStuckLoader, 50);
+  }
   window.addEventListener('load', function () {
     setTimeout(sdaHideStuckLoader, 150);
   });
-  setTimeout(sdaHideStuckLoader, 14000);
+  setTimeout(sdaHideStuckLoader, 12000);
 })();
 </script>
 {% block script_footer %}{% endblock %}

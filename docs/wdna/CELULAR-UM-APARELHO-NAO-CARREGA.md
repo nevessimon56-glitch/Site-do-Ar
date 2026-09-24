@@ -1,6 +1,8 @@
-# Só no meu celular a página não carrega / fica lenta
+# Celular lento ou não carrega a home
 
-Quando **outros aparelhos funcionam** e **só um falha**, quase sempre é **cache**, **dados salvos no navegador** ou **Safari/iOS mais antigo** — não a loja “quebrada” para todo mundo.
+Se **todos os celulares** ficam pesados ou com spinner, a causa costuma ser **JavaScript da vitrine na abertura** (hover de imagem + favoritos observando o DOM inteiro). As correções abaixo estão no repo; publique os arquivos indicados na WDNA.
+
+Quando **só um aparelho** falha, ainda vale **cache/dados locais** ou iOS muito antigo.
 
 ## Teste rápido (2 minutos)
 

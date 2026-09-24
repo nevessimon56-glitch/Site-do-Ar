@@ -228,7 +228,11 @@
     bootHeaderV2Mobile();
   }
 
+  var resizeNavTimer;
   window.addEventListener('resize', function () {
-    if (typeof window.initSdaMobileNavStrip === 'function') window.initSdaMobileNavStrip();
+    clearTimeout(resizeNavTimer);
+    resizeNavTimer = setTimeout(function () {
+      if (typeof window.initSdaMobileNavStrip === 'function') window.initSdaMobileNavStrip();
+    }, 280);
   }, { passive: true });
 })();

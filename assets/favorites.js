@@ -387,9 +387,25 @@
     }
   }
 
+  var favoriteInjectRunning = false;
+
   function bootFavoriteButtons() {
-    injectFavoriteButtons(document);
-    syncToggleButtons();
+    if (favoriteInjectRunning) return;
+    favoriteInjectRunning = true;
+    try {
+      injectFavoriteButtons(document);
+      syncToggleButtons();
+    } finally {
+      favoriteInjectRunning = false;
+    }
+  }
+
+  function isMobileViewport() {
+    try {
+      return window.matchMedia('(max-width: 991px)').matches;
+    } catch (e) {
+      return false;
+    }
   }
 
   function onDocumentClick(e) {
@@ -476,7 +492,7 @@
     injectTimer = setTimeout(bootFavoriteButtons, injectDelay);
   }
 
-  if (typeof MutationObserver !== 'undefined') {
+  if (typeof MutationObserver !== 'undefined' && !isMobileViewport()) {
     var mo = new MutationObserver(function (mutations) {
       for (var i = 0; i < mutations.length; i++) {
         if (mutations[i].addedNodes && mutations[i].addedNodes.length) {
@@ -486,7 +502,8 @@
       }
     });
     document.addEventListener('DOMContentLoaded', function () {
-      mo.observe(document.body, { childList: true, subtree: true });
+      var root = document.querySelector('.main-content, .content-main, #content, main');
+      mo.observe(root || document.body, { childList: true, subtree: true });
     });
   }
 
@@ -496,15 +513,20 @@
       bootFavoriteButtons();
       refreshUI();
     };
-    if (typeof window.requestIdleCallback === 'function') {
-      window.requestIdleCallback(run, { timeout: 2500 });
-    } else {
-      setTimeout(run, 0);
-    }
+    var delay = isMobileViewport() ? 600 : 0;
+    var schedule = function () {
+      if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(run, { timeout: isMobileViewport() ? 4000 : 2500 });
+      } else {
+        setTimeout(run, delay);
+      }
+    };
+    schedule();
   }
 
   document.addEventListener('DOMContentLoaded', bootFavoritesDeferred);
   window.addEventListener('load', function () {
+    if (isMobileViewport()) return;
     setTimeout(function () {
       bootFavoriteButtons();
       refreshUI();
