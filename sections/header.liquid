@@ -17,8 +17,8 @@
   Ex.: https://cdn.../split-inverter.png
   Se preenchido, vence ícone do menu WDNA e SVG local.
 {% endcomment %}
-{% assign sdaMIconSplitUrlUser = 'https://salescdn.net/DkTKglPYM8Xj7l0hM5y21Gsf1xE=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431236301.webp' %}
-{% assign sdaMIconPisoUrlUser = 'https://salescdn.net/42SzyWLpjEDqDDqjWFMPuyRaISQ=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431178000.webp' %}
+{% assign sdaMIconSplitUrlUser = 'https://salescdn.net/42SzyWLpjEDqDDqjWFMPuyRaISQ=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431178000.webp' %}
+{% assign sdaMIconPisoUrlUser = 'https://salescdn.net/DkTKglPYM8Xj7l0hM5y21Gsf1xE=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431236301.webp' %}
 {% assign sdaMIconJanelaUrlUser = 'https://salescdn.net/sH5fPAA4sqDW8yrzb22plaR8ogs=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431109503.webp' %}
 {% assign sdaMIconSplitUrl = sdaMIconSplitUrlUser %}
 {% assign sdaMIconPisoUrl = sdaMIconPisoUrlUser %}
@@ -331,13 +331,7 @@
                 <span class="header-v2-mobile-catalog__label">{{ sdaMLabelJanela }}</span>
             </a>
             <a class="header-v2-mobile-catalog__item header-v2-mobile-catalog__item--ambiente" href="/pagina/calculadora-btus" title="Compre por ambiente">
-                <span class="header-v2-mobile-catalog__icon{% if sdaMIconAmbienteUrlUser == '' %} header-v2-mobile-catalog__icon--orange{% endif %}" aria-hidden="true">
-                    {% if sdaMIconAmbienteUrlUser != '' %}
-                        <img class="header-v2-mcat-img" src="{{ sdaMIconAmbienteUrlUser }}" width="40" height="40" alt="" loading="lazy" decoding="async">
-                    {% else %}
-                        {{ iconHome }}
-                    {% endif %}
-                </span>
+                <span class="header-v2-mobile-catalog__icon header-v2-mobile-catalog__icon--orange" aria-hidden="true">{{ iconHome }}</span>
                 <span class="header-v2-mobile-catalog__label header-v2-mobile-catalog__label--ambiente">
                     <span class="header-v2-mobile-catalog__label-line">Compre por</span>
                     <span class="header-v2-mobile-catalog__label-line header-v2-mobile-catalog__label-accent">ambiente</span>
