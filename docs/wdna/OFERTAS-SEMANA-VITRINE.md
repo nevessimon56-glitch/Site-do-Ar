@@ -1,43 +1,29 @@
-# Ofertas da semana — página imersiva
+# Ofertas da semana — overlay imersivo
 
-O banner/botão **Oferta da semana** no header v2 leva à **página dedicada** (`/pagina/oferta-da-semana`), com layout imersivo (countdown, revelar oferta, pulseira de cards) — **não** abre produto solto nem a vitrine comum da home.
+O banner **Oferta da semana** abre um **painel full-screen** na própria loja (`/#sda-oferta-immersiva`): fundo escuro, countdown, “Revelar oferta”, pulseira de cards e confete. **Não depende** de criar página no admin WDNA.
 
-## Por que não usar o menu WDNA?
+## Por que não `/pagina/...`?
 
-Antes, o tema podia pegar um item do menu cujo nome contém “oferta” e usar o link dele (muitas vezes **URL de um produto**). Isso foi removido: o href é **fixo** em `header.liquid`.
+Sem página customizada configurada, o WDNA manda de volta à home **sem mudança visível**. O overlay vive no `layout/theme.liquid` e funciona em qualquer página após publicar os arquivos abaixo.
 
-## Configurar produtos
+## Publicar no WDNA (obrigatório para ver a experiência)
 
-Edite **`assets/ofertas-semana-config.js`** no tema WDNA:
+| Arquivo |
+|---------|
+| `layout/theme.liquid` (CSS + overlay + script) |
+| `sections/oferta-semana-overlay.liquid` |
+| `sections/header.liquid` |
+| `assets/oferta-semana.css` |
+| `assets/oferta-semana.js` |
+| `assets/ofertas-semana-config.js` |
+| `assets/ofertas-semana-home.js` (opcional: destaque na vitrine da home) |
 
-```javascript
-products: [
-  {
-    url: 'https://...',
-    title: 'Nome do produto',
-    image: 'https://salescdn.net/...',
-    price: 'R$ 0,00',      // opcional
-    productId: '123'       // opcional (favoritos)
-  }
-]
-```
+Link do header: **`/#sda-oferta-immersiva`**. Não reutiliza item do menu “oferta” (evita abrir produto aleatório).
 
-- Com `products` preenchido → a página imersiva usa esses itens **primeiro** e completa com a vitrine “ofertas” da home (fetch).
-- `products: []` → só produtos lidos da vitrine de ofertas na home.
+## Produtos
 
-## Admin WDNA
+Edite **`assets/ofertas-semana-config.js`** — ver comentários no arquivo.
 
-1. **Página customizada** slug `oferta-da-semana` → template **`page.oferta-semana`**
-2. Publicar arquivos (um a um):
-   - `sections/header.liquid`
-   - `templates/page.oferta-semana.liquid`
-   - `sections/oferta-semana.liquid`
-   - `assets/oferta-semana.css`
-   - `assets/oferta-semana.js`
-   - `assets/ofertas-semana-config.js`
+## Página `page.oferta-semana` (opcional)
 
-## Home (opcional)
-
-Ainda existe suporte a `/#sda-ofertas-semana` na home (`ofertas-semana-home.js`): confete + destaque na vitrine. O **header não aponta mais** para esse hash.
-
-- **`/ofertas`** — busca vazia na loja; não use no banner.
+A landing em `/pagina/oferta-da-semana` continua disponível se você criar a página no admin; o **header não aponta mais** para ela.

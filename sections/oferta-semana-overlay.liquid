@@ -1,0 +1,75 @@
+{% comment %}
+  Oferta da semana — overlay full-screen (funciona sem página customizada no admin).
+  Abre via /#sda-oferta-immersiva ou clique no banner do header.
+{% endcomment %}
+<div
+  id="sda-oferta-immersiva"
+  class="sda-oferta-overlay"
+  data-sda-oferta-overlay
+  hidden
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="sda-oferta-immersiva-title"
+>
+  <button type="button" class="sda-oferta-overlay__close" data-sda-oferta-close aria-label="Fechar oferta da semana">
+    <span aria-hidden="true">×</span>
+  </button>
+
+  <div class="os-week" data-os-week>
+    <div class="os-week__aurora" aria-hidden="true"></div>
+    <div class="os-week__grid" aria-hidden="true"></div>
+
+    <div class="os-week__inner">
+      <header class="os-week__hero">
+        <p class="os-week__eyebrow">Site do Ar · drop semanal</p>
+        <h1 class="os-week__title" id="sda-oferta-immersiva-title">Oferta da semana</h1>
+        <p class="os-week__lead">Experiência exclusiva — revele o destaque e escolha na pulseira abaixo.</p>
+
+        <div class="os-week__countdown" data-os-countdown aria-live="polite">
+          <span class="os-week__countdown-label">Renova em</span>
+          <div class="os-week__countdown-digits">
+            <span data-os-cd-d>00</span><span class="os-week__cd-sep">d</span>
+            <span data-os-cd-h>00</span><span class="os-week__cd-sep">h</span>
+            <span data-os-cd-m>00</span><span class="os-week__cd-sep">m</span>
+            <span data-os-cd-s>00</span><span class="os-week__cd-sep">s</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="os-week__spotlight" aria-label="Destaque da semana">
+        <article class="os-week__hero-card" data-os-hero-card hidden>
+          <div class="os-week__hero-card-glow" aria-hidden="true"></div>
+          <div class="os-week__hero-card-media">
+            <img data-os-hero-img src="" alt="" width="320" height="320" loading="eager" decoding="async">
+          </div>
+          <div class="os-week__hero-card-body">
+            <span class="os-week__pill">Destaque #1</span>
+            <h2 class="os-week__hero-name" data-os-hero-title>Carregando…</h2>
+            <p class="os-week__hero-hint">Toque em revelar ou escolha outro card abaixo.</p>
+            <div class="os-week__hero-actions">
+              <button type="button" class="os-week__btn os-week__btn--ghost" data-os-reveal>Revelar oferta</button>
+              <a class="os-week__btn os-week__btn--primary" data-os-hero-link href="/">Ver produto</a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="os-week__rail-wrap" aria-label="Mais ofertas">
+        <div class="os-week__rail-head">
+          <h3 class="os-week__rail-title">Pulseira de ofertas</h3>
+          <button type="button" class="os-week__shuffle" data-os-shuffle title="Embaralhar destaque">↻ Embaralhar</button>
+        </div>
+        <div class="os-week__rail" data-os-rail tabindex="0"></div>
+      </section>
+
+      <p class="os-week__foot">Fora da vitrine habitual — edite os destaques em <strong>ofertas-semana-config.js</strong>.</p>
+    </div>
+
+    <div class="os-week__loader" data-os-loader aria-hidden="true">
+      <span class="os-week__loader-dot"></span>
+      <span class="os-week__loader-dot"></span>
+      <span class="os-week__loader-dot"></span>
+    </div>
+  </div>
+</div>

@@ -13,8 +13,8 @@
  * A vitrine do admin NUNCA é apagada.
  */
 window.SDA_OFERTAS_SEMANA = window.SDA_OFERTAS_SEMANA || {
-  /** Página imersiva (banner do header). Não altere sem criar redirect no admin. */
-  immersivePageUrl: '/pagina/oferta-da-semana',
+  /** Hash do overlay (banner do header). */
+  immersiveHash: 'sda-oferta-immersiva',
   sectionTitleMatch: /ofertas/i,
   products: []
 };

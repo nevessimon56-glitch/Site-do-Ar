@@ -91,6 +91,7 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/favorites.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/oferta-semana.css' | themeAssetUrl }}">
     {%- comment -%}
       HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
       Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
@@ -326,6 +327,7 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
 {% render 'sections/check-cookie'%}
 {% render 'sections/sidenav-overlay-cart', cart: cart, store: store, themeConfig: themeConfig %}
 {% render 'sections/sidenav-overlay-favorites' %}
+{% render 'sections/oferta-semana-overlay' %}
 {% render 'sections/mega-menu-ar' %}
 {% render 'sections/product-compare-panel' %}
 {% block content %}{% endblock %}
@@ -375,6 +377,7 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
 <script src="{{ 'assets/header-v2-mobile.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/ofertas-semana-config.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/ofertas-semana-home.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/oferta-semana.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/favorites.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>

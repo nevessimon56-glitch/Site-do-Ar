@@ -392,3 +392,54 @@
     margin-bottom: 0;
   }
 }
+
+/* Overlay global (header → sem página no admin) */
+.sda-oferta-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #070d18;
+}
+
+.sda-oferta-overlay[hidden] {
+  display: none !important;
+}
+
+html.sda-oferta-overlay-open,
+body.sda-oferta-overlay-open {
+  overflow: hidden !important;
+}
+
+.sda-oferta-overlay .os-week {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.sda-oferta-overlay__close {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+  z-index: 100001;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  background: rgba(7, 13, 24, 0.85);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+.sda-oferta-overlay__close:hover,
+.sda-oferta-overlay__close:focus {
+  border-color: #f58220;
+  outline: none;
+}

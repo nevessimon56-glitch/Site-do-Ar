@@ -1,8 +1,10 @@
 /**
- * Oferta da Semana — vitrine dinâmica + countdown + reveal
+ * Oferta da Semana — vitrine dinâmica + countdown + overlay global (#sda-oferta-immersiva)
  */
 (function () {
   'use strict';
+
+  var OVERLAY_HASH = 'sda-oferta-immersiva';
 
   function pad(n) {
     return n < 10 ? '0' + n : String(n);
@@ -122,7 +124,7 @@
     var canvas = document.createElement('canvas');
     canvas.setAttribute('aria-hidden', 'true');
     canvas.style.cssText =
-      'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99999';
+      'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:100002';
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     document.body.appendChild(canvas);
@@ -149,8 +151,8 @@
     function tick() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       var alive = 0;
-      for (var j = 0; j < pieces.length; j++) {
-        var p = pieces[j];
+      for (var k = 0; k < pieces.length; k++) {
+        var p = pieces[k];
         p.life -= 1;
         if (p.life <= 0) continue;
         alive++;
@@ -220,23 +222,23 @@
 
     if (rail) {
       rail.innerHTML = '';
-      for (var k = 0; k < products.length; k++) {
+      for (var n = 0; n < products.length; n++) {
         (function (idx) {
-          var p = products[idx];
+          var prod = products[idx];
           var btn = document.createElement('button');
           btn.type = 'button';
           btn.className = 'os-week__chip' + (idx === 0 ? ' is-active' : '');
           btn.setAttribute('data-index', String(idx));
           btn.innerHTML =
-            (p.image ? '<img src="' + p.image.replace(/"/g, '&quot;') + '" alt="" loading="lazy">' : '') +
+            (prod.image ? '<img src="' + prod.image.replace(/"/g, '&quot;') + '" alt="" loading="lazy">' : '') +
             '<span class="os-week__chip-title">' +
-            (p.title || 'Oferta') +
+            (prod.title || 'Oferta') +
             '</span>';
           btn.addEventListener('click', function () {
             setHero(idx, heroCard && heroCard.classList.contains('is-mystery'));
           });
           rail.appendChild(btn);
-        })(k);
+        })(n);
       }
     }
 
@@ -273,11 +275,102 @@
   }
 
   function init() {
-    var root = document.querySelector('[data-os-week]');
+    var overlay = document.querySelector('[data-sda-oferta-overlay]');
+    var root = overlay
+      ? overlay.querySelector('[data-os-week]')
+      : document.querySelector('[data-os-week]');
     if (!root) return;
-    startCountdown(root);
-    loadProducts().then(function (products) {
-      renderApp(root, products);
+
+    var appPromise = null;
+
+    function ensureApp() {
+      if (appPromise) return appPromise;
+      startCountdown(root);
+      appPromise = loadProducts().then(function (products) {
+        renderApp(root, products);
+        return products;
+      });
+      return appPromise;
+    }
+
+    function setHash(open) {
+      var base = location.pathname + location.search;
+      if (open) {
+        if (history.replaceState) history.replaceState(null, '', base + '#' + OVERLAY_HASH);
+        else location.hash = OVERLAY_HASH;
+      } else if (location.hash === '#' + OVERLAY_HASH) {
+        if (history.replaceState) history.replaceState(null, '', base);
+        else location.hash = '';
+      }
+    }
+
+    function openOverlay(withConfetti) {
+      if (!overlay) return;
+      overlay.hidden = false;
+      overlay.setAttribute('aria-hidden', 'false');
+      document.documentElement.classList.add('sda-oferta-overlay-open');
+      document.body.classList.add('sda-oferta-overlay-open');
+      setHash(true);
+      ensureApp().then(function (products) {
+        if (withConfetti && products && products.length) fireConfetti();
+      });
+      var closeBtn = overlay.querySelector('[data-sda-oferta-close]');
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeOverlay() {
+      if (!overlay) return;
+      overlay.hidden = true;
+      overlay.setAttribute('aria-hidden', 'true');
+      document.documentElement.classList.remove('sda-oferta-overlay-open');
+      document.body.classList.remove('sda-oferta-overlay-open');
+      setHash(false);
+    }
+
+    function isOfferLink(href) {
+      if (!href) return false;
+      return href.indexOf('#' + OVERLAY_HASH) !== -1 || href.indexOf('/pagina/oferta-da-semana') !== -1;
+    }
+
+    function bindHeaderLinks() {
+      var links = document.querySelectorAll('[data-sda-offer-week-link]');
+      for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', function (e) {
+          var href = this.getAttribute('href') || '';
+          if (!isOfferLink(href)) return;
+          e.preventDefault();
+          if (!overlay) {
+            window.location.href = '/#' + OVERLAY_HASH;
+            return;
+          }
+          openOverlay(true);
+        });
+      }
+    }
+
+    if (overlay) {
+      bindHeaderLinks();
+      var closeEl = overlay.querySelector('[data-sda-oferta-close]');
+      if (closeEl) closeEl.addEventListener('click', closeOverlay);
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && !overlay.hidden) closeOverlay();
+      });
+      window.addEventListener('hashchange', function () {
+        if (location.hash === '#' + OVERLAY_HASH) openOverlay(true);
+        else if (!overlay.hidden) closeOverlay();
+      });
+      if (location.hash === '#' + OVERLAY_HASH) {
+        setTimeout(function () {
+          openOverlay(true);
+        }, 300);
+      }
+      window.SDA_openOfertaImmersiva = function () {
+        openOverlay(true);
+      };
+      return;
+    }
+
+    ensureApp().then(function (products) {
       if (products.length) fireConfetti();
     });
   }

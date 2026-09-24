@@ -28,11 +28,10 @@
 {% assign sdaMIconJanelaSvg = '' %}
 
 {% comment %}
-  Oferta da semana → página imersiva (não usa link do menu WDNA — evita abrir produto aleatório).
-  Admin: Página customizada slug oferta-da-semana → template page.oferta-semana
+  Oferta da semana → overlay imersivo na loja (/#sda-oferta-immersiva). Sem página no admin.
   Produtos: assets/ofertas-semana-config.js
 {% endcomment %}
-{% assign sdaOfferWeekUrlUser = '/pagina/oferta-da-semana' %}
+{% assign sdaOfferWeekUrlUser = '/#sda-oferta-immersiva' %}
 {% assign sdaOfferWeekSubUser = 'Drop semanal exclusivo' %}
 {% assign sdaOfferWeekUrl = sdaOfferWeekUrlUser %}
 {% assign sdaOfferWeekSub = sdaOfferWeekSubUser %}

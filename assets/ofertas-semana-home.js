@@ -233,24 +233,6 @@
     return true;
   }
 
-  function bindHeaderLinks() {
-    var links = document.querySelectorAll('[data-sda-offer-week-link]');
-    for (var i = 0; i < links.length; i++) {
-      links[i].addEventListener('click', function (e) {
-        var href = this.getAttribute('href') || '';
-        if (href.indexOf(HASH) === -1) return;
-        if (!isHome()) return;
-        e.preventDefault();
-        if (history.replaceState) {
-          history.replaceState(null, '', '#' + HASH);
-        } else {
-          location.hash = HASH;
-        }
-        scrollToSection(true);
-      });
-    }
-  }
-
   function init() {
     if (!isHome()) return;
 
@@ -258,7 +240,6 @@
     if (!section) return;
 
     applyCustomProducts(section);
-    bindHeaderLinks();
 
     if (location.hash === '#' + HASH) {
       setTimeout(function () {
