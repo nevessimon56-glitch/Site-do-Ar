@@ -1,5 +1,9 @@
 # Header v2 + Favoritos — deploy WDNA
 
+> **Não faça upload da pasta `assets/` ou `layout/` inteira do GitHub.**  
+> O repo só tem arquivos parciais; isso pode apagar `theme.js`, outros layouts e derrubar a loja com **“Página não encontrada!”**.  
+> Copie **arquivo por arquivo** no editor WDNA. Recuperação: `docs/wdna/RECUPERAR-SITE-APOS-UPLOAD-PASTAS.md`.
+
 ## Arquivos (ordem sugerida)
 
 | # | Arquivo no WDNA | Ação |
