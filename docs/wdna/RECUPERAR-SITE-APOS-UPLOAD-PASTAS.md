@@ -56,26 +56,18 @@ Sem esses arquivos, **não publique** só os nossos CSS/JS custom.
 
 ## Passo 3 — Publicar header mobile do jeito certo
 
-Depois que a home voltar a abrir:
+Depois que a home voltar a abrir, siga **`docs/wdna/PUBLICAR-HEADER-MOBILE-SEGURO.md`**.
 
-**Nunca** suba a pasta `assets/` ou `layout/` do GitHub de uma vez.
+Resumo: publique **`assets/header-v2.css`**; **evite** substituir o `theme.liquid` inteiro só por causa do mobile (o CSS já traz os overrides).
 
-| Arquivo no WDNA | Origem no GitHub |
-|-----------------|------------------|
-| `assets/header-v2.css` | copiar conteúdo de `assets/header-v2.css` |
-| `layout/theme.liquid` | copiar conteúdo de `layout/theme.liquid` |
+| Arquivo no WDNA | Quando usar |
+|-----------------|-------------|
+| `assets/header-v2.css` | **Sempre** para o fix mobile |
+| `layout/theme.liquid` | Só se souber que falta link do CSS no `<head>` — com backup antes |
 
-Opcional (se ainda não estiver na loja):
-
-- `sections/header.liquid`
-- `assets/favorites.css` + `assets/favorites.js`
-
-Abra **cada arquivo** no editor WDNA → cole → salve → **publicar tema**.
-
-Links Raw (branch `cursor/header-favoritos-v2-e52b`):
+Raw do CSS (branch `cursor/header-favoritos-v2-e52b`):
 
 - https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/header-favoritos-v2-e52b/assets/header-v2.css
-- https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/header-favoritos-v2-e52b/layout/theme.liquid
 
 ---
 
