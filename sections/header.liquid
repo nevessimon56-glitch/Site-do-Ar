@@ -69,7 +69,7 @@
                 <div class="header-v2-search search-desktop hide-lg">
                     <form id="myForm2Desktop" method="POST" action="">
                         <div class="input-group">
-                            <input type="search" id="term2Desktop" class="form-input" placeholder="Busque por produto, marca ou modelo" autocomplete="off">
+                            <input type="search" id="term2Desktop" class="form-input" placeholder="Busque por produto, marca ou modelo" autocomplete="off" aria-label="Busque por produto, marca ou modelo">
                             <button class="btn" type="button" title="Buscar" onclick="alterForm2Desktop()">
                                 {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
                             </button>

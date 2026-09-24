@@ -27,8 +27,8 @@
   --hdr-nav-bg: #eef3f8;
   --hdr-border: #d8e0ea;
   --hdr-text: #1a2d4a;
-  --hdr-action-h: 76px;
-  --hdr-action-w: 82px;
+  --hdr-action-h: 64px;
+  --hdr-action-w: 72px;
 }
 
 /* —— Faixa utilitária (tipografia + ícones = mock WDNA) —— */
@@ -152,7 +152,7 @@
 .header-v2 .header-content {
   background: #fff;
   border-bottom: 1px solid var(--hdr-border);
-  padding: 14px 0;
+  padding: 10px 0;
 }
 
 .header-v2 .header-v2-navbar {
@@ -171,7 +171,7 @@
 }
 
 .header-v2 .header-v2-navbar .logo picture img {
-  max-height: 52px;
+  max-height: 44px;
   width: auto;
 }
 
@@ -188,16 +188,16 @@
   border-radius: 8px;
   overflow: hidden;
   background: #fff;
-  min-height: 48px;
+  min-height: 44px;
   box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .header-v2 .header-v2-search .form-input {
   flex: 1;
   border: 0;
-  padding: 12px 16px;
-  font-size: 14px;
-  min-height: 48px;
+  padding: 10px 14px;
+  font-size: 13px;
+  min-height: 44px;
   box-shadow: none;
   color: #334155;
 }
@@ -205,6 +205,10 @@
 .header-v2 .header-v2-search .form-input::placeholder {
   color: #94a3b8;
   opacity: 1;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .header-v2 .header-v2-search .form-input:focus {
@@ -216,8 +220,8 @@
   border-radius: 0 6px 6px 0;
   background: var(--hdr-blue) !important;
   color: #fff !important;
-  min-width: 50px;
-  width: 50px;
+  min-width: 44px;
+  width: 44px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -235,7 +239,7 @@
 .header-v2 .header-v2-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
@@ -244,23 +248,23 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   width: var(--hdr-action-w);
   min-width: var(--hdr-action-w);
   height: var(--hdr-action-h);
   min-height: var(--hdr-action-h);
-  padding: 10px 6px 8px;
+  padding: 6px 4px 5px;
   border: 1px solid var(--hdr-border) !important;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #fff !important;
   color: var(--hdr-blue) !important;
   text-decoration: none !important;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.1;
   position: relative;
   box-sizing: border-box;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -275,7 +279,7 @@
 .header-v2 .header-v2-action__label {
   display: block;
   text-align: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--hdr-blue) !important;
   text-transform: none;
@@ -285,8 +289,8 @@
 }
 
 .header-v2 .header-v2-action__icon {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -295,8 +299,8 @@
 }
 
 .header-v2 .header-v2-action__icon svg {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   display: block;
 }
 
@@ -316,8 +320,8 @@
 
 .header-v2 .header-v2-action__badge {
   position: absolute;
-  top: 6px;
-  right: 10px;
+  top: 4px;
+  right: 8px;
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
@@ -399,11 +403,11 @@ body .header.header-v2 .nav-content .nav-main_icon.nav-main-icon_svg {
 .header-v2 .header-v2-cta-ambiente {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
-  padding: 6px 14px;
-  margin-right: 4px;
-  border-radius: 8px;
+  padding: 5px 12px;
+  margin-right: 2px;
+  border-radius: 6px;
   background: var(--hdr-orange);
   color: #fff !important;
   font-size: 11px;
@@ -490,9 +494,9 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
 .header-v2 .header-v2-cta-semana {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
-  padding: 10px 18px;
+  padding: 6px 14px;
   border: 2px solid var(--hdr-orange);
   border-radius: 999px;
   background: rgba(245, 130, 32, 0.14);
@@ -1151,6 +1155,76 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
 
   .header-v2 .header-v2-cta-ambiente__chev {
     display: none;
+  }
+
+  /* Desktop: faixas mais baixas (vence theme-custom navbar ~96px) */
+  body .header.header-v2 .header-utility .header-utility__inner {
+    min-height: 28px !important;
+    max-height: none !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+  }
+
+  body .header.header-v2 .header-utility,
+  body .header.header-v2 .header-utility a,
+  body .header.header-v2 .header-utility button,
+  body .header.header-v2 .header-utility .header-utility__label {
+    font-size: 11px !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  .header-v2 .header-utility__links {
+    gap: 22px;
+  }
+
+  /* Meus pedidos já aparece nas caixas de ação */
+  .header-v2 .header-utility__links li:nth-child(2) {
+    display: none;
+  }
+
+  body .header.header-v2 .header-content {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  body .header.header-v2 .header-content .navbar,
+  body .header.header-v2 .header-content .navbar.header-v2-navbar {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    align-items: center !important;
+  }
+
+  .header-v2 .header-v2-navbar {
+    gap: 16px;
+  }
+
+  .header-v2 .header-v2-search {
+    max-width: 520px;
+  }
+
+  body .header.header-v2 .header-v2-nav-inner {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    gap: 12px;
+  }
+
+  body .header.header-v2 .nav-content .nav-main_link {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+  }
+
+  body .header.header-v2 .header-v2-nav-inner .nav-main_link {
+    padding: 4px 8px !important;
+  }
+
+  body .header.header-v2 .header-v2-nav-inner .nav-main_text {
+    font-size: 11px !important;
+  }
+
+  .header-v2 .header-v2-action--cart .header-v2-action__badge.cart_quantity,
+  .header-v2 .header-v2-action--cart [data-cart-quantity].cart_quantity {
+    display: inline-block !important;
   }
 }
 
