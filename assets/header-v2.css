@@ -520,22 +520,18 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
 
 /* Favoritos: ver assets/favorites.css */
 
-/* —— Mobile (layout mock: utilitária + logo/ícones + busca pill + nav scroll) —— */
+/* —— Mobile compacto: logo + busca + categorias (utility e CTA ambiente no menu) —— */
 @media (max-width: 991px) {
   .header-v2 {
     --hdr-m-gutter: 14px;
-    --hdr-m-gap-sm: 8px;
-    --hdr-m-gap-md: 10px;
-    --hdr-m-gap-lg: 12px;
-    --hdr-m-utility-h: 30px;
+    --hdr-m-gap-sm: 6px;
+    --hdr-m-gap-md: 8px;
+    --hdr-m-gap-lg: 10px;
+    --hdr-m-touch: 40px;
   }
 
-  .header-v2 .header-utility__guest-short {
-    display: none;
-  }
-
-  .header-v2 .header-utility__guest-long {
-    display: inline;
+  body .header.header-v2 > .header-utility.header-utility--desktop-only {
+    display: none !important;
   }
 
   .header-v2 .header-utility {
@@ -659,8 +655,21 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   }
 
   body .header.header-v2 .header-content > .container {
-    padding-top: 8px !important;
+    padding-top: 6px !important;
     padding-bottom: 0 !important;
+  }
+
+  body .header.header-v2.header-v2--scroll-compact .header-content > .container {
+    padding-top: 4px !important;
+  }
+
+  body .header.header-v2.header-v2--scroll-compact .header-v2-search-pill {
+    display: none !important;
+  }
+
+  body .header.header-v2.header-v2--scroll-compact .header-v2-navbar .logo picture img,
+  body .header.header-v2.header-v2--scroll-compact .header-v2-navbar .logo img {
+    max-height: 26px !important;
   }
 
   body .header.header-v2 > .nav-content.header-v2-nav-row {
@@ -722,16 +731,17 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     margin-left: auto;
   }
 
-  .header-v2 .header-v2-mobile-search-btn,
   .header-v2 .header-v2-mobile-icon-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: 1px solid #d4dce6;
+    width: var(--hdr-m-touch);
+    height: var(--hdr-m-touch);
+    min-width: var(--hdr-m-touch);
+    min-height: var(--hdr-m-touch);
+    border: 0;
     border-radius: 8px;
-    background: #fff;
+    background: transparent;
     color: var(--hdr-blue);
     flex-shrink: 0;
     padding: 0;
@@ -741,13 +751,17 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     text-decoration: none !important;
   }
 
-  .header-v2 .header-v2-mobile-search-btn svg,
+  .header-v2 .header-v2-mobile-icon-btn:focus-visible {
+    outline: 2px solid var(--hdr-blue);
+    outline-offset: 2px;
+  }
+
   .header-v2 .header-v2-mobile-icon-btn__icon svg,
   .header-v2 .header-v2-mobile-icon-btn__icon .icon_cart {
-    width: 20px !important;
-    height: 20px !important;
-    max-width: 20px !important;
-    max-height: 20px !important;
+    width: 22px !important;
+    height: 22px !important;
+    max-width: 22px !important;
+    max-height: 22px !important;
     fill: var(--hdr-blue);
   }
 
@@ -765,14 +779,23 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   }
 
   .header-v2 .header-v2-mobile-fav-btn .header-v2-action__badge {
-    top: 1px;
-    right: 1px;
-    min-width: 14px;
-    height: 14px;
-    line-height: 14px;
-    font-size: 8px;
+    top: 4px;
+    right: 2px;
+    min-width: 15px;
+    height: 15px;
+    line-height: 15px;
+    font-size: 9px;
     padding: 0 3px;
     border-width: 1px;
+    background: #f97316 !important;
+    color: #fff !important;
+    border-color: #ea580c !important;
+  }
+
+  .header-v2 .header-v2-mobile-fav-btn .header-v2-action__badge[data-count="0"],
+  .header-v2 .header-v2-mobile-tools .cart_quantity[data-cart-quantity="0"],
+  .header-v2 .header-v2-mobile-tools .cart_quantity:empty {
+    display: none !important;
   }
 
   body .header.header-v2 .header-v2-mobile-tools .menu-mobile_link {
@@ -818,7 +841,7 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   /* Busca pill — linha dedicada */
   .header-v2 .header-v2-search-pill {
     display: block;
-    padding: 2px 0 10px;
+    padding: 0 0 8px;
     margin: 0;
   }
 
@@ -828,11 +851,16 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     gap: var(--hdr-m-gap-sm);
     margin: 0;
     padding: 0 14px;
-    min-height: 36px;
-    border: 1px solid #cfd8e3;
+    min-height: 40px;
+    border: 1px solid #b8c5d4;
     border-radius: 999px;
     background: #fff;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  }
+
+  .header-v2 .header-v2-search-pill__field:focus-within {
+    border-color: var(--hdr-blue);
+    box-shadow: 0 0 0 2px rgba(75, 150, 212, 0.25);
   }
 
   .header-v2 .header-v2-search-pill__icon {
@@ -851,11 +879,17 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   .header-v2 .header-v2-search-pill__input {
     flex: 1;
     border: 0;
-    padding: 7px 0;
+    padding: 8px 0;
     min-height: 0;
-    font-size: 13px;
+    font-size: 14px;
+    color: var(--hdr-text);
     background: transparent;
     box-shadow: none;
+  }
+
+  .header-v2 .header-v2-search-pill__input::placeholder {
+    color: #64748b;
+    opacity: 1;
   }
 
   .header-v2 .header-v2-search-pill__input:focus {
@@ -908,14 +942,30 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     position: sticky;
     right: 0;
     flex-shrink: 0;
-    margin-left: auto;
-    padding-left: 4px;
-    font-size: 15px;
+    margin-left: 4px;
+    padding-left: 6px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1;
     color: var(--hdr-blue-dark);
     pointer-events: none;
-    background: linear-gradient(90deg, rgba(244, 248, 252, 0) 0%, #f4f8fc 40%);
+    background: linear-gradient(90deg, rgba(244, 248, 252, 0) 0%, #f4f8fc 45%);
+  }
+
+  body .header.header-v2 .header-v2-cta-ambiente.header-v2-cta-ambiente--desktop-only {
+    display: none !important;
+  }
+
+  .header-v2 .header-v2-nav-scroll-hint {
+    flex: 0 0 auto;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #64748b;
+    white-space: nowrap;
+    margin-right: 2px;
+    user-select: none;
   }
 
   body .header.header-v2 .header-v2-cta-ambiente {

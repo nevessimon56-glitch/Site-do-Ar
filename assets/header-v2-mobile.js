@@ -222,10 +222,47 @@
     remeasureAndUpdate();
   };
 
+  window.initSdaHeaderScrollCompact = window.initSdaHeaderScrollCompact || function initSdaHeaderScrollCompact() {
+    if (window.__SDA_HDR_COMPACT_INIT__) return;
+    window.__SDA_HDR_COMPACT_INIT__ = true;
+    var header = document.querySelector('.header.header-v2');
+    if (!header) return;
+    var threshold = 56;
+
+    function readScrollY() {
+      return window.pageYOffset || document.documentElement.scrollTop || 0;
+    }
+
+    function update() {
+      if (!isMobile()) {
+        header.classList.remove('header-v2--scroll-compact');
+        return;
+      }
+      header.classList.toggle('header-v2--scroll-compact', readScrollY() >= threshold);
+    }
+
+    var scheduled = false;
+    window.addEventListener(
+      'scroll',
+      function () {
+        if (scheduled) return;
+        scheduled = true;
+        requestAnimationFrame(function () {
+          scheduled = false;
+          update();
+        });
+      },
+      { passive: true }
+    );
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  };
+
   function bootHeaderV2Mobile() {
     try {
       if (typeof window.initSdaMobileNavStrip === 'function') window.initSdaMobileNavStrip();
       if (typeof window.initSdaNavFixedTop === 'function') window.initSdaNavFixedTop();
+      if (typeof window.initSdaHeaderScrollCompact === 'function') window.initSdaHeaderScrollCompact();
       if (typeof window.sdaSyncMobileCatalogDock === 'function') window.sdaSyncMobileCatalogDock();
       if (typeof window.sdaUpdateUtilityBarLabels === 'function') {
         window.sdaUpdateUtilityBarLabels(window.__SITE_DOAR_CUSTOMER__);
