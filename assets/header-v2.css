@@ -526,8 +526,8 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
 
   .header-v2 .header-utility__label {
     display: inline;
-    font-size: 8px;
-    letter-spacing: 0.08em;
+    font-size: 9px !important;
+    letter-spacing: 0.08em !important;
   }
 
   .header-v2 .header-utility__account .header-utility__label {
@@ -542,8 +542,49 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     height: 14px;
   }
 
+  /* Vence theme-all + theme-custom (.header-content .navbar { height: 90px }, max-width nas sections) */
+  body .header.header-v2 .header-content .navbar.header-v2-navbar {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  body .header.header-v2 .header-content .navbar-section,
+  body .header.header-v2 .header-content .navbar-section:first-of-type,
+  body .header.header-v2 .header-content .navbar-section:last-of-type,
+  body .header.header-v2 .header-content .navbar-section:first-child,
+  body .header.header-v2 .header-content .navbar-section:last-child {
+    max-width: none !important;
+    width: auto !important;
+  }
+
+  body .header.header-v2 .header-v2-mobile-tools .header-link,
+  body .header.header-v2 .header-v2-mobile-tools .header-link_cart,
+  body .header.header-v2 .header-v2-mobile-tools .header-link_menu__mobile,
+  body .header.header-v2 .header-v2-mobile-tools .menu-mobile_link {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+  }
+
+  body .header.header-v2 .header-v2-mobile-tools .header-link > * {
+    float: none !important;
+  }
+
+  body .header.header-v2 .header-v2-mobile-tools .header-link .icon_cart,
+  body .header.header-v2 .header-v2-mobile-tools .header-link svg {
+    width: 22px !important;
+    height: 22px !important;
+    max-width: 22px !important;
+    max-height: 22px !important;
+  }
+
+  body .header.header-v2 .sidebar-nav {
+    margin-top: 0 !important;
+  }
+
   .header-v2 .header-content {
-    padding: 6px 0 0;
+    padding: 8px 0 0;
   }
 
   .header-v2 .header-content > .container {
@@ -555,9 +596,9 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 6px;
     width: 100%;
-    padding-bottom: 8px;
+    padding-bottom: 6px;
   }
 
   .header-v2 .header-v2-navbar > .navbar-section:first-child {
@@ -565,15 +606,23 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     min-width: 0;
   }
 
-  .header-v2 .header-v2-navbar .logo {
-    display: block;
-    max-width: 140px;
+  .header-v2 .header-v2-navbar > .navbar-section.header-v2-mobile-tools {
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 
-  .header-v2 .header-v2-navbar .logo picture img {
-    max-height: 32px;
+  .header-v2 .header-v2-navbar .logo {
+    display: flex;
+    align-items: center;
+    max-width: min(148px, 42vw);
+  }
+
+  .header-v2 .header-v2-navbar .logo picture img,
+  .header-v2 .header-v2-navbar .logo img {
+    max-height: 32px !important;
     width: auto;
     max-width: 100%;
+    display: block;
   }
 
   .header-v2 .header-v2-search.search-desktop {
@@ -643,7 +692,7 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   /* Busca pill — linha dedicada */
   .header-v2 .header-v2-search-pill {
     display: block;
-    padding: 0 0 6px;
+    padding: 0 0 8px;
   }
 
   .header-v2 .header-v2-search-pill__field {
@@ -700,13 +749,19 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     box-shadow: none !important;
   }
 
+  body .header.header-v2 .header-v2-nav-row > .container.header-v2-nav-inner--scroll {
+    max-width: 100%;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
   body .header.header-v2 .header-v2-nav-inner--scroll {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 8px;
-    min-height: 40px;
-    padding: 5px 24px 5px 10px;
+    gap: 10px;
+    min-height: 36px;
+    padding: 4px 28px 4px 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -767,12 +822,12 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     justify-content: flex-start;
   }
 
-  body .header.header-v2 .header-v2-nav-inner .nav-main_item--nav-hidden-mobile {
+  body .header.header-v2 .header-v2-nav-inner .nav-main_item--nav-hidden-mobile,
+  body .header.header-v2 .header-v2-nav-inner .nav-main_item:has(a[href*="todos-os-produtos"]) {
     display: none !important;
   }
 
   body .header.header-v2 .header-v2-nav-inner .nav-main_item {
-    display: block !important;
     flex: 0 0 auto;
     margin: 0 !important;
   }
