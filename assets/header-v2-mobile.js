@@ -32,6 +32,7 @@
       label.textContent = first ? 'Olá, ' + first : 'Olá';
       btn.classList.add('is-logged-in');
       btn.setAttribute('title', label.textContent);
+      btn.setAttribute('aria-label', label.textContent);
     } else {
       label.innerHTML = sdaUtilityGuestLabelHtml();
       btn.classList.remove('is-logged-in');
