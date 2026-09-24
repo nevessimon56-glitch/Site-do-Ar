@@ -14,7 +14,7 @@
 {% assign iconTag = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>' %}
 
 <header class="header header-v2">
-    <div class="header-utility content header-utility--desktop-only">
+    <div class="header-utility content">
         <div class="container header-utility__inner">
             <ul class="header-utility__links">
                 <li>
@@ -152,8 +152,7 @@
 
     <div class="nav-content content header-v2-nav-row">
         <div class="container header-v2-nav-inner header-v2-nav-inner--scroll" role="navigation" aria-label="Categorias — deslize horizontalmente para ver mais">
-            <span class="header-v2-nav-scroll-hint" aria-hidden="true">Deslize</span>
-            <a class="header-v2-cta-ambiente header-v2-cta-ambiente--desktop-only" href="/pagina/calculadora-btus" title="Compre por ambiente">
+            <a class="header-v2-cta-ambiente header-v2-cta-ambiente--in-nav" href="/pagina/calculadora-btus" title="Compre por ambiente">
                 {{ iconHome }}
                 <span class="header-v2-cta-ambiente__text">Compre por ambiente</span>
                 <span class="header-v2-cta-ambiente__chev" aria-hidden="true">▾</span>
@@ -237,6 +236,16 @@
             <a class="header-v2-cta-semana" href="/ofertas" title="Ofertas da semana">
                 {{ iconTag }}
                 <span class="header-v2-cta-semana__text">Ofertas da semana</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="header-v2-ambiente-row show-lg content">
+        <div class="container">
+            <a class="header-v2-ambiente-row__link" href="/pagina/calculadora-btus" title="Compre por ambiente">
+                <span class="header-v2-ambiente-row__icon" aria-hidden="true">{{ iconHome }}</span>
+                <span class="header-v2-ambiente-row__text">Compre por ambiente</span>
+                <span class="header-v2-ambiente-row__chev" aria-hidden="true">›</span>
             </a>
         </div>
     </div>
