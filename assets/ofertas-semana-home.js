@@ -162,20 +162,63 @@
     );
   }
 
+  function normalizeProductPath(href) {
+    try {
+      return (new URL(href, window.location.origin).pathname || '')
+        .toLowerCase()
+        .replace(/\/+$/, '');
+    } catch (err) {
+      return String(href || '')
+        .toLowerCase()
+        .split('?')[0]
+        .replace(/\/+$/, '');
+    }
+  }
+
+  /** Destaca / coloca no topo — nunca apaga a vitrine do admin WDNA */
   function applyCustomProducts(section) {
     var products = cfg().products;
     if (!products || !products.length) return;
     var list = section.querySelector('.showcase-list');
     if (!list) return;
-    var html = '';
+
+    var items = list.querySelectorAll('.showcase-item');
+    var byPath = {};
+    for (var e = 0; e < items.length; e++) {
+      var item = items[e];
+      var link = item.querySelector('[data-product-url], a.showcase-product_link[href]');
+      var href = link && (link.getAttribute('data-product-url') || link.getAttribute('href'));
+      if (href) byPath[normalizeProductPath(href)] = item;
+    }
+
+    var toFront = [];
+    var seen = {};
+
     for (var i = 0; i < products.length; i++) {
-      if (products[i] && products[i].url && products[i].title && products[i].image) {
-        html += buildCard(products[i]);
+      var p = products[i];
+      if (!p || !p.url) continue;
+      var path = normalizeProductPath(p.url);
+      if (seen[path]) continue;
+      seen[path] = true;
+
+      var existing = byPath[path];
+      if (existing) {
+        existing.classList.add('sda-week-offer-highlight');
+        existing.setAttribute('data-sda-week-offer', '1');
+        toFront.push(existing);
+      } else if (p.title && p.image) {
+        var wrap = document.createElement('div');
+        wrap.innerHTML = buildCard(p);
+        var li = wrap.firstElementChild;
+        if (li) toFront.push(li);
       }
     }
-    if (!html) return;
-    list.innerHTML = html;
-    section.setAttribute('data-sda-week-custom', '1');
+
+    for (var j = toFront.length - 1; j >= 0; j--) {
+      list.insertBefore(toFront[j], list.firstChild);
+    }
+
+    if (toFront.length) section.setAttribute('data-sda-week-boost', '1');
   }
 
   function scrollToSection(withConfetti) {

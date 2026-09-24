@@ -18,8 +18,8 @@ products: [
 ]
 ```
 
-- **`products: []`** → mantém a vitrine que você configurou no **admin WDNA** (showcase “Ofertas de Verão”).
-- Com itens no array → a lista da vitrine é **substituída** por esses produtos (mesmo visual de card do tema).
+- **`products: []`** → vitrine **100% do admin WDNA** (só confete + scroll).
+- Com itens no array → esses produtos vão para o **topo** (se já estiverem na vitrine, só reordenam; se não estiverem, entram como card extra). **Nada é removido.**
 
 Copie `url`, `title`, `image` e `productId` do HTML do card na loja (botão favoritar / data attributes).
 
