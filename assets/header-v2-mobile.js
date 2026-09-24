@@ -50,26 +50,6 @@
 
     if (isHeaderV2()) {
       navContent.classList.remove('sda-mobile-nav-strip--3', 'sda-mobile-nav-revealed');
-      var allItems = navContent.querySelectorAll('.nav-main_item');
-      var mobileNavShown = 0;
-      var mobileNavMax = 6;
-      for (var vi = 0; vi < allItems.length; vi++) {
-        var item = allItems[vi];
-        item.classList.remove('nav-main_item--nav-hidden-mobile');
-        var link = item.querySelector('a.nav-main_link');
-        var href = (link && link.getAttribute('href') ? link.getAttribute('href') : '').toLowerCase();
-        var label = (link && link.textContent ? link.textContent : '').replace(/\s+/g, ' ').trim().toLowerCase();
-        var hide =
-          label.indexOf('todos os produtos') !== -1 ||
-          href.indexOf('todos-os-produtos') !== -1;
-        if (hide || mobileNavShown >= mobileNavMax) {
-          item.classList.add('nav-main_item--nav-hidden-mobile');
-          item.style.display = 'none';
-          continue;
-        }
-        item.style.display = '';
-        mobileNavShown++;
-      }
       return;
     }
 

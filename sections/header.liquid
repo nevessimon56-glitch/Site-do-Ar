@@ -12,6 +12,28 @@
 {% assign iconCartOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 9.2h11.3L21 7H7"/><circle cx="10" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>' %}
 {% assign iconHome = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' %}
 {% assign iconTag = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>' %}
+{% assign iconCatSplit = '<svg class="sda-ico-stroke header-v2-mcat-svg" viewBox="0 0 32 32" aria-hidden="true"><path d="M6 8h14v18H6z"/><path d="M20 12h4v6"/><path d="M9 13h8M9 17h8M9 21h5"/><path d="M6 8V6a2 2 0 0 1 2-2h10"/></svg>' %}
+{% assign iconCatPiso = '<svg class="sda-ico-stroke header-v2-mcat-svg" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 10h24"/><path d="M8 10v3h16v-3"/><path d="M10 13v8M22 13v8"/><path d="M12 21h8v2H12z"/><path d="M14 15h4M14 18h4"/></svg>' %}
+{% assign iconCatJanela = '<svg class="sda-ico-stroke header-v2-mcat-svg" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="6" width="22" height="20" rx="1"/><path d="M5 14h22"/><path d="M16 6v20"/><path d="M8 10h5v3H8zM19 18h5v3h-5z"/></svg>' %}
+{% assign sdaMLinkSplit = '/split-inverter' %}
+{% assign sdaMLabelSplit = 'Split Inverter' %}
+{% assign sdaMLinkPiso = '/piso-teto' %}
+{% assign sdaMLabelPiso = 'Piso Teto' %}
+{% assign sdaMLinkJanela = '/janela' %}
+{% assign sdaMLabelJanela = 'Janela' %}
+{% for menuItem in menu.items %}
+    {% assign sdaMName = menuItem.name | downcase %}
+    {% if sdaMName contains 'split' %}
+        {% assign sdaMLinkSplit = menuItem.link %}
+        {% assign sdaMLabelSplit = menuItem.name %}
+    {% elsif sdaMName contains 'piso' %}
+        {% assign sdaMLinkPiso = menuItem.link %}
+        {% assign sdaMLabelPiso = menuItem.name %}
+    {% elsif sdaMName contains 'janela' %}
+        {% assign sdaMLinkJanela = menuItem.link %}
+        {% assign sdaMLabelJanela = menuItem.name %}
+    {% endif %}
+{% endfor %}
 
 <header class="header header-v2">
     <div class="header-utility content">
@@ -240,12 +262,39 @@
         </div>
     </div>
 
-    <div class="header-v2-ambiente-row show-lg content">
+    <div class="header-v2-mobile-catalog show-lg content" aria-label="Categorias">
+        <div class="container header-v2-mobile-catalog__scroll">
+            <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkSplit }}" title="{{ sdaMLabelSplit }}">
+                <span class="header-v2-mobile-catalog__icon" aria-hidden="true">{{ iconCatSplit }}</span>
+                <span class="header-v2-mobile-catalog__label">{{ sdaMLabelSplit }}</span>
+            </a>
+            <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkPiso }}" title="{{ sdaMLabelPiso }}">
+                <span class="header-v2-mobile-catalog__icon" aria-hidden="true">{{ iconCatPiso }}</span>
+                <span class="header-v2-mobile-catalog__label">{{ sdaMLabelPiso }}</span>
+            </a>
+            <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkJanela }}" title="{{ sdaMLabelJanela }}">
+                <span class="header-v2-mobile-catalog__icon" aria-hidden="true">{{ iconCatJanela }}</span>
+                <span class="header-v2-mobile-catalog__label">{{ sdaMLabelJanela }}</span>
+            </a>
+            <a class="header-v2-mobile-catalog__item header-v2-mobile-catalog__item--ambiente" href="/pagina/calculadora-btus" title="Compre por ambiente">
+                <span class="header-v2-mobile-catalog__icon header-v2-mobile-catalog__icon--orange" aria-hidden="true">{{ iconHome }}</span>
+                <span class="header-v2-mobile-catalog__label header-v2-mobile-catalog__label--ambiente">
+                    <span class="header-v2-mobile-catalog__label-line">Compre por</span>
+                    <span class="header-v2-mobile-catalog__label-line header-v2-mobile-catalog__label-accent">ambiente</span>
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <div class="header-v2-mobile-offer show-lg content">
         <div class="container">
-            <a class="header-v2-ambiente-row__link" href="/pagina/calculadora-btus" title="Compre por ambiente">
-                <span class="header-v2-ambiente-row__icon" aria-hidden="true">{{ iconHome }}</span>
-                <span class="header-v2-ambiente-row__text">Compre por ambiente</span>
-                <span class="header-v2-ambiente-row__chev" aria-hidden="true">›</span>
+            <a class="header-v2-mobile-offer__card" href="/ofertas" title="Ver oferta da semana">
+                <span class="header-v2-mobile-offer__badge" aria-hidden="true">{{ iconTag }}</span>
+                <span class="header-v2-mobile-offer__body">
+                    <span class="header-v2-mobile-offer__title">Oferta da semana</span>
+                    <span class="header-v2-mobile-offer__sub">Ar-condicionado Inverter</span>
+                </span>
+                <span class="header-v2-mobile-offer__cta">Ver oferta ›</span>
             </a>
         </div>
     </div>
