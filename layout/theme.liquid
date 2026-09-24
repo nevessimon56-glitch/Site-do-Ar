@@ -258,7 +258,7 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     {% block head %}{% endblock %}
 </head>
 <script>window.__SITE_DOAR_CUSTOMER__ = {{ customer | json }};</script>
-<body x-data="setupStore()" x-init="init()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
+<body x-data="setupStore()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
 {%- for script in scripts.content -%}
     {{ script.code }}
 {%- endfor -%}
@@ -311,203 +311,19 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
 </script>
 <script src="{{ scripts.main.src }}"></script>
 {%- comment -%} mega-menu.js define __SDA_HOVER_V2__; product-hover-image.js desliga se já ativo {%- endcomment -%}
+<script src="{{ 'assets/header-v2-mobile.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/favorites.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
 <script>
-  /* NAV-MOBILE-STRIP-v3 + NAV-FIXED-v15 — fallback se mega-menu.js não publicado */
-  window.initSdaMobileNavStrip = window.initSdaMobileNavStrip || function initSdaMobileNavStrip() {
-    var MOBILE_MQ = '(max-width: 991px)';
-    var KEEP = [
-      { path: '/split-inverter', label: 'split inverter' },
-      { path: '/piso-teto', label: 'piso teto' },
-      { path: '/janela', label: 'janela' }
-    ];
-    function norm(href) {
-      try { return (new URL(href, window.location.origin).pathname || '').toLowerCase().replace(/\/+$/, '') || '/'; }
-      catch (e) { return (href || '').toLowerCase().split('?')[0].replace(/\/+$/, '') || '/'; }
-    }
-    function keepItem(item) {
-      var link = item.querySelector('a.nav-main_link');
-      if (!link) return false;
-      var path = norm(link.getAttribute('href') || '');
-      var text = (link.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
-      if (text.indexOf('todos os produtos') !== -1 || path.indexOf('todos-os-produtos') !== -1) return false;
-      for (var i = 0; i < KEEP.length; i++) {
-        if (path.indexOf(KEEP[i].path) !== -1 || text === KEEP[i].label) return true;
-      }
-      return false;
-    }
-    var navContent = document.querySelector('.header > .nav-content');
-    if (!navContent) return;
-    if (document.querySelector('.header.header-v2')) {
-      navContent.classList.remove('sda-mobile-nav-strip--3', 'sda-mobile-nav-revealed');
-      var allItems = navContent.querySelectorAll('.nav-main_item');
-      var mobileNavShown = 0;
-      var mobileNavMax = 6;
-      for (var vi = 0; vi < allItems.length; vi++) {
-        var item = allItems[vi];
-        item.classList.remove('nav-main_item--nav-hidden-mobile');
-        var link = item.querySelector('a.nav-main_link');
-        var label = (link && link.textContent ? link.textContent : '').replace(/\s+/g, ' ').trim().toLowerCase();
-        var hide =
-          label.indexOf('todos os produtos') !== -1 ||
-          (link && link.getAttribute('href') || '').toLowerCase().indexOf('todos-os-produtos') !== -1;
-        if (hide) {
-          item.classList.add('nav-main_item--nav-hidden-mobile');
-          item.style.display = 'none';
-          continue;
-        }
-        if (mobileNavShown >= mobileNavMax) {
-          item.classList.add('nav-main_item--nav-hidden-mobile');
-          item.style.display = 'none';
-          continue;
-        }
-        item.style.display = '';
-        mobileNavShown++;
-      }
-      return;
-    }
-    var navMain = navContent.querySelector('.nav-main');
-    if (!navMain) return;
-    var items = [];
-    var child = navMain.firstElementChild;
-    while (child) {
-      if (child.classList && child.classList.contains('nav-main_item')) items.push(child);
-      child = child.nextElementSibling;
-    }
-    if (!window.matchMedia(MOBILE_MQ).matches) {
-      navContent.classList.remove('sda-mobile-nav-strip--3', 'sda-mobile-nav-revealed');
-      items.forEach(function (item) { item.style.display = ''; });
-      return;
-    }
-    var visible = 0;
-    items.forEach(function (item) {
-      var show = keepItem(item);
-      item.style.display = show ? '' : 'none';
-      if (show) visible++;
-    });
-    navContent.classList.toggle('sda-mobile-nav-strip--3', visible > 0);
-  };
-  window.initSdaNavFixedTop = window.initSdaNavFixedTop || function initSdaNavFixedTop() {
-    if (window.__SDA_NAV_FIXED_INIT__) return;
-    window.__SDA_NAV_FIXED_INIT__ = true;
-    var MOBILE_MQ = '(max-width: 991px)';
-    var nav = document.querySelector('.header > .nav-content');
-    if (!nav) return;
-    var spacer = nav.nextElementSibling;
-    if (!spacer || !spacer.classList.contains('nav-content-fixed-spacer')) {
-      spacer = document.createElement('div');
-      spacer.className = 'nav-content-fixed-spacer';
-      spacer.setAttribute('aria-hidden', 'true');
-      nav.parentNode.insertBefore(spacer, nav.nextSibling);
-    }
-    var fixAt = 0;
-    function readScrollY() {
-      return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    }
-    function getMobileRevealAt() {
-      var headerContent = document.querySelector('.header:not(.header-checkout) > .header-content');
-      var headerHeight = headerContent && headerContent.offsetHeight ? headerContent.offsetHeight : 56;
-      return Math.max(48, Math.min(headerHeight, 100));
-    }
-    function measure() {
-      nav.classList.remove('is-fixed-top');
-      spacer.style.height = '0';
-      if (window.matchMedia(MOBILE_MQ).matches) return;
-      nav.classList.remove('sda-mobile-nav-revealed');
-      fixAt = nav.getBoundingClientRect().top + readScrollY();
-      if (!fixAt) fixAt = nav.offsetTop || 0;
-    }
-    function update() {
-      if (window.matchMedia(MOBILE_MQ).matches) {
-        nav.classList.remove('is-fixed-top');
-        spacer.style.height = '0';
-        if (typeof window.initSdaMobileNavStrip === 'function') window.initSdaMobileNavStrip();
-        if (document.querySelector('.header.header-v2')) {
-          nav.classList.remove('sda-mobile-nav-revealed', 'sda-mobile-nav-strip--3');
-          return;
-        }
-        if (readScrollY() >= getMobileRevealAt() - 1) {
-          nav.classList.add('sda-mobile-nav-revealed', 'sda-mobile-nav-strip--3');
-        } else {
-          nav.classList.remove('sda-mobile-nav-revealed');
-        }
-        return;
-      }
-      nav.classList.remove('sda-mobile-nav-revealed');
-      var navHeight = nav.offsetHeight;
-      if (!navHeight) {
-        nav.classList.remove('is-fixed-top');
-        spacer.style.height = '0';
-        return;
-      }
-      if (readScrollY() >= fixAt - 1) {
-        nav.classList.add('is-fixed-top');
-        spacer.style.height = navHeight + 'px';
-      } else {
-        nav.classList.remove('is-fixed-top');
-        spacer.style.height = '0';
-      }
-    }
-    function remeasureAndUpdate() { measure(); update(); }
-    window.addEventListener('scroll', update, { passive: true });
-    document.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', remeasureAndUpdate, { passive: true });
-    window.addEventListener('load', remeasureAndUpdate);
-    remeasureAndUpdate();
-  };
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', window.initSdaMobileNavStrip);
-    document.addEventListener('DOMContentLoaded', window.initSdaNavFixedTop);
-  } else {
-    window.initSdaMobileNavStrip();
-    window.initSdaNavFixedTop();
-  }
-  window.addEventListener('load', window.initSdaMobileNavStrip);
-  window.addEventListener('load', window.initSdaNavFixedTop);
-  window.addEventListener('resize', window.initSdaMobileNavStrip);
-</script>
-<script>
-  window.sdaSyncMobileCatalogDock = window.sdaSyncMobileCatalogDock || function sdaSyncMobileCatalogDock() {
-    if (!window.matchMedia('(max-width: 991px)').matches) return;
-    var inner = document.querySelector('.mobile-catalog-dock__inner');
-    if (!inner) return;
-    var loggedIn = !!(window.__SITE_DOAR_CUSTOMER__ && (window.__SITE_DOAR_CUSTOMER__.customerId || window.__SITE_DOAR_CUSTOMER__.email));
-    var btns = inner.querySelectorAll('.mobile-catalog-dock__btn, .mobile-catalog-dock__inner > a');
-    for (var i = 0; i < btns.length; i++) {
-      var btn = btns[i];
-      var labelEl = btn.querySelector('.mobile-catalog-dock__label');
-      var label = (labelEl && labelEl.textContent ? labelEl.textContent : btn.textContent || '').replace(/\s+/g, ' ').trim();
-      if (loggedIn && /^conta$/i.test(label)) {
-        btn.classList.add('sda-dock-account-hidden');
-        btn.setAttribute('aria-hidden', 'true');
-        btn.setAttribute('tabindex', '-1');
-      } else {
-        btn.classList.remove('sda-dock-account-hidden');
-        btn.removeAttribute('aria-hidden');
-        btn.removeAttribute('tabindex');
-      }
-    }
-    inner.classList.toggle('mobile-catalog-dock__inner--logged', loggedIn);
-  };
   window.addEventListener('load', function () {
     if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
       window.initMegaMenuAr();
     }
-    if (typeof window.initSdaMobileNavStrip === 'function') {
-      window.initSdaMobileNavStrip();
-    }
-    if (typeof window.initSdaNavFixedTop === 'function') {
-      window.initSdaNavFixedTop();
-    }
     if (window.SiteDoarFavorites && typeof window.SiteDoarFavorites.mergeGuestOnLogin === 'function') {
       window.SiteDoarFavorites.mergeGuestOnLogin();
       window.SiteDoarFavorites.refresh();
-    }
-    if (typeof window.sdaSyncMobileCatalogDock === 'function') {
-      window.sdaSyncMobileCatalogDock();
     }
   });
 </script>
@@ -536,10 +352,13 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
                 } else {
                     this.data.user = '';
                 }
+                window.__SITE_DOAR_CUSTOMER__ = customer || null;
+                if (typeof window.sdaUpdateUtilityBarLabels === 'function') {
+                    window.sdaUpdateUtilityBarLabels(customer);
+                }
                 if (typeof window.sdaSyncMobileCatalogDock === 'function') {
                     window.sdaSyncMobileCatalogDock();
                 }
-                window.__SITE_DOAR_CUSTOMER__ = customer || null;
                 if (window.SiteDoarFavorites && typeof window.SiteDoarFavorites.mergeGuestOnLogin === 'function') {
                     window.SiteDoarFavorites.mergeGuestOnLogin();
                 }

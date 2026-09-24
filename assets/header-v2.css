@@ -887,8 +887,7 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     justify-content: flex-start;
   }
 
-  body .header.header-v2 .header-v2-nav-inner .nav-main_item--nav-hidden-mobile,
-  body .header.header-v2 .header-v2-nav-inner .nav-main_item:has(a[href*="todos-os-produtos"]) {
+  body .header.header-v2 .header-v2-nav-inner .nav-main_item--nav-hidden-mobile {
     display: none !important;
   }
 

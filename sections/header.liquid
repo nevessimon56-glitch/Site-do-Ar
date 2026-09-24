@@ -31,11 +31,21 @@
                 </li>
             </ul>
             {% if themeConfig.account.type != 'disabled' %}
+                {% assign sdaUtilityFirst = '' %}
+                {% if customer %}
+                    {% if customer.name and customer.name != '' %}
+                        {% assign sdaUtilityFirst = customer.name | split: ' ' | first %}
+                    {% elsif customer.fantasyName and customer.fantasyName != '' %}
+                        {% assign sdaUtilityFirst = customer.fantasyName | split: ' ' | first %}
+                    {% elsif customer.email and customer.email != '' %}
+                        {% assign sdaUtilityFirst = customer.email | split: '@' | first %}
+                    {% endif %}
+                {% endif %}
                 <button type="button" class="header-utility__account" onclick="openSideNavOverlay('.sidenav-overlay_account', true)"
                     x-bind:title="data.isLogged ? (data.user ? 'Olá, ' + data.user : 'Minha conta') : 'Entre ou cadastre-se'">
                     <span class="header-utility__icon">{{ iconUser }}</span>
-                    <span class="header-utility__label" x-show="data.isLogged === true" x-cloak x-text="utilityGreeting()"></span>
-                    <span class="header-utility__label" x-show="data.isLogged !== true" x-cloak>Entre ou cadastre-se</span>
+                    <span class="header-utility__label header-utility__label--logged"{% if sdaUtilityFirst == '' %} hidden{% endif %}>{% if sdaUtilityFirst != '' %}Olá, {{ sdaUtilityFirst }}{% else %}Olá{% endif %}</span>
+                    <span class="header-utility__label header-utility__label--guest"{% if sdaUtilityFirst != '' %} hidden{% endif %}>Entre ou cadastre-se</span>
                 </button>
             {% endif %}
         </div>

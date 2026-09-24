@@ -56,5 +56,8 @@ Salve → publique → teste no celular (aba anônima).
 | Arquivo | Obrigatório para mobile? | Risco se errar |
 |---------|--------------------------|----------------|
 | `assets/header-v2.css` | **Sim** | Baixo |
+| `assets/header-v2-mobile.js` | **Sim** (nav + dock; cacheável) | Baixo |
 | `sections/header.liquid` | Se ainda não publicou header v2 | Médio |
-| `layout/theme.liquid` | Só se faltar link do CSS/JS no `<head>` | **Alto** |
+| `layout/theme.liquid` | Só link `<script defer>` do `header-v2-mobile.js` — **apague** blocos inline duplicados `initSdaMobileNavStrip` | Médio |
+
+Se a página ficar **lenta** ou com erro no console, confira se o `theme.liquid` **não** colou duas vezes o JavaScript de nav (inline + arquivo `.js`).
