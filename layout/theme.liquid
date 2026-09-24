@@ -258,7 +258,7 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     {% block head %}{% endblock %}
 </head>
 <script>window.__SITE_DOAR_CUSTOMER__ = {{ customer | json }};</script>
-<body x-data="setupStore()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
+<body x-data="setupStore()" x-init="init()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
 {%- for script in scripts.content -%}
     {{ script.code }}
 {%- endfor -%}
@@ -470,6 +470,28 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
   window.addEventListener('resize', window.initSdaMobileNavStrip);
 </script>
 <script>
+  window.sdaSyncMobileCatalogDock = window.sdaSyncMobileCatalogDock || function sdaSyncMobileCatalogDock() {
+    if (!window.matchMedia('(max-width: 991px)').matches) return;
+    var inner = document.querySelector('.mobile-catalog-dock__inner');
+    if (!inner) return;
+    var loggedIn = !!(window.__SITE_DOAR_CUSTOMER__ && (window.__SITE_DOAR_CUSTOMER__.customerId || window.__SITE_DOAR_CUSTOMER__.email));
+    var btns = inner.querySelectorAll('.mobile-catalog-dock__btn, .mobile-catalog-dock__inner > a');
+    for (var i = 0; i < btns.length; i++) {
+      var btn = btns[i];
+      var labelEl = btn.querySelector('.mobile-catalog-dock__label');
+      var label = (labelEl && labelEl.textContent ? labelEl.textContent : btn.textContent || '').replace(/\s+/g, ' ').trim();
+      if (loggedIn && /^conta$/i.test(label)) {
+        btn.classList.add('sda-dock-account-hidden');
+        btn.setAttribute('aria-hidden', 'true');
+        btn.setAttribute('tabindex', '-1');
+      } else {
+        btn.classList.remove('sda-dock-account-hidden');
+        btn.removeAttribute('aria-hidden');
+        btn.removeAttribute('tabindex');
+      }
+    }
+    inner.classList.toggle('mobile-catalog-dock__inner--logged', loggedIn);
+  };
   window.addEventListener('load', function () {
     if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
       window.initMegaMenuAr();
@@ -483,6 +505,9 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     if (window.SiteDoarFavorites && typeof window.SiteDoarFavorites.mergeGuestOnLogin === 'function') {
       window.SiteDoarFavorites.mergeGuestOnLogin();
       window.SiteDoarFavorites.refresh();
+    }
+    if (typeof window.sdaSyncMobileCatalogDock === 'function') {
+      window.sdaSyncMobileCatalogDock();
     }
   });
 </script>
@@ -507,9 +532,12 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
             changeCustomerLogin: function changeCustomerLogin(customer) {
                 this.data.isLogged = !!customer;
                 if (customer) {
-                    this.data.user = customer.name || customer.fantasyName || '';
+                    this.data.user = customer.name || customer.fantasyName || customer.email || '';
                 } else {
                     this.data.user = '';
+                }
+                if (typeof window.sdaSyncMobileCatalogDock === 'function') {
+                    window.sdaSyncMobileCatalogDock();
                 }
                 window.__SITE_DOAR_CUSTOMER__ = customer || null;
                 if (window.SiteDoarFavorites && typeof window.SiteDoarFavorites.mergeGuestOnLogin === 'function') {

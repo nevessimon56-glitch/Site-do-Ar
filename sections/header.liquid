@@ -34,8 +34,8 @@
                 <button type="button" class="header-utility__account" onclick="openSideNavOverlay('.sidenav-overlay_account', true)"
                     x-bind:title="data.isLogged ? (data.user ? 'Olá, ' + data.user : 'Minha conta') : 'Entre ou cadastre-se'">
                     <span class="header-utility__icon">{{ iconUser }}</span>
-                    <span class="header-utility__label" x-show="data.isLogged" x-cloak x-text="utilityGreeting()"></span>
-                    <span class="header-utility__label" x-show="!data.isLogged" x-cloak>Entre ou cadastre-se</span>
+                    <span class="header-utility__label" x-show="data.isLogged === true" x-cloak x-text="utilityGreeting()"></span>
+                    <span class="header-utility__label" x-show="data.isLogged !== true" x-cloak>Entre ou cadastre-se</span>
                 </button>
             {% endif %}
         </div>
