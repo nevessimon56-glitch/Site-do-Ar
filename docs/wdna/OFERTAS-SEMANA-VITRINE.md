@@ -1,6 +1,6 @@
 # Ofertas da semana — overlay imersivo
 
-O banner **Oferta da semana** abre um **painel full-screen** na própria loja (`/#sda-oferta-immersiva`): fundo escuro, countdown, “Revelar oferta”, pulseira de cards e confete. **Não depende** de criar página no admin WDNA.
+O banner **Oferta da semana** abre um **painel full-screen** na própria loja (`/#sda-oferta-immersiva`): layout **curadoria PMN** (hero “O clima certo muda tudo.”, destaque da semana, cards horizontais, banner calculadora). **Não depende** de criar página no admin WDNA.
 
 ## Por que não `/pagina/...`?
 

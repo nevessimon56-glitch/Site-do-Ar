@@ -1,54 +1,54 @@
 /**
- * Oferta da Semana — vitrine dinâmica + countdown + overlay global (#sda-oferta-immersiva)
+ * Oferta da Semana — layout curadoria PMN + overlay #sda-oferta-immersiva
  */
 (function () {
   'use strict';
 
   var OVERLAY_HASH = 'sda-oferta-immersiva';
 
-  function pad(n) {
-    return n < 10 ? '0' + n : String(n);
+  function cfg() {
+    return window.SDA_OFERTAS_SEMANA || {};
   }
 
-  function nextSundayEnd() {
-    var now = new Date();
-    var day = now.getDay();
-    var daysUntil = day === 0 ? 0 : 7 - day;
-    var end = new Date(now);
-    end.setDate(now.getDate() + daysUntil);
-    end.setHours(23, 59, 59, 999);
-    if (end <= now) {
-      end.setDate(end.getDate() + 7);
-    }
-    return end;
+  function escapeHtml(s) {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/"/g, '&quot;');
   }
 
-  function startCountdown(root) {
-    var box = root.querySelector('[data-os-countdown]');
-    if (!box) return;
-    var elD = box.querySelector('[data-os-cd-d]');
-    var elH = box.querySelector('[data-os-cd-h]');
-    var elM = box.querySelector('[data-os-cd-m]');
-    var elS = box.querySelector('[data-os-cd-s]');
+  function inferCategory(title) {
+    var t = (title || '').toLowerCase();
+    if (t.indexOf('piso') !== -1) return 'PISO-TETO';
+    if (t.indexOf('janela') !== -1) return 'JANELA';
+    if (t.indexOf('multi') !== -1) return 'MULTI-SPLIT';
+    return 'SPLIT INVERTER';
+  }
 
-    function tick() {
-      var target = nextSundayEnd();
-      var diff = Math.max(0, target - Date.now());
-      var sec = Math.floor(diff / 1000);
-      var d = Math.floor(sec / 86400);
-      sec -= d * 86400;
-      var h = Math.floor(sec / 3600);
-      sec -= h * 3600;
-      var m = Math.floor(sec / 60);
-      sec -= m * 60;
-      if (elD) elD.textContent = pad(d);
-      if (elH) elH.textContent = pad(h);
-      if (elM) elM.textContent = pad(m);
-      if (elS) elS.textContent = pad(sec);
+  function inferBtus(title) {
+    var m = String(title || '').match(/(\d{1,3})[\.,]?\d{3}\s*btus/i);
+    if (m) return m[1] + ',000';
+    m = String(title || '').match(/(\d+)\s*btus/i);
+    return m ? m[1] : '';
+  }
+
+  function parseDiscount(p) {
+    if (p.discountLabel) return p.discountLabel;
+    if (p.compareAtPrice && p.price) {
+      var oldN = parseMoney(p.compareAtPrice);
+      var newN = parseMoney(p.price);
+      if (oldN > newN && oldN > 0) {
+        var pct = Math.round(((oldN - newN) / oldN) * 100);
+        if (pct > 0) return pct + '% OFF';
+      }
     }
+    return '';
+  }
 
-    tick();
-    setInterval(tick, 1000);
+  function parseMoney(str) {
+    var s = String(str || '').replace(/[^\d,]/g, '').replace(',', '.');
+    var n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
   }
 
   function parseProductsFromHtml(html) {
@@ -57,8 +57,9 @@
       doc.querySelector('.showcase-14') ||
       (function () {
         var titles = doc.querySelectorAll('h2.showcase-title');
+        var matchRe = (cfg().sectionTitleMatch || /ofertas/i);
         for (var i = 0; i < titles.length; i++) {
-          if (/ofertas/i.test(titles[i].textContent || '')) {
+          if (matchRe.test(titles[i].textContent || '')) {
             return titles[i].closest('section.showcase');
           }
         }
@@ -67,19 +68,35 @@
 
     if (!section) return [];
 
-    var nodes = section.querySelectorAll('[data-product-url]');
+    var items = section.querySelectorAll('.showcase-item');
     var list = [];
     var seen = {};
 
-    for (var j = 0; j < nodes.length; j++) {
-      var node = nodes[j];
+    for (var j = 0; j < items.length; j++) {
+      var item = items[j];
+      var node = item.querySelector('[data-product-url]');
+      if (!node) continue;
       var url = node.getAttribute('data-product-url') || '';
       if (!url || seen[url]) continue;
       seen[url] = true;
+
+      var title = node.getAttribute('data-product-title') || '';
+      var price =
+        node.getAttribute('data-product-price') ||
+        (item.querySelector('.showcase-price_value') &&
+          item.querySelector('.showcase-price_value').textContent.trim()) ||
+        '';
+      var compareAt = '';
+      var oldEl = item.querySelector('.showcase-price_old, .old-price, del');
+      if (oldEl) compareAt = oldEl.textContent.trim();
+
       list.push({
         url: url,
-        title: node.getAttribute('data-product-title') || 'Oferta',
-        image: node.getAttribute('data-product-image') || ''
+        title: title || 'Oferta',
+        image: node.getAttribute('data-product-image') || '',
+        price: price,
+        compareAtPrice: compareAt,
+        productId: node.getAttribute('data-product-id') || ''
       });
     }
     return list;
@@ -97,7 +114,7 @@
   }
 
   function configProducts() {
-    var list = (window.SDA_OFERTAS_SEMANA || {}).products;
+    var list = cfg().products;
     if (!list || !list.length) return [];
     var out = [];
     for (var i = 0; i < list.length; i++) {
@@ -120,6 +137,16 @@
     return merged;
   }
 
+  function loadProducts() {
+    var fromConfig = configProducts();
+    if (fromConfig.length) {
+      return fetchShowcaseProducts().then(function (fromHome) {
+        return mergeProducts(fromConfig, fromHome);
+      });
+    }
+    return fetchShowcaseProducts();
+  }
+
   function fireConfetti() {
     var canvas = document.createElement('canvas');
     canvas.setAttribute('aria-hidden', 'true');
@@ -129,22 +156,22 @@
     canvas.height = window.innerHeight;
     document.body.appendChild(canvas);
     var ctx = canvas.getContext('2d');
-    var colors = ['#f58220', '#4b96d4', '#ffffff', '#ffd166', '#1a2d4a'];
+    var colors = ['#f58220', '#4b96d4', '#ff7f5c', '#2d6a6a', '#ffffff'];
     var originX = window.innerWidth * 0.5;
-    var originY = window.innerHeight * 0.22;
+    var originY = window.innerHeight * 0.18;
     var pieces = [];
-    for (var i = 0; i < 80; i++) {
+    for (var i = 0; i < 70; i++) {
       pieces.push({
         x: originX,
         y: originY,
-        vx: (Math.random() - 0.5) * 10,
-        vy: Math.random() * -12 - 4,
+        vx: (Math.random() - 0.5) * 9,
+        vy: Math.random() * -11 - 3,
         rot: Math.random() * Math.PI,
-        vr: (Math.random() - 0.5) * 0.2,
-        w: 6 + Math.random() * 6,
-        h: 4 + Math.random() * 4,
+        vr: (Math.random() - 0.5) * 0.18,
+        w: 5 + Math.random() * 5,
+        h: 3 + Math.random() * 4,
         color: colors[Math.floor(Math.random() * colors.length)],
-        life: 90 + Math.random() * 40
+        life: 80 + Math.random() * 40
       });
     }
     var frame = 0;
@@ -156,7 +183,7 @@
         p.life -= 1;
         if (p.life <= 0) continue;
         alive++;
-        p.vy += 0.35;
+        p.vy += 0.32;
         p.x += p.vx;
         p.y += p.vy;
         p.rot += p.vr;
@@ -164,130 +191,157 @@
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rot);
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = Math.min(1, p.life / 30);
+        ctx.globalAlpha = Math.min(1, p.life / 28);
         ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
         ctx.restore();
       }
       frame++;
-      if (alive > 0 && frame < 220) requestAnimationFrame(tick);
+      if (alive > 0 && frame < 200) requestAnimationFrame(tick);
       else canvas.remove();
     }
     requestAnimationFrame(tick);
   }
 
-  function renderApp(root, products) {
-    var heroCard = root.querySelector('[data-os-hero-card]');
-    var heroImg = root.querySelector('[data-os-hero-img]');
-    var heroTitle = root.querySelector('[data-os-hero-title]');
-    var heroLink = root.querySelector('[data-os-hero-link]');
-    var rail = root.querySelector('[data-os-rail]');
-    var revealBtn = root.querySelector('[data-os-reveal]');
-    var shuffleBtn = root.querySelector('[data-os-shuffle]');
-    var loader = root.querySelector('[data-os-loader]');
+  function buildCardHtml(p, index, isActive) {
+    var discount = parseDiscount(p);
+    var btus = p.btus || inferBtus(p.title);
+    var category = p.category || inferCategory(p.title);
+    var room = p.room || (btus ? 'Ambiente ideal · 2026' : 'SITE DO AR · 2026');
+    var feat = p.features || (btus ? btus + ' BTUs · conforto inverter' : 'Seleção curada Site do Ar');
+    var oldPrice = p.compareAtPrice ? '<span class="opmn-card__old">DE ' + escapeHtml(p.compareAtPrice) + '</span>' : '';
+    var price = p.price ? '<span class="opmn-card__price">' + escapeHtml(p.price) + '</span>' : '';
+
+    return (
+      '<article class="opmn-card' +
+      (isActive ? ' is-active' : '') +
+      '" data-opmn-index="' +
+      index +
+      '" tabindex="0">' +
+      (discount ? '<span class="opmn-card__off">' + escapeHtml(discount) + '</span>' : '') +
+      '<p class="opmn-card__type">' +
+      escapeHtml(category) +
+      '</p>' +
+      '<p class="opmn-card__avail">Disponível</p>' +
+      '<div class="opmn-card__media"><img src="' +
+      escapeHtml(p.image) +
+      '" alt="' +
+      escapeHtml(p.title) +
+      '" loading="lazy"></div>' +
+      '<p class="opmn-card__room">' +
+      escapeHtml(room) +
+      '</p>' +
+      '<h3 class="opmn-card__name">' +
+      escapeHtml(p.title) +
+      '</h3>' +
+      '<p class="opmn-card__feat">' +
+      escapeHtml(feat) +
+      '</p>' +
+      '<div class="opmn-card__prices">' +
+      oldPrice +
+      price +
+      '</div>' +
+      '<div class="opmn-card__foot">' +
+      '<a class="opmn-card__link" href="' +
+      escapeHtml(p.url) +
+      '">Ver produto</a>' +
+      '<a class="opmn-card__cart" href="' +
+      escapeHtml(p.url) +
+      '" title="Ir ao produto" aria-label="Ir ao produto">🛒</a>' +
+      '</div></article>'
+    );
+  }
+
+  function renderPMN(root, products) {
+    var rail = root.querySelector('[data-opmn-rail]');
+    var empty = root.querySelector('[data-opmn-empty]');
+    var loader = root.querySelector('[data-opmn-loader]');
+    var edition = root.querySelector('[data-opmn-edition]');
+    var spotImg = root.querySelector('[data-opmn-spot-img]');
+    var spotTitle = root.querySelector('[data-opmn-spot-title]');
+    var spotLink = root.querySelector('[data-opmn-spot-link]');
+    var spotDiscount = root.querySelector('[data-opmn-spot-discount]');
+
+    if (edition && cfg().edition) {
+      edition.textContent = cfg().edition;
+    }
+
+    function setSpot(i) {
+      var p = products[i];
+      if (!p) return;
+      if (spotImg) {
+        spotImg.src = p.image || '';
+        spotImg.alt = p.title || '';
+      }
+      if (spotTitle) spotTitle.textContent = p.title || '';
+      if (spotLink) {
+        spotLink.href = p.url || '#';
+        spotLink.setAttribute('title', p.title || '');
+      }
+      var disc = parseDiscount(p);
+      if (spotDiscount) {
+        if (disc) {
+          spotDiscount.textContent = disc;
+          spotDiscount.hidden = false;
+        } else {
+          spotDiscount.hidden = true;
+        }
+      }
+      if (rail) {
+        var cards = rail.querySelectorAll('.opmn-card');
+        for (var c = 0; c < cards.length; c++) {
+          cards[c].classList.toggle('is-active', Number(cards[c].getAttribute('data-opmn-index')) === i);
+        }
+      }
+    }
 
     if (!products.length) {
-      if (heroTitle) heroTitle.textContent = 'Em breve novas ofertas';
-      if (heroLink) heroLink.setAttribute('href', '/');
-      if (heroCard) heroCard.hidden = false;
+      if (empty) empty.hidden = false;
+      if (rail) rail.innerHTML = '';
+      if (spotTitle) spotTitle.textContent = 'Em breve novas ofertas';
       if (loader) loader.classList.add('is-hidden');
       return;
     }
 
-    var index = 0;
-
-    function setHero(i, mystery) {
-      var p = products[i];
-      if (!p) return;
-      index = i;
-      if (heroCard) {
-        heroCard.hidden = false;
-        heroCard.classList.toggle('is-mystery', !!mystery);
-      }
-      if (heroImg) {
-        heroImg.src = p.image || '';
-        heroImg.alt = p.title;
-      }
-      if (heroTitle) heroTitle.textContent = mystery ? 'Oferta surpresa…' : p.title;
-      if (heroLink) {
-        heroLink.href = p.url;
-        heroLink.setAttribute('title', p.title);
-      }
-      if (rail) {
-        var chips = rail.querySelectorAll('.os-week__chip');
-        for (var c = 0; c < chips.length; c++) {
-          chips[c].classList.toggle('is-active', Number(chips[c].getAttribute('data-index')) === i);
-        }
-      }
-    }
+    if (empty) empty.hidden = true;
 
     if (rail) {
       rail.innerHTML = '';
-      for (var n = 0; n < products.length; n++) {
-        (function (idx) {
-          var prod = products[idx];
-          var btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'os-week__chip' + (idx === 0 ? ' is-active' : '');
-          btn.setAttribute('data-index', String(idx));
-          btn.innerHTML =
-            (prod.image ? '<img src="' + prod.image.replace(/"/g, '&quot;') + '" alt="" loading="lazy">' : '') +
-            '<span class="os-week__chip-title">' +
-            (prod.title || 'Oferta') +
-            '</span>';
-          btn.addEventListener('click', function () {
-            setHero(idx, heroCard && heroCard.classList.contains('is-mystery'));
-          });
-          rail.appendChild(btn);
-        })(n);
+      for (var k = 0; k < products.length; k++) {
+        rail.insertAdjacentHTML('beforeend', buildCardHtml(products[k], k, k === 0));
       }
-    }
-
-    setHero(0, true);
-
-    if (revealBtn) {
-      revealBtn.addEventListener('click', function () {
-        if (heroCard) heroCard.classList.remove('is-mystery');
-        if (heroTitle && products[index]) heroTitle.textContent = products[index].title;
+      rail.addEventListener('click', function (ev) {
+        var card = ev.target.closest('.opmn-card');
+        if (!card) return;
+        var idx = Number(card.getAttribute('data-opmn-index'));
+        if (!isNaN(idx)) setSpot(idx);
       });
     }
 
-    if (shuffleBtn) {
-      shuffleBtn.addEventListener('click', function () {
-        var next = Math.floor(Math.random() * products.length);
-        if (products.length > 1) {
-          while (next === index) next = Math.floor(Math.random() * products.length);
-        }
-        setHero(next, true);
-      });
-    }
-
+    setSpot(0);
     if (loader) loader.classList.add('is-hidden');
   }
 
-  function loadProducts() {
-    var fromConfig = configProducts();
-    if (fromConfig.length) {
-      return fetchShowcaseProducts().then(function (fromHome) {
-        return mergeProducts(fromConfig, fromHome);
+  function bindScrollActions(root) {
+    var offers = root.querySelector('[data-opmn-offers]');
+    root.querySelectorAll('[data-opmn-scroll]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (offers) offers.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
-    }
-    return fetchShowcaseProducts();
+    });
   }
 
   function init() {
     var overlay = document.querySelector('[data-sda-oferta-overlay]');
-    var root = overlay
-      ? overlay.querySelector('[data-os-week]')
-      : document.querySelector('[data-os-week]');
+    var root = overlay ? overlay.querySelector('[data-opmn-root]') : document.querySelector('[data-opmn-root]');
     if (!root) return;
 
     var appPromise = null;
 
     function ensureApp() {
       if (appPromise) return appPromise;
-      startCountdown(root);
       appPromise = loadProducts().then(function (products) {
-        renderApp(root, products);
+        renderPMN(root, products);
+        bindScrollActions(root);
         return products;
       });
       return appPromise;
