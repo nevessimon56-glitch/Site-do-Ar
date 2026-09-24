@@ -357,6 +357,14 @@
   scroll-margin-top: calc(var(--hdr-m-utility-h, 32px) + 120px);
 }
 
+.showcase-item.sda-week-offer-highlight {
+  position: relative;
+}
+
+.showcase-item.sda-week-offer-highlight .showcase-product.card {
+  box-shadow: 0 0 0 2px rgba(245, 130, 32, 0.45);
+}
+
 /* Esconde blocos legados duplicados no desktop */
 @media (min-width: 992px) {
   .header-v2 .navbar-center .header-box-account-info,
