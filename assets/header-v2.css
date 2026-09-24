@@ -514,18 +514,33 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
 
 /* —— Mobile (layout mock: utilitária + logo/ícones + busca pill + nav scroll) —— */
 @media (max-width: 991px) {
+  .header-v2 {
+    --hdr-m-gutter: 14px;
+    --hdr-m-gap-sm: 8px;
+    --hdr-m-gap-md: 10px;
+    --hdr-m-gap-lg: 12px;
+  }
+
   .header-v2 .header-utility {
     font-size: 10px;
     letter-spacing: 0.1em;
   }
 
+  body .header.header-v2 .header-utility .container,
+  body .header.header-v2 .header-content > .container,
+  body .header.header-v2 .header-v2-nav-row > .container {
+    padding-left: var(--hdr-m-gutter) !important;
+    padding-right: var(--hdr-m-gutter) !important;
+  }
+
   .header-v2 .header-utility__inner {
     min-height: 0;
-    padding: 3px 0;
+    padding: 6px 0;
+    gap: var(--hdr-m-gap-md);
   }
 
   .header-v2 .header-utility__links {
-    gap: 8px;
+    gap: var(--hdr-m-gap-lg);
   }
 
   /* Mock mobile: só Atendimento na faixa (pedidos ficam no menu) */
@@ -592,11 +607,12 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   }
 
   body .header.header-v2 .header-content {
-    padding: 4px 0 0 !important;
+    padding: 0 !important;
     min-height: 0 !important;
   }
 
   body .header.header-v2 .header-content > .container {
+    padding-top: 8px !important;
     padding-bottom: 0 !important;
   }
 
@@ -613,9 +629,9 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
-    gap: 6px;
+    gap: var(--hdr-m-gap-md);
     width: 100%;
-    padding-bottom: 4px;
+    padding: 0 0 var(--hdr-m-gap-sm) !important;
   }
 
   .header-v2 .header-v2-navbar > .navbar-section:first-child {
@@ -636,7 +652,7 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
 
   .header-v2 .header-v2-navbar .logo picture img,
   .header-v2 .header-v2-navbar .logo img {
-    max-height: 32px !important;
+    max-height: 30px !important;
     width: auto;
     max-width: 100%;
     display: block;
@@ -655,7 +671,7 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     flex: 0 0 auto;
     align-items: center;
     justify-content: flex-end;
-    gap: 6px;
+    gap: var(--hdr-m-gap-sm);
     margin-left: auto;
   }
 
@@ -664,9 +680,9 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    border: 1px solid #d8e0ea;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #d4dce6;
     border-radius: 8px;
     background: #fff;
     color: var(--hdr-blue);
@@ -755,21 +771,21 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   /* Busca pill — linha dedicada */
   .header-v2 .header-v2-search-pill {
     display: block;
-    padding: 0 0 4px;
+    padding: 2px 0 10px;
     margin: 0;
   }
 
   .header-v2 .header-v2-search-pill__field {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--hdr-m-gap-sm);
     margin: 0;
-    padding: 0 12px;
-    min-height: 34px;
+    padding: 0 14px;
+    min-height: 36px;
     border: 1px solid #cfd8e3;
     border-radius: 999px;
     background: #fff;
-    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
   }
 
   .header-v2 .header-v2-search-pill__icon {
@@ -788,7 +804,7 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   .header-v2 .header-v2-search-pill__input {
     flex: 1;
     border: 0;
-    padding: 8px 0;
+    padding: 7px 0;
     min-height: 0;
     font-size: 13px;
     background: transparent;
@@ -811,15 +827,13 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     border-top: 1px solid var(--hdr-border);
     border-bottom: 1px solid var(--hdr-border);
     box-shadow: none !important;
-    padding: 0 !important;
+    padding: 7px 0 !important;
     margin: 0 !important;
     line-height: 1 !important;
   }
 
   body .header.header-v2 .header-v2-nav-row > .container.header-v2-nav-inner--scroll {
     max-width: 100%;
-    padding-left: 10px;
-    padding-right: 10px;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
   }
@@ -828,10 +842,10 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 8px;
-    min-height: 0 !important;
-    max-height: 24px !important;
-    padding: 0 16px 0 0 !important;
+    gap: var(--hdr-m-gap-md);
+    min-height: 26px !important;
+    max-height: 32px !important;
+    padding: 0 18px 0 0 !important;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -861,21 +875,21 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     display: inline-flex !important;
     flex-shrink: 0;
     align-items: center;
-    margin-right: 0;
-    padding: 1px 5px !important;
-    font-size: 7px !important;
+    margin-right: 2px;
+    padding: 3px 8px !important;
+    font-size: 7.5px !important;
     font-weight: 800;
     letter-spacing: 0.02em;
-    gap: 2px;
-    border-radius: 4px;
-    line-height: 1 !important;
+    gap: 3px;
+    border-radius: 5px;
+    line-height: 1.05 !important;
     min-height: 0 !important;
-    max-height: 20px !important;
+    max-height: 24px !important;
   }
 
   body .header.header-v2 .header-v2-cta-ambiente svg {
-    width: 9px;
-    height: 9px;
+    width: 10px;
+    height: 10px;
   }
 
   body .header.header-v2 .header-v2-cta-ambiente__chev {
@@ -898,9 +912,10 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     flex: 0 0 auto;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 10px;
+    gap: var(--hdr-m-gap-lg);
     min-width: 0;
     justify-content: flex-start;
+    padding-left: 2px;
   }
 
   body .header.header-v2 .header-v2-nav-inner .nav-main_item--nav-hidden-mobile {
@@ -1029,35 +1044,13 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   }
 }
 
-/* —— Mobile compacto: remove faixa branca (theme-custom .header-content .navbar { height: 90px }) —— */
+/* —— Mobile: mata navbar 90px do theme-custom (sem zerar o grid de espaçamento) —— */
 @media (max-width: 991px) {
-  body .header.header-v2 > .header-utility.content,
-  body .header.header-v2 > .header-content.content {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-
-  body .header.header-v2 .header-content {
-    padding: 0 !important;
-    min-height: 0 !important;
-  }
-
-  body .header.header-v2 .header-content > .container,
-  body .header.header-v2 .header-utility .container {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin-top: 0 !important;
-  }
-
   body .header.header-v2 .header-content .navbar,
   body .header.header-v2 .header-content .navbar.header-v2-navbar {
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
-    margin: 0 !important;
-    padding: 0 0 2px !important;
     background: transparent !important;
     align-items: center !important;
   }
@@ -1071,10 +1064,6 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     margin: 0 !important;
     padding: 0 !important;
     border: 0 !important;
-  }
-
-  .header-v2 .header-utility__inner {
-    padding: 2px 0 !important;
   }
 
   .header-v2 .header-utility__account {
@@ -1091,31 +1080,5 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
 
   .header-v2 .header-utility__account.is-logged-in .header-utility__label:not(.header-utility__label--account) {
     display: none !important;
-  }
-
-  .header-v2 .header-v2-mobile-search-btn,
-  .header-v2 .header-v2-mobile-icon-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 7px;
-  }
-
-  .header-v2 .header-v2-search-pill {
-    padding: 0 0 2px !important;
-  }
-
-  .header-v2 .header-v2-search-pill__field {
-    min-height: 30px;
-    padding: 0 10px;
-  }
-
-  .header-v2 .header-v2-search-pill__input {
-    padding: 5px 0;
-    font-size: 12px;
-  }
-
-  body .header.header-v2 .header-v2-navbar .logo picture img,
-  body .header.header-v2 .header-v2-navbar .logo img {
-    max-height: 28px !important;
   }
 }
