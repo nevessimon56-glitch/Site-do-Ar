@@ -18,16 +18,22 @@
   }
 
   function readStore() {
-    var data = safeParse(localStorage.getItem(STORAGE_KEY));
-    if (!data || typeof data !== 'object' || !data.byUser) {
+    try {
+      var data = safeParse(localStorage.getItem(STORAGE_KEY));
+      if (!data || typeof data !== 'object' || !data.byUser) {
+        return { byUser: {} };
+      }
+      return data;
+    } catch (e) {
       return { byUser: {} };
     }
-    return data;
   }
 
   function writeStore(store) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-    document.dispatchEvent(new CustomEvent('sitedoar-favorites-change'));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      document.dispatchEvent(new CustomEvent('sitedoar-favorites-change'));
+    } catch (e) {}
   }
 
   function getCustomerId() {
@@ -410,13 +416,19 @@
     }
   }
 
+  var mergeLoginTimer;
   function onLoginMerge() {
-    var cid = getCustomerId();
-    if (cid) {
-      mergeGuestIntoUser(cid);
-      loadServerIntoLocal();
-    }
-    refreshUI();
+    clearTimeout(mergeLoginTimer);
+    mergeLoginTimer = setTimeout(function () {
+      try {
+        var cid = getCustomerId();
+        if (cid) {
+          mergeGuestIntoUser(cid);
+          loadServerIntoLocal();
+        }
+        refreshUI();
+      } catch (e) {}
+    }, 120);
   }
 
   function onPanelClick(e) {
@@ -452,9 +464,16 @@
   });
 
   var injectTimer;
+  var injectDelay = 80;
+  try {
+    if (window.matchMedia && window.matchMedia('(max-width: 991px)').matches) {
+      injectDelay = 220;
+    }
+  } catch (e) {}
+
   function scheduleInject() {
     clearTimeout(injectTimer);
-    injectTimer = setTimeout(bootFavoriteButtons, 80);
+    injectTimer = setTimeout(bootFavoriteButtons, injectDelay);
   }
 
   if (typeof MutationObserver !== 'undefined') {
@@ -471,13 +490,24 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
-    onLoginMerge();
-    bootFavoriteButtons();
-    refreshUI();
-  });
+  function bootFavoritesDeferred() {
+    var run = function () {
+      onLoginMerge();
+      bootFavoriteButtons();
+      refreshUI();
+    };
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(run, { timeout: 2500 });
+    } else {
+      setTimeout(run, 0);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', bootFavoritesDeferred);
   window.addEventListener('load', function () {
-    bootFavoriteButtons();
-    refreshUI();
+    setTimeout(function () {
+      bootFavoriteButtons();
+      refreshUI();
+    }, 0);
   });
 })();

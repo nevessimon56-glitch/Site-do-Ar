@@ -309,19 +309,21 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
             if (key.toLowerCase() === 'linkseller') linkSellerInit = value;
             if (key.toLowerCase() === 'ref') refInit = value;
         });
-        if (linkSellerInit) {
-            localStorage.setItem('linkSeller', linkSellerInit);
-            localStorage.removeItem('seller');
-            localStorage.removeItem('ref');
-        } else if (sellerInit) {
-            localStorage.setItem('seller', sellerInit);
-            localStorage.removeItem('linkSeller');
-            localStorage.removeItem('ref');
-        } else if (refInit) {
-            localStorage.setItem('ref', refInit);
-            localStorage.removeItem('seller');
-            localStorage.removeItem('linkSeller');
-        }
+        try {
+            if (linkSellerInit) {
+                localStorage.setItem('linkSeller', linkSellerInit);
+                localStorage.removeItem('seller');
+                localStorage.removeItem('ref');
+            } else if (sellerInit) {
+                localStorage.setItem('seller', sellerInit);
+                localStorage.removeItem('linkSeller');
+                localStorage.removeItem('ref');
+            } else if (refInit) {
+                localStorage.setItem('ref', refInit);
+                localStorage.removeItem('seller');
+                localStorage.removeItem('linkSeller');
+            }
+        } catch (e) {}
     }
     window.currencyStore = {% if store.symbolPrice %}"{{ store.symbolPrice }}"{% else %}null{% endif %};
 </script>
@@ -427,14 +429,26 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
         if (typeof mb_track !== 'undefined') {
             window.mb_track('accountSync', {
                 user: {
-                    user_id: customer?.customerId,
-                    email: customer?.email,
-                    phone: customer?.cellphone,
-                    name: customer?.name || customer?.fantasyName,
+                    user_id: customer.customerId,
+                    email: customer.email,
+                    phone: customer.cellphone,
+                    name: customer.name || customer.fantasyName,
                 }
             });
         }
     }
+</script>
+<script>
+(function () {
+  function sdaHideStuckLoader() {
+    var el = document.querySelector('.loading-main.loading');
+    if (el) el.classList.remove('loading');
+  }
+  window.addEventListener('load', function () {
+    setTimeout(sdaHideStuckLoader, 150);
+  });
+  setTimeout(sdaHideStuckLoader, 14000);
+})();
 </script>
 {% block script_footer %}{% endblock %}
 {%- for script in scripts.footer -%}
