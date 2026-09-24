@@ -1162,6 +1162,19 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     object-fit: contain;
   }
 
+  .header-v2 .header-v2-mobile-catalog__icon .header-v2-mcat-img--svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
+
+  .header-v2 .header-v2-mobile-catalog__icon .header-v2-mcat-img--svg svg {
+    width: 40px;
+    height: 40px;
+    display: block;
+  }
+
   .header-v2 .header-v2-mobile-catalog__icon--orange svg {
     width: 28px;
     height: 28px;

@@ -12,6 +12,21 @@
 {% assign iconCartOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 9.2h11.3L21 7H7"/><circle cx="10" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>' %}
 {% assign iconHome = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' %}
 {% assign iconTag = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>' %}
+{% comment %}
+  Ícones mobile — cole aqui as URLs absolutas das imagens (Split / Piso / Janela).
+  Ex.: https://cdn.../split-inverter.png
+  Se preenchido, vence ícone do menu WDNA e SVG local.
+{% endcomment %}
+{% assign sdaMIconSplitUrlUser = '' %}
+{% assign sdaMIconPisoUrlUser = '' %}
+{% assign sdaMIconJanelaUrlUser = '' %}
+{% assign sdaMIconSplitUrl = sdaMIconSplitUrlUser %}
+{% assign sdaMIconPisoUrl = sdaMIconPisoUrlUser %}
+{% assign sdaMIconJanelaUrl = sdaMIconJanelaUrlUser %}
+{% assign sdaMIconSplitSvg = '' %}
+{% assign sdaMIconPisoSvg = '' %}
+{% assign sdaMIconJanelaSvg = '' %}
+
 {% assign sdaMLinkSplit = '/split-inverter' %}
 {% assign sdaMLabelSplit = 'Split Inverter' %}
 {% assign sdaMLinkPiso = '/piso-teto' %}
@@ -23,12 +38,30 @@
     {% if sdaMName contains 'split' %}
         {% assign sdaMLinkSplit = menuItem.link %}
         {% assign sdaMLabelSplit = menuItem.name %}
+        {% if sdaMIconSplitUrl == '' and menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
+            {% assign sdaMIconSplitUrl = menuItem.icon.file.url %}
+        {% endif %}
+        {% if sdaMIconSplitSvg == '' and menuItem.iconSvg %}
+            {% assign sdaMIconSplitSvg = menuItem.iconSvg %}
+        {% endif %}
     {% elsif sdaMName contains 'piso' %}
         {% assign sdaMLinkPiso = menuItem.link %}
         {% assign sdaMLabelPiso = menuItem.name %}
+        {% if sdaMIconPisoUrl == '' and menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
+            {% assign sdaMIconPisoUrl = menuItem.icon.file.url %}
+        {% endif %}
+        {% if sdaMIconPisoSvg == '' and menuItem.iconSvg %}
+            {% assign sdaMIconPisoSvg = menuItem.iconSvg %}
+        {% endif %}
     {% elsif sdaMName contains 'janela' %}
         {% assign sdaMLinkJanela = menuItem.link %}
         {% assign sdaMLabelJanela = menuItem.name %}
+        {% if sdaMIconJanelaUrl == '' and menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
+            {% assign sdaMIconJanelaUrl = menuItem.icon.file.url %}
+        {% endif %}
+        {% if sdaMIconJanelaSvg == '' and menuItem.iconSvg %}
+            {% assign sdaMIconJanelaSvg = menuItem.iconSvg %}
+        {% endif %}
     {% endif %}
 {% endfor %}
 
@@ -263,19 +296,37 @@
         <div class="container header-v2-mobile-catalog__scroll">
             <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkSplit }}" title="{{ sdaMLabelSplit }}">
                 <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
-                    <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-split.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% if sdaMIconSplitUrl != '' %}
+                        <img class="header-v2-mcat-img" src="{{ sdaMIconSplitUrl }}" width="40" height="40" alt="" loading="lazy" decoding="async">
+                    {% elsif sdaMIconSplitSvg != '' %}
+                        <span class="header-v2-mcat-img header-v2-mcat-img--svg">{{ sdaMIconSplitSvg }}</span>
+                    {% else %}
+                        <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-split.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% endif %}
                 </span>
                 <span class="header-v2-mobile-catalog__label">{{ sdaMLabelSplit }}</span>
             </a>
             <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkPiso }}" title="{{ sdaMLabelPiso }}">
                 <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
-                    <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-piso.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% if sdaMIconPisoUrl != '' %}
+                        <img class="header-v2-mcat-img" src="{{ sdaMIconPisoUrl }}" width="40" height="40" alt="" loading="lazy" decoding="async">
+                    {% elsif sdaMIconPisoSvg != '' %}
+                        <span class="header-v2-mcat-img header-v2-mcat-img--svg">{{ sdaMIconPisoSvg }}</span>
+                    {% else %}
+                        <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-piso.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% endif %}
                 </span>
                 <span class="header-v2-mobile-catalog__label">{{ sdaMLabelPiso }}</span>
             </a>
             <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkJanela }}" title="{{ sdaMLabelJanela }}">
                 <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
-                    <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-janela.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% if sdaMIconJanelaUrl != '' %}
+                        <img class="header-v2-mcat-img" src="{{ sdaMIconJanelaUrl }}" width="40" height="40" alt="" loading="lazy" decoding="async">
+                    {% elsif sdaMIconJanelaSvg != '' %}
+                        <span class="header-v2-mcat-img header-v2-mcat-img--svg">{{ sdaMIconJanelaSvg }}</span>
+                    {% else %}
+                        <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-janela.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% endif %}
                 </span>
                 <span class="header-v2-mobile-catalog__label">{{ sdaMLabelJanela }}</span>
             </a>
