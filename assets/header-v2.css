@@ -1005,3 +1005,94 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     margin-bottom: calc(50px + env(safe-area-inset-bottom, 0px));
   }
 }
+
+/* —— Mobile compacto: remove faixa branca (theme-custom .header-content .navbar { height: 90px }) —— */
+@media (max-width: 991px) {
+  body .header.header-v2 > .header-utility.content,
+  body .header.header-v2 > .header-content.content {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  body .header.header-v2 .header-content {
+    padding: 0 !important;
+    min-height: 0 !important;
+  }
+
+  body .header.header-v2 .header-content > .container,
+  body .header.header-v2 .header-utility .container {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  body .header.header-v2 .header-content .navbar,
+  body .header.header-v2 .header-content .navbar.header-v2-navbar {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 0 2px !important;
+    background: transparent !important;
+    align-items: center !important;
+  }
+
+  body .header.header-v2 .header-v2-search.search-desktop,
+  body .header.header-v2 .header-v2-actions.hide-lg {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+
+  .header-v2 .header-utility__inner {
+    padding: 2px 0 !important;
+  }
+
+  .header-v2 .header-utility__account {
+    flex: 1 1 auto;
+    min-width: 0;
+    justify-content: flex-end;
+    max-width: 58%;
+  }
+
+  .header-v2 .header-utility__account.is-logged-in .header-utility__label--account {
+    max-width: 100%;
+    text-align: right;
+  }
+
+  .header-v2 .header-utility__account.is-logged-in .header-utility__label:not(.header-utility__label--account) {
+    display: none !important;
+  }
+
+  .header-v2 .header-v2-mobile-search-btn,
+  .header-v2 .header-v2-mobile-icon-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+  }
+
+  .header-v2 .header-v2-search-pill {
+    padding: 0 0 2px !important;
+  }
+
+  .header-v2 .header-v2-search-pill__field {
+    min-height: 30px;
+    padding: 0 10px;
+  }
+
+  .header-v2 .header-v2-search-pill__input {
+    padding: 5px 0;
+    font-size: 12px;
+  }
+
+  body .header.header-v2 .header-v2-navbar .logo picture img,
+  body .header.header-v2 .header-v2-navbar .logo img {
+    max-height: 28px !important;
+  }
+}

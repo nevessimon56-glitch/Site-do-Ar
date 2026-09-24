@@ -192,6 +192,29 @@ body .header.header-v2 .header-v2-nav-inner {
   padding-top: 2px !important;
   padding-bottom: 2px !important;
 }
+@media (max-width: 991px) {
+  body .header.header-v2 .header-content .navbar,
+  body .header.header-v2 .header-content .navbar.header-v2-navbar {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: 44px !important;
+    padding: 0 0 2px !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+  body .header.header-v2 > .header-content.content {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  body .header.header-v2 .header-content > .container {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  body .header.header-v2 .header-utility .header-utility__inner {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+  }
+}
 body .header:not(.header-checkout) .header-link_cart:hover .cart_quantity,
 body .header:not(.header-checkout) .header-link_cart:focus .cart_quantity,
 body .header:not(.header-checkout) .cart_link:hover .cart_quantity,

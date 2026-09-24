@@ -17,16 +17,22 @@
   window.sdaUpdateUtilityBarLabels = window.sdaUpdateUtilityBarLabels || function sdaUpdateUtilityBarLabels(customer) {
     var btn = document.querySelector('.header-v2 .header-utility__account');
     if (!btn) return;
-    var label = btn.querySelector('.header-utility__label--account');
+    var label = btn.querySelector('[data-sda-utility-account], .header-utility__label--account');
     if (!label) return;
     if (customer && (customer.name || customer.fantasyName || customer.email)) {
       var raw = customer.name || customer.fantasyName || customer.email || '';
       var first = String(raw).trim().split(/\s+/)[0] || '';
       label.textContent = first ? 'Olá, ' + first : 'Olá';
       btn.classList.add('is-logged-in');
+      btn.setAttribute('title', label.textContent);
     } else {
       label.textContent = 'Entre ou cadastre-se';
       btn.classList.remove('is-logged-in');
+      btn.setAttribute('title', 'Entre ou cadastre-se');
+    }
+    var extras = btn.querySelectorAll('.header-utility__label:not(.header-utility__label--account)');
+    for (var ei = 0; ei < extras.length; ei++) {
+      extras[ei].parentNode.removeChild(extras[ei]);
     }
   };
 
