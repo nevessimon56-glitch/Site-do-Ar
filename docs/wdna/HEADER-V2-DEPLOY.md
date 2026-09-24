@@ -35,7 +35,7 @@ Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 | Meus pedidos (topo + bloco) | `/pedidos` |
 | Compre por ambiente | `/pagina/calculadora-btus` |
 | Favoritos | `/pagina/favoritos` |
-| Ofertas da semana | `/pagina/oferta-da-semana` (template `page.oferta-semana`) — ver `docs/wdna/OFERTA-DA-SEMANA-PAGINA.md`. **Não use `/ofertas`** (busca vazia). |
+| Ofertas da semana | `/#sda-ofertas-semana` na home + produtos em `assets/ofertas-semana-config.js` — ver `docs/wdna/OFERTAS-SEMANA-VITRINE.md`. **Não use `/ofertas`**. |
 | Menu **Modelo** | Rótulo no Liquid; link continua o item “Peças…” do menu admin |
 
 ## Favoritos (comportamento)

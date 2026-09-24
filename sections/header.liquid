@@ -28,10 +28,10 @@
 {% assign sdaMIconJanelaSvg = '' %}
 
 {% comment %}
-  Oferta da semana — landing imersiva (/pagina/oferta-da-semana). Não use /ofertas (busca vazia).
+  Oferta da semana → vitrine na home (#sda-ofertas-semana) + confete + produtos em ofertas-semana-config.js
 {% endcomment %}
-{% assign sdaOfferWeekUrlUser = '/pagina/oferta-da-semana' %}
-{% assign sdaOfferWeekSubUser = 'Experiência exclusiva · revele a oferta' %}
+{% assign sdaOfferWeekUrlUser = '/#sda-ofertas-semana' %}
+{% assign sdaOfferWeekSubUser = 'Confira as ofertas' %}
 {% assign sdaOfferWeekUrl = sdaOfferWeekUrlUser %}
 {% assign sdaOfferWeekSub = sdaOfferWeekSubUser %}
 {% for menuItem in menu.items %}
