@@ -1155,10 +1155,10 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   }
 
   .header-v2 .header-v2-mobile-catalog__icon .header-v2-mcat-svg {
-    width: 36px;
-    height: 36px;
-    stroke: var(--hdr-blue) !important;
-    stroke-width: 1.35;
+    width: 40px;
+    height: 40px;
+    display: block;
+    flex-shrink: 0;
   }
 
   .header-v2 .header-v2-mobile-catalog__icon--orange svg {
