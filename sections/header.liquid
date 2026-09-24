@@ -96,9 +96,13 @@
                     <a class="header-v2-mobile-search-btn" href="javascript:void(0)" title="Busca" onclick="headerV2FocusMobileSearch()">
                         {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
                     </a>
+                    <a class="header-v2-mobile-icon-btn header-v2-mobile-fav-btn" href="javascript:void(0)" title="Favoritos" onclick="openFavoritesPanel()">
+                        <span class="header-v2-mobile-icon-btn__icon">{{ iconHeartOutline }}</span>
+                        <span class="header-v2-action__badge" data-favorites-count data-count="0">0</span>
+                    </a>
                     {% if themeConfig.cart.type == 'default' %}
-                        <a class="header-link header-link_cart cart_link" href="javascript:void(0)" title="Carrinho" {% if themeConfig.buyAction.type == "login" %}@click="openSideNavOverlayCartB2B()"{% else %}onclick="openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true})"{% endif %}>
-                            {{ themeConfig.icons.cart }}
+                        <a class="header-v2-mobile-icon-btn header-link header-link_cart cart_link" href="javascript:void(0)" title="Carrinho" {% if themeConfig.buyAction.type == "login" %}@click="openSideNavOverlayCartB2B()"{% else %}onclick="openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true})"{% endif %}>
+                            <span class="header-v2-mobile-icon-btn__icon">{{ themeConfig.icons.cart }}</span>
                             {% assign cartQtdMobile = 0 %}
                             {% if cart.quantity %}
                                 {% assign cartQtdMobile = cart.quantity %}
@@ -106,7 +110,7 @@
                             <span class="cart_quantity" data-cart-quantity>{{ cartQtdMobile }}</span>
                         </a>
                     {% endif %}
-                    <a class="header-link header-link_menu__mobile menu-mobile_link" href="javascript:void(0)" title="Menu Mobile" onclick="openNavMobile()">
+                    <a class="header-v2-mobile-icon-btn header-link header-link_menu__mobile menu-mobile_link" href="javascript:void(0)" title="Menu Mobile" onclick="openNavMobile()">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>

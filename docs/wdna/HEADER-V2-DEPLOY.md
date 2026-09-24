@@ -47,7 +47,7 @@ Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 ## Mobile (≤991px) — layout mock
 
 1. Faixa utilitária (Atendimento + conta)
-2. Logo + lupa (caixa) + carrinho + menu
+2. Logo + lupa + favoritos + carrinho + menu (caixas 34px)
 3. Busca em **pill** full width (`Busque por produto…`)
 4. Nav horizontal scroll: **Compre por ambiente** (laranja) + itens do menu
 
