@@ -28,11 +28,10 @@
 {% assign sdaMIconJanelaSvg = '' %}
 
 {% comment %}
-  Oferta da semana — URL do produto ou vitrine ( /ofertas na loja é busca vazia ).
-  O JS na home atualiza link/subtítulo a partir da vitrine "OFERTAS DE VERÃO".
+  Oferta da semana — landing imersiva (/pagina/oferta-da-semana). Não use /ofertas (busca vazia).
 {% endcomment %}
-{% assign sdaOfferWeekUrlUser = '/ar-condicionado-split-hw-inverter-philco-12000-btus-frio-220v-p91' %}
-{% assign sdaOfferWeekSubUser = 'Split HW Inverter Philco 12.000 BTUs' %}
+{% assign sdaOfferWeekUrlUser = '/pagina/oferta-da-semana' %}
+{% assign sdaOfferWeekSubUser = 'Experiência exclusiva · revele a oferta' %}
 {% assign sdaOfferWeekUrl = sdaOfferWeekUrlUser %}
 {% assign sdaOfferWeekSub = sdaOfferWeekSubUser %}
 {% for menuItem in menu.items %}

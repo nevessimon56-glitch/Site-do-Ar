@@ -16,6 +16,7 @@
 | 6 | `sections/showcase-model-product.liquid` | Substituir (botão coração) |
 | 7 | `sections/favoritos-page.liquid` | Criar |
 | 8 | `templates/page.favoritos.liquid` | Criar |
+| 9 | `templates/page.oferta-semana.liquid` + `sections/oferta-semana.liquid` + `assets/oferta-semana.css` + `assets/oferta-semana.js` | Oferta da semana (opcional) |
 
 Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 
@@ -34,7 +35,7 @@ Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 | Meus pedidos (topo + bloco) | `/pedidos` |
 | Compre por ambiente | `/pagina/calculadora-btus` |
 | Favoritos | `/pagina/favoritos` |
-| Ofertas da semana | Produto da vitrine **OFERTAS DE VERÃO** na home (JS); fallback URL no `header.liquid` (`sdaOfferWeekUrlUser`). **Não use `/ofertas`** — na loja vira busca vazia. |
+| Ofertas da semana | `/pagina/oferta-da-semana` (template `page.oferta-semana`) — ver `docs/wdna/OFERTA-DA-SEMANA-PAGINA.md`. **Não use `/ofertas`** (busca vazia). |
 | Menu **Modelo** | Rótulo no Liquid; link continua o item “Peças…” do menu admin |
 
 ## Favoritos (comportamento)

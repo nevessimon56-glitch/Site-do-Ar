@@ -1,0 +1,23 @@
+{% layout 'theme' %}
+
+{% block head %}
+<link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/oferta-semana.css' | themeAssetUrl }}">
+<script src="{{ 'assets/oferta-semana.js' | themeAssetUrl }}" defer></script>
+<style>
+  body.oferta-semana-page .footer,
+  body.oferta-semana-page footer.footer {
+    display: none !important;
+  }
+  body.oferta-semana-page main,
+  body.oferta-semana-page .page-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+</style>
+<script>document.documentElement.classList.add('oferta-semana-page');document.body.classList.add('oferta-semana-page');</script>
+{% endblock %}
+
+{% block content %}
+  {% section 'oferta-semana' %}
+{% endblock %}

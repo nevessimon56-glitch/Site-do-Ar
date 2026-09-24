@@ -139,13 +139,13 @@
 
       var links = document.querySelectorAll('[data-sda-offer-week-link]');
       for (var li = 0; li < links.length; li++) {
-        if (productUrl) {
-          links[li].setAttribute('href', productUrl);
-        }
+        var href = links[li].getAttribute('href') || '';
+        if (href.indexOf('/pagina/oferta-da-semana') !== -1) continue;
+        if (productUrl) links[li].setAttribute('href', productUrl);
       }
 
       var sub = document.querySelector('[data-sda-offer-week-sub]');
-      if (sub && productTitle) {
+      if (sub && productTitle && !(sub.textContent || '').match(/experiência exclusiva/i)) {
         sub.textContent = productTitle.replace(/^Ar-Condicionado\s+/i, '').trim() || productTitle;
       }
 
