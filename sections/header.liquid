@@ -44,7 +44,7 @@
                 <button type="button" class="header-utility__account{% if sdaUtilityFirst != '' %} is-logged-in{% endif %}" onclick="openSideNavOverlay('.sidenav-overlay_account', true)"
                     title="{% if sdaUtilityFirst != '' %}Olá, {{ sdaUtilityFirst }}{% else %}Entre ou cadastre-se{% endif %}">
                     <span class="header-utility__icon">{{ iconUser }}</span>
-                    <span class="header-utility__label header-utility__label--account" data-sda-utility-account>{% if sdaUtilityFirst != '' %}Olá, {{ sdaUtilityFirst }}{% else %}Entre ou cadastre-se{% endif %}</span>
+                    <span class="header-utility__label header-utility__label--account" data-sda-utility-account>{% if sdaUtilityFirst != '' %}Olá, {{ sdaUtilityFirst }}{% else %}<span class="header-utility__guest-long">Entre ou cadastre-se</span><span class="header-utility__guest-short">Entrar</span>{% endif %}</span>
                 </button>
             {% endif %}
         </div>

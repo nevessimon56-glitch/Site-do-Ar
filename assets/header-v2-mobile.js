@@ -14,6 +14,13 @@
     return !!document.querySelector('.header.header-v2');
   }
 
+  function sdaUtilityGuestLabelHtml() {
+    if (window.matchMedia && window.matchMedia('(max-width: 991px)').matches) {
+      return '<span class="header-utility__guest-long">Entre ou cadastre-se</span><span class="header-utility__guest-short">Entrar</span>';
+    }
+    return '<span class="header-utility__guest-long">Entre ou cadastre-se</span><span class="header-utility__guest-short" hidden>Entrar</span>';
+  }
+
   window.sdaUpdateUtilityBarLabels = window.sdaUpdateUtilityBarLabels || function sdaUpdateUtilityBarLabels(customer) {
     var btn = document.querySelector('.header-v2 .header-utility__account');
     if (!btn) return;
@@ -26,7 +33,7 @@
       btn.classList.add('is-logged-in');
       btn.setAttribute('title', label.textContent);
     } else {
-      label.textContent = 'Entre ou cadastre-se';
+      label.innerHTML = sdaUtilityGuestLabelHtml();
       btn.classList.remove('is-logged-in');
       btn.setAttribute('title', 'Entre ou cadastre-se');
     }

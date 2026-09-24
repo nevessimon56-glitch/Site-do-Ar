@@ -140,6 +140,14 @@
   display: none !important;
 }
 
+.header-v2 .header-utility__guest-short {
+  display: none;
+}
+
+.header-v2 .header-utility__guest-long {
+  display: inline;
+}
+
 /* —— Faixa principal —— */
 .header-v2 .header-content {
   background: #fff;
@@ -519,6 +527,15 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     --hdr-m-gap-sm: 8px;
     --hdr-m-gap-md: 10px;
     --hdr-m-gap-lg: 12px;
+    --hdr-m-utility-h: 30px;
+  }
+
+  .header-v2 .header-utility__guest-short {
+    display: none;
+  }
+
+  .header-v2 .header-utility__guest-long {
+    display: inline;
   }
 
   .header-v2 .header-utility {
@@ -533,14 +550,24 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     padding-right: var(--hdr-m-gutter) !important;
   }
 
+  body .header.header-v2 .header-utility {
+    min-height: var(--hdr-m-utility-h);
+  }
+
   .header-v2 .header-utility__inner {
-    min-height: 0;
-    padding: 6px 0;
+    min-height: var(--hdr-m-utility-h);
+    max-height: var(--hdr-m-utility-h);
+    padding: 0;
     gap: var(--hdr-m-gap-md);
+    flex-wrap: nowrap;
+    align-items: center;
+    overflow: hidden;
   }
 
   .header-v2 .header-utility__links {
     gap: var(--hdr-m-gap-lg);
+    flex-wrap: nowrap;
+    flex-shrink: 0;
   }
 
   /* Mock mobile: só Atendimento na faixa (pedidos ficam no menu) */
@@ -553,11 +580,31 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     letter-spacing: 0.08em !important;
   }
 
+  .header-v2 .header-utility__guest-long {
+    display: none !important;
+  }
+
+  .header-v2 .header-utility__guest-short {
+    display: inline !important;
+  }
+
+  .header-v2 .header-utility__account {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 48%;
+    justify-content: flex-end;
+  }
+
   .header-v2 .header-utility__account .header-utility__label--account {
-    max-width: 46vw;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .header-v2 .header-utility__account.is-logged-in .header-utility__label--account,
+  .header-v2 .header-utility__account:not(.is-logged-in) .header-utility__label--account {
+    max-width: 100%;
   }
 
   .header-v2 .header-utility__icon {
@@ -1066,15 +1113,7 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     border: 0 !important;
   }
 
-  .header-v2 .header-utility__account {
-    flex: 1 1 auto;
-    min-width: 0;
-    justify-content: flex-end;
-    max-width: 58%;
-  }
-
   .header-v2 .header-utility__account.is-logged-in .header-utility__label--account {
-    max-width: 100%;
     text-align: right;
   }
 
