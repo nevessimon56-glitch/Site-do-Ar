@@ -25,6 +25,8 @@ Salve e **publique o tema**.
 
 Confira: `https://www.sitedoar.com.br/` deve voltar a mostrar vitrine/banners, não só o texto de erro.
 
+Se você **removeu os arquivos da calculadora** do tema WDNA, o `theme.liquid` atual **não** referencia mais `calculadora-btus-page.css` nem `calculadora-btus-layout.js`. A página `/pagina/calculadora-btus` pode continuar só com HTML colado no admin (sem assets no tema).
+
 ### 2. Publicar **somente** o CSS do header
 
 Abra **`assets/header-v2.css`** no WDNA e cole **o arquivo inteiro** (Raw):

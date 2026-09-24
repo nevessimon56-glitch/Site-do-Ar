@@ -84,14 +84,13 @@
       2. header-v2.css — layout header 3 faixas
       3. favorites.css — coração, página favoritos, contador
       4. product-compare.css — comparador
-      5. product-hover-image.css — shim legado
+      5. product-hover-image.css — hover 2ª foto nos cards
     {%- endcomment -%}
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/header-v2.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/favorites.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
-    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/calculadora-btus-page.css' | themeAssetUrl }}?v=4">
     {%- comment -%}
       HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
       Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
@@ -272,7 +271,6 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
 {% render 'sections/product-compare-panel' %}
 {% block content %}{% endblock %}
 {% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
-<script src="{{ 'assets/calculadora-btus-layout.js' | themeAssetUrl }}?v=4"></script>
 <script>
     window.onunload = function(){};
     window.onload = function() {
