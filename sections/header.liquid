@@ -28,21 +28,14 @@
 {% assign sdaMIconJanelaSvg = '' %}
 
 {% comment %}
-  Oferta da semana → vitrine na home (#sda-ofertas-semana) + confete + produtos em ofertas-semana-config.js
+  Oferta da semana → página imersiva (não usa link do menu WDNA — evita abrir produto aleatório).
+  Admin: Página customizada slug oferta-da-semana → template page.oferta-semana
+  Produtos: assets/ofertas-semana-config.js
 {% endcomment %}
-{% assign sdaOfferWeekUrlUser = '/#sda-ofertas-semana' %}
-{% assign sdaOfferWeekSubUser = 'Confira as ofertas' %}
+{% assign sdaOfferWeekUrlUser = '/pagina/oferta-da-semana' %}
+{% assign sdaOfferWeekSubUser = 'Drop semanal exclusivo' %}
 {% assign sdaOfferWeekUrl = sdaOfferWeekUrlUser %}
 {% assign sdaOfferWeekSub = sdaOfferWeekSubUser %}
-{% for menuItem in menu.items %}
-    {% assign sdaOfferName = menuItem.name | downcase %}
-    {% if sdaOfferName contains 'oferta' and menuItem.link != '' %}
-        {% assign sdaOfferMenuLink = menuItem.link | downcase %}
-        {% unless sdaOfferMenuLink contains '/ofertas' %}
-            {% assign sdaOfferWeekUrl = menuItem.link %}
-        {% endunless %}
-    {% endif %}
-{% endfor %}
 
 {% assign sdaMLinkSplit = '/split-inverter' %}
 {% assign sdaMLabelSplit = 'Split Inverter' %}

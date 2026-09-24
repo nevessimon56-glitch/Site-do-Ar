@@ -1,40 +1,43 @@
-# Ofertas da semana — vitrine na home + confete
+# Ofertas da semana — página imersiva
 
-Sem página extra nem layout diferente: o banner/botão leva à **vitrine de ofertas na home** (`/#sda-ofertas-semana`), com **confete** ao chegar.
+O banner/botão **Oferta da semana** no header v2 leva à **página dedicada** (`/pagina/oferta-da-semana`), com layout imersivo (countdown, revelar oferta, pulseira de cards) — **não** abre produto solto nem a vitrine comum da home.
 
-## Escolher os produtos
+## Por que não usar o menu WDNA?
+
+Antes, o tema podia pegar um item do menu cujo nome contém “oferta” e usar o link dele (muitas vezes **URL de um produto**). Isso foi removido: o href é **fixo** em `header.liquid`.
+
+## Configurar produtos
 
 Edite **`assets/ofertas-semana-config.js`** no tema WDNA:
 
 ```javascript
 products: [
   {
-    url: '/seu-produto-p91',
+    url: 'https://...',
     title: 'Nome do produto',
-    image: 'https://salescdn.net/...webp',
-    price: 'R$ 1.234,56',  // opcional
-    productId: '91'          // opcional (favoritos)
+    image: 'https://salescdn.net/...',
+    price: 'R$ 0,00',      // opcional
+    productId: '123'       // opcional (favoritos)
   }
 ]
 ```
 
-- **`products: []`** → vitrine **100% do admin WDNA** (só confete + scroll).
-- Com itens no array → esses produtos vão para o **topo** (se já estiverem na vitrine, só reordenam; se não estiverem, entram como card extra). **Nada é removido.**
+- Com `products` preenchido → a página imersiva usa esses itens **primeiro** e completa com a vitrine “ofertas” da home (fetch).
+- `products: []` → só produtos lidos da vitrine de ofertas na home.
 
-Copie `url`, `title`, `image` e `productId` do HTML do card na loja (botão favoritar / data attributes).
+## Admin WDNA
 
-## Publicar
+1. **Página customizada** slug `oferta-da-semana` → template **`page.oferta-semana`**
+2. Publicar arquivos (um a um):
+   - `sections/header.liquid`
+   - `templates/page.oferta-semana.liquid`
+   - `sections/oferta-semana.liquid`
+   - `assets/oferta-semana.css`
+   - `assets/oferta-semana.js`
+   - `assets/ofertas-semana-config.js`
 
-1. `assets/ofertas-semana-config.js`
-2. `assets/ofertas-semana-home.js`
-3. `layout/theme.liquid`
-4. `sections/header.liquid`
+## Home (opcional)
 
-## Título da vitrine
+Ainda existe suporte a `/#sda-ofertas-semana` na home (`ofertas-semana-home.js`): confete + destaque na vitrine. O **header não aponta mais** para esse hash.
 
-O script acha a seção pelo título **`h2.showcase-title`** que contenha “ofertas” (ex.: “OFERTAS DE VERÃO”). Se mudar o título no admin, ajuste `sectionTitleMatch` no config.
-
-## Não usar
-
-- **`/ofertas`** — vira busca vazia na loja.
-- A página `page.oferta-semana` (experiência antiga) **não é necessária** para este fluxo.
+- **`/ofertas`** — busca vazia na loja; não use no banner.

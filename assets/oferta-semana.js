@@ -94,6 +94,85 @@
       });
   }
 
+  function configProducts() {
+    var list = (window.SDA_OFERTAS_SEMANA || {}).products;
+    if (!list || !list.length) return [];
+    var out = [];
+    for (var i = 0; i < list.length; i++) {
+      var p = list[i];
+      if (p && p.url) out.push(p);
+    }
+    return out;
+  }
+
+  function mergeProducts(primary, extra) {
+    var seen = {};
+    var merged = [];
+    function push(p) {
+      if (!p || !p.url || seen[p.url]) return;
+      seen[p.url] = true;
+      merged.push(p);
+    }
+    for (var i = 0; i < primary.length; i++) push(primary[i]);
+    for (var j = 0; j < extra.length; j++) push(extra[j]);
+    return merged;
+  }
+
+  function fireConfetti() {
+    var canvas = document.createElement('canvas');
+    canvas.setAttribute('aria-hidden', 'true');
+    canvas.style.cssText =
+      'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99999';
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+    var colors = ['#f58220', '#4b96d4', '#ffffff', '#ffd166', '#1a2d4a'];
+    var originX = window.innerWidth * 0.5;
+    var originY = window.innerHeight * 0.22;
+    var pieces = [];
+    for (var i = 0; i < 80; i++) {
+      pieces.push({
+        x: originX,
+        y: originY,
+        vx: (Math.random() - 0.5) * 10,
+        vy: Math.random() * -12 - 4,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.2,
+        w: 6 + Math.random() * 6,
+        h: 4 + Math.random() * 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 90 + Math.random() * 40
+      });
+    }
+    var frame = 0;
+    function tick() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var alive = 0;
+      for (var j = 0; j < pieces.length; j++) {
+        var p = pieces[j];
+        p.life -= 1;
+        if (p.life <= 0) continue;
+        alive++;
+        p.vy += 0.35;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.min(1, p.life / 30);
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      }
+      frame++;
+      if (alive > 0 && frame < 220) requestAnimationFrame(tick);
+      else canvas.remove();
+    }
+    requestAnimationFrame(tick);
+  }
+
   function renderApp(root, products) {
     var heroCard = root.querySelector('[data-os-hero-card]');
     var heroImg = root.querySelector('[data-os-hero-img]');
@@ -183,12 +262,23 @@
     if (loader) loader.classList.add('is-hidden');
   }
 
+  function loadProducts() {
+    var fromConfig = configProducts();
+    if (fromConfig.length) {
+      return fetchShowcaseProducts().then(function (fromHome) {
+        return mergeProducts(fromConfig, fromHome);
+      });
+    }
+    return fetchShowcaseProducts();
+  }
+
   function init() {
     var root = document.querySelector('[data-os-week]');
     if (!root) return;
     startCountdown(root);
-    fetchShowcaseProducts().then(function (products) {
+    loadProducts().then(function (products) {
       renderApp(root, products);
+      if (products.length) fireConfetti();
     });
   }
 

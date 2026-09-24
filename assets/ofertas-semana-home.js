@@ -251,17 +251,6 @@
     }
   }
 
-  function syncBannerSubtitle() {
-    var products = cfg().products;
-    if (!products || !products.length) return;
-    var sub = document.querySelector('[data-sda-offer-week-sub]');
-    if (!sub) return;
-    var first = products[0];
-    if (first && first.title) {
-      sub.textContent = first.title.replace(/^Ar-Condicionado\s+/i, '').trim() || first.title;
-    }
-  }
-
   function init() {
     if (!isHome()) return;
 
@@ -270,7 +259,6 @@
 
     applyCustomProducts(section);
     bindHeaderLinks();
-    syncBannerSubtitle();
 
     if (location.hash === '#' + HASH) {
       setTimeout(function () {
