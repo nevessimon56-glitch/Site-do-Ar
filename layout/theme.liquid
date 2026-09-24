@@ -176,6 +176,22 @@ body .header.header-v2 .header-utility .header-utility__label {
 body .header.header-v2 .header-utility {
   background: #0c1f3d !important;
 }
+body .header.header-v2 .header-utility .header-utility__inner {
+  min-height: 0 !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+body .header.header-v2 .header-v2-nav-row.nav-content,
+body .header.header-v2 > .nav-content.content.header-v2-nav-row {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  min-height: 0 !important;
+}
+body .header.header-v2 .header-v2-nav-inner {
+  min-height: 0 !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
 body .header:not(.header-checkout) .header-link_cart:hover .cart_quantity,
 body .header:not(.header-checkout) .header-link_cart:focus .cart_quantity,
 body .header:not(.header-checkout) .cart_link:hover .cart_quantity,
@@ -258,7 +274,7 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     {% block head %}{% endblock %}
 </head>
 <script>window.__SITE_DOAR_CUSTOMER__ = {{ customer | json }};</script>
-<body x-data="setupStore()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
+<body x-data="setupStore()" x-init="init()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
 {%- for script in scripts.content -%}
     {{ script.code }}
 {%- endfor -%}

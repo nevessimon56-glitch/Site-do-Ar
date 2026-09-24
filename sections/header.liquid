@@ -41,11 +41,10 @@
                         {% assign sdaUtilityFirst = customer.email | split: '@' | first %}
                     {% endif %}
                 {% endif %}
-                <button type="button" class="header-utility__account" onclick="openSideNavOverlay('.sidenav-overlay_account', true)"
+                <button type="button" class="header-utility__account{% if sdaUtilityFirst != '' %} is-logged-in{% endif %}" onclick="openSideNavOverlay('.sidenav-overlay_account', true)"
                     x-bind:title="data.isLogged ? (data.user ? 'Olá, ' + data.user : 'Minha conta') : 'Entre ou cadastre-se'">
                     <span class="header-utility__icon">{{ iconUser }}</span>
-                    <span class="header-utility__label header-utility__label--logged"{% if sdaUtilityFirst == '' %} hidden{% endif %}>{% if sdaUtilityFirst != '' %}Olá, {{ sdaUtilityFirst }}{% else %}Olá{% endif %}</span>
-                    <span class="header-utility__label header-utility__label--guest"{% if sdaUtilityFirst != '' %} hidden{% endif %}>Entre ou cadastre-se</span>
+                    <span class="header-utility__label header-utility__label--account">{% if sdaUtilityFirst != '' %}Olá, {{ sdaUtilityFirst }}{% else %}Entre ou cadastre-se{% endif %}</span>
                 </button>
             {% endif %}
         </div>

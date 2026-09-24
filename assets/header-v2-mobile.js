@@ -17,18 +17,16 @@
   window.sdaUpdateUtilityBarLabels = window.sdaUpdateUtilityBarLabels || function sdaUpdateUtilityBarLabels(customer) {
     var btn = document.querySelector('.header-v2 .header-utility__account');
     if (!btn) return;
-    var logged = document.querySelector('.header-v2 .header-utility__label--logged');
-    var guest = document.querySelector('.header-v2 .header-utility__label--guest');
-    if (!logged || !guest) return;
+    var label = btn.querySelector('.header-utility__label--account');
+    if (!label) return;
     if (customer && (customer.name || customer.fantasyName || customer.email)) {
       var raw = customer.name || customer.fantasyName || customer.email || '';
       var first = String(raw).trim().split(/\s+/)[0] || '';
-      logged.textContent = first ? 'Olá, ' + first : 'Olá';
-      logged.hidden = false;
-      guest.hidden = true;
+      label.textContent = first ? 'Olá, ' + first : 'Olá';
+      btn.classList.add('is-logged-in');
     } else {
-      logged.hidden = true;
-      guest.hidden = false;
+      label.textContent = 'Entre ou cadastre-se';
+      btn.classList.remove('is-logged-in');
     }
   };
 
