@@ -96,6 +96,66 @@
     navContent.classList.toggle('sda-mobile-nav-strip--3', visible > 0);
   };
 
+  window.sdaFindOfferShowcaseSection =
+    window.sdaFindOfferShowcaseSection ||
+    function sdaFindOfferShowcaseSection() {
+      var byClass = document.querySelector('.showcase-14');
+      if (byClass) return byClass;
+      var titles = document.querySelectorAll('h2.showcase-title');
+      for (var i = 0; i < titles.length; i++) {
+        if (/ofertas/i.test(titles[i].textContent || '')) {
+          var sec = titles[i].closest('section.showcase');
+          if (sec) return sec;
+        }
+      }
+      return null;
+    };
+
+  window.initSdaOfferWeek =
+    window.initSdaOfferWeek ||
+    function initSdaOfferWeek() {
+      var section = window.sdaFindOfferShowcaseSection();
+      if (section && !section.id) {
+        section.id = 'sda-ofertas-semana';
+      }
+
+      var firstProduct =
+        section &&
+        (section.querySelector('[data-product-url]') ||
+          section.querySelector('a[href*="-p"]'));
+
+      var productUrl = '';
+      var productTitle = '';
+      if (firstProduct) {
+        productUrl =
+          firstProduct.getAttribute('data-product-url') ||
+          firstProduct.getAttribute('href') ||
+          '';
+        productTitle = firstProduct.getAttribute('data-product-title') || '';
+        if (!productTitle && firstProduct.getAttribute('title')) {
+          productTitle = firstProduct.getAttribute('title');
+        }
+      }
+
+      var links = document.querySelectorAll('[data-sda-offer-week-link]');
+      for (var li = 0; li < links.length; li++) {
+        if (productUrl) {
+          links[li].setAttribute('href', productUrl);
+        }
+      }
+
+      var sub = document.querySelector('[data-sda-offer-week-sub]');
+      if (sub && productTitle) {
+        sub.textContent = productTitle.replace(/^Ar-Condicionado\s+/i, '').trim() || productTitle;
+      }
+
+      if (location.hash === '#sda-ofertas-semana' && section) {
+        setTimeout(function () {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
+      }
+    };
+
   window.sdaSyncMobileCatalogDock = window.sdaSyncMobileCatalogDock || function sdaSyncMobileCatalogDock() {
     if (!isMobile()) return;
     var inner = document.querySelector('.mobile-catalog-dock__inner');
@@ -248,6 +308,7 @@
       if (typeof window.sdaUpdateUtilityBarLabels === 'function') {
         window.sdaUpdateUtilityBarLabels(window.__SITE_DOAR_CUSTOMER__);
       }
+      if (typeof window.initSdaOfferWeek === 'function') window.initSdaOfferWeek();
     } catch (err) {
       console.error('header-v2-mobile:', err);
     }

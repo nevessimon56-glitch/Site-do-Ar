@@ -27,6 +27,24 @@
 {% assign sdaMIconPisoSvg = '' %}
 {% assign sdaMIconJanelaSvg = '' %}
 
+{% comment %}
+  Oferta da semana — URL do produto ou vitrine ( /ofertas na loja é busca vazia ).
+  O JS na home atualiza link/subtítulo a partir da vitrine "OFERTAS DE VERÃO".
+{% endcomment %}
+{% assign sdaOfferWeekUrlUser = '/ar-condicionado-split-hw-inverter-philco-12000-btus-frio-220v-p91' %}
+{% assign sdaOfferWeekSubUser = 'Split HW Inverter Philco 12.000 BTUs' %}
+{% assign sdaOfferWeekUrl = sdaOfferWeekUrlUser %}
+{% assign sdaOfferWeekSub = sdaOfferWeekSubUser %}
+{% for menuItem in menu.items %}
+    {% assign sdaOfferName = menuItem.name | downcase %}
+    {% if sdaOfferName contains 'oferta' and menuItem.link != '' %}
+        {% assign sdaOfferMenuLink = menuItem.link | downcase %}
+        {% unless sdaOfferMenuLink contains '/ofertas' %}
+            {% assign sdaOfferWeekUrl = menuItem.link %}
+        {% endunless %}
+    {% endif %}
+{% endfor %}
+
 {% assign sdaMLinkSplit = '/split-inverter' %}
 {% assign sdaMLabelSplit = 'Split Inverter' %}
 {% assign sdaMLinkPiso = '/piso-teto' %}
@@ -285,7 +303,7 @@
                     </div>
                 {% endfor %}
             </nav>
-            <a class="header-v2-cta-semana" href="/ofertas" title="Ofertas da semana">
+            <a class="header-v2-cta-semana" href="{{ sdaOfferWeekUrl }}" title="Ofertas da semana" data-sda-offer-week-link>
                 {{ iconTag }}
                 <span class="header-v2-cta-semana__text">Ofertas da semana</span>
             </a>
@@ -342,11 +360,11 @@
 
     <div class="header-v2-mobile-offer show-lg content">
         <div class="container">
-            <a class="header-v2-mobile-offer__card" href="/ofertas" title="Ver oferta da semana">
+            <a class="header-v2-mobile-offer__card" href="{{ sdaOfferWeekUrl }}" title="Ver oferta da semana" data-sda-offer-week-link>
                 <span class="header-v2-mobile-offer__badge" aria-hidden="true">{{ iconTag }}</span>
                 <span class="header-v2-mobile-offer__body">
                     <span class="header-v2-mobile-offer__title">Oferta da semana</span>
-                    <span class="header-v2-mobile-offer__sub">Ar-condicionado Inverter</span>
+                    <span class="header-v2-mobile-offer__sub" data-sda-offer-week-sub>{{ sdaOfferWeekSub }}</span>
                 </span>
                 <span class="header-v2-mobile-offer__cta">Ver oferta ›</span>
             </a>

@@ -352,6 +352,11 @@
   display: none;
 }
 
+/* Vitrine alvo do banner "Oferta da semana" (id aplicado via JS na home) */
+#sda-ofertas-semana {
+  scroll-margin-top: calc(var(--hdr-m-utility-h, 32px) + 120px);
+}
+
 /* Esconde blocos legados duplicados no desktop */
 @media (min-width: 992px) {
   .header-v2 .navbar-center .header-box-account-info,

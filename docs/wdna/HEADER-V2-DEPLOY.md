@@ -34,7 +34,7 @@ Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 | Meus pedidos (topo + bloco) | `/pedidos` |
 | Compre por ambiente | `/pagina/calculadora-btus` |
 | Favoritos | `/pagina/favoritos` |
-| Ofertas da semana | `/ofertas` (ajuste no Liquid se usar outro slug) |
+| Ofertas da semana | Produto da vitrine **OFERTAS DE VERÃO** na home (JS); fallback URL no `header.liquid` (`sdaOfferWeekUrlUser`). **Não use `/ofertas`** — na loja vira busca vazia. |
 | Menu **Modelo** | Rótulo no Liquid; link continua o item “Peças…” do menu admin |
 
 ## Favoritos (comportamento)
