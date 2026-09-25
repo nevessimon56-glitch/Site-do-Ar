@@ -1,58 +1,29 @@
-# Depois de apagar as pastas/arquivos de oferta no WDNA
+# WDNA — header v2 sem “Oferta da semana”
 
-Apagar `oferta-semana.*`, overlay, template, etc. **está ok**. Só não pode ficar o **`header.liquid`** (ou `theme.liquid`) **chamando** arquivos que não existem mais.
+O repositório **não tem mais** overlay, página ou assets de oferta. No editor WDNA, publique **arquivo por arquivo** (nunca a pasta `assets/` ou `layout/` inteira).
 
-## 1) Loja abre normal?
+## Substituir (copiar do GitHub / branch `cursor/header-favoritos-v2-e52b`)
 
-- Se **“Página não encontrada”** ou erro 500 → primeiro **`RECUPERAR-SITE-APOS-UPLOAD-PASTAS.md`** (tema base / `theme.js`, layouts).
-- Isso **não** se resolve recriando oferta.
+| Pasta no WDNA | Arquivo |
+|---------------|---------|
+| `sections/` | `header.liquid` |
+| `layout/` | `theme.liquid` (só se você já usa o `theme.liquid` do repo) |
+| `assets/` | `header-v2.css` |
 
-## 2) Limpar o header no editor WDNA
+## Apagar no WDNA (se ainda existir)
 
-Abra **`sections/header.liquid`** e:
+| Pasta | Arquivos |
+|-------|----------|
+| `assets/` | `oferta-semana.css`, `oferta-semana.js`, `ofertas-semana-config.js`, `ofertas-semana-home.js` |
+| `sections/` | `oferta-semana.liquid`, `oferta-semana-overlay.liquid` |
+| `templates/` | `page.oferta-semana.liquid` |
 
-### A) Apague **tudo depois** da linha `</header>`
+## Admin
 
-Ou seja, remova:
+- Página **oferta-da-semana** → despublicar ou excluir (evita 404).
 
-- `<link ... oferta-semana.css ...>`
-- `<div ... data-sda-oferta-overlay ...>` (overlay inteiro)
-- `<script ... ofertas-semana-config.js`
-- `<script ... oferta-semana.js`
-- `<script>` do clique `#sda-oferta-immersiva`
+## Conferir na loja
 
-O arquivo deve **terminar** logo após `</header>` (e o `<script>` interno do header, se estiver **antes** de `</header>`).
+Código-fonte da home **não** deve conter: `sda-oferta-immersiva`, `oferta-semana`, `data-sda-oferta-overlay`, `header-v2-mobile-offer`, `header-v2-cta-semana`.
 
-### B) Banner “Oferta da semana” (opcional)
-
-**Esconder:** no CSS ou comentar o bloco `header-v2-mobile-offer` no Liquid.
-
-**Ou link simples:** no topo do header, altere:
-
-```liquid
-{% assign sdaOfferWeekUrlUser = '/' %}
-```
-
-(ou a URL da vitrine real, **nunca** `/#sda-oferta-immersiva` sem overlay)
-
-### C) No `layout/theme.liquid`
-
-Se existir link/script de `oferta-semana` no `<head>` ou antes do `</body>`, **apague** essas linhas.
-
-## 3) Admin — página customizada
-
-Se existir página **oferta-da-semana**, despublique ou apague no admin (evita 404).
-
-## 4) GitHub
-
-Pode **fechar a PR #33** sem merge. O repo no GitHub **não afeta** a loja até você colar de novo no WDNA.
-
-## 5) Header v2 **sem** oferta (favoritos + mobile)
-
-Depois de limpar, se quiser só mobile/favoritos:
-
-- `assets/header-v2.css`
-- `assets/favorites.css` + `favorites.js`
-- `header.liquid` **sem** bloco oferta (versão antiga do header ou cortar manualmente)
-
-Ver **`PUBLICAR-HEADER-MOBILE-SEGURO.md`**.
+Header v2 (favoritos + mobile): ver **`HEADER-V2-DEPLOY.md`** e **`PUBLICAR-HEADER-MOBILE-SEGURO.md`**.

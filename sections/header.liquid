@@ -11,7 +11,6 @@
 {% assign iconHeartOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.2-3.9-6.2-8.6c0-2.4 1.9-4.3 4.2-4.3 1.4 0 2.7.7 3.5 1.8.8-1.1 2.1-1.8 3.5-1.8 2.3 0 4.2 1.9 4.2 4.3 0 4.7-6.2 8.6-6.2 8.6z"/></svg>' %}
 {% assign iconCartOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 9.2h11.3L21 7H7"/><circle cx="10" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>' %}
 {% assign iconHome = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' %}
-{% assign iconTag = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>' %}
 {% comment %}
   Ícones mobile — cole aqui as URLs absolutas das imagens (Split / Piso / Janela).
   Ex.: https://cdn.../split-inverter.png
@@ -26,16 +25,6 @@
 {% assign sdaMIconSplitSvg = '' %}
 {% assign sdaMIconPisoSvg = '' %}
 {% assign sdaMIconJanelaSvg = '' %}
-
-{% comment %}
-  Oferta da semana → overlay imersivo na loja (/#sda-oferta-immersiva). Sem página no admin.
-  Produtos: assets/ofertas-semana-config.js
-{% endcomment %}
-{% assign sdaOfferWeekUrlUser = '/#sda-oferta-immersiva' %}
-{% assign sdaOfferWeekSubUser = 'Curadoria · toque para abrir' %}
-{% assign sdaOfertaAssetVer = '20260325-v4' %}
-{% assign sdaOfferWeekUrl = sdaOfferWeekUrlUser %}
-{% assign sdaOfferWeekSub = sdaOfferWeekSubUser %}
 
 {% assign sdaMLinkSplit = '/split-inverter' %}
 {% assign sdaMLabelSplit = 'Split Inverter' %}
@@ -295,10 +284,6 @@
                     </div>
                 {% endfor %}
             </nav>
-            <a class="header-v2-cta-semana" href="{{ sdaOfferWeekUrl }}" title="Ofertas da semana" data-sda-offer-week-link>
-                {{ iconTag }}
-                <span class="header-v2-cta-semana__text">Ofertas da semana</span>
-            </a>
         </div>
     </div>
 
@@ -346,19 +331,6 @@
                     <span class="header-v2-mobile-catalog__label-line">Compre por</span>
                     <span class="header-v2-mobile-catalog__label-line header-v2-mobile-catalog__label-accent">ambiente</span>
                 </span>
-            </a>
-        </div>
-    </div>
-
-    <div class="header-v2-mobile-offer show-lg content">
-        <div class="container">
-            <a class="header-v2-mobile-offer__card" href="{{ sdaOfferWeekUrl }}" title="Ver oferta da semana" data-sda-offer-week-link>
-                <span class="header-v2-mobile-offer__badge" aria-hidden="true">{{ iconTag }}</span>
-                <span class="header-v2-mobile-offer__body">
-                    <span class="header-v2-mobile-offer__title">Oferta da semana</span>
-                    <span class="header-v2-mobile-offer__sub" data-sda-offer-week-sub>{{ sdaOfferWeekSub }}</span>
-                </span>
-                <span class="header-v2-mobile-offer__cta">Ver oferta ›</span>
             </a>
         </div>
     </div>
@@ -524,133 +496,3 @@
         }
     </script>
 </header>
-{% comment %} Overlay oferta — no header para funcionar mesmo sem publicar theme.liquid inteiro {% endcomment %}
-<link media="all" rel="stylesheet" href="{{ 'assets/oferta-semana.css' | themeAssetUrl }}?v={{ sdaOfertaAssetVer }}">
-{% comment %} Overlay inline (não usar render — no WDNA a section extra muitas vezes não existe) {% endcomment %}
-<style id="sda-oferta-fallback-v2">
-@media (max-width: 767px) {
-  .sda-oferta-overlay .opmn-mobile-dock { display: flex !important; }
-  .sda-oferta-overlay .opmn-main { padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important; }
-  .sda-oferta-overlay .opmn-offers__filter { display: inline-flex !important; }
-}
-</style>
-<div id="sda-oferta-immersiva" class="sda-oferta-overlay" data-sda-oferta-overlay data-sda-oferta-version="2026-03-25-mobile-v4" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="opmn-hero-title">
-  <button type="button" class="sda-oferta-overlay__close sda-oferta-overlay__close--float" data-sda-oferta-close aria-label="Fechar"><span aria-hidden="true">×</span></button>
-  <div class="opmn" data-opmn-root>
-    <header class="opmn-top">
-      <div class="opmn-top__row">
-        <span class="opmn-top__brand">site do ar</span>
-        <button type="button" class="sda-oferta-overlay__close sda-oferta-overlay__close--bar" data-sda-oferta-close aria-label="Fechar"><span aria-hidden="true">×</span></button>
-      </div>
-      <nav class="opmn-top__nav" aria-label="Atalhos da oferta">
-        <button type="button" class="opmn-top__link" data-opmn-scroll="ofertas">Ofertas</button>
-        <a class="opmn-top__link" href="/pagina/calculadora-btus">Por ambiente</a>
-        <a class="opmn-top__link" href="/pagina/calculadora-btus">Como escolher</a>
-      </nav>
-    </header>
-    <main class="opmn-main">
-      <section class="opmn-hero">
-        <p class="opmn-kicker" data-opmn-edition>— EDIÇÃO 03 · CURADORIA DE CLIMATIZAÇÃO</p>
-        <h1 class="opmn-hero__title" id="opmn-hero-title"><span>O clima certo</span><span class="opmn-hero__accent">muda tudo.</span></h1>
-        <p class="opmn-hero__lead">Escolha conforto para todos os dias. Modelos selecionados, preço justo e a potência certa para cada ambiente.</p>
-        <div class="opmn-hero__actions">
-          <button type="button" class="opmn-btn opmn-btn--primary" data-opmn-scroll="ofertas">Ver ofertas <span aria-hidden="true">→</span></button>
-          <a class="opmn-btn opmn-btn--text" href="/pagina/calculadora-btus">Como escolher <span aria-hidden="true">→</span></a>
-        </div>
-        <div class="opmn-stats">
-          <div class="opmn-stat"><strong>4,9</strong><span>avaliação média de satisfação</span></div>
-          <div class="opmn-stat"><strong>+12 mil</strong><span>aparelhos vendidos neste ano</span></div>
-        </div>
-      </section>
-      <aside class="opmn-spot" data-opmn-spot aria-label="Destaque da semana">
-        <p class="opmn-spot__label">DESTAQUE DA SEMANA</p>
-        <h2 class="opmn-spot__headline">Ar que combina com sua rotina.</h2>
-        <div class="opmn-spot__card">
-          <div class="opmn-spot__badges">
-            <span class="opmn-badge opmn-badge--ok">Disponível</span>
-            <span class="opmn-badge opmn-badge--tag" data-opmn-spot-discount hidden></span>
-          </div>
-          <div class="opmn-spot__media"><img data-opmn-spot-img src="" alt="" width="280" height="200" loading="lazy" decoding="async"></div>
-          <p class="opmn-spot__meta">SITE DO AR · 2026</p>
-          <h3 class="opmn-spot__name" data-opmn-spot-title>Carregando seleção…</h3>
-          <p class="opmn-spot__hint">Tecnologia inverter — mais conforto, menos consumo.</p>
-          <a class="opmn-btn opmn-btn--primary opmn-btn--block" data-opmn-spot-link href="#">Ver produto</a>
-        </div>
-      </aside>
-      <div class="opmn-trust-wrap">
-        <ul class="opmn-trust" aria-label="Benefícios">
-          <li><strong>Compra segura</strong><span>certificados em todas as etapas</span></li>
-          <li><strong>Instalação descomplicada</strong><span>agendamento rápido</span></li>
-          <li><strong>Conforto de verdade</strong><span>tecnologia inverter</span></li>
-        </ul>
-      </div>
-      <section class="opmn-offers" id="opmn-ofertas" data-opmn-offers>
-        <p class="opmn-kicker">— OFERTAS SELECIONADAS</p>
-        <div class="opmn-offers__head">
-          <div class="opmn-offers__head-text">
-            <h2 class="opmn-section-title">Conforto em <span class="opmn-hero__accent">boa companhia.</span></h2>
-            <p class="opmn-offers__sub">Uma seleção enxuta de aparelhos para climatizar cada ambiente na temperatura ideal.</p>
-          </div>
-          <button type="button" class="opmn-offers__filter" data-opmn-scroll="ofertas" aria-label="Ir para ofertas">Filtrar ofertas</button>
-        </div>
-        <div class="opmn-rail-wrap"><div class="opmn-rail" data-opmn-rail tabindex="0" aria-live="polite"></div></div>
-        <p class="opmn-empty" data-opmn-empty hidden>Em breve novas ofertas curadas.</p>
-      </section>
-      <section class="opmn-guide">
-        <div class="opmn-guide__icon" aria-hidden="true">❄</div>
-        <div class="opmn-guide__text">
-          <p class="opmn-guide__kicker">AJUDA EM DÚVIDA?</p>
-          <p class="opmn-guide__title">BTUs, ambiente e economia sem complicação.</p>
-        </div>
-        <a class="opmn-guide__link" href="/pagina/calculadora-btus">Ver guia de escolha →</a>
-      </section>
-      <footer class="opmn-foot"><span>© 2026 Site do Ar</span><span>Curadoria v4 · vitrine + config</span></footer>
-    </main>
-    <div class="opmn-loader" data-opmn-loader aria-hidden="true"><span></span><span></span><span></span></div>
-    <div class="opmn-mobile-dock" data-opmn-mobile-dock aria-hidden="true">
-      <button type="button" class="opmn-mobile-dock__ghost" data-opmn-scroll="ofertas">Ofertas</button>
-      <a class="opmn-mobile-dock__primary" data-opmn-dock-link href="#">Ver destaque</a>
-    </div>
-  </div>
-</div>
-<script src="{{ 'assets/ofertas-semana-config.js' | themeAssetUrl }}?v={{ sdaOfertaAssetVer }}" defer></script>
-<script src="{{ 'assets/oferta-semana.js' | themeAssetUrl }}?v={{ sdaOfertaAssetVer }}" defer></script>
-<script>
-(function () {
-  var HASH = 'sda-oferta-immersiva';
-  function openOrNav() {
-    if (typeof window.SDA_openOfertaImmersiva === 'function') {
-      window.SDA_openOfertaImmersiva();
-      return;
-    }
-    var ov = document.querySelector('[data-sda-oferta-overlay]');
-    if (ov) {
-      ov.hidden = false;
-      ov.setAttribute('aria-hidden', 'false');
-      ov.scrollTop = 0;
-      document.documentElement.classList.add('sda-oferta-overlay-open');
-      document.body.classList.add('sda-oferta-overlay-open');
-      if (history.replaceState) history.replaceState(null, '', '#' + HASH);
-    } else {
-      window.location.href = '/#' + HASH;
-    }
-  }
-  document.addEventListener(
-    'click',
-    function (e) {
-      var link = e.target.closest('[data-sda-offer-week-link]');
-      if (!link) return;
-      var href = link.getAttribute('href') || '';
-      if (href.indexOf(HASH) === -1 && href.indexOf('sda-oferta-immersiva') === -1) return;
-      e.preventDefault();
-      e.stopPropagation();
-      openOrNav();
-    },
-    true
-  );
-  if (location.hash === '#' + HASH) {
-    document.addEventListener('DOMContentLoaded', openOrNav);
-    if (document.readyState !== 'loading') setTimeout(openOrNav, 100);
-  }
-})();
-</script>

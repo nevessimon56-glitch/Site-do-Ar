@@ -347,22 +347,8 @@
   gap: 8px;
 }
 
-.header-v2 .header-v2-mobile-catalog,
-.header-v2 .header-v2-mobile-offer {
+.header-v2 .header-v2-mobile-catalog {
   display: none;
-}
-
-/* Vitrine alvo do banner "Oferta da semana" (id aplicado via JS na home) */
-#sda-ofertas-semana {
-  scroll-margin-top: calc(var(--hdr-m-utility-h, 32px) + 120px);
-}
-
-.showcase-item.sda-week-offer-highlight {
-  position: relative;
-}
-
-.showcase-item.sda-week-offer-highlight .showcase-product.card {
-  box-shadow: 0 0 0 2px rgba(245, 130, 32, 0.45);
 }
 
 /* Esconde blocos legados duplicados no desktop */
@@ -507,37 +493,6 @@ body .header.header-v2 .header-v2-nav-inner .nav-main_arrow svg {
 
 body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   padding: 8px 12px;
-}
-
-.header-v2 .header-v2-cta-semana {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-  padding: 9px 18px;
-  border: 2px solid var(--hdr-orange);
-  border-radius: 999px;
-  background: rgba(245, 130, 32, 0.14);
-  color: var(--hdr-orange) !important;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  text-decoration: none !important;
-  white-space: nowrap;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.header-v2 .header-v2-cta-semana:hover {
-  background: rgba(245, 130, 32, 0.22);
-  color: var(--hdr-orange) !important;
-  border-color: var(--hdr-orange-dark);
-}
-
-.header-v2 .header-v2-cta-semana svg {
-  width: 18px;
-  height: 18px;
-  fill: var(--hdr-orange);
 }
 
 /* Favoritos: ver assets/favorites.css */
@@ -1082,10 +1037,6 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     fill: var(--hdr-blue-dark) !important;
   }
 
-  body .header.header-v2 .header-v2-cta-semana {
-    display: none !important;
-  }
-
   body .header.header-v2 .header-v2-nav-inner .nav-main_content {
     display: none !important;
   }
@@ -1260,92 +1211,6 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     min-height: 22px;
   }
 
-  /* Banner oferta da semana */
-  body .header.header-v2 .header-v2-mobile-offer.show-lg {
-    display: block !important;
-    background: #fff;
-    padding: 0 0 12px;
-    margin: 0;
-    border-bottom: 1px solid var(--hdr-border);
-  }
-
-  body .header.header-v2 .header-v2-mobile-offer .container {
-    padding-left: var(--hdr-m-gutter) !important;
-    padding-right: var(--hdr-m-gutter) !important;
-  }
-
-  .header-v2 .header-v2-mobile-offer__card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px 14px;
-    border: 1px solid #c5d8ea;
-    border-radius: 14px;
-    background: linear-gradient(180deg, #f3f9ff 0%, #e8f2fa 100%);
-    text-decoration: none !important;
-    color: inherit;
-  }
-
-  .header-v2 .header-v2-mobile-offer__card:focus-visible {
-    outline: 2px solid var(--hdr-blue);
-    outline-offset: 2px;
-  }
-
-  .header-v2 .header-v2-mobile-offer__badge {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: var(--hdr-orange);
-    line-height: 0;
-  }
-
-  .header-v2 .header-v2-mobile-offer__badge svg {
-    width: 24px;
-    height: 24px;
-    fill: #fff !important;
-  }
-
-  .header-v2 .header-v2-mobile-offer__body {
-    flex: 1 1 auto;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .header-v2 .header-v2-mobile-offer__title {
-    font-family: 'Akhand', sans-serif;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--hdr-navy) !important;
-    line-height: 1.15;
-  }
-
-  .header-v2 .header-v2-mobile-offer__sub {
-    font-size: 12px;
-    font-weight: 500;
-    color: #64748b;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .header-v2 .header-v2-mobile-offer__cta {
-    flex-shrink: 0;
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--hdr-orange) !important;
-    white-space: nowrap;
-  }
 }
 
 @media (min-width: 992px) {
@@ -1353,8 +1218,7 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     display: none !important;
   }
 
-  .header-v2 .header-v2-mobile-catalog,
-  .header-v2 .header-v2-mobile-offer {
+  .header-v2 .header-v2-mobile-catalog {
     display: none !important;
   }
 
@@ -1435,8 +1299,7 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     letter-spacing: 0.05em !important;
   }
 
-  body .header.header-v2 .header-v2-cta-ambiente,
-  body .header.header-v2 .header-v2-cta-semana {
+  body .header.header-v2 .header-v2-cta-ambiente {
     font-size: 13px !important;
   }
 

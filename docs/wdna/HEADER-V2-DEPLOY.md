@@ -16,7 +16,6 @@
 | 6 | `sections/showcase-model-product.liquid` | Substituir (botão coração) |
 | 7 | `sections/favoritos-page.liquid` | Criar |
 | 8 | `templates/page.favoritos.liquid` | Criar |
-| 9 | `sections/oferta-semana-overlay.liquid` + `assets/oferta-semana.css` + `assets/oferta-semana.js` + `assets/ofertas-semana-config.js` | Oferta da semana (overlay no `theme.liquid`) |
 
 Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 
@@ -35,7 +34,6 @@ Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 | Meus pedidos (topo + bloco) | `/pedidos` |
 | Compre por ambiente | `/pagina/calculadora-btus` |
 | Favoritos | `/pagina/favoritos` |
-| Ofertas da semana | `/pagina/oferta-da-semana` (template `page.oferta-semana`) — ver `docs/wdna/OFERTAS-SEMANA-VITRINE.md`. **Não use `/ofertas`**. |
 | Menu **Modelo** | Rótulo no Liquid; link continua o item “Peças…” do menu admin |
 
 ## Favoritos (comportamento)
@@ -60,7 +58,7 @@ Publicar: **`assets/header-v2.css`**, **`sections/header.liquid`**, **`layout/th
 - [ ] Faixa azul: Atendimento, Meus pedidos, Entre ou cadastre-se  
 - [ ] Busca, logo, Meus pedidos / Favoritos / Carrinho (desktop)  
 - [ ] Mobile: header sem sobreposição; lupa abre busca; cards 2 col alinhados  
-- [ ] Compre por ambiente + menu + Ofertas da semana  
+- [ ] Compre por ambiente + menu  
 - [ ] Mega menu Ar-condicionado  
 - [ ] Coração na vitrine + contador + `/pagina/favoritos`  
 - [ ] Login: favoritos do visitante aparecem logado  
