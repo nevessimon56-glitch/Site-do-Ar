@@ -25,7 +25,16 @@
     width: 100% !important;
   }
 </style>
-<script>document.body.classList.add('diag360-page');</script>
+<script>
+(function () {
+  function mark() {
+    document.documentElement.classList.add('diag360-page', 'diag360-active');
+    if (document.body) document.body.classList.add('diag360-page', 'diag360-active');
+  }
+  mark();
+  document.addEventListener('DOMContentLoaded', mark);
+})();
+</script>
 {% endblock %}
 
 {% block content %}
