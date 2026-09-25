@@ -72,30 +72,37 @@
         </div>
       </aside>
 
-      <ul class="opmn-trust" aria-label="Benefícios">
-        <li>
-          <strong>Compra segura</strong>
-          <span>certificados em todas as etapas</span>
-        </li>
-        <li>
-          <strong>Instalação descomplicada</strong>
-          <span>agendamento rápido</span>
-        </li>
-        <li>
-          <strong>Conforto de verdade</strong>
-          <span>tecnologia inverter</span>
-        </li>
-      </ul>
+      <div class="opmn-trust-wrap">
+        <ul class="opmn-trust" aria-label="Benefícios">
+          <li>
+            <strong>Compra segura</strong>
+            <span>certificados em todas as etapas</span>
+          </li>
+          <li>
+            <strong>Instalação descomplicada</strong>
+            <span>agendamento rápido</span>
+          </li>
+          <li>
+            <strong>Conforto de verdade</strong>
+            <span>tecnologia inverter</span>
+          </li>
+        </ul>
+      </div>
 
       <section class="opmn-offers" id="opmn-ofertas" data-opmn-offers>
         <p class="opmn-kicker">— OFERTAS SELECIONADAS</p>
         <div class="opmn-offers__head">
-          <h2 class="opmn-section-title">
-            Conforto em <span class="opmn-hero__accent">boa companhia.</span>
-          </h2>
-          <p class="opmn-offers__sub">
-            Uma seleção enxuta de aparelhos para climatizar cada ambiente na temperatura ideal.
-          </p>
+          <div class="opmn-offers__head-text">
+            <h2 class="opmn-section-title">
+              Conforto em <span class="opmn-hero__accent">boa companhia.</span>
+            </h2>
+            <p class="opmn-offers__sub">
+              Uma seleção enxuta de aparelhos para climatizar cada ambiente na temperatura ideal.
+            </p>
+          </div>
+          <button type="button" class="opmn-offers__filter" data-opmn-scroll="ofertas" aria-label="Ir para ofertas">
+            Filtrar ofertas
+          </button>
         </div>
         <div class="opmn-rail-wrap">
           <div class="opmn-rail" data-opmn-rail tabindex="0" aria-live="polite"></div>
@@ -120,6 +127,11 @@
 
     <div class="opmn-loader" data-opmn-loader aria-hidden="true">
       <span></span><span></span><span></span>
+    </div>
+
+    <div class="opmn-mobile-dock" data-opmn-mobile-dock aria-hidden="true">
+      <button type="button" class="opmn-mobile-dock__ghost" data-opmn-scroll="ofertas">Ofertas</button>
+      <a class="opmn-mobile-dock__primary" data-opmn-dock-link href="#" data-opmn-scroll="ofertas">Ver destaque</a>
     </div>
   </div>
 </div>

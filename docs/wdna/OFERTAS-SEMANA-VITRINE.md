@@ -20,6 +20,10 @@ Sem página customizada configurada, o WDNA manda de volta à home **sem mudanç
 
 Link do header: **`/#sda-oferta-immersiva`**. Não reutiliza item do menu “oferta” (evita abrir produto aleatório).
 
+## Mobile (≤767px)
+
+Nav superior em scroll horizontal, benefícios em carrossel, cards de oferta quase full-width, botão **Filtrar ofertas** e barra fixa inferior (**Ofertas** + **Ver produto** do destaque).
+
 ## Produtos
 
 Edite **`assets/ofertas-semana-config.js`** — ver comentários no arquivo.

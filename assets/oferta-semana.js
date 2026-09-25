@@ -277,6 +277,12 @@
         spotLink.href = p.url || '#';
         spotLink.setAttribute('title', p.title || '');
       }
+      var dockLink = root.querySelector('[data-opmn-dock-link]');
+      if (dockLink && p.url) {
+        dockLink.href = p.url;
+        dockLink.setAttribute('title', p.title || '');
+        dockLink.textContent = 'Ver produto';
+      }
       var disc = parseDiscount(p);
       if (spotDiscount) {
         if (disc) {
@@ -321,13 +327,32 @@
     if (loader) loader.classList.add('is-hidden');
   }
 
-  function bindScrollActions(root) {
-    var offers = root.querySelector('[data-opmn-offers]');
-    root.querySelectorAll('[data-opmn-scroll]').forEach(function (btn) {
+  function bindScrollActions(scope) {
+    var offers = scope.querySelector('[data-opmn-offers]');
+    scope.querySelectorAll('[data-opmn-scroll]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         if (offers) offers.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
+  }
+
+  function bindMobileMode(root, overlay) {
+    var dock = root.querySelector('[data-opmn-mobile-dock]');
+    var mq = window.matchMedia('(max-width: 767px)');
+
+    function apply() {
+      var mobile = mq.matches;
+      root.classList.toggle('opmn--mobile', mobile);
+      if (overlay) overlay.classList.toggle('sda-oferta-overlay--mobile', mobile);
+      if (dock) dock.setAttribute('aria-hidden', mobile ? 'false' : 'true');
+    }
+
+    apply();
+    if (typeof mq.addEventListener === 'function') {
+      mq.addEventListener('change', apply);
+    } else if (typeof mq.addListener === 'function') {
+      mq.addListener(apply);
+    }
   }
 
   function init() {
@@ -403,6 +428,7 @@
     }
 
     if (overlay) {
+      bindMobileMode(root, overlay);
       bindHeaderLinks();
       var closeEl = overlay.querySelector('[data-sda-oferta-close]');
       if (closeEl) closeEl.addEventListener('click', closeOverlay);
