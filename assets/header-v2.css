@@ -402,6 +402,45 @@ body .header.header-v2 .nav-content .nav-main_icon.nav-main-icon_svg {
   display: block;
 }
 
+/* Desktop nav — mesma foto da faixa mobile, sem caixa branca (não usa .nav-main_icon do tema) */
+@media (min-width: 992px) {
+  .header-v2 .nav-main_cat-thumb {
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 34px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    line-height: 0;
+    overflow: visible;
+  }
+
+  .header-v2 .nav-main_cat-thumb .header-v2-mcat-img--nav {
+    display: block;
+    width: auto !important;
+    height: auto !important;
+    max-width: 38px;
+    max-height: 34px;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+
+  body .header.header-v2 .header-v2-nav-inner .nav-main-box_link:has(.nav-main_cat-thumb) {
+    gap: 6px !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .header-v2 .nav-main_cat-thumb {
+    display: none !important;
+  }
+}
+
 .header-v2 .header-v2-nav-inner {
   display: flex;
   align-items: center;
