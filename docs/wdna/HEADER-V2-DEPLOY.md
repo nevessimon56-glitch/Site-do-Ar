@@ -34,6 +34,7 @@ Manter como já estava: `mega-menu-ar.liquid`, `mega-menu.js`, `mega-menu.css`.
 | Meus pedidos (topo + bloco) | `/pedidos` |
 | Compre por ambiente | `/pagina/calculadora-btus` |
 | Favoritos | `/pagina/favoritos` |
+| Diagnóstico 360 (botão nav desktop) | `/pagina/diagnostico-360` |
 | Menu **Modelo** | Rótulo no Liquid; link continua o item “Peças…” do menu admin |
 
 ## Favoritos (comportamento)
