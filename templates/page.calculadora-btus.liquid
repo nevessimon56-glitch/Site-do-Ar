@@ -1,0 +1,31 @@
+{% layout 'theme' %}
+
+{% block head %}
+<style>
+  body.sda-btu-page .page-header,
+  body.sda-btu-page .page-title,
+  body.sda-btu-page .title-page,
+  body.sda-btu-page .page-content > h1:first-of-type {
+    display: none !important;
+  }
+  body.sda-btu-page main,
+  body.sda-btu-page .page-content {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+</style>
+<script>
+(function(){
+  function mark(){
+    document.documentElement.classList.add('sda-btu-page','sda-btu-active');
+    if(document.body)document.body.classList.add('sda-btu-page','sda-btu-active');
+  }
+  mark();
+  document.addEventListener('DOMContentLoaded',mark);
+})();
+</script>
+{% endblock %}
+
+{% block content %}
+  {{ page.content }}
+{% endblock %}
