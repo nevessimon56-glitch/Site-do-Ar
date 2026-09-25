@@ -488,31 +488,41 @@ body .header.header-v2 .nav-content .nav-main_icon.nav-main-icon_svg {
   flex-shrink: 0;
   padding: 9px 16px;
   margin-left: 4px;
-  border: 2px solid var(--hdr-blue);
+  border: 2px solid rgb(36, 94, 168);
   border-radius: 999px;
-  background: rgba(75, 150, 212, 0.12);
-  color: var(--hdr-blue-dark) !important;
+  background: rgba(44, 119, 187, 0.32);
+  box-shadow:
+    0 0 0 1px rgb(75, 150, 212),
+    0 1px 2px rgba(12, 31, 61, 0.08);
+  color: rgb(12, 31, 61) !important;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   text-decoration: none !important;
   white-space: nowrap;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    color 0.15s ease;
 }
 
 .header-v2 .header-v2-cta-diag360:hover,
 .header-v2 .header-v2-cta-diag360:focus {
-  background: rgba(75, 150, 212, 0.2);
-  border-color: var(--hdr-blue-dark);
-  color: var(--hdr-navy) !important;
+  background: rgba(44, 119, 187, 0.42);
+  border-color: rgb(26, 72, 130);
+  box-shadow:
+    0 0 0 2px rgb(75, 150, 212),
+    0 2px 6px rgba(12, 31, 61, 0.12);
+  color: rgb(12, 31, 61) !important;
 }
 
 .header-v2 .header-v2-cta-diag360__ico {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  color: var(--hdr-blue);
+  color: rgb(26, 72, 130);
 }
 
 .header-v2 .header-v2-nav-inner .nav-main {
@@ -1380,6 +1390,11 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
   }
 
   body .header.header-v2 .header-v2-cta-ambiente {
+    font-size: 13px !important;
+  }
+
+  body .header.header-v2 .header-v2-cta-diag360 {
+    display: inline-flex !important;
     font-size: 13px !important;
   }
 
