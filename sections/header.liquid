@@ -12,9 +12,8 @@
 {% assign iconCartOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 9.2h11.3L21 7H7"/><circle cx="10" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>' %}
 {% assign iconHome = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' %}
 {% comment %}
-  Ícones mobile — cole aqui as URLs absolutas das imagens (Split / Piso / Janela).
-  Ex.: https://cdn.../split-inverter.png
-  Se preenchido, vence ícone do menu WDNA e SVG local.
+  Ícones Split / Piso / Janela — faixa mobile + menu desktop (nav) + menu lateral.
+  Cole URLs absolutas (webp/png). Se preenchido, vence ícone do menu WDNA e SVG local.
 {% endcomment %}
 {% assign sdaMIconSplitUrlUser = 'https://salescdn.net/42SzyWLpjEDqDDqjWFMPuyRaISQ=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431178000.webp' %}
 {% assign sdaMIconPisoUrlUser = 'https://salescdn.net/DkTKglPYM8Xj7l0hM5y21Gsf1xE=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431236301.webp' %}
@@ -215,10 +214,22 @@
                     {% if menuLabelLower contains 'peças' or menuLabelLower contains 'pecas' or menuLabelLower contains 'acessório' or menuLabelLower contains 'acessorio' %}
                         {% assign menuLabel = 'Modelo' %}
                     {% endif %}
+                    {% assign sdaNavCatIconUrl = '' %}
+                    {% if menuLabelLower contains 'split' and sdaMIconSplitUrl != '' %}
+                        {% assign sdaNavCatIconUrl = sdaMIconSplitUrl %}
+                    {% elsif menuLabelLower contains 'piso' and sdaMIconPisoUrl != '' %}
+                        {% assign sdaNavCatIconUrl = sdaMIconPisoUrl %}
+                    {% elsif menuLabelLower contains 'janela' and sdaMIconJanelaUrl != '' %}
+                        {% assign sdaNavCatIconUrl = sdaMIconJanelaUrl %}
+                    {% endif %}
                     <div class="nav-main_item dropdown">
                         <a href="{{ menuItem.link }}" class="nav-main_link dropdown-toggle" tabindex="0" title="{{ menuLabel }}"{% if menuItem.newTab == true %} target="_blank"{% endif %}>
                             <div class="nav-main-box_link">
-                                {% if menuItem.iconSvg %}
+                                {% if sdaNavCatIconUrl != '' %}
+                                    <div class="nav-main_icon nav-main-icon_img nav-main-icon_sda" aria-hidden="true">
+                                        <img class="header-v2-nav-cat-img" src="{{ sdaNavCatIconUrl }}" width="32" height="32" alt="" loading="lazy" decoding="async">
+                                    </div>
+                                {% elsif menuItem.iconSvg %}
                                     <div class="nav-main_icon nav-main-icon_svg">{{ menuItem.iconSvg }}</div>
                                 {% elsif menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
                                     <div class="nav-main_icon nav-main-icon_img">
@@ -378,6 +389,14 @@
                         {% if menuLabelLower contains 'peças' or menuLabelLower contains 'pecas' or menuLabelLower contains 'acessório' or menuLabelLower contains 'acessorio' %}
                             {% assign menuLabel = 'Modelo' %}
                         {% endif %}
+                        {% assign sdaNavCatIconUrl = '' %}
+                        {% if menuLabelLower contains 'split' and sdaMIconSplitUrl != '' %}
+                            {% assign sdaNavCatIconUrl = sdaMIconSplitUrl %}
+                        {% elsif menuLabelLower contains 'piso' and sdaMIconPisoUrl != '' %}
+                            {% assign sdaNavCatIconUrl = sdaMIconPisoUrl %}
+                        {% elsif menuLabelLower contains 'janela' and sdaMIconJanelaUrl != '' %}
+                            {% assign sdaNavCatIconUrl = sdaMIconJanelaUrl %}
+                        {% endif %}
                         <li class="nav-mobile_item">
                             {% assign classArrowItem = '' %}
                             {% if menuItem.items.size > 0 %}
@@ -387,7 +406,11 @@
                                 <p>
                                     <a href="{{ menuItem.link }}" title="{{ menuLabel }}"{% if menuItem.newTab == true %} target="_blank"{% endif %}>
                                         <div class="nav-mobile-box_link">
-                                            {% if menuItem.iconSvg %}
+                                            {% if sdaNavCatIconUrl != '' %}
+                                                <div class="nav-mobile_icon nav-mobile-icon_img nav-mobile-icon_sda" aria-hidden="true">
+                                                    <img class="header-v2-nav-cat-img" src="{{ sdaNavCatIconUrl }}" width="36" height="36" alt="" loading="lazy" decoding="async">
+                                                </div>
+                                            {% elsif menuItem.iconSvg %}
                                                 <div class="nav-mobile_icon nav-mobile-icon_svg">{{ menuItem.iconSvg }}</div>
                                             {% elsif menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
                                                 <div class="nav-mobile_icon nav-mobile-icon_img">
