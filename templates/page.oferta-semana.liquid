@@ -1,9 +1,10 @@
 {% layout 'theme' %}
 
 {% block head %}
-<link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/oferta-semana.css' | themeAssetUrl }}">
-<script src="{{ 'assets/ofertas-semana-config.js' | themeAssetUrl }}" defer></script>
-<script src="{{ 'assets/oferta-semana.js' | themeAssetUrl }}" defer></script>
+{% assign sdaOfertaAssetVer = '20260325-v4' %}
+<link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/oferta-semana.css' | themeAssetUrl }}?v={{ sdaOfertaAssetVer }}">
+<script src="{{ 'assets/ofertas-semana-config.js' | themeAssetUrl }}?v={{ sdaOfertaAssetVer }}" defer></script>
+<script src="{{ 'assets/oferta-semana.js' | themeAssetUrl }}?v={{ sdaOfertaAssetVer }}" defer></script>
 <style>
   body.oferta-semana-page .footer,
   body.oferta-semana-page footer.footer {

@@ -292,6 +292,9 @@
         }
         spotImg.alt = p.title || '';
       }
+      if (spotMedia) {
+        spotMedia.classList.toggle('opmn-spot__media--empty', !p.image);
+      }
       if (spotTitle) spotTitle.textContent = p.title || '';
       if (spotLink) {
         spotLink.href = p.url || '#';
@@ -472,6 +475,7 @@
       return;
     }
 
+    bindMobileMode(root, null);
     ensureApp().then(function (products) {
       if (products.length) fireConfetti();
     });

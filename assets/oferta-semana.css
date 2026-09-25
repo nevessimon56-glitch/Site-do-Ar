@@ -987,3 +987,27 @@ body.sda-oferta-overlay-open {
 .oferta-semana-page {
   background: var(--opmn-bg) !important;
 }
+
+/* Página /pagina/oferta-da-semana (section oferta-semana.liquid) */
+.opmn--standalone {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--opmn-bg);
+}
+
+.opmn--standalone .opmn-main {
+  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+}
+
+.opmn-top__back {
+  text-decoration: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 767px) {
+  .opmn--standalone .opmn-mobile-dock {
+    display: flex;
+  }
+}

@@ -60,10 +60,20 @@ Crie ou substitua **só estes nomes** dentro de **`assets/`** (sem subpasta extr
 | `ofertas-semana-config.js` | `assets/ofertas-semana-config.js` |
 | `header-v2.css` | `assets/header-v2.css` (banner mobile) |
 
-### 3) O que **não** precisa colar (v4)
+### 3) Três arquivos diferentes (não misturar)
 
-- `sections/oferta-semana-overlay.liquid` — opcional; o HTML já está **dentro do header**.  
-- `layout/theme.liquid` — só se souber o que está fazendo; **não é obrigatório** para oferta.
+| Arquivo WDNA | Função |
+|--------------|--------|
+| **`sections/header.liquid`** | Banner mobile + overlay ao clicar (`/#sda-oferta-immersiva`) |
+| **`templates/page.oferta-semana.liquid`** | Só a URL **`/pagina/oferta-da-semana`** (página no admin) |
+| **`sections/oferta-semana.liquid`** | Conteúdo **dentro** dessa página (layout PMN; **não** `os-week` antigo) |
+
+Colar o template no header, ou a section `os-week` no lugar do header, **quebra** ou não muda o banner.
+
+### 4) Opcional
+
+- `sections/oferta-semana-overlay.liquid` — não usado no v4 (overlay está no header).  
+- `layout/theme.liquid` — não obrigatório para oferta.
 
 ---
 
