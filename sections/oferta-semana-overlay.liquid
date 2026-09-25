@@ -13,20 +13,25 @@
   id="sda-oferta-immersiva"
   class="sda-oferta-overlay"
   data-sda-oferta-overlay
-  data-sda-oferta-version="2026-03-25-mobile"
+  data-sda-oferta-version="2026-03-25-mobile-v3"
   hidden
   aria-hidden="true"
   role="dialog"
   aria-modal="true"
   aria-labelledby="opmn-hero-title"
 >
-  <button type="button" class="sda-oferta-overlay__close" data-sda-oferta-close aria-label="Fechar">
+  <button type="button" class="sda-oferta-overlay__close sda-oferta-overlay__close--float" data-sda-oferta-close aria-label="Fechar">
     <span aria-hidden="true">×</span>
   </button>
 
   <div class="opmn" data-opmn-root>
     <header class="opmn-top">
-      <span class="opmn-top__brand">site do ar</span>
+      <div class="opmn-top__row">
+        <span class="opmn-top__brand">site do ar</span>
+        <button type="button" class="sda-oferta-overlay__close sda-oferta-overlay__close--bar" data-sda-oferta-close aria-label="Fechar">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
       <nav class="opmn-top__nav" aria-label="Atalhos da oferta">
         <button type="button" class="opmn-top__link" data-opmn-scroll="ofertas">Ofertas</button>
         <a class="opmn-top__link" href="/pagina/calculadora-btus">Por ambiente</a>

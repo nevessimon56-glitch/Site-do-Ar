@@ -84,6 +84,16 @@
       seen[url] = true;
 
       var title = node.getAttribute('data-product-title') || '';
+      var imgNode = item.querySelector('img[data-src], img[data-product-image], img.lazy, img');
+      var image = node.getAttribute('data-product-image') || '';
+      if (!image && imgNode) {
+        image =
+          imgNode.getAttribute('data-src') ||
+          imgNode.getAttribute('src') ||
+          imgNode.getAttribute('data-product-image') ||
+          '';
+      }
+      if (image && image.indexOf('data:') === 0) image = '';
       var price =
         node.getAttribute('data-product-price') ||
         (item.querySelector('.showcase-price_value') &&
@@ -96,7 +106,7 @@
       list.push({
         url: url,
         title: title || 'Oferta',
-        image: node.getAttribute('data-product-image') || '',
+        image: image,
         price: price,
         compareAtPrice: compareAt,
         productId: node.getAttribute('data-product-id') || ''
@@ -259,6 +269,7 @@
     var empty = root.querySelector('[data-opmn-empty]');
     var loader = root.querySelector('[data-opmn-loader]');
     var edition = root.querySelector('[data-opmn-edition]');
+    var spotMedia = root.querySelector('.opmn-spot__media');
     var spotImg = root.querySelector('[data-opmn-spot-img]');
     var spotTitle = root.querySelector('[data-opmn-spot-title]');
     var spotLink = root.querySelector('[data-opmn-spot-link]');
@@ -272,7 +283,13 @@
       var p = products[i];
       if (!p) return;
       if (spotImg) {
-        spotImg.src = p.image || '';
+        if (p.image) {
+          spotImg.src = p.image;
+          spotImg.hidden = false;
+        } else {
+          spotImg.removeAttribute('src');
+          spotImg.hidden = true;
+        }
         spotImg.alt = p.title || '';
       }
       if (spotTitle) spotTitle.textContent = p.title || '';
@@ -390,6 +407,7 @@
       if (!overlay) return;
       overlay.hidden = false;
       overlay.setAttribute('aria-hidden', 'false');
+      overlay.scrollTop = 0;
       document.documentElement.classList.add('sda-oferta-overlay-open');
       document.body.classList.add('sda-oferta-overlay-open');
       setHash(true);
@@ -433,8 +451,9 @@
     if (overlay) {
       bindMobileMode(root, overlay);
       bindHeaderLinks();
-      var closeEl = overlay.querySelector('[data-sda-oferta-close]');
-      if (closeEl) closeEl.addEventListener('click', closeOverlay);
+      overlay.querySelectorAll('[data-sda-oferta-close]').forEach(function (closeEl) {
+        closeEl.addEventListener('click', closeOverlay);
+      });
       document.addEventListener('keydown', function (ev) {
         if (ev.key === 'Escape' && !overlay.hidden) closeOverlay();
       });

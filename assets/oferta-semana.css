@@ -63,6 +63,31 @@ body.sda-oferta-overlay-open {
   outline: none;
 }
 
+.sda-oferta-overlay__close--bar {
+  display: none;
+}
+
+.opmn-top__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Vence theme-all em links/botões dentro do overlay */
+.sda-oferta-overlay a.opmn-btn--primary,
+.sda-oferta-overlay .opmn-btn--primary,
+.sda-oferta-overlay a.opmn-mobile-dock__primary {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.sda-oferta-overlay a.opmn-btn--primary:visited,
+.sda-oferta-overlay a.opmn-mobile-dock__primary:visited {
+  color: #ffffff !important;
+}
+
 .opmn {
   position: relative;
   font-family: var(--opmn-font);
@@ -314,6 +339,18 @@ body.sda-oferta-overlay-open {
   font-size: 16px;
   font-weight: 800;
   line-height: 1.25;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.opmn-spot__media img[hidden] {
+  display: none !important;
+}
+
+.opmn-spot__media--empty {
+  display: none !important;
+  min-height: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .opmn-spot__hint {
@@ -665,12 +702,18 @@ body.sda-oferta-overlay-open {
 
 /* —— Mobile (curadoria PMN) —— */
 @media (max-width: 767px) {
-  .sda-oferta-overlay .sda-oferta-overlay__close {
-    top: max(8px, env(safe-area-inset-top));
-    right: max(8px, env(safe-area-inset-right));
+  .sda-oferta-overlay .sda-oferta-overlay__close--float {
+    display: none !important;
+  }
+
+  .sda-oferta-overlay .sda-oferta-overlay__close--bar {
+    display: flex;
+    position: static;
     width: 40px;
     height: 40px;
-    font-size: 24px;
+    flex-shrink: 0;
+    font-size: 22px;
+    box-shadow: none;
   }
 
   .sda-oferta-overlay .opmn-top {
@@ -682,7 +725,7 @@ body.sda-oferta-overlay-open {
 
   .sda-oferta-overlay .opmn-top__brand {
     font-size: 1rem;
-    padding-right: 44px;
+    padding-right: 0;
   }
 
   .sda-oferta-overlay .opmn-top__nav {
@@ -756,12 +799,30 @@ body.sda-oferta-overlay-open {
   }
 
   .sda-oferta-overlay .opmn-spot {
-    padding: 16px 14px;
+    padding: 14px 12px;
     border-radius: 14px;
   }
 
   .sda-oferta-overlay .opmn-spot__headline {
-    font-size: 1.35rem;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+
+  .sda-oferta-overlay .opmn-spot__card .opmn-btn--block {
+    display: none;
+  }
+
+  .sda-oferta-overlay .opmn-spot__name {
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .sda-oferta-overlay .opmn-spot__media {
+    min-height: 140px;
+  }
+
+  .sda-oferta-overlay .opmn-spot__media img:not([hidden]) {
+    max-height: 150px;
   }
 
   .sda-oferta-overlay .opmn-trust-wrap {

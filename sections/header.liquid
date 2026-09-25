@@ -540,6 +540,7 @@
     if (ov) {
       ov.hidden = false;
       ov.setAttribute('aria-hidden', 'false');
+      ov.scrollTop = 0;
       document.documentElement.classList.add('sda-oferta-overlay-open');
       document.body.classList.add('sda-oferta-overlay-open');
       if (history.replaceState) history.replaceState(null, '', '#' + HASH);
