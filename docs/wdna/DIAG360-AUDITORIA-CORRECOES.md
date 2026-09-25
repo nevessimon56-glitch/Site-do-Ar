@@ -1,39 +1,46 @@
-# Diagnóstico Clima 360 — deploy WDNA (section + template)
+# Diagnóstico Clima 360 — deploy WDNA (página adicional)
 
-Igual ao fluxo da **calculadora**: você **não** precisa colar HTML gigante em “página adicional” nem criar arquivos em `assets/` no editor WDNA.
+Mesmo fluxo da **calculadora BTU**: HTML colado na página do admin + template no tema.
 
-## Arquivos no tema WDNA (só estes dois)
+## 1. Tema WDNA
 
 | Pasta | Arquivo | Ação |
 |-------|---------|------|
-| `sections/` | `diagnostico-360.liquid` | Substituir **inteiro** |
-| `templates/` | `page.diagnostico.liquid` | Substituir **inteiro** |
+| `templates/` | `page.diagnostico.liquid` | Substituir (renderiza `{{ page.content }}`) |
 
-## Admin da loja
+A **`sections/diagnostico-360.liquid`** pode ficar vazia / não usada — o quiz **não** vem da section.
 
-1. Página **Diagnóstico Clima 360** → slug `diagnostico-360` → URL `/pagina/diagnostico-360`
+## 2. Admin — página adicional
+
+1. Slug: `diagnostico-360` → `/pagina/diagnostico-360`
 2. Template: **`page.diagnostico`**
-3. Corpo da página adicional: **pode ficar vazio** (o quiz vem da section)
+3. Corpo: copiar **inteiro** de  
+   **`pages/diagnostico-360-pagina-adicional.html`** (GitHub, branch `cursor/header-favoritos-v2-e52b`)
 
-## JavaScript (BTU / 15 perguntas)
+Use o editor em **modo HTML / código-fonte**. Se o WDNA separar emoji dos botões, recole do GitHub (estrutura correta: emoji **dentro** de cada `<button class="d-option">`).
 
-A section carrega automaticamente:
+## 3. Script (BTU corrigido)
 
+No final do HTML colado deve existir **só uma** linha:
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/diagnostico-360.js?v=20260925-audit" defer></script>
 ```
-https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/diagnostico-360.js?v=20260925-audit
-```
 
-Aguarde ~5 min após push no GitHub. Console: `window.__diag360Ready === true`.
+**Apague** na sua página antiga:
 
-(O arquivo `assets/diagnostico-360.js` existe no **GitHub** para o CDN; **não** é obrigatório publicá-lo manualmente no WDNA.)
+- `@cursor/fix-diagnostico-360-ed4c/...`
+- O `setTimeout` que carrega `?r=2` de novo (mesmo arquivo duplicado)
 
-## Correções da auditoria (25/09/2026)
+## 4. Valores iniciais corretos
 
-- Sem teto silencioso em 56.000 BTU/h (estado “acima do catálogo” + WhatsApp)
-- Área não é mais alterada por ocupação/tipo
-- BTU ao vivo só depois de responder **área** (`—` antes disso)
-- Fatores alinhados à calculadora BTU (`calculadora-btus-wizard.js`)
+| Elemento | Deve mostrar |
+|----------|----------------|
+| `#dLiveBtu` / `#dMobBtu` | **—** (não `9.000` nem `24.000`) |
+| Após responder **área** | BTU estimado |
 
-## Referência opcional
+Console: `window.__diag360Ready === true`
 
-`pages/diagnostico-360-pagina-adicional.html` — mesmo conteúdo que a section, para quem ainda usa página adicional no admin (legado). **Preferir section + template.**
+## 5. Meta tags (admin)
+
+- Title / description conforme comentários no topo do HTML de referência.

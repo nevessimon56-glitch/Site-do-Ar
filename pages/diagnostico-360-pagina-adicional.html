@@ -1,4 +1,12 @@
-<!-- VERSAO: 2026-09-25-audit-btu-fixes-v8-cdn -->
+<!-- VERSAO: 2026-09-25-audit-v8-pagina-adicional -->
+<!--
+  WDNA — página adicional (igual calculadora BTU):
+  1) Template da página: page.diagnostico (templates/page.diagnostico.liquid no tema)
+  2) Cole TODO este arquivo no corpo da página adicional (modo HTML / código-fonte).
+  3) NÃO use branch fix-diagnostico-360-ed4c no script — use a URL abaixo (final do arquivo).
+  4) Se os emojis ficarem FORA dos <button> no editor, o WDNA quebrou o HTML: apague e recole do GitHub.
+  5) Remova o bloco setTimeout ?r=2 (script duplicado) se ainda existir na sua página.
+-->
 <!-- NÃO cole no theme.liquid, Todos-os-Produtos nem em outras páginas -->
 <!-- No admin, preencha também:
      Meta Tag title: Site Do Ar: Os Melhores Preços em Ar-Condicionado — São Paulo
@@ -492,7 +500,7 @@
 
 <div id="diag360-overlay">
   <header class="d-header">
-    <a class="d-logo" href="/" title="Site Do Ar" aria-label="Site Do Ar">
+    <a class="d-logo" href="https://www.sitedoar.com.br/" title="Site Do Ar" aria-label="Site Do Ar">
       <img class="d-logo-img" src="https://salescdn.net/XOFBUXAbeaqnTcy-gCa7vQrXkio=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/1777059085610.webp" alt="Site Do Ar" width="180" height="40">
     </a>
     <span class="d-header-badge">Quiz · 15 etapas</span>
@@ -519,7 +527,7 @@
       <p>Responda <strong>15 perguntas</strong> e descubra o ar-condicionado ideal para o seu ambiente. O quiz cruza metragem, insolação, isolamento, clima, ocupação e prioridades para um dimensionamento completo.</p>
       <div class="d-hero-actions">
         <a class="d-btn-primary" href="#d-quiz">Começar diagnóstico →</a>
-        <a class="d-btn-secondary" href="/">Ver loja</a>
+        <a class="d-btn-secondary" href="https://www.sitedoar.com.br/">Ver loja</a>
       </div>
     </div>
     <div class="d-hero-stats">
@@ -553,7 +561,7 @@
       </div>
       <div class="d-sidebar-card">
         <div class="d-live-btu">
-          <div class="d-btu-val" id="dLiveBtu">9.000<span class="d-btu-unit">BTUs/h</span></div>
+          <div class="d-btu-val" id="dLiveBtu">—<span class="d-btu-unit">BTUs/h</span></div>
           <div class="d-btu-label">BTUs estimados</div>
         </div>
       </div>

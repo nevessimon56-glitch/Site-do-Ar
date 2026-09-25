@@ -24,6 +24,12 @@
     max-width: 100% !important;
     width: 100% !important;
   }
+  /* WDNA costuma inserir <p></p> vazios ao redor do HTML colado */
+  body.diag360-page .page-content > p:empty {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 </style>
 <script>
 (function () {
@@ -38,5 +44,5 @@
 {% endblock %}
 
 {% block content %}
-  {% section 'diagnostico-360' %}
+  {{ page.content }}
 {% endblock %}
