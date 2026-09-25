@@ -1,0 +1,11 @@
+{
+  "name": "Site do Ar — Tray/WDNA theme",
+  "install": "for f in assets/*.js; do [ -e \"$f\" ] || continue; node --check \"$f\" || exit 1; done; echo 'asset JS syntax OK'",
+  "terminals": [
+    {
+      "name": "preview",
+      "command": "cd /workspace && python3 -m http.server 8000 --bind 0.0.0.0"
+    }
+  ],
+  "ports": [8000]
+}
