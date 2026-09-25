@@ -32,7 +32,7 @@
   Produtos: assets/ofertas-semana-config.js
 {% endcomment %}
 {% assign sdaOfferWeekUrlUser = '/#sda-oferta-immersiva' %}
-{% assign sdaOfferWeekSubUser = 'Drop semanal exclusivo' %}
+{% assign sdaOfferWeekSubUser = 'Curadoria · toque para abrir' %}
 {% assign sdaOfferWeekUrl = sdaOfferWeekUrlUser %}
 {% assign sdaOfferWeekSub = sdaOfferWeekSubUser %}
 
@@ -523,3 +523,46 @@
         }
     </script>
 </header>
+{% comment %} Overlay oferta — no header para funcionar mesmo sem publicar theme.liquid inteiro {% endcomment %}
+<link media="all" rel="stylesheet" href="{{ 'assets/oferta-semana.css' | themeAssetUrl }}">
+{% render 'sections/oferta-semana-overlay' %}
+<script src="{{ 'assets/ofertas-semana-config.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/oferta-semana.js' | themeAssetUrl }}" defer></script>
+<script>
+(function () {
+  var HASH = 'sda-oferta-immersiva';
+  function openOrNav() {
+    if (typeof window.SDA_openOfertaImmersiva === 'function') {
+      window.SDA_openOfertaImmersiva();
+      return;
+    }
+    var ov = document.querySelector('[data-sda-oferta-overlay]');
+    if (ov) {
+      ov.hidden = false;
+      ov.setAttribute('aria-hidden', 'false');
+      document.documentElement.classList.add('sda-oferta-overlay-open');
+      document.body.classList.add('sda-oferta-overlay-open');
+      if (history.replaceState) history.replaceState(null, '', '#' + HASH);
+    } else {
+      window.location.href = '/#' + HASH;
+    }
+  }
+  document.addEventListener(
+    'click',
+    function (e) {
+      var link = e.target.closest('[data-sda-offer-week-link]');
+      if (!link) return;
+      var href = link.getAttribute('href') || '';
+      if (href.indexOf(HASH) === -1 && href.indexOf('sda-oferta-immersiva') === -1) return;
+      e.preventDefault();
+      e.stopPropagation();
+      openOrNav();
+    },
+    true
+  );
+  if (location.hash === '#' + HASH) {
+    document.addEventListener('DOMContentLoaded', openOrNav);
+    if (document.readyState !== 'loading') setTimeout(openOrNav, 100);
+  }
+})();
+</script>

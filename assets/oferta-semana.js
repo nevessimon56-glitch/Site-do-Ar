@@ -4,6 +4,9 @@
 (function () {
   'use strict';
 
+  if (window.__SDA_OFERTA_SEMANA_BOOTED__) return;
+  window.__SDA_OFERTA_SEMANA_BOOTED__ = true;
+
   var OVERLAY_HASH = 'sda-oferta-immersiva';
 
   function cfg() {

@@ -2,10 +2,18 @@
   Oferta da semana — layout estilo curadoria PMN (overlay full-screen).
   Abre: /#sda-oferta-immersiva ou banner do header.
 {% endcomment %}
+<style id="sda-oferta-fallback-v2">
+@media (max-width: 767px) {
+  .sda-oferta-overlay .opmn-mobile-dock { display: flex !important; }
+  .sda-oferta-overlay .opmn-main { padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important; }
+  .sda-oferta-overlay .opmn-offers__filter { display: inline-flex !important; }
+}
+</style>
 <div
   id="sda-oferta-immersiva"
   class="sda-oferta-overlay"
   data-sda-oferta-overlay
+  data-sda-oferta-version="2026-03-25-mobile"
   hidden
   aria-hidden="true"
   role="dialog"
@@ -131,7 +139,7 @@
 
     <div class="opmn-mobile-dock" data-opmn-mobile-dock aria-hidden="true">
       <button type="button" class="opmn-mobile-dock__ghost" data-opmn-scroll="ofertas">Ofertas</button>
-      <a class="opmn-mobile-dock__primary" data-opmn-dock-link href="#" data-opmn-scroll="ofertas">Ver destaque</a>
+      <a class="opmn-mobile-dock__primary" data-opmn-dock-link href="#">Ver destaque</a>
     </div>
   </div>
 </div>
