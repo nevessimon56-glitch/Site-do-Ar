@@ -12,7 +12,7 @@
 {% assign iconCartOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 9.2h11.3L21 7H7"/><circle cx="10" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>' %}
 {% assign iconHome = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' %}
 {% comment %}
-  Ícones Split / Piso / Janela — faixa mobile + menu desktop (nav) + menu lateral.
+  Ícones Split / Piso / Janela — faixa mobile (e menu lateral opcional).
   Cole URLs absolutas (webp/png). Se preenchido, vence ícone do menu WDNA e SVG local.
 {% endcomment %}
 {% assign sdaMIconSplitUrlUser = 'https://salescdn.net/42SzyWLpjEDqDDqjWFMPuyRaISQ=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431178000.webp' %}
@@ -214,22 +214,10 @@
                     {% if menuLabelLower contains 'peças' or menuLabelLower contains 'pecas' or menuLabelLower contains 'acessório' or menuLabelLower contains 'acessorio' %}
                         {% assign menuLabel = 'Modelo' %}
                     {% endif %}
-                    {% assign sdaNavCatIconUrl = '' %}
-                    {% if menuLabelLower contains 'split' and sdaMIconSplitUrl != '' %}
-                        {% assign sdaNavCatIconUrl = sdaMIconSplitUrl %}
-                    {% elsif menuLabelLower contains 'piso' and sdaMIconPisoUrl != '' %}
-                        {% assign sdaNavCatIconUrl = sdaMIconPisoUrl %}
-                    {% elsif menuLabelLower contains 'janela' and sdaMIconJanelaUrl != '' %}
-                        {% assign sdaNavCatIconUrl = sdaMIconJanelaUrl %}
-                    {% endif %}
                     <div class="nav-main_item dropdown">
                         <a href="{{ menuItem.link }}" class="nav-main_link dropdown-toggle" tabindex="0" title="{{ menuLabel }}"{% if menuItem.newTab == true %} target="_blank"{% endif %}>
                             <div class="nav-main-box_link">
-                                {% if sdaNavCatIconUrl != '' %}
-                                    <div class="nav-main_icon nav-main-icon_img nav-main-icon_sda" aria-hidden="true">
-                                        <img class="header-v2-nav-cat-img" src="{{ sdaNavCatIconUrl }}" width="32" height="32" alt="" loading="lazy" decoding="async">
-                                    </div>
-                                {% elsif menuItem.iconSvg %}
+                                {% if menuItem.iconSvg %}
                                     <div class="nav-main_icon nav-main-icon_svg">{{ menuItem.iconSvg }}</div>
                                 {% elsif menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
                                     <div class="nav-main_icon nav-main-icon_img">
