@@ -24,7 +24,7 @@ Use o editor em **modo HTML / código-fonte**. Se o WDNA separar emoji dos botõ
 No final do HTML colado deve existir **só uma** linha:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/diagnostico-360.js?v=20260925-audit" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/nevessimon56-glitch/Site-do-Ar@cursor/header-favoritos-v2-e52b/assets/diagnostico-360.js?v=20260925-mobile-ui" defer></script>
 ```
 
 **Apague** na sua página antiga:

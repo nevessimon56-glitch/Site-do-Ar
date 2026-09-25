@@ -222,6 +222,7 @@
     mobFit: document.getElementById('dMobFit'),
     mobStep: document.getElementById('dMobStep'),
     mobBar: document.getElementById('dMobBar'),
+    mobileBar: document.getElementById('dMobileBar'),
     back: document.getElementById('dBack'),
     next: document.getElementById('dNext'),
     result: document.getElementById('dResult')
@@ -485,10 +486,28 @@
     els.liveBtu.innerHTML = btuHtml;
     els.sideStatus.textContent = status;
     els.quizBar.style.width = Math.round(((state.step+1)/questions.length)*100)+'%';
-    if (els.mobBtu) els.mobBtu.textContent = btuText;
+    var mobBtuShort = '—';
+    if (canBtu) {
+      if (state.exceedsCatalog) {
+        mobBtuShort = fmtBtuNum(state.btuRaw) + '+';
+      } else {
+        mobBtuShort = fmtBtuNum(btu);
+      }
+    }
+    if (els.mobBtu) {
+      els.mobBtu.textContent = mobBtuShort;
+      els.mobBtu.title = canBtu ? btuText : '';
+    }
     if (els.mobFit) els.mobFit.textContent = fit + '%';
     if (els.mobStep) els.mobStep.textContent = (state.step + 1) + ' de ' + questions.length;
     if (els.mobBar) els.mobBar.style.width = Math.round(((state.step + 1) / questions.length) * 100) + '%';
+    if (els.mobileBar) {
+      var longBtu =
+        state.exceedsCatalog ||
+        mobBtuShort.length > 9 ||
+        (canBtu && state.btuRaw >= 100000);
+      els.mobileBar.classList.toggle('d-mobile-bar--long-btu', longBtu);
+    }
   }
 
   function showFact() {
@@ -507,7 +526,9 @@
     els.stepType.textContent = q.type==='multi' ? 'Múltipla escolha' : 'Escolha única';
     els.qTitle.textContent = q.title;
     els.qHint.textContent = q.hint;
-    els.options.className = 'd-option-grid' + (q.options.length >= 5 ? ' cols-3' : '');
+    var cols3 = q.options.length >= 5;
+    els.options.className = 'd-option-grid' + (cols3 ? ' cols-3' : '');
+    els.options.classList.toggle('d-option-grid--many', cols3);
     els.options.innerHTML = q.options.map(function(opt,i) {
       return '<button class="d-option'+(sel.includes(i)?' selected':'')+'" type="button" data-i="'+i+'"><div class="d-opt-emoji">'+opt.emoji+'</div><span class="d-opt-title">'+opt.label+'</span><span class="d-opt-desc">'+opt.desc+'</span></button>';
     }).join('');
