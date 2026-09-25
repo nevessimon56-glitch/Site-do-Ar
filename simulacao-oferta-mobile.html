@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Simulação — Oferta mobile (Site do Ar)</title>
+  <link rel="stylesheet" href="assets/oferta-semana.css?v=sim">
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #e2e8f0; }
+    .sim-bar {
+      position: sticky; top: 0; z-index: 1;
+      padding: 12px 16px; background: #1a2d4a; color: #fff;
+      font-size: 13px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
+    .sim-bar button {
+      background: #f58220; border: 0; color: #fff; font-weight: 700;
+      padding: 10px 16px; border-radius: 8px; cursor: pointer;
+    }
+    .sim-fake-header {
+      padding: 16px; background: #fff; border-bottom: 1px solid #ccc;
+      text-align: center;
+    }
+    .sim-fake-header a {
+      display: inline-block; padding: 12px 16px; background: #e8f2fa;
+      border-radius: 12px; text-decoration: none; color: #1a2d4a; font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="sim-bar">
+    <span>Simulação local (414px) — igual WDNA após publicar header + assets</span>
+    <button type="button" id="sim-open">Abrir oferta</button>
+    <span id="sim-version" data-test="version"></span>
+  </div>
+  <div class="sim-fake-header">
+    <a href="#sda-oferta-immersiva" data-sda-offer-week-link>Oferta da semana (banner)</a>
+  </div>
+  <p style="padding:16px;color:#64748b;font-size:14px;">Role a home fake abaixo. No celular real, o overlay vem do <code>header.liquid</code>.</p>
+
+  <!-- Cópia do overlay (mesmo markup do header.liquid v4) -->
+  <div id="sda-oferta-immersiva" class="sda-oferta-overlay" data-sda-oferta-overlay data-sda-oferta-version="2026-03-25-mobile-v4" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="opmn-hero-title">
+    <button type="button" class="sda-oferta-overlay__close sda-oferta-overlay__close--float" data-sda-oferta-close aria-label="Fechar"><span aria-hidden="true">×</span></button>
+    <div class="opmn" data-opmn-root>
+      <header class="opmn-top">
+        <div class="opmn-top__row">
+          <span class="opmn-top__brand">site do ar</span>
+          <button type="button" class="sda-oferta-overlay__close sda-oferta-overlay__close--bar" data-sda-oferta-close aria-label="Fechar"><span aria-hidden="true">×</span></button>
+        </div>
+        <nav class="opmn-top__nav"><button type="button" class="opmn-top__link" data-opmn-scroll="ofertas">Ofertas</button></nav>
+      </header>
+      <main class="opmn-main">
+        <section class="opmn-hero">
+          <p class="opmn-kicker">— EDIÇÃO 03 · SIMULAÇÃO</p>
+          <h1 class="opmn-hero__title" id="opmn-hero-title"><span>O clima certo</span><span class="opmn-hero__accent">muda tudo.</span></h1>
+          <p class="opmn-hero__lead">Texto hero visível no topo ao abrir.</p>
+        </section>
+        <aside class="opmn-spot" data-opmn-spot>
+          <p class="opmn-spot__label">DESTAQUE DA SEMANA</p>
+          <div class="opmn-spot__card">
+            <div class="opmn-spot__media"><img data-opmn-spot-img src="https://salescdn.net/42SzyWLpjEDqDDqjWFMPuyRaISQ=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431178000.webp" alt="Produto demo"></div>
+            <h3 class="opmn-spot__name" data-opmn-spot-title>Ar-Condicionado Split HW Inverter Philco (demo)</h3>
+            <a class="opmn-btn opmn-btn--primary opmn-btn--block" data-opmn-spot-link href="#">Ver produto</a>
+          </div>
+        </aside>
+        <section class="opmn-offers" id="opmn-ofertas" data-opmn-offers>
+          <div class="opmn-rail-wrap"><div class="opmn-rail" data-opmn-rail></div></div>
+        </section>
+      </main>
+      <div class="opmn-mobile-dock" data-opmn-mobile-dock>
+        <button type="button" class="opmn-mobile-dock__ghost" data-opmn-scroll="ofertas">Ofertas</button>
+        <a class="opmn-mobile-dock__primary" data-opmn-dock-link href="#">Ver produto</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.SDA_OFERTAS_SEMANA = {
+      edition: '— SIMULAÇÃO LOCAL',
+      products: [{
+        url: '#',
+        title: 'Ar-Condicionado Split HW Inverter Philco 12.000 BTUs',
+        image: 'https://salescdn.net/42SzyWLpjEDqDDqjWFMPuyRaISQ=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431178000.webp',
+        price: 'R$ 2.199,00',
+        compareAtPrice: 'R$ 2.590,00'
+      }]
+    };
+  </script>
+  <script src="assets/oferta-semana.js?v=sim" defer></script>
+  <script>
+    document.getElementById('sim-open').addEventListener('click', function () {
+      if (window.SDA_openOfertaImmersiva) window.SDA_openOfertaImmersiva();
+    });
+    window.addEventListener('load', function () {
+      var el = document.querySelector('[data-sda-oferta-version]');
+      document.getElementById('sim-version').textContent = el ? el.getAttribute('data-sda-oferta-version') : 'sem overlay';
+    });
+  </script>
+</body>
+</html>
