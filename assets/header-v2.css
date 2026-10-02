@@ -1157,6 +1157,18 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     position: relative;
   }
 
+  /* Centraliza as categorias quando cabem na tela usando margens automáticas
+     (compatível com todos os navegadores). Em telas estreitas as margens
+     colapsam para 0, então os itens alinham à esquerda e rolam na horizontal
+     sem cortar o primeiro item. */
+  .header-v2 .header-v2-mobile-catalog__scroll > .header-v2-mobile-catalog__item:first-child {
+    margin-left: auto;
+  }
+
+  .header-v2 .header-v2-mobile-catalog__scroll > .header-v2-mobile-catalog__item:last-child {
+    margin-right: auto;
+  }
+
   .header-v2 .header-v2-mobile-catalog__scroll::-webkit-scrollbar {
     display: none;
   }
@@ -1166,7 +1178,6 @@ body .header.header-v2 .header-v2-nav-inner .mega-menu-ar > .nav-main_link {
     position: sticky;
     right: 0;
     flex-shrink: 0;
-    margin-left: auto;
     padding-left: 8px;
     font-size: 18px;
     font-weight: 700;
