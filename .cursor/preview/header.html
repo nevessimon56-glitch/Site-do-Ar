@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Faixa de categorias mobile — comparação de larguras (dev)</title>
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #e2e8f0; padding: 20px; }
+    h1 { font-size: 16px; margin: 0 0 4px; }
+    p.note { font-size: 12px; color: #94a3b8; margin: 0 0 20px; max-width: 760px; }
+    .row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+    .case { background: #1e293b; border-radius: 10px; padding: 10px; }
+    .case h2 { font-size: 12px; margin: 0 0 8px; color: #93c5fd; font-weight: 700; }
+    .device { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+    iframe { border: 0; display: block; width: 100%; }
+    .w320 { width: 320px; } .w360 { width: 360px; } .w414 { width: 414px; } .w480 { width: 480px; } .w540 { width: 540px; }
+  </style>
+</head>
+<body>
+  <h1>Faixa de categorias (mobile) — comparação de larguras</h1>
+  <p class="note">Cada moldura carrega a faixa real <code>.header-v2-mobile-catalog</code> (header-v2.css) no seu próprio viewport. Esperado: itens centralizados quando cabem; em telas estreitas, alinham à esquerda e rolam na horizontal (seta ›) sem cortar o primeiro item.</p>
+
+  <div class="row">
+    <div class="case"><h2>320px (estreito — deve rolar)</h2><div class="device w320"><iframe class="w320" height="92" src="/.cursor/preview/header-strip.html"></iframe></div></div>
+    <div class="case"><h2>360px</h2><div class="device w360"><iframe class="w360" height="92" src="/.cursor/preview/header-strip.html"></iframe></div></div>
+    <div class="case"><h2>414px</h2><div class="device w414"><iframe class="w414" height="92" src="/.cursor/preview/header-strip.html"></iframe></div></div>
+  </div>
+
+  <div class="row" style="margin-top:24px">
+    <div class="case"><h2>480px</h2><div class="device w480"><iframe class="w480" height="92" src="/.cursor/preview/header-strip.html"></iframe></div></div>
+    <div class="case"><h2>540px (celular mais largo — era o bug)</h2><div class="device w540"><iframe class="w540" height="92" src="/.cursor/preview/header-strip.html"></iframe></div></div>
+  </div>
+</body>
+</html>

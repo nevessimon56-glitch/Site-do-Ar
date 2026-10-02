@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Header mobile catalog strip — preview</title>
+
+  <!-- Dev-only reproduction of the mobile category strip (.header-v2-mobile-catalog)
+       from sections/header.liquid, using the REAL assets/header-v2.css.
+       Not part of the published theme. -->
+  <link rel="stylesheet" href="/assets/header-v2.css">
+  <style>
+    html, body { margin: 0; background: #fff; }
+  </style>
+</head>
+<body>
+  <header class="header header-v2">
+    <div class="header-v2-mobile-catalog show-lg content" aria-label="Categorias">
+      <div class="container header-v2-mobile-catalog__scroll">
+        <a class="header-v2-mobile-catalog__item" href="/split-inverter" title="Split Inverter">
+          <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
+            <img class="header-v2-mcat-img" src="https://dummyimage.com/40x40/1c3f6e/ffffff.png&text=S" width="40" height="40" alt="">
+          </span>
+          <span class="header-v2-mobile-catalog__label">Split Inverter</span>
+        </a>
+        <a class="header-v2-mobile-catalog__item" href="/piso-teto" title="Piso Teto">
+          <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
+            <img class="header-v2-mcat-img" src="https://dummyimage.com/40x40/1c3f6e/ffffff.png&text=P" width="40" height="40" alt="">
+          </span>
+          <span class="header-v2-mobile-catalog__label">Piso Teto</span>
+        </a>
+        <a class="header-v2-mobile-catalog__item" href="/janela" title="Janela">
+          <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
+            <img class="header-v2-mcat-img" src="https://dummyimage.com/40x40/1c3f6e/ffffff.png&text=J" width="40" height="40" alt="">
+          </span>
+          <span class="header-v2-mobile-catalog__label">Janela</span>
+        </a>
+        <a class="header-v2-mobile-catalog__item header-v2-mobile-catalog__item--ambiente" href="/pagina/calculadora-btus" title="Compre por ambiente">
+          <span class="header-v2-mobile-catalog__icon header-v2-mobile-catalog__icon--orange" aria-hidden="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          </span>
+          <span class="header-v2-mobile-catalog__label header-v2-mobile-catalog__label--ambiente">
+            <span class="header-v2-mobile-catalog__label-line">Compre por</span>
+            <span class="header-v2-mobile-catalog__label-line header-v2-mobile-catalog__label-accent">ambiente</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </header>
+</body>
+</html>
