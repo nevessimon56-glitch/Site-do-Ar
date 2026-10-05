@@ -24,7 +24,14 @@
         {% comment %} WDNA exige preco inteiro (ex: 0,5000) — centavos quebram a URL {% endcomment %}
         {% assign priceMin = search.facets.priceRange.min | round %}
         {% assign priceMax = search.facets.priceRange.max | round %}
-        {% assign priceCurrent = priceMin | append: ',' | append: priceMax %}
+        {% comment %}
+          NÃO pré-aplicar a faixa cheia como preço. Antes, priceCurrent nascia
+          como "priceMin,priceMax" e ia no <input name="preco">, então QUALQUER
+          filtro (ex.: marca) enviava preco=min,max e excluía todo produto fora
+          dessa faixa — bug da LG (produtos abaixo do mínimo do facet sumiam).
+          Agora só há preço quando o cliente de fato envia ?preco= na URL.
+        {% endcomment %}
+        {% assign priceCurrent = '' %}
         {% if search.query.preco %}
             {% assign priceCurrent = search.query.preco %}
         {% endif %}
@@ -535,7 +542,10 @@
                                 </span>
                             </div>
                             <div class="search-filter-price_slider"></div>
+                            {% comment %} Só emite o input de preço quando o cliente escolheu uma faixa; o JS recria o input ao arrastar o slider. {% endcomment %}
+                            {% if priceCurrent != blank %}
                             <input type="hidden" name="preco" class="priceBySearch" value="{{ priceCurrent }}"/>
+                            {% endif %}
                             <div class="priceBySearchTemp d-hide" data-prices="{{ priceCurrent }}" data-pricesTemp="{{ priceCurrent }}"></div>
                         </div>
                     </div>
