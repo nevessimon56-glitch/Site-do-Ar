@@ -801,16 +801,28 @@
 .product-v2 .product-trust_txt small { font-size: 11px; color: #64748b; }
 
 /* ---------- Descrição / Destaques / Especificações ---------- */
-.product-v2 .product-descriptions { margin-top: 16px; }
+#product-pdp-v2 .product-descriptions {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+#product-pdp-v2 .product-descriptions-content.content,
+#product-pdp-v2 .product-descriptions-container.container {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
 .product-v2 .product-descriptions_grid {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 4px;
+  row-gap: 4px;
+  column-gap: 4px;
   align-items: stretch;
 }
 .product-v2 .product-descriptions_grid > .product-description {
-  flex: 1 1 calc(50% - 5px);
+  flex: 1 1 calc(50% - 2px);
   min-width: 280px;
 }
 .product-v2 .product-descriptions_grid > .product-description--desc,
@@ -973,13 +985,14 @@
   /* Descrição/Destaques/Especificações viram acordeão (uma coluna) */
   .product-v2 .product-descriptions_grid {
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
+    row-gap: 6px;
   }
   .product-v2 .product-descriptions_grid > .product-description {
     flex: 1 1 100%;
     min-width: 0;
   }
-  .product-v2 .product-descriptions { margin-top: 14px; }
+  #product-pdp-v2 .product-descriptions { margin-top: 10px; }
   .product-v2 .product-description { padding: 0; }
   .product-v2 .product-description_header { cursor: pointer; padding: 16px 16px; }
   .product-v2 .product-description_ico { display: inline-flex; transition: transform .2s ease; }
@@ -1066,15 +1079,11 @@
     display: block !important;
   }
   .product-v2 .product-description_header { pointer-events: none; cursor: default; }
-  .product-v2 .product-descriptions { margin-top: 16px; }
-  .product-v2 .product-descriptions_grid { gap: 10px; }
-  .product-v2 .product-descriptions_grid > .product-description--desc {
-    flex: 1 1 58%;
-    min-width: 300px;
-  }
-  .product-v2 .product-descriptions_grid > .product-description--highlights {
-    flex: 1 1 38%;
-    min-width: 260px;
+  #product-pdp-v2 .product-descriptions { margin-top: 12px; }
+  .product-v2 .product-descriptions_grid {
+    gap: 4px;
+    row-gap: 4px;
+    column-gap: 4px;
   }
   .product-v2 .product-description {
     padding: 16px 18px;
@@ -1112,7 +1121,7 @@
   }
   .product-v2 .product-descriptions_grid > .product-description--desc,
   .product-v2 .product-descriptions_grid > .product-description--highlights {
-    flex: 1 1 calc(50% - 7px);
+    flex: 1 1 calc(50% - 2px);
     min-width: 300px;
   }
 }
