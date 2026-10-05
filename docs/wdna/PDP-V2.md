@@ -2,7 +2,7 @@
 
 **Branch:** `cursor/pdp-integrate-v2-2cf7`
 
-> O CSS v2 usa **flexbox** (sem `grid` / `1fr`) para passar no validador do editor WDNA.
+> O CSS v2 usa **flexbox** (sem `grid` / `1fr`) e **cores em hex** (sem `--variáveis` CSS) para o validador do editor WDNA.
 
 Layout alinhado aos mockups desktop/mobile: galeria + painel de compra, CEP, confiança, Descrição / Destaques / Especificações.
 
