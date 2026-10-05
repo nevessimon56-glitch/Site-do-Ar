@@ -137,7 +137,7 @@
                                     <div class="product-gallery product-gallery_desktop product-gallery_pdp" data-pdp-gallery="carousel">
                                         <div class="product-pdp-thumbs" aria-label="Miniaturas do produto">
                                             <div class="product-pdp-thumbs_carousel" data-pdp-thumbs-carousel>
-                                                <button type="button" class="product-pdp-thumbs_nav product-pdp-thumbs_nav--prev" aria-label="Ver miniaturas anteriores">
+                                                <button type="button" class="product-pdp-thumbs_nav product-pdp-thumbs_nav--prev" data-pdp-thumb-nav="-1" aria-label="Ver miniaturas anteriores">
                                                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
                                                 </button>
                                                 <div class="product-pdp-thumbs_viewport" tabindex="0" role="region" aria-label="Carrossel de miniaturas">
@@ -155,7 +155,7 @@
                                                         {% endfor %}
                                                     </ul>
                                                 </div>
-                                                <button type="button" class="product-pdp-thumbs_nav product-pdp-thumbs_nav--next" aria-label="Ver próximas miniaturas">
+                                                <button type="button" class="product-pdp-thumbs_nav product-pdp-thumbs_nav--next" data-pdp-thumb-nav="1" aria-label="Ver próximas miniaturas">
                                                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
                                                 </button>
                                             </div>
@@ -531,104 +531,179 @@
         </nav>
         <script>
         (function () {
+          var VISIBLE = 4;
+
+          function getGap(list) {
+            var styles = window.getComputedStyle(list);
+            return parseFloat(styles.columnGap || styles.gap || '8') || 8;
+          }
+
+          function layoutThumbs(wrap) {
+            var viewport = wrap.querySelector('.product-pdp-thumbs_viewport');
+            var list = wrap.querySelector('.product-pdp-thumbs_list');
+            if (!viewport || !list) return;
+            var items = list.querySelectorAll('.product-gallery_item');
+            if (!items.length) return;
+            var gap = getGap(list);
+            var viewW = viewport.clientWidth;
+            if (viewW < 1) return;
+            var thumbW = (viewW - gap * (VISIBLE - 1)) / VISIBLE;
+            thumbW = Math.max(48, thumbW);
+            viewport.style.setProperty('--pdp-thumb-w', thumbW + 'px');
+            items.forEach(function (item) {
+              item.style.flex = '0 0 ' + thumbW + 'px';
+              item.style.width = thumbW + 'px';
+              item.style.maxWidth = thumbW + 'px';
+            });
+            var listW = items.length * thumbW + Math.max(0, items.length - 1) * gap;
+            list.style.width = listW + 'px';
+            list.style.minWidth = listW + 'px';
+            list.style.maxWidth = 'none';
+          }
+
+          function scrollThumbs(wrap, dir) {
+            var viewport = wrap.querySelector('.product-pdp-thumbs_viewport');
+            var list = wrap.querySelector('.product-pdp-thumbs_list');
+            if (!viewport || !list) return;
+            layoutThumbs(wrap);
+            var item = list.querySelector('.product-gallery_item');
+            if (!item) return;
+            var gap = getGap(list);
+            var step = item.getBoundingClientRect().width + gap;
+            var maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+            var target = viewport.scrollLeft + dir * step;
+            if (target < 0) target = 0;
+            if (target > maxScroll) target = maxScroll;
+            if (viewport.scrollTo) {
+              try {
+                viewport.scrollTo({ left: target, behavior: 'smooth' });
+              } catch (err) {
+                viewport.scrollLeft = target;
+              }
+            } else {
+              viewport.scrollLeft = target;
+            }
+            window.setTimeout(function () { syncNav(wrap); }, 280);
+          }
+
+          function syncNav(wrap) {
+            var viewport = wrap.querySelector('.product-pdp-thumbs_viewport');
+            var list = wrap.querySelector('.product-pdp-thumbs_list');
+            if (!viewport || !list) return;
+            layoutThumbs(wrap);
+            var items = list.querySelectorAll('.product-gallery_item');
+            var maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+            var left = viewport.scrollLeft;
+            var needsCarousel = items.length > VISIBLE || maxScroll > 1;
+            wrap.classList.toggle('product-pdp-thumbs_carousel--static', !needsCarousel);
+            wrap.classList.toggle('product-pdp-thumbs_carousel--start', needsCarousel && left <= 1);
+            wrap.classList.toggle('product-pdp-thumbs_carousel--end', needsCarousel && left >= maxScroll - 1);
+          }
+
+          function setActiveThumb(list, index) {
+            list.querySelectorAll('.product-gallery_link').forEach(function (link) {
+              link.classList.toggle('image-main', link.getAttribute('data-index') === String(index));
+            });
+          }
+
+          function scrollActiveThumbIntoView(wrap) {
+            var viewport = wrap.querySelector('.product-pdp-thumbs_viewport');
+            var list = wrap.querySelector('.product-pdp-thumbs_list');
+            if (!viewport || !list) return;
+            var active = list.querySelector('.product-gallery_link.image-main');
+            if (!active) return;
+            var item = active.closest('.product-gallery_item');
+            if (!item) return;
+            var pad = 2;
+            var itemLeft = item.offsetLeft;
+            var itemRight = itemLeft + item.offsetWidth;
+            var viewLeft = viewport.scrollLeft;
+            var viewRight = viewLeft + viewport.clientWidth;
+            var target = null;
+            if (itemLeft < viewLeft) target = itemLeft - pad;
+            else if (itemRight > viewRight) target = itemRight - viewport.clientWidth + pad;
+            if (target == null) return;
+            if (viewport.scrollTo) {
+              try {
+                viewport.scrollTo({ left: target, behavior: 'smooth' });
+              } catch (err) {
+                viewport.scrollLeft = target;
+              }
+            } else {
+              viewport.scrollLeft = target;
+            }
+          }
+
+          function bindCarousel(wrap) {
+            if (wrap.dataset.pdpThumbsReady === '1') return;
+            wrap.dataset.pdpThumbsReady = '1';
+            var viewport = wrap.querySelector('.product-pdp-thumbs_viewport');
+            var list = wrap.querySelector('.product-pdp-thumbs_list');
+            if (!viewport || !list) return;
+
+            wrap.addEventListener('click', function (event) {
+              var navBtn = event.target.closest('[data-pdp-thumb-nav]');
+              if (!navBtn || !wrap.contains(navBtn)) return;
+              event.preventDefault();
+              event.stopPropagation();
+              var dir = parseInt(navBtn.getAttribute('data-pdp-thumb-nav'), 10);
+              if (dir === -1 || dir === 1) scrollThumbs(wrap, dir);
+            });
+
+            viewport.addEventListener('scroll', function () { syncNav(wrap); }, { passive: true });
+            window.addEventListener('resize', function () { syncNav(wrap); });
+            list.addEventListener('click', function (event) {
+              var link = event.target.closest('.product-gallery_link');
+              if (!link || !list.contains(link)) return;
+              var idx = link.getAttribute('data-index');
+              if (idx != null) setActiveThumb(list, idx);
+              window.setTimeout(function () { scrollActiveThumbIntoView(wrap); }, 80);
+            });
+            list.querySelectorAll('img').forEach(function (img) {
+              if (!img.complete) img.addEventListener('load', function () { syncNav(wrap); }, { once: true });
+            });
+            if (typeof ResizeObserver !== 'undefined') {
+              new ResizeObserver(function () { syncNav(wrap); }).observe(viewport);
+            }
+            syncNav(wrap);
+          }
+
           function initPdpThumbsCarousel() {
             var root = document.getElementById('product-pdp-v2');
             if (!root) return;
-            root.querySelectorAll('[data-pdp-thumbs-carousel]').forEach(function (wrap) {
-              if (wrap.dataset.pdpThumbsReady === '1') return;
-              wrap.dataset.pdpThumbsReady = '1';
-              var viewport = wrap.querySelector('.product-pdp-thumbs_viewport');
-              var list = wrap.querySelector('.product-pdp-thumbs_list');
-              var prev = wrap.querySelector('.product-pdp-thumbs_nav--prev');
-              var next = wrap.querySelector('.product-pdp-thumbs_nav--next');
-              if (!viewport || !list || !prev || !next) return;
+            root.querySelectorAll('[data-pdp-thumbs-carousel]').forEach(bindCarousel);
 
-              function stepPx() {
-                var item = list.querySelector('.product-gallery_item');
-                if (!item) return Math.max(80, viewport.clientWidth * 0.75);
-                var styles = window.getComputedStyle(list);
-                var gap = parseFloat(styles.columnGap || styles.gap || '8') || 8;
-                return item.getBoundingClientRect().width + gap;
-              }
-
-              var visibleCount = 4;
-
-              function syncNav() {
-                var items = list.querySelectorAll('.product-gallery_item');
-                var maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
-                var left = viewport.scrollLeft;
-                var needsCarousel = items.length > visibleCount || maxScroll > 2;
-                wrap.classList.toggle('product-pdp-thumbs_carousel--static', !needsCarousel);
-                wrap.classList.toggle('product-pdp-thumbs_carousel--start', needsCarousel && left <= 2);
-                wrap.classList.toggle('product-pdp-thumbs_carousel--end', needsCarousel && left >= maxScroll - 2);
-                prev.disabled = !needsCarousel || left <= 2;
-                next.disabled = !needsCarousel || left >= maxScroll - 2;
-              }
-
-              function scrollByDir(dir) {
-                viewport.scrollBy({ left: dir * stepPx(), behavior: 'smooth' });
-              }
-
-              function setActiveThumb(index) {
-                list.querySelectorAll('.product-gallery_link').forEach(function (link) {
-                  var isActive = link.getAttribute('data-index') === String(index);
-                  link.classList.toggle('image-main', isActive);
-                });
-              }
-
-              function scrollActiveThumbIntoView() {
-                var active = list.querySelector('.product-gallery_link.image-main');
-                if (!active) return;
-                var item = active.closest('.product-gallery_item');
-                if (!item) return;
-                var pad = 4;
-                var itemLeft = item.offsetLeft;
-                var itemRight = itemLeft + item.offsetWidth;
-                var viewLeft = viewport.scrollLeft;
-                var viewRight = viewLeft + viewport.clientWidth;
-                if (itemLeft < viewLeft) {
-                  viewport.scrollTo({ left: itemLeft - pad, behavior: 'smooth' });
-                } else if (itemRight > viewRight) {
-                  viewport.scrollTo({ left: itemRight - viewport.clientWidth + pad, behavior: 'smooth' });
-                }
-              }
-
-              prev.addEventListener('click', function () { scrollByDir(-1); });
-              next.addEventListener('click', function () { scrollByDir(1); });
-              viewport.addEventListener('scroll', syncNav, { passive: true });
-              window.addEventListener('resize', syncNav);
-              list.addEventListener('click', function (event) {
-                var link = event.target.closest('.product-gallery_link');
-                if (!link || !list.contains(link)) return;
-                var idx = link.getAttribute('data-index');
-                if (idx != null) setActiveThumb(idx);
-                window.setTimeout(scrollActiveThumbIntoView, 80);
-              });
-              list.querySelectorAll('img').forEach(function (img) {
-                if (!img.complete) img.addEventListener('load', syncNav, { once: true });
-              });
-              if (typeof ResizeObserver !== 'undefined') {
-                new ResizeObserver(syncNav).observe(viewport);
-              }
-
+            if (!window.__pdpThumbsOnChangeWrapped) {
+              window.__pdpThumbsOnChangeWrapped = true;
               var prevOnChange = window.onChangeProductGallery;
               window.onChangeProductGallery = function (index, url1200, url800) {
                 if (typeof prevOnChange === 'function') {
                   prevOnChange(index, url1200, url800);
                 }
-                setActiveThumb(index);
-                scrollActiveThumbIntoView();
-                window.setTimeout(syncNav, 120);
+                var pdpRoot = document.getElementById('product-pdp-v2');
+                if (!pdpRoot) return;
+                pdpRoot.querySelectorAll('[data-pdp-thumbs-carousel]').forEach(function (wrap) {
+                  var list = wrap.querySelector('.product-pdp-thumbs_list');
+                  if (list) setActiveThumb(list, index);
+                  scrollActiveThumbIntoView(wrap);
+                  window.setTimeout(function () { syncNav(wrap); }, 120);
+                });
               };
-
-              syncNav();
-            });
+            }
           }
+
+          window.__pdpThumbNav = function (btn, dir) {
+            var wrap = btn && btn.closest ? btn.closest('[data-pdp-thumbs-carousel]') : null;
+            if (wrap) scrollThumbs(wrap, dir);
+            return false;
+          };
+
           if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initPdpThumbsCarousel);
           } else {
             initPdpThumbsCarousel();
           }
+          window.addEventListener('load', initPdpThumbsCarousel);
         })();
         </script>
         </div><!-- /#product-pdp-v2 — vitrines (relacionados / último visto) ficam FORA -->
