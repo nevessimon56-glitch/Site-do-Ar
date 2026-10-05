@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDP v2 — preview (dev)</title>
+
+  <!--
+    Dev-only prototype of the redesigned Product Detail Page.
+    Reproduces the REAL class names from sections/product-content.liquid so the
+    CSS (assets/product-page-v2.css) is production-ready, plus the new pieces
+    (availability pill, trust row, Comparar, CEP box, Destaques, Especificações).
+    Not part of the published theme.
+  -->
+  <link rel="stylesheet" href="/assets/product-page-v2.css">
+  <style>
+    body { margin: 0; background: #eef3f9; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+    .sda-stage { max-width: 1180px; margin: 0 auto; padding: 20px 16px 60px; }
+  </style>
+</head>
+<body>
+  <div class="sda-stage">
+  <div class="product-v2">
+
+    <!-- Breadcrumb -->
+    <section class="product-breadcrumb">
+      <ol class="product-breadcrumb-list breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/Todos-os-Produtos">Todos os produtos</a></li>
+        <li class="breadcrumb-item breadcrumb-item--current"><a href="javascript:void(0)">Ar-Condicionado Split Hi Wall TCL T-Pro 2.0 Inverter 18.000 BTUs</a></li>
+      </ol>
+    </section>
+
+    <section class="product-header">
+      <div class="columns">
+        <!-- LEFT: gallery -->
+        <div class="product-header-left col-7 col-lg-12 column">
+          <div class="product-images col-12">
+            <p class="product-title product-title_mobile show-lg">Ar-Condicionado Split Hi Wall TCL T-Pro 2.0 Inverter 18.000 BTUs</p>
+            <div class="product-zoom">
+              <a class="product-zoom_link" href="javascript:void(0)">
+                <img class="product-zoom_image" src="https://dummyimage.com/640x640/ffffff/8aa0bd.png&text=TCL+T-Pro+18000" alt="Produto">
+              </a>
+            </div>
+            <div class="product-gallery product-gallery_desktop">
+              <div class="product-gallery_list">
+                <ul class="product-gallery-slider product-gallery-slider_desktop">
+                  <li class="product-gallery_item"><a class="product-gallery_link image-main" href="javascript:void(0)"><img class="product-gallery_image" src="https://dummyimage.com/120x120/ffffff/8aa0bd.png&text=1" alt=""></a></li>
+                  <li class="product-gallery_item"><a class="product-gallery_link" href="javascript:void(0)"><img class="product-gallery_image" src="https://dummyimage.com/120x120/ffffff/8aa0bd.png&text=2" alt=""></a></li>
+                  <li class="product-gallery_item"><a class="product-gallery_link" href="javascript:void(0)"><img class="product-gallery_image" src="https://dummyimage.com/120x120/ffffff/8aa0bd.png&text=3" alt=""></a></li>
+                  <li class="product-gallery_item"><a class="product-gallery_link" href="javascript:void(0)"><img class="product-gallery_image" src="https://dummyimage.com/120x120/ffffff/8aa0bd.png&text=4" alt=""></a></li>
+                  <li class="product-gallery_item"><a class="product-gallery_link" href="javascript:void(0)"><img class="product-gallery_image" src="https://dummyimage.com/120x120/ffffff/8aa0bd.png&text=5" alt=""></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: info -->
+        <div class="product-header-right col-5 col-lg-12 column">
+          <div class="product-header-box">
+            <div class="product-header-box_top">
+              <div class="product-sku">Ref.: TAC-18CTG2X-INV-SET</div>
+              <div class="product-stock product-stock--ok">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                <span>Disponibilidade: Imediata</span>
+              </div>
+            </div>
+
+            <h1 class="product-title product-title_desktop hide-lg">Ar-Condicionado Split Hi Wall TCL T-Pro 2.0 Inverter 18.000 BTUs</h1>
+
+            <div class="product-variations">
+              <div class="columns">
+                <div class="product-box_variations product-box_variations__list col-6 col-md-12 column">
+                  <p class="product-variations_title">Voltagem</p>
+                  <div class="product-variations_content product-variations_content__list">
+                    <div class="sda-select"><span>220V</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div>
+                  </div>
+                </div>
+                <div class="product-box_variations product-box_variations__list col-6 col-md-12 column">
+                  <p class="product-variations_title">Capacidade</p>
+                  <div class="product-variations_content product-variations_content__list">
+                    <div class="sda-select"><span>18.000 BTUs</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-prices">
+              <div class="product-content_box product-box_prices col-12">
+                <del class="product-prices_strike"><s>R$ 3.682,59</s></del>
+                <p class="product-prices_price">R$ 3.498,46</p>
+                <p class="product-prices_pix"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3H5a2 2 0 0 0-2 2v4.59c0 .53.21 1.04.59 1.41l9.58 9.59a2 2 0 0 0 2.83 0l4.59-4.59a2 2 0 0 0 0-2.83z"/><circle cx="7.5" cy="7.5" r="1.3" fill="#fff"/></svg><span>5% de desconto no Pix</span></p>
+                <p class="product-prices_plots">6x de R$ 613,77 no cartão</p>
+              </div>
+              <div class="product-content_box product-box_qtd col-12">
+                <div class="product-qtd input-group_qtd input-group">
+                  <button class="product-qtd_minus btn input-group-btn">-</button>
+                  <input class="product-qtd_value form-input" type="number" min="1" value="1">
+                  <button class="product-qtd_plus btn input-group-btn">+</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-buy">
+              <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 9.2h11.3L21 7H7"/><circle cx="10" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>
+                Comprar
+              </a>
+            </div>
+            <div class="product-compare">
+              <a class="product-btn product-btn_compare btn col-12" href="javascript:void(0)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+                Comparar
+              </a>
+            </div>
+
+            <div class="product-cep">
+              <div class="product-cep_head">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+                <span>Calcule o frete para seu CEP</span>
+              </div>
+              <div class="product-cep_row">
+                <input class="product-cep_input" type="text" inputmode="numeric" placeholder="Digite seu CEP">
+                <button class="product-cep_btn btn" type="button">Calcular</button>
+              </div>
+            </div>
+
+            <ul class="product-trust">
+              <li class="product-trust_item">
+                <span class="product-trust_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.4 3 8.4 7 10 4-1.6 7-5.6 7-10V6l-7-3z"/><path d="m9 12 2 2 4-4"/></svg></span>
+                <span class="product-trust_txt"><b>Compra segura</b><small>Seus dados protegidos</small></span>
+              </li>
+              <li class="product-trust_item">
+                <span class="product-trust_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="m8.5 13-1.5 7 5-3 5 3-1.5-7"/></svg></span>
+                <span class="product-trust_txt"><b>Garantia</b><small>Produto original</small></span>
+              </li>
+              <li class="product-trust_item">
+                <span class="product-trust_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l3 3v17l-3-2-3 2-3-2-3 2V2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></span>
+                <span class="product-trust_txt"><b>Nota fiscal</b><small>Em todos os pedidos</small></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Descrição / Destaques / Especificações -->
+    <section class="product-descriptions">
+      <div class="product-descriptions_grid">
+        <details class="product-description accordion product-description--desc" open>
+          <summary class="product-description_header accordion-header">
+            <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l3 3v17H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
+            <span class="product-description_title">Descrição</span>
+            <span class="product-description_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+          </summary>
+          <div class="product-description_body"><div class="accordion-body">
+            O Ar-Condicionado Split Hi Wall TCL T-Pro 2.0 Inverter 18.000 BTUs oferece o equilíbrio ideal entre conforto, tecnologia e economia. Com a exclusiva função Brisa Suave e aletas verticais microperfuradas, garante uma climatização mais confortável e sem jatos de ar diretos. Ideal para ambientes de até 30 m², conta com Wi-Fi integrado (TCL Home) e compatibilidade com Alexa e Google Assistente, além de utilizar gás ecológico R-32. Seu compressor Inverter proporciona maior eficiência e até 75% de economia de energia.
+          </div></div>
+        </details>
+
+        <details class="product-description accordion product-description--highlights" open>
+          <summary class="product-description_header accordion-header">
+            <span class="product-description_ico-lead product-description_ico-lead--green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/></svg></span>
+            <span class="product-description_title">Destaques</span>
+            <span class="product-description_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+          </summary>
+          <div class="product-description_body"><div class="accordion-body">
+            <ul class="product-highlights">
+              <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h11a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h9a2.5 2.5 0 1 1-2.5 2.5"/></svg>Brisa Suave</li>
+              <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5a10 10 0 0 1 14 0M8 15.5a6 6 0 0 1 8 0"/><circle cx="12" cy="18.5" r="1.2"/></svg>Wi-Fi integrado</li>
+              <li class="product-highlight product-highlight--a"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 7 16H5z"/><path d="M9 15h6"/></svg>Classificação A</li>
+              <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/></svg>R-32 ecológico</li>
+              <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10 12 4l8 6v10H4z"/><path d="M9 20v-6h6v6"/></svg>Até 30 m²</li>
+            </ul>
+          </div></div>
+        </details>
+      </div>
+
+      <details class="product-description accordion product-description--specs" open>
+        <summary class="product-description_header accordion-header">
+          <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span>
+          <span class="product-description_title">Especificações</span>
+          <span class="product-description_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+        </summary>
+        <div class="product-description_body"><div class="accordion-body">
+          <ul class="product-specs">
+            <li class="product-spec"><span class="product-spec_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18v10H3z"/><path d="M7 7v10M17 7v10"/></svg></span><span class="product-spec_txt"><small>Dimensões (L x A x P)</small><b>910 x 294 x 206 mm</b></span></li>
+            <li class="product-spec"><span class="product-spec_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/><circle cx="12" cy="12" r="3"/></svg></span><span class="product-spec_txt"><small>Capacidade</small><b>18.000 BTU/h</b></span></li>
+            <li class="product-spec"><span class="product-spec_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span><span class="product-spec_txt"><small>Voltagem</small><b>220V / 60Hz</b></span></li>
+            <li class="product-spec"><span class="product-spec_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.4 3 8.4 7 10 4-1.6 7-5.6 7-10V6l-7-3z"/></svg></span><span class="product-spec_txt"><small>Garantia</small><b>2 anos de garantia</b></span></li>
+          </ul>
+        </div></div>
+      </details>
+    </section>
+
+  </div>
+  </div>
+</body>
+</html>
