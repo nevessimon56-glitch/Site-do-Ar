@@ -1163,7 +1163,7 @@
 
 /* ---------- Descrição / Destaques / Especificações ---------- */
 #product-pdp-v2 .product-descriptions {
-  margin-top: 12px;
+  margin-top: 8px;
   margin-bottom: 0;
 }
 #product-pdp-v2 .product-descriptions-content.content,
@@ -1602,7 +1602,20 @@
     font-size: 17px !important;
     line-height: 1.22 !important;
   }
-  #product-pdp-v2 .product-descriptions { margin-top: 12px; }
+  /* Faixa verde (mock): 8px entre header ↔ desc/destaques ↔ especificações */
+  #product-pdp-v2 .product-header {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  #product-pdp-v2 .product-header-content.content,
+  #product-pdp-v2 .product-header-container.container {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  #product-pdp-v2 .product-descriptions {
+    margin-top: 8px !important;
+    padding-top: 0 !important;
+  }
   /*
    * Mesma régua do header: coluna esq flex + coluna dir 380px (não 50/50).
    */
@@ -1611,9 +1624,33 @@
     flex-direction: row !important;
     flex-wrap: wrap !important;
     align-items: flex-start !important;
-    gap: 12px !important;
-    row-gap: 12px !important;
+    gap: 8px 12px !important;
+    row-gap: 8px !important;
     column-gap: 12px !important;
+  }
+  #product-pdp-v2 .product-description.product-description--desc,
+  #product-pdp-v2 .product-description.product-description--highlights,
+  #product-pdp-v2 .product-description.product-description--specs {
+    padding: 10px 12px !important;
+  }
+  #product-pdp-v2 .product-description_body {
+    margin-top: 6px !important;
+  }
+  #product-pdp-v2 .product-description_richtext p {
+    margin: 0 0 6px !important;
+  }
+  #product-pdp-v2 .product-description_richtext p:last-child {
+    margin-bottom: 0 !important;
+  }
+  #product-pdp-v2 .product-description_highlights-body .product-highlights {
+    margin-bottom: 0 !important;
+  }
+  #product-pdp-v2 .product-header-box .product-trust {
+    padding-top: 6px !important;
+    padding-bottom: 0 !important;
+  }
+  #product-pdp-v2 .product-header-box .product-cep {
+    padding-top: 6px !important;
   }
   #product-pdp-v2 .product-descriptions_grid > .product-description--desc {
     flex: 1 1 calc(100% - 392px) !important;
@@ -1637,11 +1674,11 @@
     max-width: 100% !important;
     min-width: 0 !important;
   }
-  .product-v2 .product-description {
-    padding: 14px 18px;
+  #product-pdp-v2 .product-description {
+    padding: 10px 12px !important;
   }
-  .product-v2 .product-description:not([open]) {
-    padding-bottom: 14px;
+  #product-pdp-v2 .product-description:not([open]) {
+    padding-bottom: 10px !important;
   }
   .product-v2 .product-description_body { margin-top: 8px; }
   .product-v2 .product-description_specs-table--full {
