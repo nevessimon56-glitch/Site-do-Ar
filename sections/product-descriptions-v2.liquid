@@ -39,13 +39,20 @@
   {% assign pdpSpecHtmlForIcons = pdpDescSpecs.text %}
 {% endif %}
 
-{% if pdpDescMain or pdpDescSpecs or product %}
+{% assign pdpHasSpecsTable = false %}
+{% if pdpDescSpecs and pdpDescSpecs.text != '' %}
+  {% assign pdpHasSpecsTable = true %}
+{% elsif product.specification and product.specification != '' %}
+  {% assign pdpHasSpecsTable = true %}
+{% endif %}
+
+{% if pdpDescMain or pdpHasSpecsTable %}
 <section class="product-descriptions">
   <div class="product-descriptions-content content">
     <div class="product-descriptions-container container">
       <div class="product-descriptions_grid">
         {% if pdpDescMain %}
-        <details class="product-description accordion product-description--desc" open>
+        <details class="product-description accordion product-description--desc">
           <summary class="product-description_header accordion-header">
             <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l3 3v17H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
             <span class="product-description_title">{{ pdpDescMain.name }}</span>
@@ -57,7 +64,8 @@
         </details>
         {% endif %}
 
-        <details class="product-description accordion product-description--highlights" open>
+        {% if pdpSpecHtmlForIcons != blank or pdpDescMain %}
+        <details class="product-description accordion product-description--highlights">
           <summary class="product-description_header accordion-header">
             <span class="product-description_ico-lead product-description_ico-lead--green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/></svg></span>
             <span class="product-description_title">Destaques</span>
@@ -69,9 +77,10 @@
             </div>
           </div>
         </details>
+        {% endif %}
       </div>
 
-      <details class="product-description accordion product-description--specs" open>
+      <details class="product-description accordion product-description--specs">
         <summary class="product-description_header accordion-header">
           <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span>
           <span class="product-description_title">{% if pdpDescSpecs %}{{ pdpDescSpecs.name }}{% else %}Especificações{% endif %}</span>

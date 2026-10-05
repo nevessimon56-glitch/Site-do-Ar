@@ -143,7 +143,13 @@
   position: relative; background: #ffffff; border: 1px solid #e5eaf1;
   border-radius: 16px; box-shadow: 0 4px 14px rgba(15, 23, 42, .05);
   padding: 22px; display: flex; align-items: center; justify-content: center;
-  aspect-ratio: 1 / 0.82; overflow: hidden;
+  aspect-ratio: 1.28 / 1; overflow: hidden;
+}
+@media (max-width: 991px) {
+  .product-v2 .product-zoom {
+    aspect-ratio: 1.35 / 1;
+    padding: 14px;
+  }
 }
 .product-v2 .product-zoom_link { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
 .product-v2 .product-zoom_image { max-width: 92%; max-height: 92%; object-fit: contain; }
@@ -452,9 +458,26 @@
   margin-top: 0;
 }
 
-/* esconde o botão/ link antigo de "mais formas de pagamento" e o de frete modal
-   quando usamos a caixa de CEP; mantidos acessíveis caso necessário */
-.product-v2 .product-payments { display: none; }
+.product-v2 .product-payments {
+  margin: 4px 0 0;
+}
+.product-v2 .product-btn_payment {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: #1a6fe0;
+  font-size: 13px;
+  font-weight: 700;
+  min-height: auto;
+  padding: 4px 0;
+  text-align: left;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.product-v2 .product-btn_payment:hover {
+  color: #1560c6;
+  text-decoration: underline;
+}
 
 /* ---------- CEP ---------- */
 .product-v2 .product-cep {
@@ -666,7 +689,17 @@
   .product-v2 .product-description_header { cursor: pointer; padding: 16px 16px; }
   .product-v2 .product-description_ico { display: inline-flex; transition: transform .2s ease; }
   .product-v2 .product-description[open] .product-description_ico { transform: rotate(180deg); }
-  .product-v2 .product-description_body { margin-top: 0; padding: 0 16px 16px; }
+  .product-v2 .product-description_body {
+    display: none;
+    margin-top: 0;
+    padding: 0 16px 16px;
+  }
+  .product-v2 .product-description[open] .product-description_body {
+    display: block;
+  }
+  #product-pdp-v2 {
+    padding-bottom: 100px;
+  }
   .product-v2 .product-highlight {
     flex: 1 1 100%;
   }
@@ -722,14 +755,10 @@
   }
   #product-pdp-v2 .product-header-box_top {
     display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 8px 12px !important;
-  }
-  #product-pdp-v2 .product-stock {
-    margin-left: auto !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
   }
   #product-pdp-v2 .product-header-box {
     gap: 10px !important;
@@ -774,6 +803,8 @@
 
   /* No desktop os blocos ficam sempre abertos (painéis), sem seta */
   .product-v2 .product-description_ico { display: none !important; }
+  .product-v2 .product-description_body { display: block !important; }
+  .product-v2 .product-description_header { pointer-events: none; cursor: default; }
   .product-v2 .product-descriptions { margin-top: 20px; gap: 14px; }
   .product-v2 .product-descriptions_grid { gap: 14px; }
   .product-v2 .product-descriptions_grid > .product-description--desc {
@@ -832,10 +863,64 @@
     align-self: flex-end;
   }
   .product-v2 .product-prices_price { font-size: 26px; }
-  .product-v2 .product-gallery-slider { gap: 7px; }
-  .product-v2 .product-gallery_item { max-width: 18%; }
+  .product-v2 .product-pdp-thumbs_list {
+    display: flex;
+    gap: 7px;
+    width: 100%;
+  }
+  .product-v2 .product-gallery_item {
+    flex: 1 1 0;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+  }
+  .product-v2 .product-gallery_link {
+    width: 100%;
+    padding: 5px;
+  }
   .product-v2 .product-trust { flex-direction: column; gap: 12px; }
   .product-v2 .product-trust_item { flex: 1 1 100%; gap: 11px; }
+}
+
+/* Navegação inferior mobile (mock PDP) */
+#product-pdp-v2 .mobile-bottom-nav {
+  display: none;
+}
+@media (max-width: 991px) {
+  #product-pdp-v2 .mobile-bottom-nav {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+    background: #fff;
+    border-top: 1px solid #e5eaf1;
+    box-shadow: 0 -4px 16px rgba(15, 23, 42, .08);
+  }
+  #product-pdp-v2 .mobile-bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: #1c2b4a;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  #product-pdp-v2 .mobile-bottom-nav_ico {
+    font-size: 18px;
+    line-height: 1;
+  }
+  #product-pdp-v2 .mobile-bottom-nav a.active {
+    color: #fff;
+    background: #1a6fe0;
+    border-radius: 18px;
+    padding: 8px 34px;
+  }
 }
 
 /* ---------- Vitrines inferiores (Último visto / Relacionados) ----------

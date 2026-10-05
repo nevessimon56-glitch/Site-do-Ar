@@ -16,7 +16,9 @@
         {% endif %}
 
         {% assign productPricePrimary = product.price %}
-        {% comment %} Desconto Pix está no método de pagamento, não em product.primaryPrice {% endcomment %}
+        {% if product.primaryPrice %}
+            {% assign productPricePrimary = product.primaryPrice %}
+        {% endif %}
         {% if product.secondaryPrice %}
             {% assign productPriceSecond = product.secondaryPrice %}
         {% endif %}
@@ -120,8 +122,8 @@
                                         <a class="product-zoom_link" title="{{ product.title | escape }}" href="javascript:void(0)">
                                             <div class="loading loading-lg" style="display: none;"></div>
                                             <picture>
-                                                <source class="product-zoom_image__mobile" media="(max-width:575px)" data-srcset="{{ product.medias[0].path | imgUrl: 250}}">
-                                                <img class="product-zoom_image lazy" data-src="{{ product.medias[0].path | imgUrl: 500}}" alt="{{ product.title | escape }}">
+                                                <source class="product-zoom_image__mobile" media="(max-width:575px)" data-srcset="{{ product.medias[0].path | imgUrl: 800 }}">
+                                                <img class="product-zoom_image lazy" data-src="{{ product.medias[0].path | imgUrl: 1200 }}" alt="{{ product.title | escape }}" width="1200" height="900">
                                             </picture>
                                         </a>
                                     {% else %}
@@ -140,7 +142,7 @@
                                                         {% assign classImageMain = ' image-main' %}
                                                     {% endif %}
                                                     <li class="product-gallery_item">
-                                                        <a class="product-gallery_link{{ classImageMain }}" title="{{ product.title | escape }}" href="javascript:void(0)" data-index="{{ forloop.index | minus: 1 }}" data-zoom="{{ medias.path | imgUrl: 0 }}" onclick="onChangeProductGallery('{{ forloop.index | minus: 1 }}','{{ medias.path | imgUrl: 500 }}','{{ medias.path | imgUrl: 250 }}')">
+                                                        <a class="product-gallery_link{{ classImageMain }}" title="{{ product.title | escape }}" href="javascript:void(0)" data-index="{{ forloop.index | minus: 1 }}" data-zoom="{{ medias.path | imgUrl: 0 }}" onclick="onChangeProductGallery('{{ forloop.index | minus: 1 }}','{{ medias.path | imgUrl: 1200 }}','{{ medias.path | imgUrl: 800 }}')">
                                                             <img class="product-gallery_image" alt="{{ product.title | escape }}" src="{{ medias.path | imgUrl: 120 }}" width="120" height="120" loading="lazy">
                                                         </a>
                                                     </li>
@@ -367,25 +369,25 @@
                                 </div>
                                 {% endif %}
                                 {% if product.typeId != 2 or product.gridOptions.size > 0 %}
-                                    {% assign _listPrice = product.price.price %}
-                                    {% assign _pixPercent = 5 %}
-                                    {% assign _pixPrice = _listPrice %}
-                                    {% assign _pixPercentShow = _pixPercent %}
-                                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
-                                        {% assign _pixPrice = product.price.promotionPrice %}
-                                        {% assign _pixPercentShow = product.price.promotionMargin | round %}
-                                    {% else %}
-                                        {% assign _pixDiscountAmt = _listPrice | times: _pixPercent | divided_by: 100 %}
-                                        {% assign _pixPrice = _listPrice | minus: _pixDiscountAmt %}
+                                    {% assign _pixPrice = productPricePrimary.price %}
+                                    {% if productPricePrimary.promotionPrice > 0 %}
+                                        {% assign _pixPrice = productPricePrimary.promotionPrice %}
+                                    {% endif %}
+                                    {% assign _hasPixDiscount = false %}
+                                    {% if product.primaryPrice and product.price.price > _pixPrice %}
+                                        {% assign _hasPixDiscount = true %}
                                     {% endif %}
                                     <div class="product-prices">
                                         <div class="product-content_box product-box_prices col-12">
-                                            {% if _listPrice > _pixPrice %}
-                                                <del class="product-prices_strike"><s>{{ _listPrice | money }}</s></del>
+                                            {% if _hasPixDiscount %}
+                                                <del class="product-prices_strike"><s>{{ product.price.price | money }}</s></del>
                                                 <p class="product-prices_price"><span class="product-prices_price-inner">{{ _pixPrice | money }}</span></p>
-                                                <p class="product-prices_pix"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3H5a2 2 0 0 0-2 2v4.59c0 .53.21 1.04.59 1.41l9.58 9.59a2 2 0 0 0 2.83 0l4.59-4.59a2 2 0 0 0 0-2.83z"/><circle cx="7.5" cy="7.5" r="1.3" fill="#fff"/></svg><span>{{ _pixPercentShow }}% de desconto no Pix</span></p>
+                                                <p class="product-prices_pix"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3H5a2 2 0 0 0-2 2v4.59c0 .53.21 1.04.59 1.41l9.58 9.59a2 2 0 0 0 2.83 0l4.59-4.59a2 2 0 0 0 0-2.83z"/><circle cx="7.5" cy="7.5" r="1.3" fill="#fff"/></svg><span>{% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}{{ productPricePrimary.discountPercentage | round }}% de desconto no Pix{% else %}Desconto no Pix{% endif %}</span></p>
+                                            {% elsif product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                                                <del class="product-prices_strike"><s>{{ product.price.price | money }}</s></del>
+                                                <p class="product-prices_price"><span class="product-prices_price-inner">{{ _pixPrice | money }}</span></p>
                                             {% else %}
-                                                <p class="product-prices_price"><span class="product-prices_price-inner">{{ _listPrice | money }}</span></p>
+                                                <p class="product-prices_price"><span class="product-prices_price-inner">{{ _pixPrice | money }}</span></p>
                                             {% endif %}
                                             {% if productPriceSecond %}
                                                 {% assign _mainPriceSecond = productPriceSecond.price %}
@@ -432,7 +434,16 @@
                                             <span>Calcule o frete para seu CEP</span>
                                         </div>
                                         <div class="product-cep_row">
-                                            <input class="product-cep_input" type="text" inputmode="numeric" placeholder="Digite seu CEP" maxlength="9" aria-label="CEP">
+                                            <input
+                                                class="product-cep_input"
+                                                type="text"
+                                                inputmode="numeric"
+                                                placeholder="Digite seu CEP"
+                                                maxlength="9"
+                                                aria-label="CEP"
+                                                x-model="state.zipCode"
+                                                @input="state.zipCode = (state.zipCode || '').replace(/\D/g, '').replace(/^(\d{5})(\d)/, '$1-$2')"
+                                            >
                                             <button class="product-cep_btn btn" type="button" title="Calcular frete" @click="openShippingCalculation()">Calcular</button>
                                         </div>
                                     </div>
@@ -480,6 +491,20 @@
         {% endif %}
 
         {% render 'sections/product-descriptions-v2', product: product, themeConfig: themeConfig %}
+        <nav class="mobile-bottom-nav" aria-label="Navegação mobile">
+            <a href="/" title="Início">
+                <span class="mobile-bottom-nav_ico" aria-hidden="true">⌂</span>
+                <small>Início</small>
+            </a>
+            <a href="/todos-os-produtos" class="active" title="Catálogo">
+                <span class="mobile-bottom-nav_ico" aria-hidden="true">▦</span>
+                <small>Catálogo</small>
+            </a>
+            <a href="/categorias" title="Categorias">
+                <span class="mobile-bottom-nav_ico" aria-hidden="true">☰</span>
+                <small>Categorias</small>
+            </a>
+        </nav>
         </div><!-- /#product-pdp-v2 — vitrines (relacionados / último visto) ficam FORA -->
         {% render 'sections/product-reviews', product: product, themeConfig: themeConfig %}
 
@@ -557,6 +582,7 @@
             const state = {
                 store,
                 quantity: 1,
+                zipCode: '',
                 price: {% if product.price.basePrice %}{{ product.price.basePrice }}{% else %}{% if mainPrice %}{{ mainPrice }}{% else %}null{% endif %}{% endif %},
                 productId: {{ product.id }},
                 themeConfig: {
@@ -567,9 +593,9 @@
                     categories: {% if product.categories %}{{ product.categories | json }}{% else %}{}{% endif %},
                     grids: {% if product.grids %}{{ product.grids | json }}{% else %}{}{% endif %},
                     price: {% if product.price %}{{ product.price | json }}{% else %}{}{% endif %},
-                    sku: {% if product.sku %}"{{ product.sku | escape }}"{% else %}null{% endif %},
-                    title: {% if product.title %}"{{ product.title | escape }}"{% else %}null{% endif %},
-                    url: {% if product.url %}"{{ product.url }}"{% else %}null{% endif %},
+                    sku: {{ product.sku | default: '' | json }},
+                    title: {{ product.title | default: '' | json }},
+                    url: {{ product.url | default: '' | json }},
                     id: {% if product.id %}{{ product.id }}{% else %}null{% endif %},
                     prices: {% if product.prices %}{{ product.prices | json }}{% else %}[]{% endif %},
                     priceGroupId: {% if product.price.priceGroupId %}{{ product.price.priceGroupId }}{% else %}1{% endif %},
@@ -581,10 +607,10 @@
                             price: {% if prodVariation.price %}{{ prodVariation.price | json }}{% else %}{}{% endif %},
                             primaryPrice: {% if prodVariation.primaryPrice %}{{ prodVariation.primaryPrice | json }}{% else %}{}{% endif %},
                             prices: {% if prodVariation.prices %}{{ prodVariation.prices | json }}{% else %}[]{% endif %},
-                            url: "{% if prodVariation.url %}{{ prodVariation.url }}{% endif %}",
-                            title: "{% if prodVariation.title %}{{ prodVariation.title }}{% endif %}",
-                            sku: "{% if prodVariation.sku %}{{ prodVariation.sku }}{% endif %}",
-                            id: "{% if prodVariation.id %}{{ prodVariation.id }}{% endif %}",
+                            url: {{ prodVariation.url | default: '' | json }},
+                            title: {{ prodVariation.title | default: '' | json }},
+                            sku: {{ prodVariation.sku | default: '' | json }},
+                            id: {{ prodVariation.id | default: '' | json }},
                         }{% if forloop.last == false %},{% endif %}
                         {% endfor %}
                     ]
@@ -606,7 +632,7 @@
                     {% for groupPurchaseItem in groupPurchase %}
                     {
                         id: "{{ groupPurchaseItem.id }}",
-                        title: "{{ groupPurchaseItem.title | escape }}",
+                        title: {{ groupPurchaseItem.title | json }},
                         stockTotal: "{{ groupPurchaseItem.stockTotal }}",
                         manageStock: {{ groupPurchaseItem.manageStock }},
                         status: false,
@@ -772,6 +798,15 @@
                 }, 500);
             }
             function openShippingCalculation() {
+                const zipDigits = (this.state.zipCode || '').replace(/\D/g, '');
+                if (zipDigits.length >= 8) {
+                    try {
+                        sessionStorage.setItem('shippingZipCode', zipDigits);
+                    } catch (e) {}
+                    window.dispatchEvent(
+                        new CustomEvent('change-shipping-zip', { detail: { zipCode: zipDigits } })
+                    );
+                }
                 if (this.state?.productKit?.products && this.state?.productKit?.products.length > 0) {
                     const productKitItems = [
                         ...this.state?.productKit?.products.map((product) => {
