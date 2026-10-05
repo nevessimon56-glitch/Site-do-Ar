@@ -1174,12 +1174,24 @@
   padding-bottom: 0 !important;
 }
 @media (min-width: 992px) {
+  /*
+   * Régua externa (mock): mesma largura útil no header e nos blocos de baixo.
+   * Coluna dir fixa 380px + gap 12px; esq ocupa o resto. Alturas internas podem diferir.
+   */
   #product-pdp-v2 .product-header-content.content,
   #product-pdp-v2 .product-header-container.container,
   #product-pdp-v2 .product-descriptions-content.content,
   #product-pdp-v2 .product-descriptions-container.container {
     padding-left: 15px !important;
     padding-right: 15px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  #product-pdp-v2 .product-header .columns,
+  #product-pdp-v2 .product-descriptions_grid {
+    width: 100% !important;
+    max-width: 100% !important;
     box-sizing: border-box !important;
   }
 }
@@ -1490,9 +1502,9 @@
   #product-pdp-v2 .product-header-left,
   #product-pdp-v2 .product-header-left.col-7,
   #product-pdp-v2 .product-header-left.col-lg-7 {
-    flex: 1 1 0 !important;
+    flex: 1 1 calc(100% - 392px) !important;
     width: auto !important;
-    max-width: none !important;
+    max-width: calc(100% - 392px) !important;
     min-width: 0 !important;
     float: none !important;
     padding: 0 !important;
@@ -1513,52 +1525,35 @@
   #product-pdp-v2 .product-header-left {
     display: flex !important;
     flex-direction: column !important;
-    align-self: stretch !important;
+    align-self: flex-start !important;
   }
   #product-pdp-v2 .product-header-left .product-images {
     display: flex;
     flex-direction: column;
     width: 100%;
-    flex: 1 1 auto;
-    min-height: 100%;
-    height: 100%;
+    flex: 0 1 auto;
+    min-height: 0;
+    height: auto;
   }
   #product-pdp-v2 .product-gallery-panel {
     display: flex;
     flex-direction: column;
     width: 100%;
-    flex: 1 1 auto;
-    min-height: 100%;
-    height: 100%;
+    flex: 0 1 auto;
+    min-height: 0;
+    height: auto;
     box-sizing: border-box;
   }
   #product-pdp-v2 .product-gallery-panel .product-zoom {
-    flex: 1 1 auto;
-    min-height: 160px;
-    aspect-ratio: auto;
-    max-height: none;
-  }
-  #product-pdp-v2 .product-gallery-panel .product-zoom_link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    flex: 0 0 auto;
     min-height: 0;
-  }
-  #product-pdp-v2 .product-gallery-panel .product-zoom_image,
-  #product-pdp-v2 .product-gallery-panel .product-zoom_link picture,
-  #product-pdp-v2 .product-gallery-panel .product-zoom_link img {
-    max-height: 100%;
-    max-width: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
+    aspect-ratio: 1.05 / 1;
+    max-height: 340px;
   }
   #product-pdp-v2 .product-gallery-panel .product-gallery_pdp,
   #product-pdp-v2 .product-gallery-panel .product-gallery_desktop.product-gallery_pdp {
     flex: 0 0 auto;
-    margin-top: auto;
+    margin-top: 0;
   }
   /* Card de compra: altura só do conteúdo (não esticar — aprovado pelo cliente) */
   #product-pdp-v2 .product-header-box {
@@ -1609,7 +1604,7 @@
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: wrap !important;
-    align-items: stretch !important;
+    align-items: flex-start !important;
     gap: 12px !important;
     row-gap: 12px !important;
     column-gap: 12px !important;
@@ -1619,14 +1614,16 @@
     min-width: 0 !important;
     width: auto !important;
     max-width: none !important;
-    align-self: stretch !important;
+    align-self: flex-start !important;
+    margin: 0 !important;
   }
   #product-pdp-v2 .product-descriptions_grid > .product-description--highlights {
     flex: 0 0 380px !important;
     width: 380px !important;
     max-width: 380px !important;
     min-width: 300px !important;
-    align-self: stretch !important;
+    align-self: flex-start !important;
+    margin: 0 !important;
   }
   #product-pdp-v2 .product-descriptions_grid > .product-description--specs {
     flex: 1 1 100% !important;
