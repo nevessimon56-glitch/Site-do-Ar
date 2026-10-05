@@ -1,7 +1,7 @@
 {% assign seoTitle = '' %}
 {% if product.seoTitle %}
     {% assign seoTitle = product.seoTitle %}
-{% elsif search.results[0].categories[0].title %}
+{% elsif search.results and search.results.size > 0 and search.results[0].categories and search.results[0].categories.size > 0 and search.results[0].categories[0].title %}
     {% assign seoTitle = search.results[0].categories[0].title %}
 {% elsif seo.title %}
     {% assign seoTitle = seo.title %}
@@ -12,7 +12,7 @@
 {% assign seoDescription = '' %}
 {% if product.seoDescription %}
     {% assign seoDescription = product.seoDescription %}
-{% elsif search.results[0].categories[0].description %}
+{% elsif search.results and search.results.size > 0 and search.results[0].categories and search.results[0].categories.size > 0 and search.results[0].categories[0].description %}
     {% assign seoDescription = search.results[0].categories[0].description %}
 {% elsif seo.description %}
     {% assign seoDescription = seo.description %}
@@ -23,7 +23,7 @@
 {% assign seoKeywords = '' %}
 {% if product.tags %}
     {% assign seoKeywords = product.tags %}
-{% elsif search.results[0].categories[0].tags %}
+{% elsif search.results and search.results.size > 0 and search.results[0].categories and search.results[0].categories.size > 0 and search.results[0].categories[0].tags %}
     {% assign seoKeywords = search.results[0].categories[0].tags %}
 {% elsif seo.keywords %}
     {% assign seoKeywords = seo.keywords %}
