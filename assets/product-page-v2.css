@@ -1513,7 +1513,8 @@
     max-width: calc(100% - 392px) !important;
     min-width: 0 !important;
     float: none !important;
-    padding: 0 !important;
+    padding: 0 16px 16px 0 !important;
+    box-sizing: border-box !important;
   }
   #product-pdp-v2 .product-header-right,
   #product-pdp-v2 .product-header-right.col-5,
@@ -1561,10 +1562,15 @@
     flex: 0 0 auto;
     margin-top: 0;
   }
-  /* Respiro externo galeria (mock: direita + base) — só este bloco */
+  /* Faixa cinza visível: direita da galeria + base (antes da Descrição) */
+  #product-pdp-v2 .product-header .columns {
+    gap: 16px !important;
+  }
   #product-pdp-v2 .product-gallery-panel {
-    margin-right: 10px !important;
-    margin-bottom: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
   }
   /* Card de compra: altura só do conteúdo (não esticar — aprovado pelo cliente) */
   #product-pdp-v2 .product-header-box {
