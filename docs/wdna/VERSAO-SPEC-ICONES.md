@@ -1,8 +1,11 @@
-# Pills coloridas nos cards — versão bonita completa
+# Pills coloridas nos cards — versão integrada (hover + spec)
 
-**O que falta no site:** as etiquetas coloridas em cada produto (A, Q/F, Frio, Inverter, Cobre, 220V, Wi-Fi).
+**Branch:** `cursor/product-visual-spec-pills-2cf7` (merge na `main` quando aprovado)
 
-**Commit:** `70254aa` (branch `cursor/product-spec-icons-ed4c`)
+Combina:
+- Hover Nike (`product-hover-wrap`) — correção de fotos empilhadas (`main`)
+- Pills coloridas (A, Q/F, Frio, Inverter, Cobre, 220V, Wi-Fi)
+- Preço Pix com badge verde + parcelas
 
 ---
 
@@ -12,37 +15,30 @@
 
 Crie o arquivo se não existir.
 
-https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/70254aa/sections/product-spec-icons.liquid
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/product-visual-spec-pills-2cf7/sections/product-spec-icons.liquid
 
 ### 2 — `sections/showcase-model-product.liquid`
 
 Substitua **todo** o conteúdo.
 
-https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/70254aa/sections/showcase-model-product.liquid
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/product-visual-spec-pills-2cf7/sections/showcase-model-product.liquid
 
 ### 3 — `assets/mega-menu.css`
 
-Substitua **todo** o conteúdo (tem as cores das pills + preço Pix verde + parcelas).
+Substitua **todo** o conteúdo (pills + preços + mega menu + fallback hover).
 
-https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/70254aa/assets/mega-menu.css
+https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/product-visual-spec-pills-2cf7/assets/mega-menu.css
 
-### 4 — `assets/mega-menu.js`
+### 4 — Manter da versão atual (`main` / `c7be17c`)
 
-Substitua **todo** o conteúdo (hover nos cards + mega menu).
-
-https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/70254aa/assets/mega-menu.js
-
-> Este JS tem ~820 linhas (versão completa de ontem). **Não use** a branch `fix-logged-price-table`.
-
-### 5 — Manter como está
-
-- `layout/theme.liquid` — versão `c7be17c` (já com links CSS/JS)
-- `sections/mega-menu-ar.liquid` — versão `c7be17c`
-- `assets/product-hover-image.css` / `.js` — opcional (o mega-menu.js já cuida do hover)
+- `layout/theme.liquid` — links CSS/JS
+- `sections/mega-menu-ar.liquid`
+- `assets/mega-menu.js` — versão `c7be17c` (não usar `fix-logged-price-table`)
+- `assets/product-hover-image.css` + `.js` — recomendado (hover em todo o site)
 
 ---
 
-## Cores das pills (identidade visual)
+## Cores das pills
 
 | Pill | Cor | Significado |
 |------|-----|-------------|
@@ -58,18 +54,15 @@ https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/70254aa/assets/
 
 ## Testar depois
 
-- [ ] Cada card da vitrine mostra pills coloridas abaixo do título
+- [ ] Cada card mostra **uma** foto (sem empilhar)
+- [ ] Hover / toque troca para 2ª foto quando existir
+- [ ] Pills coloridas abaixo do título
 - [ ] Preço Pix com badge verde “% off no Pix”
 - [ ] Parcelas “ou em até Nx…”
 - [ ] Mega menu ok
-- [ ] Catálogo abre
 
 ---
 
 ## Se o site ficar lento
 
-Volte só o `mega-menu.js` para a versão simples:
-
-https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/c7be17c/assets/mega-menu.js
-
-As pills coloridas **continuam** (estão no liquid + CSS).
+Volte só o `mega-menu.js` para `c7be17c`. Pills e preços continuam (liquid + CSS).

@@ -46,9 +46,11 @@ Se der erro 500: Histórico de versões do tema → restaurar anterior.
 
 ## Diferença da versão de hoje
 
-Hoje foram adicionados ajustes de CSS nos cards (`347ab7b`). Se os cards empilharem fotos, use a `main` atual só para:
+Para **pills + hover + preço Pix** juntos, use o guia `docs/wdna/VERSAO-SPEC-ICONES.md` (branch `cursor/product-visual-spec-pills-2cf7`).
+
+Só correção de fotos empilhadas (sem pills):
 
 - https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/main/assets/product-hover-image.css
 - https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/main/assets/mega-menu.css
 
-O resto fica em `c7be17c` (visual de ontem).
+Mega menu / JS / liquid base: `c7be17c`.
