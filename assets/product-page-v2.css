@@ -672,12 +672,56 @@
   line-height: 1 !important;
   width: 100% !important;
 }
-#product-pdp-v2 .product-header-box .product-btn_buy {
-  background: #1a6fe0 !important;
+/* COMPRAR — mock TCL: pill alto, azul sólido, carrinho branco, sombra suave */
+#product-pdp-v2 .product-header-box .product-buy .product-btn_buy,
+#product-pdp-v2 .product-header-box a.product-btn_buy.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 46px !important;
+  height: 46px !important;
+  padding: 0 20px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
   color: #ffffff !important;
-  box-shadow: 0 3px 12px rgba(26, 111, 224, 0.25) !important;
+  background: #1a6fe0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  box-shadow: 0 4px 16px rgba(26, 111, 224, 0.38) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease !important;
 }
-#product-pdp-v2 .product-header-box .product-btn svg {
+#product-pdp-v2 .product-header-box .product-buy .product-btn_buy:hover,
+#product-pdp-v2 .product-header-box a.product-btn_buy.btn:hover {
+  background: #1560c6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(26, 111, 224, 0.42) !important;
+}
+#product-pdp-v2 .product-header-box .product-buy .product-btn_buy:active,
+#product-pdp-v2 .product-header-box a.product-btn_buy.btn:active {
+  transform: translateY(1px) !important;
+  box-shadow: 0 3px 12px rgba(26, 111, 224, 0.32) !important;
+}
+#product-pdp-v2 .product-header-box .product-buy .product-btn_buy svg,
+#product-pdp-v2 .product-header-box a.product-btn_buy.btn svg {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  font-size: 20px !important;
+  fill: #ffffff !important;
+  stroke: none !important;
+  color: #ffffff !important;
+  flex-shrink: 0 !important;
+}
+#product-pdp-v2 .product-header-box .product-btn_compare svg,
+#product-pdp-v2 .product-header-box .product-btn:not(.product-btn_buy) svg {
   font-size: 16px !important;
 }
 #product-pdp-v2 .product-header-box .product-btn_compare {
