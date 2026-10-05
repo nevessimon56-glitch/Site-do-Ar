@@ -89,7 +89,7 @@
                     <div class="columns">
                         <div class="product-header-left col-7 col-lg-12 column">
                             <div class="product-images col-12">
-                                <p class="product-title product-title_mobile show-lg">
+                                <p class="product-title product-title_mobile">
                                     {{ product.title | escape }}
                                     {% if product.multiple > 1 %}
                                         - {{ product.multiple }}
@@ -131,9 +131,9 @@
                                     {% endif %}
                                 </div>
                                 {% if product.medias.size > 1 %}
-                                    <div class="product-gallery product-gallery_desktop product-gallery_v2">
-                                        <div class="product-gallery_list product-gallery_list--v2">
-                                            <ul class="product-gallery-slider product-gallery-slider_desktop">
+                                    <div class="product-gallery product-gallery_desktop product-gallery_pdp" data-pdp-gallery="static">
+                                        <div class="product-pdp-thumbs" aria-label="Miniaturas do produto">
+                                            <ul class="product-pdp-thumbs_list product-gallery-slider product-gallery-slider_desktop">
                                                 {% for medias in product.medias %}
                                                     {% assign classImageMain = '' %}
                                                     {% if forloop.first == true %}
@@ -141,9 +141,7 @@
                                                     {% endif %}
                                                     <li class="product-gallery_item">
                                                         <a class="product-gallery_link{{ classImageMain }}" title="{{ product.title | escape }}" href="javascript:void(0)" data-index="{{ forloop.index | minus: 1 }}" data-zoom="{{ medias.path | imgUrl: 0 }}" onclick="onChangeProductGallery('{{ forloop.index | minus: 1 }}','{{ medias.path | imgUrl: 500 }}','{{ medias.path | imgUrl: 250 }}')">
-                                                            <picture>
-                                                                <img class="product-gallery_image lazy" alt="{{ product.title | escape }}" data-src="{{ medias.path | imgUrl: 120 }}">
-                                                            </picture>
+                                                            <img class="product-gallery_image" alt="{{ product.title | escape }}" src="{{ medias.path | imgUrl: 120 }}" width="120" height="120" loading="lazy">
                                                         </a>
                                                     </li>
                                                 {% endfor %}
@@ -213,7 +211,7 @@
                                         {% endif %}
                                     {% endif %}
                                 </div>
-                                <h1 class="product-title product-title_desktop hide-lg">
+                                <h1 class="product-title product-title_desktop">
                                     {{ product.title | escape }}
                                     {% if product.multiple > 1 %}
                                         - {{ product.multiple }}
