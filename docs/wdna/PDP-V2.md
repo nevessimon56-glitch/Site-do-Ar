@@ -15,7 +15,8 @@ Layout alinhado aos mockups desktop/mobile: galeria + painel de compra, CEP, con
 | 1 | `assets/product-page-v2.css` | Substituir / criar |
 | 2 | `sections/product-descriptions-v2.liquid` | **Novo** |
 | 3 | `sections/product-spec-icons.liquid` | **Novo** (fallback Destaques) |
-| 4 | `sections/product-compare-data.liquid` | **Novo** (se usar Comparar) |
+| 4 | `sections/product-compare-data.liquid` | **Não substituir** se já tiver v6 (`compare-v6-ml-attrs-safe`) |
+| — | `sections/product-compare-panel.liquid` | **Manter** o que já está no WDNA |
 | 5 | `sections/product-content.liquid` | Substituir todo |
 | 6 | `layout/theme.liquid` | **Só 1 linha** — link do `product-page-v2.css` (ver `PDP-V2-THEME-PATCH.md`). **Não** use o theme curto (~414 linhas). |
 
