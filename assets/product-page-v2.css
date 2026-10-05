@@ -1487,9 +1487,7 @@
     min-width: 300px !important;
     float: none !important;
     padding: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-self: stretch !important;
+    display: block !important;
   }
   #product-pdp-v2 .product-header-left {
     display: flex !important;
@@ -1541,6 +1539,7 @@
     flex: 0 0 auto;
     margin-top: auto;
   }
+  /* Card de compra: altura só do conteúdo (não esticar — aprovado pelo cliente) */
   #product-pdp-v2 .product-header-box {
     gap: 6px !important;
     padding: 12px 14px !important;
@@ -1550,15 +1549,13 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    flex: 1 1 auto;
-    min-height: 100%;
-    height: 100%;
-    align-self: stretch;
-    display: flex !important;
-    flex-direction: column !important;
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    align-self: flex-start !important;
   }
   #product-pdp-v2 .product-header-box .product-trust {
-    margin-top: auto !important;
+    margin-top: 0 !important;
     padding-top: 8px !important;
     flex-wrap: nowrap !important;
     gap: 0 !important;

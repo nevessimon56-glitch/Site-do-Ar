@@ -424,6 +424,12 @@
                                     {% if _pixBadgePct > 0 %}
                                         {% assign _showPixBadge = true %}
                                     {% endif %}
+                                    {% if product.primaryPrice and product.secondaryPrice %}
+                                        {% if _pixBadgePct == 0 %}
+                                            {% assign _pixBadgePct = 5 %}
+                                        {% endif %}
+                                        {% assign _showPixBadge = true %}
+                                    {% endif %}
                                     {% assign _showStrike = false %}
                                     {% if _listPrice > _displayPrice %}
                                         {% assign _showStrike = true %}
