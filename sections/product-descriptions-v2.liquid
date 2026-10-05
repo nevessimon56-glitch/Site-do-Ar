@@ -15,8 +15,10 @@
 {% for description in product.descriptions %}
   {% if description.text != '' %}
     {% assign dname = description.name | downcase | strip %}
-    {% if dname contains 'especifica' %}
-      {% assign pdpDescSpecs = description %}
+    {% if dname contains 'especifica' or dname contains 'ficha' or dname contains 'técnica' or dname contains 'tecnica' or description.id == 2 %}
+      {% if pdpDescSpecs == nil %}
+        {% assign pdpDescSpecs = description %}
+      {% endif %}
     {% elsif pdpDescMain == nil %}
       {% if dname contains 'descri' or description.id == 1 %}
         {% assign pdpDescMain = description %}
@@ -28,7 +30,7 @@
 {% for description in product.descriptions %}
   {% if description.text != '' and pdpDescMain == nil %}
     {% assign dname = description.name | downcase | strip %}
-    {% unless dname contains 'especifica' %}
+    {% unless dname contains 'especifica' or dname contains 'ficha' or dname contains 'tecnica' or dname contains 'técnica' %}
       {% assign pdpDescMain = description %}
     {% endunless %}
   {% endif %}
@@ -46,26 +48,35 @@
   {% assign pdpHasSpecsTable = true %}
 {% endif %}
 
-{% if pdpDescMain or pdpHasSpecsTable %}
+{% assign pdpDescMainHtml = '' %}
+{% if pdpDescMain and pdpDescMain.text != '' %}
+  {% assign pdpDescMainHtml = pdpDescMain.text %}
+{% elsif product.shortDescription and product.shortDescription != '' %}
+  {% assign pdpDescMainHtml = product.shortDescription %}
+{% elsif product.description and product.description != '' %}
+  {% assign pdpDescMainHtml = product.description %}
+{% endif %}
+
+{% if pdpDescMainHtml != '' or pdpHasSpecsTable %}
 <section class="product-descriptions">
   <div class="product-descriptions-content content">
     <div class="product-descriptions-container container">
       <div class="product-descriptions_grid">
-        {% if pdpDescMain %}
-        <details class="product-description accordion product-description--desc">
+        {% if pdpDescMainHtml != '' %}
+        <details class="product-description accordion product-description--desc" open>
           <summary class="product-description_header accordion-header">
             <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l3 3v17H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
-            <span class="product-description_title">{{ pdpDescMain.name }}</span>
+            <span class="product-description_title">{% if pdpDescMain %}{{ pdpDescMain.name }}{% else %}Descrição{% endif %}</span>
             <span class="product-description_ico">{{ themeConfig.icons.arrow.down }}</span>
           </summary>
           <div class="product-description_body">
-            <div class="accordion-body product-description_richtext">{{ pdpDescMain.text }}</div>
+            <div class="accordion-body product-description_richtext">{{ pdpDescMainHtml }}</div>
           </div>
         </details>
         {% endif %}
 
-        {% if pdpSpecHtmlForIcons != blank or pdpDescMain %}
-        <details class="product-description accordion product-description--highlights">
+        {% if pdpSpecHtmlForIcons != blank or pdpDescMainHtml != '' %}
+        <details class="product-description accordion product-description--highlights" open>
           <summary class="product-description_header accordion-header">
             <span class="product-description_ico-lead product-description_ico-lead--green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/></svg></span>
             <span class="product-description_title">Destaques</span>
@@ -78,9 +89,8 @@
           </div>
         </details>
         {% endif %}
-      </div>
 
-      <details class="product-description accordion product-description--specs">
+        <details class="product-description accordion product-description--specs" open>
         <summary class="product-description_header accordion-header">
           <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span>
           <span class="product-description_title">{% if pdpDescSpecs %}{{ pdpDescSpecs.name }}{% else %}Especificações{% endif %}</span>
@@ -103,7 +113,23 @@
           </div>
         </div>
       </details>
+      </div>
     </div>
   </div>
 </section>
+<script>
+(function () {
+  var root = document.getElementById('product-pdp-v2');
+  if (!root) return;
+  var mq = window.matchMedia('(max-width: 991px)');
+  function syncPdpDescAccordion() {
+    root.querySelectorAll('.product-descriptions details.product-description').forEach(function (el) {
+      el.open = !mq.matches;
+    });
+  }
+  syncPdpDescAccordion();
+  if (mq.addEventListener) mq.addEventListener('change', syncPdpDescAccordion);
+  else mq.addListener(syncPdpDescAccordion);
+})();
+</script>
 {% endif %}

@@ -275,6 +275,20 @@
     <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>{{ iconVoltage }}</li>
     {% endif %}
   </ul>
+  {% else %}
+  <ul class="product-highlights product-highlights--fallback" data-pdp-highlights="fallback" aria-label="Destaques do produto">
+    {% if iconInverter %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>Tecnologia Inverter</li>
+    {% endif %}
+    {% if iconVoltage != '' %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>{{ iconVoltage }}</li>
+    {% endif %}
+    {% if specTitle contains '18.000' or specTitle contains '18000' %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="3"/></svg>18.000 BTU/h</li>
+    {% elsif specTitle contains '12.000' or specTitle contains '12000' %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="3"/></svg>12.000 BTU/h</li>
+    {% endif %}
+  </ul>
   {% endif %}
 {% elsif hasSpecIcons %}
 <ul class="showcase-spec-bar" data-spec-icons="v4" aria-label="Características do produto">
