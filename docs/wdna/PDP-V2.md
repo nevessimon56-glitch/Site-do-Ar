@@ -17,7 +17,9 @@ Layout alinhado aos mockups desktop/mobile: galeria + painel de compra, CEP, con
 | 3 | `sections/product-spec-icons.liquid` | **Novo** (fallback Destaques) |
 | 4 | `sections/product-compare-data.liquid` | **Novo** (se usar Comparar) |
 | 5 | `sections/product-content.liquid` | Substituir todo |
-| 6 | `layout/theme.liquid` | Incluir link do CSS (já no repo) |
+| 6 | `layout/theme.liquid` | **Só 1 linha** — link do `product-page-v2.css` (ver `PDP-V2-THEME-PATCH.md`). **Não** use o theme curto (~414 linhas). |
+
+Guia do theme: [`docs/wdna/PDP-V2-THEME-PATCH.md`](PDP-V2-THEME-PATCH.md)
 
 Links após push:  
 `https://raw.githubusercontent.com/nevessimon56-glitch/Site-do-Ar/cursor/pdp-integrate-v2-2cf7/<caminho>`
