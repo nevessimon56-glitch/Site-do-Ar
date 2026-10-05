@@ -137,7 +137,7 @@
                                     <div class="product-gallery product-gallery_desktop product-gallery_pdp" data-pdp-gallery="carousel">
                                         <div class="product-pdp-thumbs" aria-label="Miniaturas do produto">
                                             <div class="product-pdp-thumbs_carousel" data-pdp-thumbs-carousel>
-                                                <button type="button" class="product-pdp-thumbs_nav product-pdp-thumbs_nav--prev" data-pdp-thumb-nav="-1" aria-label="Ver miniaturas anteriores">
+                                                <button type="button" class="product-pdp-thumbs_nav product-pdp-thumbs_nav--prev" data-pdp-thumb-nav="-1" aria-label="Ver miniaturas anteriores" onclick="return window.__pdpThumbNav(this,-1)">
                                                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
                                                 </button>
                                                 <div class="product-pdp-thumbs_viewport" tabindex="0" role="region" aria-label="Carrossel de miniaturas">
@@ -155,7 +155,7 @@
                                                         {% endfor %}
                                                     </ul>
                                                 </div>
-                                                <button type="button" class="product-pdp-thumbs_nav product-pdp-thumbs_nav--next" data-pdp-thumb-nav="1" aria-label="Ver próximas miniaturas">
+                                                <button type="button" class="product-pdp-thumbs_nav product-pdp-thumbs_nav--next" data-pdp-thumb-nav="1" aria-label="Ver próximas miniaturas" onclick="return window.__pdpThumbNav(this,1)">
                                                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
                                                 </button>
                                             </div>
@@ -281,7 +281,7 @@
                                                 {% case gridOption.displayType %}
                                                     {% when 'button' %}
                                                         <div class="product-variations_content product-variations_content__{{ gridOption.displayType }}">
-                                                            <ul class="product-variation_list">
+                                                            <ul class="product-variation_list{% if gridOption.options.size == 1 %} product-variation_list--single{% endif %}">
                                                                 {% for variation in gridOption.options %}
                                                                     {% assign classSelected = '' %}
                                                                     {% assign classDisabled = '' %}
@@ -400,7 +400,7 @@
                                     {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null and product.price.promotionPrice > 0 and product.price.price > product.price.promotionPrice %}
                                         {% assign _hasTablePromo = true %}
                                     {% endif %}
-                                    <div class="product-prices">
+                                    <div class="product-prices{% if _hasPixDiscount or _hasTablePromo %} product-prices--strike{% endif %}">
                                         <div class="product-content_box product-box_prices col-12">
                                             {% if _hasPixDiscount %}
                                                 <del class="product-prices_strike"><s>{{ product.price.price | money }}</s></del>

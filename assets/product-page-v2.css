@@ -6,7 +6,7 @@
  * .product-highlights, .product-specs).
  */
 
-/* Paleta fixa (hex/rgba) — editor WDNA não aceita custom properties (--var) */
+/* Paleta fixa (hex). WDNA: sem grid/1fr, var(--), :has(), 100cqi. Thumbs: JS inline width. */
 #product-pdp-v2.product-v2 {
   color: #1c2b4a;
   font-family: Arial, Helvetica, sans-serif;
@@ -195,10 +195,6 @@
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   scroll-snap-type: x proximity;
-  container-type: inline-size;
-  container-name: pdp-thumbs;
-  --pdp-visible: 4;
-  --pdp-thumb-gap: 8px;
 }
 #product-pdp-v2 .product-pdp-thumbs_viewport::-webkit-scrollbar {
   display: none;
@@ -217,10 +213,10 @@
 #product-pdp-v2 .product-gallery-panel .product-gallery_item {
   margin: 0;
   padding: 0;
-  flex: 0 0 var(--pdp-thumb-w, calc((100cqi - var(--pdp-thumb-gap) * (var(--pdp-visible) - 1)) / var(--pdp-visible))) !important;
-  width: var(--pdp-thumb-w, calc((100cqi - var(--pdp-thumb-gap) * (var(--pdp-visible) - 1)) / var(--pdp-visible))) !important;
-  min-width: 0 !important;
-  max-width: none !important;
+  flex: 0 0 72px;
+  width: 72px;
+  min-width: 48px;
+  max-width: none;
   flex-shrink: 0 !important;
   scroll-snap-align: start;
   list-style: none;
@@ -304,9 +300,6 @@
   }
   #product-pdp-v2 .product-gallery-panel .product-zoom {
     aspect-ratio: 1.32 / 1;
-  }
-  #product-pdp-v2 .product-pdp-thumbs_viewport {
-    --pdp-thumb-gap: 6px;
   }
   #product-pdp-v2 .product-gallery-panel .product-pdp-thumbs_list {
     gap: 6px;
@@ -492,17 +485,16 @@
   padding: 4px 9px 4px 7px;
 }
 /*
- * Preço + quantidade (mock): grid 2 colunas — anula theme-all
+ * Preço + quantidade (mock): flex — anula theme-all
  * (.product-content_box { float:left }, align-items:flex-end) que faz o - 1 + cobrir o preço.
  */
 #product-pdp-v2 .product-header-box .product-prices {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 112px;
-  grid-template-rows: auto;
-  column-gap: 10px;
-  row-gap: 0;
-  align-items: start !important;
-  justify-content: stretch !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 10px;
   padding-top: 10px !important;
   margin: 0 !important;
   border-top: 0;
@@ -521,23 +513,19 @@
   padding: 0 !important;
 }
 #product-pdp-v2 .product-header-box .product-prices .product-box_prices {
-  grid-column: 1;
-  grid-row: 1;
+  flex: 1 1 auto;
   min-width: 0 !important;
   max-width: 100% !important;
   padding-right: 4px !important;
 }
 #product-pdp-v2 .product-header-box .product-prices .product-box_qtd {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: end;
-  align-self: start;
+  flex: 0 0 112px;
   width: 112px !important;
   max-width: 112px !important;
-  margin: 2px 0 0 !important;
+  margin: 14px 0 0 !important;
   padding: 0 !important;
 }
-#product-pdp-v2 .product-header-box .product-prices .product-box_prices:has(.product-prices_strike) + .product-box_qtd {
+#product-pdp-v2 .product-header-box .product-prices.product-prices--strike .product-box_qtd {
   margin-top: 20px !important;
 }
 #product-pdp-v2 .product-header-box .product-prices .input-group_qtd,
@@ -727,11 +715,11 @@
   text-decoration: none;
   box-shadow: none;
 }
-#product-pdp-v2 .product-variations_content__button .product-variation_list:has(.product-variation_item:only-child) .product-variation_link {
+#product-pdp-v2 .product-variations_content__button .product-variation_list--single .product-variation_link {
   padding-right: 34px;
   position: relative;
 }
-#product-pdp-v2 .product-variations_content__button .product-variation_list:has(.product-variation_item:only-child) .product-variation_link::after {
+#product-pdp-v2 .product-variations_content__button .product-variation_list--single .product-variation_link::after {
   content: "";
   position: absolute;
   right: 12px;
@@ -1374,9 +1362,6 @@
   }
   #product-pdp-v2 .product-header-box .product-btn {
     min-height: 46px !important;
-  }
-  #product-pdp-v2 .product-header-box .product-prices {
-    grid-template-columns: minmax(0, 1fr) 112px !important;
   }
   #product-pdp-v2 .product-btn {
     border-radius: 10px !important;

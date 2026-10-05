@@ -19,17 +19,24 @@ No painel WDNA → **Layout → theme.liquid**:
 
 Salve e teste a **home**.
 
-### 2. Se ainda falhar — comente a linha nova do PDP
+### 2. Se foi o `product-page-v2.css` (caso mais comum)
 
-No `<head>`, **comente temporariamente**:
+O **validador do WDNA derruba o site inteiro** se o CSS tiver, por exemplo:
+
+- `display: grid` / `1fr` / `minmax(...)`
+- `var(--nome)`
+- `:has(...)`
+- `100cqi` / `container-type`
+
+Use sempre a versão **WDNA-safe** da branch `cursor/pdp-integrate-v2-2cf7` (commit mais recente do `assets/product-page-v2.css`).
+
+Enquanto corrige, pode comentar no `<head>`:
 
 ```liquid
 {% comment %}
 <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-page-v2.css' | themeAssetUrl }}">
 {% endcomment %}
 ```
-
-Salve e teste a home. Se voltar, faça upload de `assets/product-page-v2.css` no WDNA e descomente.
 
 ### 3. Sections que o `theme.liquid` chama (não podem faltar)
 
