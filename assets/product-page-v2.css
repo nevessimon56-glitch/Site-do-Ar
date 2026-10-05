@@ -1561,6 +1561,11 @@
     flex: 0 0 auto;
     margin-top: 0;
   }
+  /* Respiro externo galeria (mock: direita + base) — só este bloco */
+  #product-pdp-v2 .product-gallery-panel {
+    margin-right: 10px !important;
+    margin-bottom: 10px !important;
+  }
   /* Card de compra: altura só do conteúdo (não esticar — aprovado pelo cliente) */
   #product-pdp-v2 .product-header-box {
     gap: 6px !important;
