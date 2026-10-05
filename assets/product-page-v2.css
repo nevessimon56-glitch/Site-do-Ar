@@ -688,6 +688,90 @@
 }
 
 @media (min-width: 992px) {
+  /*
+   * DESKTOP — mock (fase 1). Vence theme-all: col-lg-12 nas colunas do header
+   * empilhava foto + card (100% largura cada).
+   */
+  #product-pdp-v2 .product-header .columns {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    gap: 24px !important;
+    margin: 0 !important;
+  }
+  #product-pdp-v2 .product-header-left,
+  #product-pdp-v2 .product-header-left.col-7,
+  #product-pdp-v2 .product-header-left.col-lg-7 {
+    flex: 1 1 56% !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 300px !important;
+    float: none !important;
+    padding: 0 !important;
+  }
+  #product-pdp-v2 .product-header-right,
+  #product-pdp-v2 .product-header-right.col-5,
+  #product-pdp-v2 .product-header-right.col-lg-5 {
+    flex: 1 1 40% !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 320px !important;
+    float: none !important;
+    padding: 0 !important;
+  }
+  #product-pdp-v2 .product-header-box_top {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px 12px !important;
+  }
+  #product-pdp-v2 .product-stock {
+    margin-left: auto !important;
+  }
+  #product-pdp-v2 .product-header-box {
+    gap: 10px !important;
+    padding: 20px 22px !important;
+  }
+  #product-pdp-v2 .product-prices {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+  #product-pdp-v2 .product-box_prices {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #product-pdp-v2 .product-box_qtd {
+    flex: 0 0 auto !important;
+    margin-top: 4px !important;
+  }
+  #product-pdp-v2 .product-header-box_ctas {
+    gap: 10px !important;
+  }
+  #product-pdp-v2 .product-btn {
+    border-radius: 10px !important;
+    min-height: 50px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+  }
+  #product-pdp-v2 .product-pdp-thumbs_list {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+  }
+  #product-pdp-v2 .product-gallery_item {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
   /* No desktop os blocos ficam sempre abertos (painéis), sem seta */
   .product-v2 .product-description_ico { display: none !important; }
   .product-v2 .product-descriptions { margin-top: 20px; gap: 14px; }
