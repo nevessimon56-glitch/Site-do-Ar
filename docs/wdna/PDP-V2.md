@@ -38,7 +38,7 @@ Em **Configurações → Grupos → Descrições** existem dois grupos ativos:
 
 **Destaques** (mock): grade **ícone + texto** (`product-highlights`), gerada por `product-spec-icons` com `pdpHighlights: true` (título + ficha de Especificações).
 
-**Especificações** (mock): barra horizontal `product-specs` (4 dados-chave via `product-pdp-spec-bar.liquid`) + tabela completa do WDNA no mobile (oculta no desktop).
+**Especificações**: barra `product-specs` + **tabela completa** do WDNA abaixo (desktop e mobile).
 
 Se a aba Especificações estiver vazia, as pills e a ficha usam fallbacks (`product.specification` ou aviso no layout).
 

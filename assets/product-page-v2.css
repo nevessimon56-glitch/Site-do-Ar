@@ -118,12 +118,15 @@
   margin: 0 !important;
   padding: 0 !important;
 }
-/* Reserva vazia / slider legado abaixo da foto */
+/* Galeria mobile duplicada / tns legado (só mobile — não esconder thumbs desktop) */
 .product-v2 .product-images > .product-gallery_mobile,
-.product-v2 .product-images .tns-outer {
+.product-v2 .product-images .product-gallery_mobile .tns-outer {
   display: none !important;
   min-height: 0 !important;
   height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 @media (min-width: 992px) {
   .product-v2 .product-title_mobile { display: none; }
@@ -144,7 +147,12 @@
 .product-v2 .product-tag-free_shipping { background: #16a34a; }
 
 .product-v2 .product-gallery_desktop,
-.product-v2 .product-gallery_v2 { margin-top: 12px; }
+.product-v2 .product-gallery_v2 {
+  margin-top: 12px;
+  display: block !important;
+  min-height: 0 !important;
+  background: transparent !important;
+}
 .product-v2 .product-gallery_mobile,
 .product-v2 .product-images .product-gallery:not(.product-gallery_desktop):not(.product-gallery_v2) {
   display: none !important;
@@ -158,20 +166,65 @@
   border: 0 !important;
   background: transparent !important;
 }
-.product-v2 .product-gallery_list,
-.product-v2 .product-gallery_list.slider-hide {
-  background: transparent !important;
+.product-v2 .product-gallery_v2 .product-gallery_list,
+.product-v2 .product-gallery_desktop .product-gallery_list {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
   min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  background: transparent !important;
   box-shadow: none !important;
+  border: 0 !important;
+}
+/* Tema usa .slider-hide até o JS iniciar — na PDP v2 mostramos thumbs em flex */
+.product-v2 .product-gallery_v2 .product-gallery_list.slider-hide {
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  position: static !important;
+  clip: auto !important;
+  pointer-events: auto !important;
+}
+.product-v2 .product-gallery_v2 .tns-outer,
+.product-v2 .product-gallery_desktop .tns-outer {
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  background: transparent !important;
+}
+.product-v2 .product-gallery_v2 .tns-inner,
+.product-v2 .product-gallery_desktop .tns-inner {
+  overflow: visible !important;
 }
 .product-v2 .product-gallery-slider {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
+  display: flex !important;
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 10px;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+.product-v2 .product-gallery_v2 .tns-slider,
+.product-v2 .product-gallery_desktop .tns-slider {
+  display: flex !important;
+  flex-wrap: nowrap;
+  gap: 10px;
+}
+.product-v2 .product-gallery_v2 .tns-item,
+.product-v2 .product-gallery_desktop .tns-item {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 20%;
 }
 .product-v2 .product-gallery_item {
   margin: 0;
@@ -356,7 +409,29 @@
 .product-v2 .product-btn_buy:active { transform: translateY(1px); }
 .product-v2 .product-btn_compare { background: #fff; color: #1a6fe0; border-color: #bcd0ec; }
 .product-v2 .product-btn_compare:hover { border-color: #1a6fe0; background: #f3f8ff; }
-.product-v2 .product-buy, .product-v2 .product-compare { margin: 0; }
+.product-v2 .product-buy {
+  margin: 16px 0 0;
+  width: 100%;
+}
+.product-v2 .product-compare {
+  margin: 12px 0 0;
+  width: 100%;
+}
+.product-v2 .product-buy .product-btn,
+.product-v2 .product-compare .product-btn {
+  width: 100%;
+  margin: 0;
+}
+.product-v2 .product-header-box .product-prices + .product-payments {
+  margin-top: 4px;
+}
+.product-v2 .product-header-box .product-compare + .product-cep,
+.product-v2 .product-header-box .product-buy + .product-compare + .product-cep {
+  margin-top: 4px;
+}
+.product-v2 .product-cep {
+  margin-top: 16px;
+}
 
 /* esconde o botão/ link antigo de "mais formas de pagamento" e o de frete modal
    quando usamos a caixa de CEP; mantidos acessíveis caso necessário */
@@ -477,11 +552,6 @@
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid #e5eaf1;
-}
-@media (min-width: 992px) {
-  .product-v2 .product-description--specs .product-description_specs-table--full {
-    display: none;
-  }
 }
 
 /* Destaques (mock — ícone + texto) */
