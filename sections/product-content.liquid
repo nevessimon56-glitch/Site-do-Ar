@@ -413,17 +413,19 @@
                                     {% assign compareListPrice = product.price.price %}
                                     {% assign comparePixPrice = mainPrice %}
                                     {% render 'sections/product-compare-data', product: product, pixPrice: comparePixPrice, listPrice: compareListPrice %}
-                                    <div class="product-buy">
-                                        <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" title="Comprar" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ product.price.price }}')">
-                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 9.2h11.3L21 7H7"/><circle cx="10" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>
-                                            Comprar
-                                        </a>
-                                    </div>
-                                    <div class="product-compare">
-                                        <button type="button" class="product-btn product-btn_compare btn col-12 product-compare-btn" data-compare-id="{{ product.id }}" aria-pressed="false">
-                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
-                                            Comparar
-                                        </button>
+                                    <div class="product-header-box_ctas">
+                                        <div class="product-buy">
+                                            <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" title="Comprar" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ product.price.price }}')">
+                                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 9.2h11.3L21 7H7"/><circle cx="10" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>
+                                                Comprar
+                                            </a>
+                                        </div>
+                                        <div class="product-compare">
+                                            <button type="button" class="product-btn product-btn_compare btn col-12 product-compare-btn" data-compare-id="{{ product.id }}" aria-pressed="false">
+                                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+                                                Comparar
+                                            </button>
+                                        </div>
                                     </div>
                                     {% if product.physicalProduct == true %}
                                     <div class="product-cep">
