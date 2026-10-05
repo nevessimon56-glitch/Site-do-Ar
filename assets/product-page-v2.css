@@ -1175,9 +1175,10 @@
 }
 @media (min-width: 992px) {
   /*
-   * Régua externa (mock): mesma largura útil no header e nos blocos de baixo.
-   * Coluna dir fixa 380px + gap 12px; esq ocupa o resto. Alturas internas podem diferir.
+   * Régua externa (mock): centralizado, max 1200px; col dir 380px + gap 12px.
    */
+  #product-pdp-v2 .product-breadcrumb-content.content,
+  #product-pdp-v2 .product-breadcrumb-container.container,
   #product-pdp-v2 .product-header-content.content,
   #product-pdp-v2 .product-header-container.container,
   #product-pdp-v2 .product-descriptions-content.content,
@@ -1186,13 +1187,18 @@
     padding-right: 15px !important;
     box-sizing: border-box !important;
     width: 100% !important;
-    max-width: 100% !important;
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    float: none !important;
   }
   #product-pdp-v2 .product-header .columns,
   #product-pdp-v2 .product-descriptions_grid {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 }
 .product-v2 .product-descriptions_grid {
