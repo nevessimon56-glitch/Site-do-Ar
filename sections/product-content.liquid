@@ -134,21 +134,31 @@
                                     {% endif %}
                                 </div>
                                 {% if product.medias.size > 1 %}
-                                    <div class="product-gallery product-gallery_desktop product-gallery_pdp" data-pdp-gallery="static">
+                                    <div class="product-gallery product-gallery_desktop product-gallery_pdp" data-pdp-gallery="carousel">
                                         <div class="product-pdp-thumbs" aria-label="Miniaturas do produto">
-                                            <ul class="product-pdp-thumbs_list">
-                                                {% for medias in product.medias %}
-                                                    {% assign classImageMain = '' %}
-                                                    {% if forloop.first == true %}
-                                                        {% assign classImageMain = ' image-main' %}
-                                                    {% endif %}
-                                                    <li class="product-gallery_item">
-                                                        <a class="product-gallery_link{{ classImageMain }}" title="{{ product.title | escape }}" href="javascript:void(0)" data-index="{{ forloop.index | minus: 1 }}" data-zoom="{{ medias.path | imgUrl: 0 }}" onclick="onChangeProductGallery('{{ forloop.index | minus: 1 }}','{{ medias.path | imgUrl: 1200 }}','{{ medias.path | imgUrl: 800 }}')">
-                                                            <img class="product-gallery_image" alt="{{ product.title | escape }}" src="{{ medias.path | imgUrl: 120 }}" width="120" height="120" loading="lazy">
-                                                        </a>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
+                                            <div class="product-pdp-thumbs_carousel" data-pdp-thumbs-carousel>
+                                                <button type="button" class="product-pdp-thumbs_nav product-pdp-thumbs_nav--prev" aria-label="Ver miniaturas anteriores">
+                                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
+                                                </button>
+                                                <div class="product-pdp-thumbs_viewport" tabindex="0" role="region" aria-label="Carrossel de miniaturas">
+                                                    <ul class="product-pdp-thumbs_list">
+                                                        {% for medias in product.medias %}
+                                                            {% assign classImageMain = '' %}
+                                                            {% if forloop.first == true %}
+                                                                {% assign classImageMain = ' image-main' %}
+                                                            {% endif %}
+                                                            <li class="product-gallery_item">
+                                                                <a class="product-gallery_link{{ classImageMain }}" title="{{ product.title | escape }}" href="javascript:void(0)" data-index="{{ forloop.index | minus: 1 }}" data-zoom="{{ medias.path | imgUrl: 0 }}" onclick="onChangeProductGallery('{{ forloop.index | minus: 1 }}','{{ medias.path | imgUrl: 1200 }}','{{ medias.path | imgUrl: 800 }}')">
+                                                                    <img class="product-gallery_image" alt="{{ product.title | escape }}" src="{{ medias.path | imgUrl: 120 }}" width="120" height="120" loading="lazy">
+                                                                </a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <button type="button" class="product-pdp-thumbs_nav product-pdp-thumbs_nav--next" aria-label="Ver próximas miniaturas">
+                                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -519,6 +529,68 @@
                 <small>Categorias</small>
             </a>
         </nav>
+        <script>
+        (function () {
+          function initPdpThumbsCarousel() {
+            var root = document.getElementById('product-pdp-v2');
+            if (!root) return;
+            root.querySelectorAll('[data-pdp-thumbs-carousel]').forEach(function (wrap) {
+              if (wrap.dataset.pdpThumbsReady === '1') return;
+              wrap.dataset.pdpThumbsReady = '1';
+              var viewport = wrap.querySelector('.product-pdp-thumbs_viewport');
+              var list = wrap.querySelector('.product-pdp-thumbs_list');
+              var prev = wrap.querySelector('.product-pdp-thumbs_nav--prev');
+              var next = wrap.querySelector('.product-pdp-thumbs_nav--next');
+              if (!viewport || !list || !prev || !next) return;
+
+              function stepPx() {
+                var item = list.querySelector('.product-gallery_item');
+                if (!item) return Math.max(80, viewport.clientWidth * 0.75);
+                var styles = window.getComputedStyle(list);
+                var gap = parseFloat(styles.columnGap || styles.gap || '8') || 8;
+                return item.getBoundingClientRect().width + gap;
+              }
+
+              function syncThumbWidth() {
+                var mqMobile = window.matchMedia('(max-width: 991px)').matches;
+                var visible = mqMobile ? 4 : 5;
+                var styles = window.getComputedStyle(list);
+                var gap = parseFloat(styles.columnGap || styles.gap || '8') || 8;
+                var width = (viewport.clientWidth - gap * (visible - 1)) / visible;
+                viewport.style.setProperty('--pdp-thumb-w', Math.max(48, width) + 'px');
+              }
+
+              function syncNav() {
+                syncThumbWidth();
+                var maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+                var left = viewport.scrollLeft;
+                prev.disabled = left <= 2;
+                next.disabled = left >= maxScroll - 2;
+                if (maxScroll <= 2) {
+                  wrap.classList.add('product-pdp-thumbs_carousel--static');
+                } else {
+                  wrap.classList.remove('product-pdp-thumbs_carousel--static');
+                }
+              }
+
+              function scrollByDir(dir) {
+                viewport.scrollBy({ left: dir * stepPx(), behavior: 'smooth' });
+              }
+
+              prev.addEventListener('click', function () { scrollByDir(-1); });
+              next.addEventListener('click', function () { scrollByDir(1); });
+              viewport.addEventListener('scroll', syncNav, { passive: true });
+              window.addEventListener('resize', syncNav);
+              syncNav();
+            });
+          }
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPdpThumbsCarousel);
+          } else {
+            initPdpThumbsCarousel();
+          }
+        })();
+        </script>
         </div><!-- /#product-pdp-v2 — vitrines (relacionados / último visto) ficam FORA -->
         {% render 'sections/product-reviews', product: product, themeConfig: themeConfig %}
 
