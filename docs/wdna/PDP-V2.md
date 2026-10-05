@@ -36,7 +36,9 @@ Em **Configurações → Grupos → Descrições** existem dois grupos ativos:
 | **Descrição** (id 1) | Descrição (editor rich text) | `product.descriptions` onde o nome contém “Descrição” → bloco **Descrição** |
 | **Especificações** (id 2) | Especificações (tabela HTML) | `product.descriptions` onde o nome contém “Especificações” → bloco **Especificações** |
 
-**Destaques** não é um grupo no WDNA. O tema monta esse painel com **pills automáticas** (`product-spec-icons`), usando título do produto + conteúdo da tabela de **Especificações** (Wi-Fi, Inverter, 220V, etc.).
+**Destaques** (mock): grade **ícone + texto** (`product-highlights`), gerada por `product-spec-icons` com `pdpHighlights: true` (título + ficha de Especificações).
+
+**Especificações** (mock): barra horizontal `product-specs` (4 dados-chave via `product-pdp-spec-bar.liquid`) + tabela completa do WDNA no mobile (oculta no desktop).
 
 Se a aba Especificações estiver vazia, as pills e a ficha usam fallbacks (`product.specification` ou aviso no layout).
 

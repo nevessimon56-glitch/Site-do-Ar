@@ -203,7 +203,63 @@
   {% assign hasSpecIcons = true %}
 {% endif %}
 
-{% if hasSpecIcons %}
+{% assign pdpBrisaSuave = false %}
+{% if specBlob contains 'brisa suave' %}
+  {% assign pdpBrisaSuave = true %}
+{% endif %}
+{% assign pdpR32 = false %}
+{% if specBlob contains 'r-32' or specBlob contains 'r32' or specBlob contains 'gás r-32' or specBlob contains 'gas r-32' %}
+  {% assign pdpR32 = true %}
+{% endif %}
+{% assign pdpArea = '' %}
+{% if specBlob contains '30 m²' or specBlob contains '30m²' or specBlob contains '30 m2' or specBlob contains 'até 30' or specBlob contains 'ate 30' %}
+  {% assign pdpArea = 'Até 30 m²' %}
+{% elsif specBlob contains '25 m²' or specBlob contains '25m²' %}
+  {% assign pdpArea = 'Até 25 m²' %}
+{% elsif specBlob contains '20 m²' or specBlob contains '20m²' %}
+  {% assign pdpArea = 'Até 20 m²' %}
+{% endif %}
+
+{% if pdpHighlights %}
+  {% assign hasPdpHighlights = false %}
+  {% if pdpBrisaSuave or iconWifi or iconProcelA or pdpR32 or pdpArea != '' or iconInverter or iconQuenteFrio or iconFrio or iconCobre or iconVoltage != '' %}
+    {% assign hasPdpHighlights = true %}
+  {% endif %}
+  {% if hasPdpHighlights %}
+  <ul class="product-highlights" data-pdp-highlights="v1" aria-label="Destaques do produto">
+    {% if pdpBrisaSuave %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h11a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h9a2.5 2.5 0 1 1-2.5 2.5"/></svg>Brisa Suave</li>
+    {% endif %}
+    {% if iconWifi %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5a10 10 0 0 1 14 0M8 15.5a6 6 0 0 1 8 0"/><circle cx="12" cy="18.5" r="1.2"/></svg>Wi-Fi integrado</li>
+    {% endif %}
+    {% if iconProcelA %}
+    <li class="product-highlight product-highlight--a"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 7 16H5z"/><path d="M9 15h6"/></svg>Classificação A</li>
+    {% endif %}
+    {% if iconInverter %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>Tecnologia Inverter</li>
+    {% endif %}
+    {% if pdpR32 %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/></svg>R-32 ecológico</li>
+    {% endif %}
+    {% if pdpArea != '' %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10 12 4l8 6v10H4z"/><path d="M9 20v-6h6v6"/></svg>{{ pdpArea }}</li>
+    {% endif %}
+    {% if iconQuenteFrio %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M5 8h14M5 16h14"/></svg>Quente e Frio</li>
+    {% endif %}
+    {% if iconFrio and iconQuenteFrio == false %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M17 8H7M17 16H7"/></svg>Só Frio</li>
+    {% endif %}
+    {% if iconCobre %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3"/></svg>Serpentina de Cobre</li>
+    {% endif %}
+    {% if iconVoltage != '' %}
+    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>{{ iconVoltage }}</li>
+    {% endif %}
+  </ul>
+  {% endif %}
+{% elsif hasSpecIcons %}
 <ul class="showcase-spec-bar" data-spec-icons="v4" aria-label="Características do produto">
   {% if iconProcelA %}
   <li class="showcase-spec-bar__tag showcase-spec-bar__tag--procel" title="Classificação A — Procel">A</li>

@@ -5,8 +5,8 @@
   - Grupo "Descrição" (id 1) → aba Descrição no produto → product.descriptions[].text (HTML)
   - Grupo "Especificações" (id 2) → aba Especificações (tabela TinyMCE) → product.descriptions[].text
 
-  Não existe grupo "Destaques" no painel: a coluna Destaques usa pills automáticas
-  (product-spec-icons), alimentadas pelo título + tabela de Especificações.
+  Destaques: grade com ícone + texto (mock PDP), gerada a partir do título + Especificações.
+  Especificações: barra com 4 dados-chave + tabela completa abaixo (WDNA).
 {% endcomment %}
 
 {% assign pdpDescMain = nil %}
@@ -65,9 +65,7 @@
           </summary>
           <div class="product-description_body">
             <div class="accordion-body product-description_highlights-body">
-              <div class="product-spec-icons-pdp">
-                {% render 'sections/product-spec-icons', product: product, specHtmlFromDescriptions: pdpSpecHtmlForIcons %}
-              </div>
+              {% render 'sections/product-spec-icons', product: product, specHtmlFromDescriptions: pdpSpecHtmlForIcons, pdpHighlights: true %}
             </div>
           </div>
         </details>
@@ -80,11 +78,16 @@
           <span class="product-description_ico">{{ themeConfig.icons.arrow.down }}</span>
         </summary>
         <div class="product-description_body">
-          <div class="accordion-body product-description_richtext product-description_specs-table">
+          <div class="accordion-body">
+            {% render 'sections/product-pdp-spec-bar', product: product, specHtmlFromDescriptions: pdpSpecHtmlForIcons %}
             {% if pdpDescSpecs %}
-              {{ pdpDescSpecs.text }}
+              <div class="product-description_richtext product-description_specs-table product-description_specs-table--full">
+                {{ pdpDescSpecs.text }}
+              </div>
             {% elsif product.specification and product.specification != '' %}
-              {{ product.specification }}
+              <div class="product-description_richtext product-description_specs-table product-description_specs-table--full">
+                {{ product.specification }}
+              </div>
             {% else %}
               <p class="product-specs-fallback">Cadastre a ficha na aba <strong>Especificações</strong> do produto no painel.</p>
             {% endif %}

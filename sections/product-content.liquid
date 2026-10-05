@@ -393,7 +393,7 @@
                                                 {% assign _mainPriceSecond = productPriceSecond.price %}
                                                 {% if productPriceSecond.promotionPrice > 0 %}{% assign _mainPriceSecond = productPriceSecond.promotionPrice %}{% endif %}
                                                 {% if productPriceSecond.installment > 1 %}
-                                                    <p class="product-prices_plots"><span class="product-v2-installment-prefix">ou</span> {{ productPriceSecond.installment }}x de {{ productPriceSecond.installmentValue | money }} sem juros</p>
+                                                    <p class="product-prices_plots">{{ productPriceSecond.installment }}x de {{ productPriceSecond.installmentValue | money }} no cartão</p>
                                                 {% else %}
                                                     <p class="product-prices_plots">ou {{ _mainPriceSecond | money }} à vista</p>
                                                 {% endif %}
