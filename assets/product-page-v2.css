@@ -1610,10 +1610,10 @@
     column-gap: 12px !important;
   }
   #product-pdp-v2 .product-descriptions_grid > .product-description--desc {
-    flex: 1 1 0 !important;
+    flex: 1 1 calc(100% - 392px) !important;
     min-width: 0 !important;
     width: auto !important;
-    max-width: none !important;
+    max-width: calc(100% - 392px) !important;
     align-self: flex-start !important;
     margin: 0 !important;
   }
