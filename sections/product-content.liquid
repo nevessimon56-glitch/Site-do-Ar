@@ -43,7 +43,7 @@
             {% endif %}
         {% endfor %}
         <!-- End - Showcase -->
-        <div class="product-v2">
+        <div class="product-v2" id="product-pdp-v2">
         <section class="product-breadcrumb">
             <div class="product-breadcrumb-content content">
                 <div class="product-breadcrumb-container container">
@@ -132,7 +132,7 @@
                                 </div>
                                 {% if product.medias.size > 1 %}
                                     <div class="product-gallery product-gallery_desktop product-gallery_v2">
-                                        <div class="product-gallery_list">
+                                        <div class="product-gallery_list slider-hide">
                                             <ul class="product-gallery-slider product-gallery-slider_desktop">
                                                 {% for medias in product.medias %}
                                                     {% assign classImageMain = '' %}
@@ -393,7 +393,7 @@
                                                 {% assign _mainPriceSecond = productPriceSecond.price %}
                                                 {% if productPriceSecond.promotionPrice > 0 %}{% assign _mainPriceSecond = productPriceSecond.promotionPrice %}{% endif %}
                                                 {% if productPriceSecond.installment > 1 %}
-                                                    <p class="product-prices_plots"><span class="showcase-prices_installment-prefix">ou</span> {{ productPriceSecond.installment }}x de {{ productPriceSecond.installmentValue | money }} sem juros</p>
+                                                    <p class="product-prices_plots"><span class="product-v2-installment-prefix">ou</span> {{ productPriceSecond.installment }}x de {{ productPriceSecond.installmentValue | money }} sem juros</p>
                                                 {% else %}
                                                     <p class="product-prices_plots">ou {{ _mainPriceSecond | money }} à vista</p>
                                                 {% endif %}
@@ -480,7 +480,7 @@
         {% endif %}
 
         {% render 'sections/product-descriptions-v2', product: product, themeConfig: themeConfig %}
-        </div>
+        </div><!-- /#product-pdp-v2 — vitrines (relacionados / último visto) ficam FORA -->
         {% render 'sections/product-reviews', product: product, themeConfig: themeConfig %}
 
         {% if kitOptions.size > 0 %}

@@ -287,7 +287,7 @@
   text-transform: none;
   letter-spacing: 0;
 }
-.product-v2 .product-prices_plots .showcase-prices_installment-prefix {
+.product-v2 .product-prices_plots .product-v2-installment-prefix {
   color: #8a9aab;
   margin-right: 4px;
   text-transform: lowercase;
@@ -489,38 +489,8 @@
 .product-v2 .product-highlight svg { font-size: 20px; flex: 0 0 auto; fill: none; stroke: #1a6fe0; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .product-v2 .product-highlight--a svg { stroke: #16a34a; }
 
-/* Destaques automáticos (product-spec-icons no PDP) */
-.product-v2 .product-spec-icons-pdp .showcase-spec-bar {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-start;
-}
-.product-v2 .product-spec-icons-pdp .showcase-spec-bar__tag {
-  flex: 1 1 calc(50% - 5px);
-  min-width: 140px;
-  box-sizing: border-box;
-}
-.product-v2 .product-spec-icons-pdp .showcase-spec-bar__tag {
-  height: auto;
-  min-height: 44px;
-  padding: 11px 13px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: none;
-  letter-spacing: 0;
-  border-radius: 12px;
-  background: #f8fbff;
-  color: #1c2b4a;
-  border-color: #e5eaf1;
-  box-shadow: none;
-  justify-content: flex-start;
-}
-.product-v2 .product-spec-icons-pdp .showcase-spec-bar__tag--procel { background: #ecfdf3; color: #15803d; border-color: #86efac; }
-
-/* Destaques — vence mega-menu / theme-custom (pills vazias ou sem contraste) */
-.product-v2 .product-description--highlights .showcase-spec-bar {
+/* Destaques — SOMENTE dentro do bloco PDP (#product-pdp-v2), nunca nos cards do carrossel */
+#product-pdp-v2 .product-descriptions .product-spec-icons-pdp .showcase-spec-bar {
   display: flex !important;
   flex-wrap: wrap !important;
   gap: 10px !important;
@@ -528,7 +498,7 @@
   padding: 0 !important;
   list-style: none !important;
 }
-.product-v2 .product-description--highlights .showcase-spec-bar__tag {
+#product-pdp-v2 .product-descriptions .product-spec-icons-pdp .showcase-spec-bar__tag {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -552,37 +522,37 @@
   min-width: 120px !important;
   max-width: 100% !important;
 }
-.product-v2 .product-description--highlights .showcase-spec-bar__tag--procel {
+#product-pdp-v2 .product-descriptions .product-spec-icons-pdp .showcase-spec-bar__tag--procel {
   background: #22c55e !important;
   color: #ffffff !important;
   border-color: #16a34a !important;
 }
-.product-v2 .product-description--highlights .showcase-spec-bar__tag--cycle-qf {
+#product-pdp-v2 .product-descriptions .product-spec-icons-pdp .showcase-spec-bar__tag--cycle-qf {
   background: #fff1e8 !important;
   color: #c2410c !important;
   border-color: #fb923c !important;
 }
-.product-v2 .product-description--highlights .showcase-spec-bar__tag--cycle-frio {
+#product-pdp-v2 .product-descriptions .product-spec-icons-pdp .showcase-spec-bar__tag--cycle-frio {
   background: #e0f2fe !important;
   color: #0369a1 !important;
   border-color: #38bdf8 !important;
 }
-.product-v2 .product-description--highlights .showcase-spec-bar__tag--inverter {
+#product-pdp-v2 .product-descriptions .product-spec-icons-pdp .showcase-spec-bar__tag--inverter {
   background: #ede9fe !important;
   color: #6d28d9 !important;
   border-color: #a78bfa !important;
 }
-.product-v2 .product-description--highlights .showcase-spec-bar__tag--cobre {
+#product-pdp-v2 .product-descriptions .product-spec-icons-pdp .showcase-spec-bar__tag--cobre {
   background: #fef3e2 !important;
   color: #b45309 !important;
   border-color: #d4a574 !important;
 }
-.product-v2 .product-description--highlights .showcase-spec-bar__tag--voltage {
+#product-pdp-v2 .product-descriptions .product-spec-icons-pdp .showcase-spec-bar__tag--voltage {
   background: #eff6ff !important;
   color: #1d4ed8 !important;
   border-color: #60a5fa !important;
 }
-.product-v2 .product-description--highlights .showcase-spec-bar__tag--wifi {
+#product-pdp-v2 .product-descriptions .product-spec-icons-pdp .showcase-spec-bar__tag--wifi {
   background: #ccfbf1 !important;
   color: #0f766e !important;
   border-color: #2dd4bf !important;
@@ -650,7 +620,7 @@
   .product-v2 .product-description[open] .product-description_ico { transform: rotate(180deg); }
   .product-v2 .product-description_body { margin-top: 0; padding: 0 16px 16px; }
   .product-v2 .product-highlight,
-  .product-v2 .product-spec-icons-pdp .showcase-spec-bar__tag {
+  #product-pdp-v2 .product-descriptions .product-spec-icons-pdp .showcase-spec-bar__tag {
     flex: 1 1 100%;
   }
   .product-v2 .product-spec {
@@ -683,4 +653,84 @@
   .product-v2 .product-gallery_item { max-width: 18%; }
   .product-v2 .product-trust { flex-direction: column; gap: 12px; }
   .product-v2 .product-trust_item { flex: 1 1 100%; gap: 11px; }
+}
+
+/* ---------- Vitrines inferiores (Último visto / Relacionados) ----------
+   Garante que regras de pills/preço da PDP não vazem para os cards do carrossel. */
+.product-showcase .showcase-spec-bar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: transparent;
+  border: 0;
+  min-height: 0;
+}
+.product-showcase .showcase-product .showcase-spec-bar__tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  height: 20px !important;
+  min-height: 20px !important;
+  padding: 0 7px !important;
+  margin: 0 !important;
+  border: 1px solid #c5d3de !important;
+  border-radius: 4px !important;
+  background: #ffffff !important;
+  color: #3a5f7d !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: uppercase !important;
+  text-indent: 0 !important;
+  white-space: nowrap !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+.product-showcase .showcase-spec-wrap {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px 8px;
+}
+.product-showcase .showcase-item {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+  min-width: 0;
+}
+.product-showcase .showcase-product.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+.product-showcase .columns {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.product-showcase .column {
+  float: none;
+  min-width: 0;
+}
+.product-showcase .product-v2-installment-prefix,
+.product-showcase .showcase-prices_installment-prefix {
+  display: inline;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-transform: none;
+  letter-spacing: 0;
 }
