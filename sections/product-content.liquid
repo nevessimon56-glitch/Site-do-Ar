@@ -553,15 +553,7 @@
 
               var visibleCount = 4;
 
-              function syncThumbWidth() {
-                var styles = window.getComputedStyle(list);
-                var gap = parseFloat(styles.columnGap || styles.gap || '8') || 8;
-                var width = (viewport.clientWidth - gap * (visibleCount - 1)) / visibleCount;
-                viewport.style.setProperty('--pdp-thumb-w', Math.max(52, width) + 'px');
-              }
-
               function syncNav() {
-                syncThumbWidth();
                 var items = list.querySelectorAll('.product-gallery_item');
                 var maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
                 var left = viewport.scrollLeft;
