@@ -1,22 +1,26 @@
 {% comment %}
-  PDP v2 — Descrição / Destaques / Especificações
-  Usa abas de descrição do produto no WDNA (nome contendo "destaque" ou "especifica").
-  Fallback Destaques: pills de sections/product-spec-icons.liquid
+  PDP v2 — blocos inferiores da página de produto
+
+  WDNA (Configurações → Grupos → Descrições):
+  - Grupo "Descrição" (id 1) → aba Descrição no produto → product.descriptions[].text (HTML)
+  - Grupo "Especificações" (id 2) → aba Especificações (tabela TinyMCE) → product.descriptions[].text
+
+  Não existe grupo "Destaques" no painel: a coluna Destaques usa pills automáticas
+  (product-spec-icons), alimentadas pelo título + tabela de Especificações.
 {% endcomment %}
 
 {% assign pdpDescMain = nil %}
-{% assign pdpDescDestaques = nil %}
 {% assign pdpDescSpecs = nil %}
 
 {% for description in product.descriptions %}
   {% if description.text != '' %}
     {% assign dname = description.name | downcase | strip %}
-    {% if dname contains 'destaque' %}
-      {% assign pdpDescDestaques = description %}
-    {% elsif dname contains 'especifica' %}
+    {% if dname contains 'especifica' %}
       {% assign pdpDescSpecs = description %}
-    {% elsif pdpDescMain == nil and dname contains 'descri' %}
-      {% assign pdpDescMain = description %}
+    {% elsif pdpDescMain == nil %}
+      {% if dname contains 'descri' or description.id == 1 %}
+        {% assign pdpDescMain = description %}
+      {% endif %}
     {% endif %}
   {% endif %}
 {% endfor %}
@@ -24,13 +28,18 @@
 {% for description in product.descriptions %}
   {% if description.text != '' and pdpDescMain == nil %}
     {% assign dname = description.name | downcase | strip %}
-    {% unless dname contains 'destaque' or dname contains 'especifica' %}
+    {% unless dname contains 'especifica' %}
       {% assign pdpDescMain = description %}
     {% endunless %}
   {% endif %}
 {% endfor %}
 
-{% if pdpDescMain or pdpDescDestaques or pdpDescSpecs or product %}
+{% assign pdpSpecHtmlForIcons = '' %}
+{% if pdpDescSpecs and pdpDescSpecs.text != '' %}
+  {% assign pdpSpecHtmlForIcons = pdpDescSpecs.text %}
+{% endif %}
+
+{% if pdpDescMain or pdpDescSpecs or product %}
 <section class="product-descriptions">
   <div class="product-descriptions-content content">
     <div class="product-descriptions-container container">
@@ -43,7 +52,7 @@
             <span class="product-description_ico">{{ themeConfig.icons.arrow.down }}</span>
           </summary>
           <div class="product-description_body">
-            <div class="accordion-body">{{ pdpDescMain.text }}</div>
+            <div class="accordion-body product-description_richtext">{{ pdpDescMain.text }}</div>
           </div>
         </details>
         {% endif %}
@@ -51,18 +60,14 @@
         <details class="product-description accordion product-description--highlights" open>
           <summary class="product-description_header accordion-header">
             <span class="product-description_ico-lead product-description_ico-lead--green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/></svg></span>
-            <span class="product-description_title">{% if pdpDescDestaques %}{{ pdpDescDestaques.name }}{% else %}Destaques{% endif %}</span>
+            <span class="product-description_title">Destaques</span>
             <span class="product-description_ico">{{ themeConfig.icons.arrow.down }}</span>
           </summary>
           <div class="product-description_body">
             <div class="accordion-body product-description_highlights-body">
-              {% if pdpDescDestaques %}
-                {{ pdpDescDestaques.text }}
-              {% else %}
-                <div class="product-spec-icons-pdp">
-                  {% render 'sections/product-spec-icons', product: product %}
-                </div>
-              {% endif %}
+              <div class="product-spec-icons-pdp">
+                {% render 'sections/product-spec-icons', product: product, specHtmlFromDescriptions: pdpSpecHtmlForIcons %}
+              </div>
             </div>
           </div>
         </details>
@@ -75,13 +80,13 @@
           <span class="product-description_ico">{{ themeConfig.icons.arrow.down }}</span>
         </summary>
         <div class="product-description_body">
-          <div class="accordion-body">
+          <div class="accordion-body product-description_richtext product-description_specs-table">
             {% if pdpDescSpecs %}
               {{ pdpDescSpecs.text }}
             {% elsif product.specification and product.specification != '' %}
               {{ product.specification }}
             {% else %}
-              <p class="product-specs-fallback">Consulte a ficha técnica na descrição ou entre em contato.</p>
+              <p class="product-specs-fallback">Cadastre a ficha na aba <strong>Especificações</strong> do produto no painel.</p>
             {% endif %}
           </div>
         </div>

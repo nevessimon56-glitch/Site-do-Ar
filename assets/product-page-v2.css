@@ -292,6 +292,32 @@
 .product-v2 .product-description_body { margin-top: 12px; }
 .product-v2 .product-description_body .accordion-body { color: #475569; font-size: 14px; line-height: 1.6; }
 
+/* HTML das abas Descrição / Especificações (TinyMCE no WDNA) */
+.product-v2 .product-description_richtext p { margin: 0 0 10px; }
+.product-v2 .product-description_richtext ul,
+.product-v2 .product-description_richtext ol { margin: 0 0 10px; padding-left: 20px; }
+.product-v2 .product-description_specs-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.product-v2 .product-description_specs-table table td,
+.product-v2 .product-description_specs-table table th {
+  padding: 10px 12px;
+  border: 1px solid #e5eaf1;
+  vertical-align: top;
+  text-align: left;
+}
+.product-v2 .product-description_specs-table table tr:nth-child(even) td {
+  background: #f8fafc;
+}
+.product-v2 .product-description_specs-table table td:first-child {
+  font-weight: 700;
+  color: #1c2b4a;
+  width: 38%;
+}
+
 /* Destaques pills */
 .product-v2 .product-highlights {
   list-style: none;

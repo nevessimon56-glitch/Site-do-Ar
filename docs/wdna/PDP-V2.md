@@ -24,16 +24,18 @@ Links após push:
 
 ---
 
-## Destaques e Especificações (dados)
+## De onde vêm os textos (painel WDNA)
 
-1. **Descrições do produto** no painel WDNA (recomendado):
-   - Aba **Descrição** — texto principal
-   - Aba cujo nome contém **Destaques** — HTML ou lista (vira painel / acordeão)
-   - Aba cujo nome contém **Especificações** — ficha técnica (tabela HTML)
+Em **Configurações → Grupos → Descrições** existem dois grupos ativos:
 
-2. Se não houver aba **Destaques**, o tema usa as **pills automáticas** (`product-spec-icons`) como no catálogo.
+| Grupo no painel | Aba ao editar produto | No tema (Liquid) |
+|-----------------|----------------------|------------------|
+| **Descrição** (id 1) | Descrição (editor rich text) | `product.descriptions` onde o nome contém “Descrição” → bloco **Descrição** |
+| **Especificações** (id 2) | Especificações (tabela HTML) | `product.descriptions` onde o nome contém “Especificações” → bloco **Especificações** |
 
-3. Se não houver aba **Especificações**, usa `product.specification` ou mensagem de fallback.
+**Destaques** não é um grupo no WDNA. O tema monta esse painel com **pills automáticas** (`product-spec-icons`), usando título do produto + conteúdo da tabela de **Especificações** (Wi-Fi, Inverter, 220V, etc.).
+
+Se a aba Especificações estiver vazia, as pills e a ficha usam fallbacks (`product.specification` ou aviso no layout).
 
 ---
 

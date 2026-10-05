@@ -37,6 +37,13 @@
 {% if product.specificationText and product.specificationText != '' %}{{ product.specificationText }}{% endif %}
 {% if product.especificacao and product.especificacao != '' %}{{ product.especificacao }}{% endif %}
 {% if product.especificacoes and product.especificacoes != '' %}{{ product.especificacoes }}{% endif %}
+{% if specHtmlFromDescriptions and specHtmlFromDescriptions != '' %}{{ specHtmlFromDescriptions }}{% endif %}
+{% if specHtmlFromDescriptions == blank %}
+  {% for _desc in product.descriptions %}
+    {% assign _dname = _desc.name | downcase | strip %}
+    {% if _dname contains 'especifica' and _desc.text != '' %}{{ _desc.text }}{% endif %}
+  {% endfor %}
+{% endif %}
 {% endcapture %}
 
 {% assign specHtmlRaw = specHtmlRaw | strip %}
