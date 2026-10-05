@@ -114,8 +114,7 @@
 }
 /* Reserva vazia / slider legado abaixo da foto */
 .product-v2 .product-images > .product-gallery_mobile,
-.product-v2 .product-images .tns-outer,
-.product-v2 .product-images .tns-ovh:not(:has(.product-gallery_image)) {
+.product-v2 .product-images .tns-outer {
   display: none !important;
   min-height: 0 !important;
   height: 0 !important;
