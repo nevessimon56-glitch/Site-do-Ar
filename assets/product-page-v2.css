@@ -831,9 +831,16 @@
   flex: 1 1 100%;
   width: 100%;
 }
-/* Tema WDNA: .accordion-body costuma ficar oculto com <details> fechado */
-#product-pdp-v2 .product-descriptions details.product-description .product-description_body,
-#product-pdp-v2 .product-descriptions details.product-description .accordion-body {
+/* Acordeão Descrição / Destaques / Especificações (setas + expandir/recolher) */
+#product-pdp-v2 .product-descriptions details.product-description:not([open]) .product-description_body,
+#product-pdp-v2 .product-descriptions details.product-description:not([open]) .accordion-body {
+  display: none !important;
+}
+#product-pdp-v2 .product-descriptions details.product-description[open] .product-description_body {
+  display: block !important;
+}
+#product-pdp-v2 .product-descriptions details.product-description[open] .accordion-body {
+  display: block !important;
   max-height: none !important;
   overflow: visible !important;
   visibility: visible !important;
@@ -844,15 +851,34 @@
   box-shadow: 0 4px 14px rgba(15, 23, 42, .05); padding: 18px 20px; margin: 0;
 }
 .product-v2 .product-description_header {
-  display: flex; align-items: center; gap: 10px; list-style: none; cursor: default;
+  display: flex; align-items: center; gap: 10px; list-style: none; cursor: pointer;
+  user-select: none;
 }
 .product-v2 .product-description_header::-webkit-details-marker { display: none; }
 .product-v2 .product-description_ico-lead { color: #1a6fe0; display: inline-flex; }
 .product-v2 .product-description_ico-lead svg { font-size: 20px; fill: none; stroke: #1a6fe0; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .product-v2 .product-description_ico-lead--green svg { stroke: #16a34a; }
 .product-v2 .product-description_title { font-size: 17px; font-weight: 800; color: #1a6fe0; flex: 1 1 auto; }
-.product-v2 .product-description_ico { display: none; color: #64748b; }
-.product-v2 .product-description_ico svg { font-size: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.product-v2 .product-description_ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  color: #64748b;
+  transition: transform .2s ease;
+}
+.product-v2 .product-description[open] .product-description_ico { transform: rotate(180deg); }
+.product-v2 .product-description_ico svg,
+.product-v2 .product-description_ico .product-description_chevron {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .product-v2 .product-description_body { margin-top: 12px; }
 .product-v2 .product-description_body .accordion-body { color: #475569; font-size: 14px; line-height: 1.6; }
 .product-v2 .product-description_richtext a {
@@ -994,16 +1020,10 @@
   }
   #product-pdp-v2 .product-descriptions { margin-top: 10px; }
   .product-v2 .product-description { padding: 0; }
-  .product-v2 .product-description_header { cursor: pointer; padding: 16px 16px; }
-  .product-v2 .product-description_ico { display: inline-flex; transition: transform .2s ease; }
-  .product-v2 .product-description[open] .product-description_ico { transform: rotate(180deg); }
+  .product-v2 .product-description_header { padding: 16px 16px; }
   .product-v2 .product-description_body {
-    display: none;
     margin-top: 0;
     padding: 0 16px 16px;
-  }
-  .product-v2 .product-description[open] .product-description_body {
-    display: block;
   }
   #product-pdp-v2 {
     padding-bottom: 100px;
@@ -1072,13 +1092,6 @@
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
   }
-  /* No desktop os blocos ficam sempre abertos (painéis), sem seta */
-  .product-v2 .product-description_ico { display: none !important; }
-  .product-v2 .product-description_body,
-  #product-pdp-v2 .product-descriptions details.product-description .accordion-body {
-    display: block !important;
-  }
-  .product-v2 .product-description_header { pointer-events: none; cursor: default; }
   #product-pdp-v2 .product-descriptions { margin-top: 12px; }
   .product-v2 .product-descriptions_grid {
     gap: 4px;
@@ -1086,7 +1099,10 @@
     column-gap: 4px;
   }
   .product-v2 .product-description {
-    padding: 16px 18px;
+    padding: 14px 18px;
+  }
+  .product-v2 .product-description:not([open]) {
+    padding-bottom: 14px;
   }
   .product-v2 .product-description_body { margin-top: 8px; }
   .product-v2 .product-description_specs-table--full {

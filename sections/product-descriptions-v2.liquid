@@ -57,6 +57,10 @@
   {% assign pdpDescMainHtml = product.description %}
 {% endif %}
 
+{% capture pdpDescChevron %}
+<svg class="product-description_chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+{% endcapture %}
+
 {% if pdpDescMainHtml != '' or pdpHasSpecsTable %}
 <section class="product-descriptions">
   <div class="product-descriptions-content content">
@@ -67,7 +71,7 @@
           <summary class="product-description_header accordion-header">
             <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l3 3v17H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
             <span class="product-description_title">{% if pdpDescMain %}{{ pdpDescMain.name }}{% else %}Descrição{% endif %}</span>
-            <span class="product-description_ico">{{ themeConfig.icons.arrow.down }}</span>
+            <span class="product-description_ico">{% if themeConfig.icons.arrow.down != blank %}{{ themeConfig.icons.arrow.down }}{% else %}{{ pdpDescChevron }}{% endif %}</span>
           </summary>
           <div class="product-description_body">
             <div class="accordion-body product-description_richtext">{{ pdpDescMainHtml }}</div>
@@ -80,7 +84,7 @@
           <summary class="product-description_header accordion-header">
             <span class="product-description_ico-lead product-description_ico-lead--green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/></svg></span>
             <span class="product-description_title">Destaques</span>
-            <span class="product-description_ico">{{ themeConfig.icons.arrow.down }}</span>
+            <span class="product-description_ico">{% if themeConfig.icons.arrow.down != blank %}{{ themeConfig.icons.arrow.down }}{% else %}{{ pdpDescChevron }}{% endif %}</span>
           </summary>
           <div class="product-description_body">
             <div class="accordion-body product-description_highlights-body">
@@ -94,7 +98,7 @@
         <summary class="product-description_header accordion-header">
           <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span>
           <span class="product-description_title">{% if pdpDescSpecs %}{{ pdpDescSpecs.name }}{% else %}Especificações{% endif %}</span>
-          <span class="product-description_ico">{{ themeConfig.icons.arrow.down }}</span>
+          <span class="product-description_ico">{% if themeConfig.icons.arrow.down != blank %}{{ themeConfig.icons.arrow.down }}{% else %}{{ pdpDescChevron }}{% endif %}</span>
         </summary>
         <div class="product-description_body">
           <div class="accordion-body">
@@ -117,19 +121,4 @@
     </div>
   </div>
 </section>
-<script>
-(function () {
-  var root = document.getElementById('product-pdp-v2');
-  if (!root) return;
-  var mq = window.matchMedia('(max-width: 991px)');
-  function syncPdpDescAccordion() {
-    root.querySelectorAll('.product-descriptions details.product-description').forEach(function (el) {
-      el.open = !mq.matches;
-    });
-  }
-  syncPdpDescAccordion();
-  if (mq.addEventListener) mq.addEventListener('change', syncPdpDescAccordion);
-  else mq.addListener(syncPdpDescAccordion);
-})();
-</script>
 {% endif %}
