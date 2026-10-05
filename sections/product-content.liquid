@@ -255,9 +255,16 @@
                                 <div class="product-variations">
                                     <div class="columns">
                                         {% for gridOption in product.gridOptions %}
+                                            {% assign pdpVarLabel = gridOption.name %}
+                                            {% assign pdpVarLabelL = pdpVarLabel | downcase %}
+                                            {% if pdpVarLabelL contains 'capacidade' %}
+                                                {% assign pdpVarLabel = 'Capacidade' %}
+                                            {% elsif pdpVarLabelL contains 'voltagem' %}
+                                                {% assign pdpVarLabel = 'Voltagem' %}
+                                            {% endif %}
                                             <div class="product-box_variations product-box_variations__{{ gridOption.displayType }} col-6 col-md-12 column">
                                                 <p class="product-variations_title">
-                                                    {{ gridOption.name }}
+                                                    {{ pdpVarLabel }}
                                                 </p>
                                                 {% case gridOption.displayType %}
                                                     {% when 'button' %}
@@ -273,7 +280,7 @@
                                                                     {% if variation.available == false %}
                                                                         {% assign classDisabled = ' disabled' %}
                                                                     {% endif %}
-                                                                    {% assign textVariation = variation.value %}
+                                                                    {% assign textVariation = variation.value | replace: "BTU'S", "BTUs" | replace: "btu's", "BTUs" | replace: "Btu's", "BTUs" %}
                                                                     {% assign styleColors = '' %}
                                                                     {% if variation.display != blank %}
                                                                         {% assign textVariation = '' %}
