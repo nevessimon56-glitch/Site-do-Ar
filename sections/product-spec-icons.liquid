@@ -177,9 +177,26 @@
 {% if specWifiBlob contains 'compatibilidade wi-fi: não' or specWifiBlob contains 'compatibilidade wi-fi: nao' or specWifiBlob contains 'compatibilidade wifi: não' or specWifiBlob contains 'compatibilidade wifi: nao' or specWifiBlob contains 'sem wi-fi' or specWifiBlob contains 'sem wifi' or specWifiBlob contains 'não possui wi-fi' or specWifiBlob contains 'nao possui wi-fi' or specWifiBlob contains 'não possui wifi' or specWifiBlob contains 'nao possui wifi' %}
   {% assign wifiBlocked = true %}
 {% endif %}
+{% if specWifiBlob contains 'compatibilidade wi-fi' %}
+  {% if specWifiBlob contains 'não' or specWifiBlob contains 'nao' %}
+    {% unless specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' %}
+      {% assign wifiBlocked = true %}
+    {% endunless %}
+  {% endif %}
+{% endif %}
+{% if specWifiBlob contains 'vendido separadamente' %}
+  {% if specWifiBlob contains 'wi-fi' or specWifiBlob contains 'wifi' %}
+    {% assign wifiBlocked = true %}
+  {% endif %}
+{% endif %}
+{% if specWifiBlob contains 'kit ' and specWifiBlob contains 'smart wi-fi' %}
+  {% unless specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' %}
+    {% assign wifiBlocked = true %}
+  {% endunless %}
+{% endif %}
 
 {% unless wifiBlocked %}
-  {% if specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' or specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' or specWifiBlob contains 'wi-fi de fábrica' or specWifiBlob contains 'wi-fi de fabrica' or specWifiBlob contains 'smart wi-fi' or specWifiBlob contains 'smart wifi' %}
+  {% if specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' or specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' or specWifiBlob contains 'wi-fi de fábrica' or specWifiBlob contains 'wi-fi de fabrica' %}
     {% assign iconWifi = true %}
   {% elsif specTitle contains ' wi-fi' or specTitle contains '-wi-fi' or specTitle contains 'wifi' %}
     {% assign iconWifi = true %}

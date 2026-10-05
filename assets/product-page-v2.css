@@ -168,7 +168,13 @@
 .product-v2 .product-gallery_desktop.product-gallery_pdp {
   margin-top: 12px;
   display: block !important;
-  min-height: 0 !important;
+  visibility: visible !important;
+  float: none !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 72px !important;
+  max-height: none !important;
+  padding: 0 !important;
   background: transparent !important;
 }
 .product-v2 .product-pdp-thumbs {
@@ -184,11 +190,23 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
+  display: flex !important;
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 10px;
   align-items: stretch;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+/* theme-all: .product-gallery-slider { display: table } quebra o flex das miniaturas */
+.product-v2 .product-pdp-thumbs_list.product-gallery-slider,
+.product-v2 .product-pdp-thumbs_list.product-gallery-slider_desktop {
+  display: flex !important;
+  table-layout: auto !important;
 }
 .product-v2 .product-gallery_mobile,
 .product-v2 .product-images .product-gallery:not(.product-gallery_desktop):not(.product-gallery_pdp) {
@@ -224,10 +242,19 @@
 }
 .product-v2 .product-gallery_item {
   margin: 0;
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: 20%;
+  flex: 0 0 auto;
+  min-width: 56px;
+  width: 72px;
+  max-width: 72px;
   list-style: none;
+}
+@media (min-width: 992px) {
+  .product-v2 .product-pdp-thumbs_list .product-gallery_item {
+    flex: 0 0 calc((100% - 70px) / 8);
+    min-width: 52px;
+    max-width: none;
+    width: auto;
+  }
 }
 .product-v2 .product-gallery_link {
   display: flex; align-items: center; justify-content: center; aspect-ratio: 1;
@@ -459,7 +486,7 @@
 }
 
 .product-v2 .product-payments {
-  margin: 4px 0 0;
+  margin: 8px 0 0;
 }
 .product-v2 .product-btn_payment {
   background: transparent;
@@ -790,14 +817,21 @@
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
   }
+  #product-pdp-v2 .product-gallery.product-gallery_pdp {
+    height: auto !important;
+    min-height: 72px !important;
+    padding: 0 !important;
+    float: none !important;
+  }
   #product-pdp-v2 .product-pdp-thumbs_list {
     display: flex !important;
     flex-direction: row !important;
     gap: 10px !important;
+    width: 100% !important;
   }
   #product-pdp-v2 .product-gallery_item {
-    flex: 1 1 0 !important;
-    min-width: 0 !important;
+    flex: 0 0 auto !important;
+    min-width: 52px !important;
     max-width: none !important;
   }
 

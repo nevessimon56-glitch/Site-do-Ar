@@ -188,9 +188,24 @@
     {% assign wifiBlocked = true %}
   {% endunless %}
 {% endif %}
+{% if specWifiBlob contains 'compatibilidade wi-fi: não' or specWifiBlob contains 'compatibilidade wi-fi: nao' or specWifiBlob contains 'compatibilidade wifi: não' or specWifiBlob contains 'compatibilidade wifi: nao' %}
+  {% assign wifiBlocked = true %}
+{% endif %}
+{% if specWifiBlob contains 'compatibilidade wi-fi' %}
+  {% if specWifiBlob contains 'não' or specWifiBlob contains 'nao' %}
+    {% unless specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' %}
+      {% assign wifiBlocked = true %}
+    {% endunless %}
+  {% endif %}
+{% endif %}
+{% if specWifiBlob contains 'vendido separadamente' %}
+  {% if specWifiBlob contains 'wi-fi' or specWifiBlob contains 'wifi' %}
+    {% assign wifiBlocked = true %}
+  {% endif %}
+{% endif %}
 
 {% unless wifiBlocked %}
-  {% if specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' or specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' or specWifiBlob contains 'smart wi-fi' or specWifiBlob contains 'smart wifi' %}
+  {% if specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' or specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' %}
     {% assign cmpWifi = true %}
   {% elsif specTitle contains ' wi-fi' or specTitle contains '-wi-fi' or specTitle contains 'wifi' %}
     {% assign cmpWifi = true %}
