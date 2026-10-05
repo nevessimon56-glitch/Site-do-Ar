@@ -67,41 +67,41 @@
     <div class="product-descriptions-container container">
       <div class="product-descriptions_grid">
         {% if pdpDescMainHtml != '' %}
-        <details class="product-description accordion product-description--desc" open>
-          <summary class="product-description_header accordion-header">
+        <details class="product-description product-description--desc" open>
+          <summary class="product-description_header">
             <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l3 3v17H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
             <span class="product-description_title">{% if pdpDescMain %}{{ pdpDescMain.name }}{% else %}Descrição{% endif %}</span>
-            <span class="product-description_ico">{% if themeConfig.icons.arrow.down != blank %}{{ themeConfig.icons.arrow.down }}{% else %}{{ pdpDescChevron }}{% endif %}</span>
+            <span class="product-description_toggle" aria-hidden="true">{{ pdpDescChevron }}</span>
           </summary>
           <div class="product-description_body">
-            <div class="accordion-body product-description_richtext">{{ pdpDescMainHtml }}</div>
+            <div class="pdp-desc-panel product-description_richtext">{{ pdpDescMainHtml }}</div>
           </div>
         </details>
         {% endif %}
 
         {% if pdpSpecHtmlForIcons != blank or pdpDescMainHtml != '' %}
-        <details class="product-description accordion product-description--highlights" open>
-          <summary class="product-description_header accordion-header">
+        <details class="product-description product-description--highlights" open>
+          <summary class="product-description_header">
             <span class="product-description_ico-lead product-description_ico-lead--green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/></svg></span>
             <span class="product-description_title">Destaques</span>
-            <span class="product-description_ico">{% if themeConfig.icons.arrow.down != blank %}{{ themeConfig.icons.arrow.down }}{% else %}{{ pdpDescChevron }}{% endif %}</span>
+            <span class="product-description_toggle" aria-hidden="true">{{ pdpDescChevron }}</span>
           </summary>
           <div class="product-description_body">
-            <div class="accordion-body product-description_highlights-body">
+            <div class="pdp-desc-panel product-description_highlights-body">
               {% render 'sections/product-spec-icons', product: product, specHtmlFromDescriptions: pdpSpecHtmlForIcons, pdpHighlights: true %}
             </div>
           </div>
         </details>
         {% endif %}
 
-        <details class="product-description accordion product-description--specs" open>
-        <summary class="product-description_header accordion-header">
+        <details class="product-description product-description--specs" open>
+        <summary class="product-description_header">
           <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span>
           <span class="product-description_title">{% if pdpDescSpecs %}{{ pdpDescSpecs.name }}{% else %}Especificações{% endif %}</span>
-          <span class="product-description_ico">{% if themeConfig.icons.arrow.down != blank %}{{ themeConfig.icons.arrow.down }}{% else %}{{ pdpDescChevron }}{% endif %}</span>
+          <span class="product-description_toggle" aria-hidden="true">{{ pdpDescChevron }}</span>
         </summary>
         <div class="product-description_body">
-          <div class="accordion-body">
+          <div class="pdp-desc-panel">
             {% render 'sections/product-pdp-spec-bar', product: product, specHtmlFromDescriptions: pdpSpecHtmlForIcons %}
             {% if pdpDescSpecs %}
               <div class="product-description_richtext product-description_specs-table product-description_specs-table--full">
@@ -121,4 +121,15 @@
     </div>
   </div>
 </section>
+<script>
+(function () {
+  var root = document.getElementById('product-pdp-v2');
+  if (!root) return;
+  root.querySelectorAll('.product-descriptions summary.product-description_header').forEach(function (summary) {
+    summary.addEventListener('click', function (event) {
+      event.stopImmediatePropagation();
+    }, true);
+  });
+})();
+</script>
 {% endif %}

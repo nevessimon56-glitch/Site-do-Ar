@@ -25,6 +25,20 @@
   | replace: '</table>', ' '
   | replace: '<p>', ' '
   | replace: '</p>', ' '
+  | replace: '<span', ' '
+  | replace: '</span>', ' '
+  | replace: '<strong>', ' '
+  | replace: '</strong>', ' '
+  | replace: '<b>', ' '
+  | replace: '</b>', ' '
+  | replace: 'style="color: #ffffff;"', ' '
+  | replace: 'style="color:#ffffff;"', ' '
+  | replace: 'style="color: #ffffff', ' '
+  | replace: '#ffffff;', ' '
+  | replace: '#ffffff', ' '
+  | replace: ';">', ' '
+  | replace: '&quot;', ' '
+  | replace: '&#39;', ' '
   | strip
 %}
 {% assign specLower = specPlain | downcase %}
@@ -41,42 +55,60 @@
   {% assign chunkL = chunk | downcase %}
   {% if chunk != '' %}
     {% if pdpDim == '' and chunkL contains 'dimens' %}
-      {% assign pdpDimParts = chunk | split: ':' %}
+      {% assign pdpDim = chunk | replace: 'Dimensões', '' | replace: 'dimensões', '' | replace: 'Dimensoes', '' | replace: 'dimensoes', '' | strip %}
+      {% assign pdpDimParts = pdpDim | split: ':' %}
       {% if pdpDimParts.size > 1 %}
         {% assign pdpDim = pdpDimParts[1] | strip %}
-      {% else %}
-        {% assign pdpDim = chunk | strip %}
       {% endif %}
     {% endif %}
     {% if pdpCap == '' and chunkL contains 'capacidade' %}
-      {% assign pdpCapParts = chunk | split: ':' %}
+      {% assign pdpCap = chunk | replace: 'Capacidade', '' | replace: 'capacidade', '' | strip %}
+      {% assign pdpCapParts = pdpCap | split: ':' %}
       {% if pdpCapParts.size > 1 %}
         {% assign pdpCap = pdpCapParts[1] | strip %}
-      {% else %}
-        {% assign pdpCap = chunk | strip %}
       {% endif %}
     {% endif %}
     {% if pdpVolt == '' and chunkL contains 'voltagem' %}
-      {% assign pdpVoltParts = chunk | split: ':' %}
+      {% assign pdpVolt = chunk | replace: 'Voltagem', '' | replace: 'voltagem', '' | strip %}
+      {% assign pdpVoltParts = pdpVolt | split: ':' %}
       {% if pdpVoltParts.size > 1 %}
         {% assign pdpVolt = pdpVoltParts[1] | strip %}
-      {% else %}
-        {% assign pdpVolt = chunk | strip %}
       {% endif %}
     {% endif %}
     {% if pdpGar == '' and chunkL contains 'garantia' %}
-      {% assign pdpGarParts = chunk | split: ':' %}
+      {% assign pdpGar = chunk | replace: 'Garantia', '' | replace: 'garantia', '' | strip %}
+      {% assign pdpGarParts = pdpGar | split: ':' %}
       {% if pdpGarParts.size > 1 %}
         {% assign pdpGar = pdpGarParts[1] | strip %}
-      {% else %}
-        {% assign pdpGar = chunk | strip %}
       {% endif %}
     {% endif %}
   {% endif %}
 {% endfor %}
 
+{% assign pdpDim = pdpDim | replace: '#ffffff', '' | replace: ';">', '' | replace: 'style', '' | strip %}
+{% assign pdpCap = pdpCap | replace: '#ffffff', '' | replace: ';">', '' | replace: 'style', '' | strip %}
+{% assign pdpVolt = pdpVolt | replace: '#ffffff', '' | replace: ';">', '' | replace: 'style', '' | strip %}
+{% assign pdpGar = pdpGar | replace: '#ffffff', '' | replace: ';">', '' | replace: 'style', '' | strip %}
+
+{% if pdpDim contains '<' or pdpDim contains 'color' or pdpDim.size < 2 %}
+  {% assign pdpDim = '' %}
+{% endif %}
+{% if pdpCap contains '<' or pdpCap contains 'color' or pdpCap.size < 2 %}
+  {% assign pdpCap = '' %}
+{% endif %}
+{% if pdpVolt contains '<' or pdpVolt contains 'color' or pdpVolt.size < 2 %}
+  {% assign pdpVolt = '' %}
+{% endif %}
+{% if pdpGar contains '<' or pdpGar contains 'color' or pdpGar.size < 2 %}
+  {% assign pdpGar = '' %}
+{% endif %}
+
 {% if pdpCap == '' %}
-  {% if titleLower contains '18.000' or titleLower contains '18000' %}
+  {% if titleLower contains '46.000' or titleLower contains '46000' %}
+    {% assign pdpCap = '46.000 BTU/h' %}
+  {% elsif titleLower contains '48.000' or titleLower contains '48000' %}
+    {% assign pdpCap = '48.000 BTU/h' %}
+  {% elsif titleLower contains '18.000' or titleLower contains '18000' %}
     {% assign pdpCap = '18.000 BTU/h' %}
   {% elsif titleLower contains '12.000' or titleLower contains '12000' %}
     {% assign pdpCap = '12.000 BTU/h' %}
@@ -111,7 +143,7 @@
 {% endif %}
 
 {% if hasSpecBar %}
-<ul class="product-specs" data-pdp-spec-bar="v1" aria-label="Especificações principais">
+<ul class="product-specs" data-pdp-spec-bar="v2" aria-label="Especificações principais">
   {% if pdpDim != '' %}
   <li class="product-spec">
     <span class="product-spec_ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18v10H3z"/><path d="M7 7v10M17 7v10"/></svg></span>
