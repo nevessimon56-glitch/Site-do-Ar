@@ -47,16 +47,66 @@
   float: none;
 }
 .product-v2 .product-header-right {
-  flex: 1 1 36%;
-  min-width: 280px;
+  flex: 1 1 40%;
+  min-width: 340px;
   padding: 0;
   width: auto;
   max-width: none;
   float: none;
 }
 
+/* Vence grid .col-7 / .col-5 do theme-all na PDP */
+.product-v2 .product-header .column,
+.product-v2 .product-header .col-7,
+.product-v2 .product-header .col-5,
+.product-v2 .product-header-left.col-7,
+.product-v2 .product-header-right.col-5 {
+  width: auto !important;
+  max-width: none !important;
+  float: none !important;
+}
+.product-v2 .product-header-left.col-7 {
+  flex: 1 1 56% !important;
+  min-width: 300px !important;
+}
+.product-v2 .product-header-right.col-5 {
+  flex: 1 1 40% !important;
+  min-width: 340px !important;
+}
+
 /* ---------- Gallery ---------- */
-.product-v2 .product-images { margin: 0; }
+.product-v2 .product-images {
+  margin: 0;
+  display: block !important;
+  position: relative;
+}
+.product-v2 .product-images .product-gallery,
+.product-v2 .product-images .product-gallery_list {
+  position: static !important;
+  float: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  left: auto !important;
+  top: auto !important;
+}
+.product-v2 .product-images .product-zoom {
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+/* Pills só em Destaques — esconde duplicata perto da foto (theme-custom / cards) */
+.product-v2 .product-images .showcase-spec-wrap,
+.product-v2 .product-images .showcase-spec-bar,
+.product-v2 .product-images .showcase-spec-bar__tag,
+.product-v2 .product-zoom .showcase-spec-bar,
+.product-v2 .product-gallery .showcase-spec-wrap {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
 .product-v2 .product-title_mobile { display: none; }
 .product-v2 .product-zoom {
   position: relative; background: #ffffff; border: 1px solid #e5eaf1;
@@ -159,15 +209,34 @@
 
 /* ---------- Price block ---------- */
 .product-v2 .product-prices {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
-  padding: 14px 0 2px; border-top: 1px solid #e5eaf1; margin-top: 2px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0 2px;
+  border-top: 1px solid #e5eaf1;
+  margin-top: 2px;
 }
-.product-v2 .product-box_prices { padding: 0; width: auto; max-width: none; }
+.product-v2 .product-box_prices {
+  padding: 0;
+  width: auto;
+  max-width: none;
+  flex: 1 1 200px;
+  min-width: 0;
+}
 .product-v2 .product-prices_strike { display: block; font-size: 14px; }
 .product-v2 .product-prices_strike s { color: #9aa6b8; }
 .product-v2 .product-prices_price {
-  margin: 2px 0 6px; font-size: 32px; line-height: 1.05; font-weight: 800; color: #1a6fe0;
+  margin: 2px 0 6px;
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #1a6fe0;
   letter-spacing: -.01em;
+  white-space: normal;
+  word-break: break-word;
 }
 .product-v2 .product-prices_pix {
   display: inline-flex; align-items: center; gap: 6px; margin: 0 0 6px;
@@ -291,6 +360,14 @@
 .product-v2 .product-description_ico svg { font-size: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .product-v2 .product-description_body { margin-top: 12px; }
 .product-v2 .product-description_body .accordion-body { color: #475569; font-size: 14px; line-height: 1.6; }
+.product-v2 .product-description_richtext a {
+  color: #1c2b4a;
+  text-decoration: underline;
+  text-decoration-color: #94a3b8;
+}
+.product-v2 .product-description_richtext a:hover {
+  color: #1a6fe0;
+}
 
 /* HTML das abas Descrição / Especificações (TinyMCE no WDNA) */
 .product-v2 .product-description_richtext p { margin: 0 0 10px; }
@@ -377,6 +454,76 @@
   justify-content: flex-start;
 }
 .product-v2 .product-spec-icons-pdp .showcase-spec-bar__tag--procel { background: #ecfdf3; color: #15803d; border-color: #86efac; }
+
+/* Destaques — vence mega-menu / theme-custom (pills vazias ou sem contraste) */
+.product-v2 .product-description--highlights .showcase-spec-bar {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+.product-v2 .product-description--highlights .showcase-spec-bar__tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  min-height: 44px !important;
+  padding: 11px 14px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  text-indent: 0 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #1c2b4a !important;
+  background: #f8fbff !important;
+  border: 1px solid #e5eaf1 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  flex: 1 1 calc(50% - 5px) !important;
+  min-width: 120px !important;
+  max-width: 100% !important;
+}
+.product-v2 .product-description--highlights .showcase-spec-bar__tag--procel {
+  background: #22c55e !important;
+  color: #ffffff !important;
+  border-color: #16a34a !important;
+}
+.product-v2 .product-description--highlights .showcase-spec-bar__tag--cycle-qf {
+  background: #fff1e8 !important;
+  color: #c2410c !important;
+  border-color: #fb923c !important;
+}
+.product-v2 .product-description--highlights .showcase-spec-bar__tag--cycle-frio {
+  background: #e0f2fe !important;
+  color: #0369a1 !important;
+  border-color: #38bdf8 !important;
+}
+.product-v2 .product-description--highlights .showcase-spec-bar__tag--inverter {
+  background: #ede9fe !important;
+  color: #6d28d9 !important;
+  border-color: #a78bfa !important;
+}
+.product-v2 .product-description--highlights .showcase-spec-bar__tag--cobre {
+  background: #fef3e2 !important;
+  color: #b45309 !important;
+  border-color: #d4a574 !important;
+}
+.product-v2 .product-description--highlights .showcase-spec-bar__tag--voltage {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border-color: #60a5fa !important;
+}
+.product-v2 .product-description--highlights .showcase-spec-bar__tag--wifi {
+  background: #ccfbf1 !important;
+  color: #0f766e !important;
+  border-color: #2dd4bf !important;
+}
+
 .product-v2 .product-description_highlights-body ul:not(.showcase-spec-bar) { list-style: none; margin: 0; padding: 0; }
 .product-v2 .product-specs-fallback { margin: 0; color: #64748b; font-size: 14px; }
 
@@ -456,8 +603,18 @@
 }
 
 @media (max-width: 575px) {
-  .product-v2 .product-prices { flex-direction: row; align-items: center; }
-  .product-v2 .product-prices_price { font-size: 27px; }
+  .product-v2 .product-header-right.col-5,
+  .product-v2 .product-header-right {
+    min-width: 0 !important;
+  }
+  .product-v2 .product-prices {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .product-v2 .product-box_qtd {
+    align-self: flex-end;
+  }
+  .product-v2 .product-prices_price { font-size: 26px; }
   .product-v2 .product-gallery-slider { gap: 7px; }
   .product-v2 .product-gallery_item { max-width: 18%; }
   .product-v2 .product-trust { flex-direction: column; gap: 12px; }
