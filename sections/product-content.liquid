@@ -395,7 +395,9 @@
                                     {% assign _listPrice = product.price.price %}
                                     {% assign _displayPrice = _pixPrice %}
                                     {% assign _hasPixDiscount = false %}
-                                    {% if _listPrice > _pixPrice %}
+                                    {% if product.primaryPrice and _listPrice > _pixPrice %}
+                                        {% assign _hasPixDiscount = true %}
+                                    {% elsif _listPrice > _pixPrice %}
                                         {% assign _hasPixDiscount = true %}
                                     {% endif %}
                                     {% assign _pixBadgePct = 0 %}
@@ -414,21 +416,18 @@
                                             {% assign _pixBadgePct = product.price.promotionMargin | round %}
                                         {% endif %}
                                     {% endif %}
-                                    {% if _hasPixDiscount and _pixBadgePct == 0 %}
-                                        {% assign _pixBadgePct = 5 %}
+                                    {% if _hasPixDiscount and _pixBadgePct == 0 and _listPrice > 0 %}
+                                        {% assign _pixDiff = _listPrice | minus: _pixPrice %}
+                                        {% assign _pixBadgePct = _pixDiff | times: 100 | divided_by: _listPrice | round %}
                                     {% endif %}
-                                    {% if product.primaryPrice and product.secondaryPrice and _pixBadgePct == 0 %}
-                                        {% assign _pixBadgePct = 5 %}
-                                    {% endif %}
-                                    {% assign _showPixBadge = false %}
-                                    {% if _pixBadgePct > 0 %}
-                                        {% assign _showPixBadge = true %}
-                                    {% endif %}
-                                    {% if product.primaryPrice and product.secondaryPrice %}
-                                        {% if _pixBadgePct == 0 %}
+                                    {% if _pixBadgePct == 0 %}
+                                        {% if _hasPixDiscount or product.primaryPrice or product.secondaryPrice or productPriceSecond %}
                                             {% assign _pixBadgePct = 5 %}
                                         {% endif %}
-                                        {% assign _showPixBadge = true %}
+                                    {% endif %}
+                                    {% assign _showPixBadge = true %}
+                                    {% if _pixBadgePct == 0 %}
+                                        {% assign _pixBadgePct = 5 %}
                                     {% endif %}
                                     {% assign _showStrike = false %}
                                     {% if _listPrice > _displayPrice %}

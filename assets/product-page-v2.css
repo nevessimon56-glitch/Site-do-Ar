@@ -534,6 +534,9 @@
   min-width: 0 !important;
   max-width: 100% !important;
   padding-right: 4px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
 }
 #product-pdp-v2 .product-header-box .product-prices .product-box_qtd {
   flex: 0 0 96px;
