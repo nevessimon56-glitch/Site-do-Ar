@@ -563,11 +563,11 @@
         </nav>
         <script>
         (function () {
-          var VISIBLE = 5;
+          var VISIBLE = 4;
 
           function getGap(list) {
             var styles = window.getComputedStyle(list);
-            return parseFloat(styles.columnGap || styles.gap || '8') || 8;
+            return parseFloat(styles.columnGap || styles.gap || '10') || 10;
           }
 
           function layoutThumbs(wrap) {
@@ -580,7 +580,7 @@
             var viewW = viewport.clientWidth;
             if (viewW < 1) return;
             var thumbW = (viewW - gap * (VISIBLE - 1)) / VISIBLE;
-            thumbW = Math.max(48, thumbW);
+            thumbW = Math.max(56, thumbW);
             viewport.style.setProperty('--pdp-thumb-w', thumbW + 'px');
             items.forEach(function (item) {
               item.style.flex = '0 0 ' + thumbW + 'px';
