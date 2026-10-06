@@ -32,6 +32,23 @@
   width: 20px;
   height: 20px;
 }
+.product-v2 .product-highlight_ico img.pdp-icon-img,
+.product-v2 .product-spec_ico img.pdp-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+.product-v2 .product-spec_ico img.pdp-icon-img {
+  width: 22px;
+  height: 22px;
+}
+.product-v2 .product-highlight_ico img.pdp-icon-img--r32 {
+  width: 30px;
+  height: auto;
+  max-height: 18px;
+}
 
 /* ---------- Breadcrumb ---------- */
 .product-v2 .product-breadcrumb { margin: 4px 0 14px; }
