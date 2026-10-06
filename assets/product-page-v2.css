@@ -296,11 +296,15 @@
 #product-pdp-v2 .product-pdp-thumbs_carousel--static .product-pdp-thumbs_nav {
   display: none !important;
 }
-#product-pdp-v2 .product-pdp-thumbs_carousel--start .product-pdp-thumbs_nav--prev {
-  display: none !important;
+#product-pdp-v2 .product-pdp-thumbs_carousel:not(.product-pdp-thumbs_carousel--static) .product-pdp-thumbs_nav {
+  flex: 0 0 32px;
+  flex-shrink: 0;
 }
+#product-pdp-v2 .product-pdp-thumbs_carousel--start .product-pdp-thumbs_nav--prev,
 #product-pdp-v2 .product-pdp-thumbs_carousel--end .product-pdp-thumbs_nav--next {
-  display: none !important;
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
 }
 #product-pdp-v2 .product-gallery-panel .product-gallery {
   float: none !important;
@@ -336,16 +340,10 @@
 }
 @media (min-width: 992px) {
   #product-pdp-v2 .product-gallery-panel .product-gallery_link {
-    max-width: none;
-    max-height: none;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  #product-pdp-v2 .product-pdp-thumbs_carousel:not(.product-pdp-thumbs_carousel--static) {
-    justify-content: space-between;
-  }
-  #product-pdp-v2 .product-pdp-thumbs_carousel--static {
-    justify-content: center;
+    max-width: 84px;
+    max-height: 84px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 @media (max-width: 991px) {
@@ -2273,10 +2271,20 @@
 @media (min-width: 992px) {
   #product-pdp-v2 .product-gallery_link {
     width: auto !important;
-    max-width: none !important;
-    max-height: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    max-width: 84px !important;
+    max-height: 84px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  #product-pdp-v2 .product-pdp-thumbs_carousel {
+    justify-content: center !important;
+    flex-wrap: nowrap !important;
+  }
+  #product-pdp-v2 .product-pdp-thumbs_carousel--start .product-pdp-thumbs_nav--prev,
+  #product-pdp-v2 .product-pdp-thumbs_carousel--end .product-pdp-thumbs_nav--next {
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
   }
 }
 #product-pdp-v2 .product-gallery_link.image-main {

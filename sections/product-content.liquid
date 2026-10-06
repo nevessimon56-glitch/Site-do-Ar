@@ -570,6 +570,13 @@
             return MOBILE_MQ.matches;
           }
 
+          function thumbLimits() {
+            if (isMobileThumbs()) {
+              return { max: 72, min: 52 };
+            }
+            return { max: 84, min: 56 };
+          }
+
           function getGap(list) {
             var styles = window.getComputedStyle(list);
             return parseFloat(styles.columnGap || styles.gap || '8') || 8;
@@ -596,23 +603,29 @@
             if (!navW) {
               navW = isMobileThumbs() ? 28 : 32;
             }
-            var navSlots = items.length > VISIBLE ? 2 : 0;
+            var needsNav = items.length > VISIBLE;
+            var navSlots = needsNav ? 2 : 0;
+            var limits = thumbLimits();
             var viewW = carouselW - navSlots * (navW + carGap);
             if (viewW < 1) {
               viewW = carouselW;
             }
-            /* 4 slots visíveis; mobile mantém teto 72px, desktop preenche a faixa */
+            /* 4 visíveis — faixa interna (não estica o card); teto 72 mobile / 84 desktop */
             var thumbW = (viewW - gap * (VISIBLE - 1)) / VISIBLE;
             thumbW = Math.round(thumbW);
-            var thumbMax = isMobileThumbs() ? 72 : null;
-            var thumbMin = isMobileThumbs() ? 52 : 48;
-            if (thumbMax && thumbW > thumbMax) {
-              thumbW = thumbMax;
+            if (thumbW > limits.max) {
+              thumbW = limits.max;
             }
-            if (thumbW < thumbMin) {
-              thumbW = thumbMin;
+            if (thumbW < limits.min) {
+              thumbW = limits.min;
             }
             var visibleStripW = VISIBLE * thumbW + gap * (VISIBLE - 1);
+            var rowW = visibleStripW + navSlots * (navW + carGap);
+            while (navSlots && rowW > carouselW + 0.5 && thumbW > limits.min) {
+              thumbW -= 1;
+              visibleStripW = VISIBLE * thumbW + gap * (VISIBLE - 1);
+              rowW = visibleStripW + navSlots * (navW + carGap);
+            }
             viewport.setAttribute('data-pdp-visible-count', String(VISIBLE));
             viewport.style.setProperty('flex', '0 0 ' + visibleStripW + 'px', 'important');
             viewport.style.setProperty('width', visibleStripW + 'px', 'important');
