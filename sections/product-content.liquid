@@ -579,17 +579,27 @@
             var gap = getGap(list);
             var viewW = viewport.clientWidth;
             if (viewW < 1) return;
+            /* 4 thumbs preenchem a faixa; teto 72px só na listra interna (card externo igual) */
             var thumbW = (viewW - gap * (VISIBLE - 1)) / VISIBLE;
-            /* Só o quadrado interno — não estica o card da galeria */
-            thumbW = Math.max(48, thumbW);
-            if (thumbW > 58) {
-              thumbW = 58;
+            thumbW = Math.round(thumbW);
+            if (thumbW > 72) {
+              thumbW = 72;
+            }
+            if (thumbW < 52) {
+              thumbW = 52;
             }
             viewport.style.setProperty('--pdp-thumb-w', thumbW + 'px');
             items.forEach(function (item) {
               item.style.flex = '0 0 ' + thumbW + 'px';
               item.style.width = thumbW + 'px';
               item.style.maxWidth = thumbW + 'px';
+              var link = item.querySelector('.product-gallery_link');
+              if (link) {
+                link.style.width = thumbW + 'px';
+                link.style.height = thumbW + 'px';
+                link.style.maxWidth = thumbW + 'px';
+                link.style.maxHeight = thumbW + 'px';
+              }
             });
             var listW = items.length * thumbW + Math.max(0, items.length - 1) * gap;
             list.style.width = listW + 'px';

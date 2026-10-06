@@ -312,8 +312,9 @@
   width: 100%;
   height: auto;
   aspect-ratio: 1;
-  max-height: 58px;
-  max-width: 58px;
+  max-height: 72px;
+  max-width: 72px;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   padding: 4px;
@@ -2237,8 +2238,8 @@
 #product-pdp-v2 .product-gallery_link {
   display: flex !important;
   width: 100% !important;
-  max-width: 58px !important;
-  max-height: 58px !important;
+  max-width: 72px !important;
+  max-height: 72px !important;
   aspect-ratio: 1;
   height: auto !important;
   padding: 5px !important;
@@ -2248,6 +2249,7 @@
   overflow: hidden !important;
   margin-left: auto !important;
   margin-right: auto !important;
+  box-sizing: border-box !important;
 }
 #product-pdp-v2 .product-gallery_link.image-main {
   border: 2px solid #176bd8 !important;
