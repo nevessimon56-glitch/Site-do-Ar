@@ -244,23 +244,8 @@
   {% endif %}
   {% if hasPdpHighlights %}
   <ul class="product-highlights" data-pdp-highlights="v1" aria-label="Destaques do produto">
-    {% if iconInverter %}
-    <li class="product-highlight product-highlight--inverter"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'inverter' %}</span><span class="product-highlight_lbl">Tecnologia Inverter</span></li>
-    {% endif %}
-    {% if iconQuenteFrio %}
-    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'heat-cool' %}</span><span class="product-highlight_lbl">Quente e Frio</span></li>
-    {% endif %}
-    {% if iconFrio and iconQuenteFrio == false %}
-    <li class="product-highlight product-highlight--cool"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'snowflake-cool' %}</span><span class="product-highlight_lbl">Só Frio</span></li>
-    {% endif %}
-    {% if pdpR32 %}
-    <li class="product-highlight product-highlight--eco"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'leaf-r32' %}</span><span class="product-highlight_lbl">R-32 ecológico</span></li>
-    {% endif %}
-    {% if iconCobre %}
-    <li class="product-highlight product-highlight--copper"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'coil-copper' %}</span><span class="product-highlight_lbl">Serpentina de Cobre</span></li>
-    {% endif %}
-    {% if iconVoltage != '' %}
-    <li class="product-highlight product-highlight--volt"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
+    {% if pdpBrisaSuave %}
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wind-brisa' %}</span><span class="product-highlight_lbl">Brisa Suave</span></li>
     {% endif %}
     {% if iconWifi %}
     <li class="product-highlight product-highlight--wifi"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wifi' %}</span><span class="product-highlight_lbl">Wi-Fi integrado</span></li>
@@ -268,17 +253,32 @@
     {% if iconProcelA %}
     <li class="product-highlight product-highlight--a"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'procel-a' %}</span><span class="product-highlight_lbl">Classificação A</span></li>
     {% endif %}
+    {% if iconInverter %}
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'inverter' %}</span><span class="product-highlight_lbl">Tecnologia Inverter</span></li>
+    {% endif %}
+    {% if pdpR32 %}
+    <li class="product-highlight product-highlight--eco"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'leaf-r32' %}</span><span class="product-highlight_lbl">R-32 ecológico</span></li>
+    {% endif %}
     {% if pdpArea != '' %}
     <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'area-home' %}</span><span class="product-highlight_lbl">{{ pdpArea }}</span></li>
     {% endif %}
-    {% if pdpBrisaSuave %}
-    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wind-brisa' %}</span><span class="product-highlight_lbl">Brisa Suave</span></li>
+    {% if iconQuenteFrio %}
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'heat-cool' %}</span><span class="product-highlight_lbl">Quente e Frio</span></li>
+    {% endif %}
+    {% if iconFrio and iconQuenteFrio == false %}
+    <li class="product-highlight product-highlight--cool"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'snowflake-cool' %}</span><span class="product-highlight_lbl">Só Frio</span></li>
+    {% endif %}
+    {% if iconCobre %}
+    <li class="product-highlight product-highlight--copper"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'coil-copper' %}</span><span class="product-highlight_lbl">Serpentina de Cobre</span></li>
+    {% endif %}
+    {% if iconVoltage != '' %}
+    <li class="product-highlight product-highlight--volt"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
     {% endif %}
   </ul>
   {% else %}
   <ul class="product-highlights product-highlights--fallback" data-pdp-highlights="fallback" aria-label="Destaques do produto">
     {% if iconInverter %}
-    <li class="product-highlight product-highlight--inverter"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'inverter' %}</span><span class="product-highlight_lbl">Tecnologia Inverter</span></li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'inverter' %}</span><span class="product-highlight_lbl">Tecnologia Inverter</span></li>
     {% endif %}
     {% if iconVoltage != '' %}
     <li class="product-highlight product-highlight--volt"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
