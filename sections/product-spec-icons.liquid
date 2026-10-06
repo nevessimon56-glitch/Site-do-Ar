@@ -106,7 +106,25 @@
 {% assign iconInverter = false %}
 {% assign iconVoltage = '' %}
 
-{% if specBlob contains 'procel' or specBlob contains 'classificação a' or specBlob contains 'classificacao a' or specBlob contains 'classificação energética a' or specBlob contains 'classificacao energetica a' or specBlob contains 'selo a' %}
+{% if product.attributes and product.attributes.size > 0 %}
+  {% for attr in product.attributes %}
+    {% assign attrNameProcel = attr.name | default: attr.nome | default: '' | downcase %}
+    {% assign attrValProcel = '' %}
+    {% if attr.values and attr.values.size > 0 %}
+      {% assign attrValProcel = attr.values[0].name | default: attr.values[0].value | default: '' | downcase %}
+    {% elsif attr.valores and attr.valores.size > 0 %}
+      {% assign attrValProcel = attr.valores[0].nome | default: '' | downcase %}
+    {% elsif attr.value %}
+      {% assign attrValProcel = attr.value | downcase %}
+    {% endif %}
+    {% if attrNameProcel contains 'procel' or attrNameProcel contains 'classificação' or attrNameProcel contains 'classificacao' or attrNameProcel contains 'eficiência' or attrNameProcel contains 'eficiencia' or attrNameProcel contains 'selo' %}
+      {% if attrValProcel contains 'classe a' or attrValProcel == 'a' or attrValProcel contains ' procel a' or attrValProcel contains 'selo a' %}
+        {% assign iconProcelA = true %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% if specBlob contains 'procel' or specBlob contains 'classificação a' or specBlob contains 'classificacao a' or specBlob contains 'classificação energética a' or specBlob contains 'classificacao energetica a' or specBlob contains 'selo a' or specBlob contains 'classe a' or specBlob contains 'eficiência energética: a' or specBlob contains 'eficiencia energetica: a' or specBlob contains 'energética: a' or specBlob contains 'energetica: a' %}
   {% assign iconProcelA = true %}
 {% endif %}
 
