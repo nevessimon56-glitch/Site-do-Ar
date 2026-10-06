@@ -45,7 +45,8 @@
             {% endif %}
         {% endfor %}
         <!-- End - Showcase -->
-        <div class="product-v2" id="product-pdp-v2">
+        {% capture pdpCycleClass %}{% render 'sections/product-pdp-cycle-class', product: product %}{% endcapture %}
+        <div class="product-v2 {{ pdpCycleClass | strip }}" id="product-pdp-v2">
         <section class="product-breadcrumb">
             <div class="product-breadcrumb-content content">
                 <div class="product-breadcrumb-container container">

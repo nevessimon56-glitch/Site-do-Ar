@@ -1,0 +1,65 @@
+{% comment %}
+  Saída: product-v2--cycle-qf | product-v2--cycle-frio (classes no #product-pdp-v2)
+  Mesma lógica de ciclo dos ícones / cards da vitrine.
+{% endcomment %}
+{% assign _pdpCycle = 'frio' %}
+{% assign _cycBlob = product.title | downcase %}
+{% if product.url and product.url != '' %}
+  {% assign _cycBlob = _cycBlob | append: ' | ' | append: product.url | downcase %}
+{% endif %}
+{% capture _cycHtml %}
+{% if product.specification and product.specification != '' %}{{ product.specification }}{% endif %}
+{% if product.specifications and product.specifications != '' %}{{ product.specifications }}{% endif %}
+{% if product.specificationText and product.specificationText != '' %}{{ product.specificationText }}{% endif %}
+{% if product.especificacao and product.especificacao != '' %}{{ product.especificacao }}{% endif %}
+{% if product.especificacoes and product.especificacoes != '' %}{{ product.especificacoes }}{% endif %}
+{% for _desc in product.descriptions %}
+  {% assign _dname = _desc.name | downcase | strip %}
+  {% if _dname contains 'especifica' and _desc.text != '' %}{{ _desc.text }}{% endif %}
+{% endfor %}
+{% endcapture %}
+{% assign _cycHtml = _cycHtml | strip %}
+{% if _cycHtml != '' %}
+  {% assign _cycPlain = _cycHtml
+    | replace: '<br>', ' | '
+    | replace: '<br/>', ' | '
+    | replace: '<br />', ' | '
+    | replace: '</tr>', ' | '
+    | replace: '</td>', ' '
+    | replace: '<td>', ' '
+    | replace: '</th>', ' '
+    | replace: '<th>', ' '
+    | replace: '<tr>', ' '
+    | downcase
+  %}
+  {% assign _cycBlob = _cycBlob | append: ' | ' | append: _cycPlain %}
+{% endif %}
+{% if product.attributes and product.attributes.size > 0 %}
+  {% for attr in product.attributes %}
+    {% assign _an = attr.name | default: attr.nome | default: '' | downcase %}
+    {% assign _av = '' %}
+    {% if attr.values and attr.values.size > 0 %}
+      {% assign _av = attr.values[0].name | default: attr.values[0].value | default: '' | downcase %}
+    {% elsif attr.valores and attr.valores.size > 0 %}
+      {% assign _av = attr.valores[0].nome | default: '' | downcase %}
+    {% elsif attr.value %}
+      {% assign _av = attr.value | downcase %}
+    {% endif %}
+    {% assign _cycBlob = _cycBlob | append: ' | ' | append: _an | append: ':' | append: _av %}
+    {% if _an contains 'ciclo' %}
+      {% if _av contains 'quente' %}
+        {% assign _pdpCycle = 'qf' %}
+      {% elsif _pdpCycle != 'qf' and _av contains 'frio' %}
+        {% assign _pdpCycle = 'frio' %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% if _cycBlob contains 'ciclo: quente/frio' or _cycBlob contains 'ciclo: quente e frio' or _cycBlob contains 'ciclo quente/frio' or _cycBlob contains 'ciclo quente e frio' or _cycBlob contains 'quente/frio' or _cycBlob contains 'quente-frio' or _cycBlob contains 'quente e frio' or _cycBlob contains 'ciclo reverso' or _cycBlob contains ' q/f' or _cycBlob contains ' q-f' or _cycBlob contains '-quente-frio' or _cycBlob contains 'quente_frio' %}
+  {% assign _pdpCycle = 'qf' %}
+{% endif %}
+{% if _pdpCycle == 'qf' %}
+product-v2--cycle-qf
+{% else %}
+product-v2--cycle-frio
+{% endif %}
