@@ -577,9 +577,27 @@
             var items = list.querySelectorAll('.product-gallery_item');
             if (!items.length) return;
             var gap = getGap(list);
-            var viewW = viewport.clientWidth;
-            if (viewW < 1) return;
-            /* 4 visíveis na faixa; teto 72px (só listra interna) */
+            viewport.style.flex = '';
+            viewport.style.width = '';
+            viewport.style.maxWidth = '';
+            var carouselW = wrap.getBoundingClientRect().width;
+            if (carouselW < 1) {
+              carouselW = viewport.clientWidth;
+            }
+            var carStyles = window.getComputedStyle(wrap);
+            var carGap = parseFloat(carStyles.columnGap || carStyles.gap || '8') || 8;
+            var navW = 32;
+            var navCount = 0;
+            wrap.querySelectorAll('.product-pdp-thumbs_nav').forEach(function (btn) {
+              if (btn.offsetWidth > 0 && window.getComputedStyle(btn).display !== 'none') {
+                navCount++;
+              }
+            });
+            var viewW = carouselW - navCount * (navW + carGap);
+            if (viewW < 1) {
+              viewW = carouselW;
+            }
+            /* 4 visíveis; teto 72px — viewport usa largura total do carrossel */
             var thumbW = (viewW - gap * (VISIBLE - 1)) / VISIBLE;
             thumbW = Math.round(thumbW);
             if (thumbW > 72) {
@@ -588,10 +606,6 @@
             if (thumbW < 52) {
               thumbW = 52;
             }
-            var stripW = VISIBLE * thumbW + gap * (VISIBLE - 1);
-            viewport.style.flex = '1 1 ' + stripW + 'px';
-            viewport.style.width = stripW + 'px';
-            viewport.style.maxWidth = stripW + 'px';
             viewport.style.setProperty('--pdp-thumb-w', thumbW + 'px');
             items.forEach(function (item) {
               item.style.flex = '0 0 ' + thumbW + 'px';
