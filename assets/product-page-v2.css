@@ -208,24 +208,20 @@
 #product-pdp-v2 .product-gallery-panel .product-gallery_pdp,
 #product-pdp-v2 .product-gallery-panel .product-gallery_desktop.product-gallery_pdp {
   margin: 0;
-  padding: 8px 0 6px;
+  padding: 8px 0 0;
   min-height: 0 !important;
   border-top: 1px solid #e8edf4;
   background: transparent !important;
 }
-#product-pdp-v2 .product-pdp-thumbs {
-  width: 100%;
-}
 #product-pdp-v2 .product-pdp-thumbs_carousel {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 4px;
   width: 100%;
   min-width: 0;
 }
 #product-pdp-v2 .product-pdp-thumbs_viewport {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
@@ -241,7 +237,7 @@
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
-  gap: 8px;
+  gap: 4px;
   width: max-content !important;
   max-width: none !important;
   margin: 0;
@@ -251,9 +247,9 @@
 #product-pdp-v2 .product-gallery-panel .product-gallery_item {
   margin: 0;
   padding: 0;
-  flex: 0 0 auto;
-  width: auto;
-  min-width: 0;
+  flex: 0 0 72px;
+  width: 72px;
+  min-width: 48px;
   max-width: none;
   flex-shrink: 0 !important;
   scroll-snap-align: start;
@@ -296,15 +292,11 @@
 #product-pdp-v2 .product-pdp-thumbs_carousel--static .product-pdp-thumbs_nav {
   display: none !important;
 }
-#product-pdp-v2 .product-pdp-thumbs_carousel:not(.product-pdp-thumbs_carousel--static) .product-pdp-thumbs_nav {
-  flex: 0 0 32px;
-  flex-shrink: 0;
+#product-pdp-v2 .product-pdp-thumbs_carousel--start .product-pdp-thumbs_nav--prev {
+  display: none !important;
 }
-#product-pdp-v2 .product-pdp-thumbs_carousel--start .product-pdp-thumbs_nav--prev,
 #product-pdp-v2 .product-pdp-thumbs_carousel--end .product-pdp-thumbs_nav--next {
-  visibility: hidden;
-  pointer-events: none;
-  opacity: 0;
+  display: none !important;
 }
 #product-pdp-v2 .product-gallery-panel .product-gallery {
   float: none !important;
@@ -320,10 +312,7 @@
   width: 100%;
   height: auto;
   aspect-ratio: 1;
-  max-height: 72px;
-  max-width: 72px;
-  margin-left: auto;
-  margin-right: auto;
+  max-height: 58px;
   padding: 4px;
   background: #ffffff;
   border: 2px solid #e5eaf1;
@@ -337,14 +326,6 @@
 #product-pdp-v2 .product-gallery-panel .product-gallery_link.image-main {
   border-color: #1a6fe0 !important;
   box-shadow: 0 0 0 3px rgba(26, 111, 224, 0.14) !important;
-}
-@media (min-width: 992px) {
-  #product-pdp-v2 .product-gallery-panel .product-gallery_link {
-    max-width: 84px;
-    max-height: 84px;
-    margin-left: auto;
-    margin-right: auto;
-  }
 }
 @media (max-width: 991px) {
   #product-pdp-v2 .product-gallery-panel {
@@ -2078,7 +2059,7 @@
   #product-pdp-v2 .product-header--pdp-v2 .columns {
     display: flex !important;
     flex-wrap: nowrap !important;
-    align-items: flex-start !important;
+    align-items: stretch !important;
     gap: 22px !important;
     width: 100% !important;
     margin: 0 !important;
@@ -2216,13 +2197,11 @@
 }
 #product-pdp-v2 .product-pdp-thumbs_carousel {
   align-items: center !important;
-  justify-content: center !important;
   gap: 8px !important;
 }
 #product-pdp-v2 .product-pdp-thumbs_viewport {
-  flex: 0 0 auto !important;
+  flex: 1 1 auto !important;
   width: auto !important;
-  max-width: none !important;
   height: auto !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
@@ -2244,10 +2223,10 @@
 }
 #product-pdp-v2 .product-gallery_item {
   display: block !important;
-  flex: 0 0 auto !important;
-  width: auto !important;
-  min-width: 0 !important;
-  max-width: none !important;
+  flex: 0 0 88px !important;
+  width: 88px !important;
+  min-width: 88px !important;
+  max-width: 88px !important;
   margin: 0 !important;
   padding: 0 !important;
   list-style: none !important;
@@ -2255,8 +2234,6 @@
 #product-pdp-v2 .product-gallery_link {
   display: flex !important;
   width: 100% !important;
-  max-width: 72px !important;
-  max-height: 72px !important;
   aspect-ratio: 1;
   height: auto !important;
   padding: 5px !important;
@@ -2264,28 +2241,6 @@
   border: 1px solid #dce6f1 !important;
   border-radius: 10px !important;
   overflow: hidden !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  box-sizing: border-box !important;
-}
-@media (min-width: 992px) {
-  #product-pdp-v2 .product-gallery_link {
-    width: auto !important;
-    max-width: 84px !important;
-    max-height: 84px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-  #product-pdp-v2 .product-pdp-thumbs_carousel {
-    justify-content: center !important;
-    flex-wrap: nowrap !important;
-  }
-  #product-pdp-v2 .product-pdp-thumbs_carousel--start .product-pdp-thumbs_nav--prev,
-  #product-pdp-v2 .product-pdp-thumbs_carousel--end .product-pdp-thumbs_nav--next {
-    visibility: hidden !important;
-    pointer-events: none !important;
-    opacity: 0 !important;
-  }
 }
 #product-pdp-v2 .product-gallery_link.image-main {
   border: 2px solid #176bd8 !important;
@@ -2332,12 +2287,10 @@
 @media (min-width: 992px) {
   #product-pdp-v2 .product-header-box {
     display: flex !important;
-    flex: 0 1 auto !important;
+    flex: 1 1 auto !important;
     flex-direction: column !important;
-    height: auto !important;
-    min-height: 0 !important;
-    align-self: flex-start !important;
-    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
     gap: 14px !important;
     padding: 22px !important;
     background: #ffffff !important;
@@ -2512,7 +2465,7 @@
     flex-wrap: nowrap !important;
     gap: 0 !important;
     width: 100% !important;
-    margin-top: 0 !important;
+    margin-top: auto !important;
     padding: 14px 0 0 !important;
     border-top: 1px solid #e3ebf4 !important;
   }
@@ -2656,10 +2609,10 @@
     padding-top: 4px !important;
   }
   #product-pdp-v2 .product-gallery_item {
-    flex: 0 0 auto !important;
-    width: auto !important;
-    min-width: 0 !important;
-    max-width: none !important;
+    flex: 0 0 64px !important;
+    width: 64px !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
   }
   #product-pdp-v2 .product-header-box {
     height: auto !important;

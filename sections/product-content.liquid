@@ -564,18 +564,6 @@
         <script>
         (function () {
           var VISIBLE = 4;
-          var MOBILE_MQ = window.matchMedia('(max-width: 991px)');
-
-          function isMobileThumbs() {
-            return MOBILE_MQ.matches;
-          }
-
-          function thumbLimits() {
-            if (isMobileThumbs()) {
-              return { max: 72, min: 52 };
-            }
-            return { max: 84, min: 56 };
-          }
 
           function getGap(list) {
             var styles = window.getComputedStyle(list);
@@ -589,63 +577,15 @@
             var items = list.querySelectorAll('.product-gallery_item');
             if (!items.length) return;
             var gap = getGap(list);
-            viewport.style.flex = '';
-            viewport.style.width = '';
-            viewport.style.maxWidth = '';
-            var carouselW = wrap.getBoundingClientRect().width;
-            if (carouselW < 1) {
-              carouselW = viewport.clientWidth;
-            }
-            var carStyles = window.getComputedStyle(wrap);
-            var carGap = parseFloat(carStyles.columnGap || carStyles.gap || '8') || 8;
-            var navBtn = wrap.querySelector('.product-pdp-thumbs_nav');
-            var navW = navBtn ? navBtn.getBoundingClientRect().width : 32;
-            if (!navW) {
-              navW = isMobileThumbs() ? 28 : 32;
-            }
-            var needsNav = items.length > VISIBLE;
-            var navSlots = needsNav ? 2 : 0;
-            var limits = thumbLimits();
-            var viewW = carouselW - navSlots * (navW + carGap);
-            if (viewW < 1) {
-              viewW = carouselW;
-            }
-            /* 4 visíveis — faixa interna (não estica o card); teto 72 mobile / 84 desktop */
+            var viewW = viewport.clientWidth;
+            if (viewW < 1) return;
             var thumbW = (viewW - gap * (VISIBLE - 1)) / VISIBLE;
-            thumbW = Math.round(thumbW);
-            if (thumbW > limits.max) {
-              thumbW = limits.max;
-            }
-            if (thumbW < limits.min) {
-              thumbW = limits.min;
-            }
-            var visibleStripW = VISIBLE * thumbW + gap * (VISIBLE - 1);
-            var rowW = visibleStripW + navSlots * (navW + carGap);
-            while (navSlots && rowW > carouselW + 0.5 && thumbW > limits.min) {
-              thumbW -= 1;
-              visibleStripW = VISIBLE * thumbW + gap * (VISIBLE - 1);
-              rowW = visibleStripW + navSlots * (navW + carGap);
-            }
-            viewport.setAttribute('data-pdp-visible-count', String(VISIBLE));
-            viewport.style.setProperty('flex', '0 0 ' + visibleStripW + 'px', 'important');
-            viewport.style.setProperty('width', visibleStripW + 'px', 'important');
-            viewport.style.setProperty('max-width', visibleStripW + 'px', 'important');
-            viewport.style.setProperty('min-width', visibleStripW + 'px', 'important');
-            viewport.style.overflowX = items.length > VISIBLE ? 'auto' : 'hidden';
+            thumbW = Math.max(48, thumbW);
             viewport.style.setProperty('--pdp-thumb-w', thumbW + 'px');
             items.forEach(function (item) {
               item.style.flex = '0 0 ' + thumbW + 'px';
               item.style.width = thumbW + 'px';
               item.style.maxWidth = thumbW + 'px';
-              var link = item.querySelector('.product-gallery_link');
-              if (link) {
-                link.style.setProperty('width', thumbW + 'px', 'important');
-                link.style.setProperty('height', thumbW + 'px', 'important');
-                link.style.setProperty('max-width', thumbW + 'px', 'important');
-                link.style.setProperty('max-height', thumbW + 'px', 'important');
-                link.style.marginLeft = '0';
-                link.style.marginRight = '0';
-              }
             });
             var listW = items.length * thumbW + Math.max(0, items.length - 1) * gap;
             list.style.width = listW + 'px';
