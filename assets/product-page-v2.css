@@ -329,11 +329,13 @@
 }
 @media (max-width: 991px) {
   #product-pdp-v2 .product-gallery-panel {
-    padding: 12px;
+    padding: 6px 8px 8px;
     border-radius: 14px;
   }
   #product-pdp-v2 .product-gallery-panel .product-zoom {
-    aspect-ratio: 1.32 / 1;
+    aspect-ratio: auto;
+    max-height: none;
+    height: auto;
   }
   #product-pdp-v2 .product-gallery-panel .product-pdp-thumbs_list {
     gap: 6px;
@@ -356,8 +358,8 @@
 }
 @media (max-width: 991px) {
   .product-v2 .product-zoom {
-    aspect-ratio: 1.35 / 1;
-    padding: 14px;
+    aspect-ratio: auto;
+    padding: 0;
   }
 }
 .product-v2 .product-zoom_link { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
@@ -2546,7 +2548,7 @@
   #product-pdp-v2 .product-header--pdp-v2 .columns {
     display: flex !important;
     flex-direction: column !important;
-    gap: 12px !important;
+    gap: 8px !important;
   }
   #product-pdp-v2 .product-header-left,
   #product-pdp-v2 .product-header-right {
@@ -2558,7 +2560,7 @@
   }
   #product-pdp-v2 .product-title_mobile {
     display: block !important;
-    margin: 0 0 10px !important;
+    margin: 0 0 6px !important;
     color: #123c6b !important;
     font-size: 20px !important;
     line-height: 1.2 !important;
@@ -2567,19 +2569,44 @@
     display: none !important;
   }
   #product-pdp-v2 .product-gallery-panel {
-    padding: 10px !important;
+    padding: 6px 8px 8px !important;
     border-radius: 14px !important;
   }
+  /* Foto principal: altura segue a imagem (evita faixa branca 430px fixa) */
+  #product-pdp-v2 .product-gallery-panel .product-zoom,
   #product-pdp-v2 .product-zoom {
-    height: 430px !important;
-    min-height: 280px !important;
-    max-height: 430px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    aspect-ratio: auto !important;
+    padding: 0 !important;
+  }
+  #product-pdp-v2 .product-zoom_link {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  #product-pdp-v2 .product-zoom_link picture {
+    height: auto !important;
+    width: 100% !important;
+  }
+  #product-pdp-v2 .product-zoom_image,
+  #product-pdp-v2 img.product-zoom_image {
+    height: auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+    max-height: 300px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
   #product-pdp-v2 .product-gallery_pdp,
   #product-pdp-v2 .product-gallery_desktop,
   #product-pdp-v2 .product-gallery {
-    margin-top: 8px !important;
-    padding-top: 8px !important;
+    margin-top: 4px !important;
+    padding-top: 4px !important;
+  }
+  #product-pdp-v2 .product-gallery-panel .product-gallery_pdp,
+  #product-pdp-v2 .product-gallery-panel .product-gallery_desktop.product-gallery_pdp {
+    padding-top: 4px !important;
   }
   #product-pdp-v2 .product-gallery_item {
     flex: 0 0 64px !important;
