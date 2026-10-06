@@ -2063,7 +2063,7 @@
   #product-pdp-v2 .product-header--pdp-v2 .columns {
     display: flex !important;
     flex-wrap: nowrap !important;
-    align-items: stretch !important;
+    align-items: flex-start !important;
     gap: 22px !important;
     width: 100% !important;
     margin: 0 !important;
@@ -2296,10 +2296,12 @@
 @media (min-width: 992px) {
   #product-pdp-v2 .product-header-box {
     display: flex !important;
-    flex: 1 1 auto !important;
+    flex: 0 1 auto !important;
     flex-direction: column !important;
-    height: 100% !important;
-    min-height: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    align-self: flex-start !important;
+    width: 100% !important;
     gap: 14px !important;
     padding: 22px !important;
     background: #ffffff !important;
@@ -2474,7 +2476,7 @@
     flex-wrap: nowrap !important;
     gap: 0 !important;
     width: 100% !important;
-    margin-top: auto !important;
+    margin-top: 0 !important;
     padding: 14px 0 0 !important;
     border-top: 1px solid #e3ebf4 !important;
   }

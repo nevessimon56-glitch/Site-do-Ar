@@ -579,7 +579,7 @@
             var gap = getGap(list);
             var viewW = viewport.clientWidth;
             if (viewW < 1) return;
-            /* 4 thumbs preenchem a faixa; teto 72px só na listra interna (card externo igual) */
+            /* 4 visíveis na faixa; teto 72px (só listra interna) */
             var thumbW = (viewW - gap * (VISIBLE - 1)) / VISIBLE;
             thumbW = Math.round(thumbW);
             if (thumbW > 72) {
@@ -588,6 +588,10 @@
             if (thumbW < 52) {
               thumbW = 52;
             }
+            var stripW = VISIBLE * thumbW + gap * (VISIBLE - 1);
+            viewport.style.flex = '1 1 ' + stripW + 'px';
+            viewport.style.width = stripW + 'px';
+            viewport.style.maxWidth = stripW + 'px';
             viewport.style.setProperty('--pdp-thumb-w', thumbW + 'px');
             items.forEach(function (item) {
               item.style.flex = '0 0 ' + thumbW + 'px';
@@ -717,7 +721,10 @@
           function initPdpThumbsCarousel() {
             var root = document.getElementById('product-pdp-v2');
             if (!root) return;
-            root.querySelectorAll('[data-pdp-thumbs-carousel]').forEach(bindCarousel);
+            root.querySelectorAll('[data-pdp-thumbs-carousel]').forEach(function (wrap) {
+              wrap.removeAttribute('data-pdp-thumbs-ready');
+              bindCarousel(wrap);
+            });
 
             if (!window.__pdpThumbsOnChangeWrapped) {
               window.__pdpThumbsOnChangeWrapped = true;
@@ -750,6 +757,7 @@
             initPdpThumbsCarousel();
           }
           window.addEventListener('load', initPdpThumbsCarousel);
+          window.initPdpThumbsCarousel = initPdpThumbsCarousel;
         })();
         </script>
         </div><!-- /#product-pdp-v2 — vitrines (relacionados / último visto) ficam FORA -->
@@ -1245,6 +1253,18 @@
                             const newLink = (window.location.pathname).replace(idProductOld, idProduct);
                             window.history.pushState("", "", newLink);
 
+                            if (typeof window.initPdpThumbsCarousel === 'function') {
+                                window.initPdpThumbsCarousel();
+                                setTimeout(function () { window.initPdpThumbsCarousel(); }, 0);
+                                setTimeout(function () { window.initPdpThumbsCarousel(); }, 250);
+                            }
+                            if (window.Alpine && typeof Alpine.initTree === 'function') {
+                                var mainsAlpine = document.querySelectorAll('main');
+                                for (var ma = 0; ma < mainsAlpine.length; ma++) {
+                                    Alpine.initTree(mainsAlpine[ma]);
+                                }
+                            }
+
                             closeLoadingMain();
                         });
                     }).catch((error) => {
@@ -1302,6 +1322,16 @@
 
                             /** Atualiza todos os plugins  **/
                             handlerProductEvents(true);
+                            if (typeof window.initPdpThumbsCarousel === 'function') {
+                                window.initPdpThumbsCarousel();
+                                setTimeout(function () { window.initPdpThumbsCarousel(); }, 250);
+                            }
+                            if (window.Alpine && typeof Alpine.initTree === 'function') {
+                                var mainsPg = document.querySelectorAll('main');
+                                for (var mp = 0; mp < mainsPg.length; mp++) {
+                                    Alpine.initTree(mainsPg[mp]);
+                                }
+                            }
                             window.dispatchEvent(new CustomEvent("update-cart-plugins", {detail: [newIdPriceGroup]}));
                             closeLoadingMain();
                         });
