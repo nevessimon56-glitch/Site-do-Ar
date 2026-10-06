@@ -587,17 +587,12 @@
             var carStyles = window.getComputedStyle(wrap);
             var carGap = parseFloat(carStyles.columnGap || carStyles.gap || '8') || 8;
             var navW = 32;
-            var navCount = 0;
-            wrap.querySelectorAll('.product-pdp-thumbs_nav').forEach(function (btn) {
-              if (btn.offsetWidth > 0 && window.getComputedStyle(btn).display !== 'none') {
-                navCount++;
-              }
-            });
-            var viewW = carouselW - navCount * (navW + carGap);
+            var navSlots = items.length > VISIBLE ? 2 : 0;
+            var viewW = carouselW - navSlots * (navW + carGap);
             if (viewW < 1) {
               viewW = carouselW;
             }
-            /* 4 visíveis; teto 72px — viewport usa largura total do carrossel */
+            /* Exatamente 4 slots visíveis; teto 72px na listra interna */
             var thumbW = (viewW - gap * (VISIBLE - 1)) / VISIBLE;
             thumbW = Math.round(thumbW);
             if (thumbW > 72) {
@@ -606,6 +601,13 @@
             if (thumbW < 52) {
               thumbW = 52;
             }
+            var visibleStripW = VISIBLE * thumbW + gap * (VISIBLE - 1);
+            viewport.setAttribute('data-pdp-visible-count', String(VISIBLE));
+            viewport.style.setProperty('flex', '0 0 ' + visibleStripW + 'px', 'important');
+            viewport.style.setProperty('width', visibleStripW + 'px', 'important');
+            viewport.style.setProperty('max-width', visibleStripW + 'px', 'important');
+            viewport.style.setProperty('min-width', visibleStripW + 'px', 'important');
+            viewport.style.overflowX = items.length > VISIBLE ? 'auto' : 'hidden';
             viewport.style.setProperty('--pdp-thumb-w', thumbW + 'px');
             items.forEach(function (item) {
               item.style.flex = '0 0 ' + thumbW + 'px';
