@@ -248,7 +248,7 @@
     <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wind-brisa' %}</span><span class="product-highlight_lbl">Brisa Suave</span></li>
     {% endif %}
     {% if iconWifi %}
-    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wifi' %}</span><span class="product-highlight_lbl">Wi-Fi integrado</span></li>
+    <li class="product-highlight product-highlight--wifi"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wifi' %}</span><span class="product-highlight_lbl">Wi-Fi integrado</span></li>
     {% endif %}
     {% if iconProcelA %}
     <li class="product-highlight product-highlight--a"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'procel-a' %}</span><span class="product-highlight_lbl">Classificação A</span></li>
@@ -266,13 +266,13 @@
     <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'heat-cool' %}</span><span class="product-highlight_lbl">Quente e Frio</span></li>
     {% endif %}
     {% if iconFrio and iconQuenteFrio == false %}
-    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'thermo-cold' %}</span><span class="product-highlight_lbl">Só Frio</span></li>
+    <li class="product-highlight product-highlight--cool"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'snowflake-cool' %}</span><span class="product-highlight_lbl">Só Frio</span></li>
     {% endif %}
     {% if iconCobre %}
-    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'coil-copper' %}</span><span class="product-highlight_lbl">Serpentina de Cobre</span></li>
+    <li class="product-highlight product-highlight--copper"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'coil-copper' %}</span><span class="product-highlight_lbl">Serpentina de Cobre</span></li>
     {% endif %}
     {% if iconVoltage != '' %}
-    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
+    <li class="product-highlight product-highlight--volt"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
     {% endif %}
   </ul>
   {% else %}
@@ -281,12 +281,12 @@
     <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'inverter' %}</span><span class="product-highlight_lbl">Tecnologia Inverter</span></li>
     {% endif %}
     {% if iconVoltage != '' %}
-    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
+    <li class="product-highlight product-highlight--volt"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
     {% endif %}
     {% if specTitle contains '18.000' or specTitle contains '18000' %}
-    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wind-capacity' %}</span><span class="product-highlight_lbl">18.000 BTU/h</span></li>
+    <li class="product-highlight product-highlight--cool"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'snowflake-cool' %}</span><span class="product-highlight_lbl">18.000 BTU/h</span></li>
     {% elsif specTitle contains '12.000' or specTitle contains '12000' %}
-    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wind-capacity' %}</span><span class="product-highlight_lbl">12.000 BTU/h</span></li>
+    <li class="product-highlight product-highlight--cool"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'snowflake-cool' %}</span><span class="product-highlight_lbl">12.000 BTU/h</span></li>
     {% endif %}
   </ul>
   {% endif %}

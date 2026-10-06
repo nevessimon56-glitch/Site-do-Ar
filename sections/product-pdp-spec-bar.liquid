@@ -162,13 +162,13 @@
   {% endif %}
   {% if pdpCap != '' %}
   <li class="product-spec">
-    <span class="product-spec_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wind-capacity' %}</span>
+    <span class="product-spec_ico product-spec_ico--cool" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'snowflake-cool' %}</span>
     <span class="product-spec_txt"><small>Capacidade</small><b>{{ pdpCap }}</b></span>
   </li>
   {% endif %}
   {% if pdpVolt != '' %}
   <li class="product-spec">
-    <span class="product-spec_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span>
+    <span class="product-spec_ico product-spec_ico--volt" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span>
     <span class="product-spec_txt"><small>Voltagem</small><b>{{ pdpVolt }}</b></span>
   </li>
   {% endif %}

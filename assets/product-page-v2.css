@@ -1468,6 +1468,36 @@
   border-color: #bbf7d0;
   color: #059669;
 }
+.product-v2 .product-highlight--cool .product-highlight_ico,
+.product-v2 .product-spec_ico--cool {
+  background: #f3f7fb;
+  border-color: #c5d6e8;
+  color: #5b7fa6;
+}
+.product-v2 .product-highlight--volt .product-highlight_ico,
+.product-v2 .product-spec_ico--volt {
+  background: #f3f7fb;
+  border-color: #c5d6e8;
+  color: #5b7fa6;
+}
+.product-v2 .product-highlight--wifi .product-highlight_ico {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+.product-v2 .product-highlight--copper .product-highlight_ico {
+  background: #fffbeb;
+  border-color: #fcd34d;
+  color: #c58a1a;
+}
+.product-v2 .product-highlight--copper .product-highlight_lbl {
+  color: #b45309;
+  font-weight: 800;
+}
+.product-v2 .product-highlight--volt .product-highlight_lbl {
+  color: #5b7fa6;
+  font-weight: 800;
+}
 
 .product-v2 .product-description_highlights-body .product-highlights { list-style: none; margin: 0; padding: 0; }
 .product-v2 .product-specs-fallback { margin: 0; color: #64748b; font-size: 14px; }
