@@ -564,6 +564,11 @@
         <script>
         (function () {
           var VISIBLE = 4;
+          var DESKTOP_MQ = window.matchMedia('(min-width: 992px)');
+
+          function isDesktopThumbs() {
+            return DESKTOP_MQ.matches;
+          }
 
           function getGap(list) {
             var styles = window.getComputedStyle(list);
@@ -580,12 +585,34 @@
             var viewW = viewport.clientWidth;
             if (viewW < 1) return;
             var thumbW = (viewW - gap * (VISIBLE - 1)) / VISIBLE;
-            thumbW = Math.max(48, thumbW);
+            thumbW = Math.round(thumbW);
+            if (isDesktopThumbs()) {
+              if (thumbW > 82) {
+                thumbW = 82;
+              }
+              if (thumbW < 56) {
+                thumbW = 56;
+              }
+            } else if (thumbW < 48) {
+              thumbW = 48;
+            }
             viewport.style.setProperty('--pdp-thumb-w', thumbW + 'px');
             items.forEach(function (item) {
               item.style.flex = '0 0 ' + thumbW + 'px';
               item.style.width = thumbW + 'px';
               item.style.maxWidth = thumbW + 'px';
+              var link = item.querySelector('.product-gallery_link');
+              if (link && isDesktopThumbs()) {
+                link.style.width = thumbW + 'px';
+                link.style.height = thumbW + 'px';
+                link.style.maxWidth = thumbW + 'px';
+                link.style.maxHeight = thumbW + 'px';
+              } else if (link) {
+                link.style.width = '';
+                link.style.height = '';
+                link.style.maxWidth = '';
+                link.style.maxHeight = '';
+              }
             });
             var listW = items.length * thumbW + Math.max(0, items.length - 1) * gap;
             list.style.width = listW + 'px';
