@@ -1415,8 +1415,36 @@
   font-weight: 700;
   color: #1c2b4a;
 }
-.product-v2 .product-highlight svg { font-size: 20px; flex: 0 0 auto; fill: none; stroke: #1a6fe0; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.product-v2 .product-highlight--a svg { stroke: #16a34a; }
+.product-v2 .product-highlight_ico {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #eef4ff;
+  color: #1a6fe0;
+}
+.product-v2 .product-highlight_lbl {
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.25;
+}
+.product-v2 .product-highlight_ico svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.product-v2 .product-highlight--a .product-highlight_ico {
+  background: #e9f7ef;
+  color: #16a34a;
+}
 
 .product-v2 .product-description_highlights-body .product-highlights { list-style: none; margin: 0; padding: 0; }
 .product-v2 .product-specs-fallback { margin: 0; color: #64748b; font-size: 14px; }
@@ -1451,8 +1479,27 @@
   position: relative;
 }
 .product-v2 .product-spec + .product-spec::before { content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 1px; height: 38px; background: #e5eaf1; }
-.product-v2 .product-spec_ico { flex: 0 0 auto; color: #1a6fe0; }
-.product-v2 .product-spec_ico svg { font-size: 24px; fill: none; stroke: #1a6fe0; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.product-v2 .product-spec_ico {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #eef4ff;
+  color: #1a6fe0;
+}
+.product-v2 .product-spec_ico svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .product-v2 .product-spec_txt { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
 .product-v2 .product-spec_txt small { font-size: 11px; color: #64748b; }
 .product-v2 .product-spec_txt b { font-size: 13px; font-weight: 800; color: #1c2b4a; }

@@ -245,48 +245,48 @@
   {% if hasPdpHighlights %}
   <ul class="product-highlights" data-pdp-highlights="v1" aria-label="Destaques do produto">
     {% if pdpBrisaSuave %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h11a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h9a2.5 2.5 0 1 1-2.5 2.5"/></svg>Brisa Suave</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h9a2.5 2.5 0 1 1-2.5 2.5"/></svg></span><span class="product-highlight_lbl">Brisa Suave</span></li>
     {% endif %}
     {% if iconWifi %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5a10 10 0 0 1 14 0M8 15.5a6 6 0 0 1 8 0"/><circle cx="12" cy="18.5" r="1.2"/></svg>Wi-Fi integrado</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8 15.5a6 6 0 0 1 8 0"/><circle cx="12" cy="18.5" r="1.2"/></svg></span><span class="product-highlight_lbl">Wi-Fi integrado</span></li>
     {% endif %}
     {% if iconProcelA %}
-    <li class="product-highlight product-highlight--a"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 7 16H5z"/><path d="M9 15h6"/></svg>Classificação A</li>
+    <li class="product-highlight product-highlight--a"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 4 7 16H5z"/><path d="M9 15h6"/></svg></span><span class="product-highlight_lbl">Classificação A</span></li>
     {% endif %}
     {% if iconInverter %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>Tecnologia Inverter</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 5 14h6l-1 8 8-12h-6l1-8z"/></svg></span><span class="product-highlight_lbl">Tecnologia Inverter</span></li>
     {% endif %}
     {% if pdpR32 %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/></svg>R-32 ecológico</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 20a7 7 0 0 1-2.2-13.9C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/><path d="M12 8v4"/></svg></span><span class="product-highlight_lbl">R-32 ecológico</span></li>
     {% endif %}
     {% if pdpArea != '' %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10 12 4l8 6v10H4z"/><path d="M9 20v-6h6v6"/></svg>{{ pdpArea }}</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 10 12 4l8 6v10H4z"/><path d="M9 20v-6h6v6"/></svg></span><span class="product-highlight_lbl">{{ pdpArea }}</span></li>
     {% endif %}
     {% if iconQuenteFrio %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M5 8h14M5 16h14"/></svg>Quente e Frio</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M5 8h14M5 16h14"/></svg></span><span class="product-highlight_lbl">Quente e Frio</span></li>
     {% endif %}
     {% if iconFrio and iconQuenteFrio == false %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M17 8H7M17 16H7"/></svg>Só Frio</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M7 8h10M7 16h10"/></svg></span><span class="product-highlight_lbl">Só Frio</span></li>
     {% endif %}
     {% if iconCobre %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3"/></svg>Serpentina de Cobre</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3"/></svg></span><span class="product-highlight_lbl">Serpentina de Cobre</span></li>
     {% endif %}
     {% if iconVoltage != '' %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>{{ iconVoltage }}</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 5 14h6l-1 8 8-12h-6l1-8z"/></svg></span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
     {% endif %}
   </ul>
   {% else %}
   <ul class="product-highlights product-highlights--fallback" data-pdp-highlights="fallback" aria-label="Destaques do produto">
     {% if iconInverter %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>Tecnologia Inverter</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 5 14h6l-1 8 8-12h-6l1-8z"/></svg></span><span class="product-highlight_lbl">Tecnologia Inverter</span></li>
     {% endif %}
     {% if iconVoltage != '' %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>{{ iconVoltage }}</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 5 14h6l-1 8 8-12h-6l1-8z"/></svg></span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
     {% endif %}
     {% if specTitle contains '18.000' or specTitle contains '18000' %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="3"/></svg>18.000 BTU/h</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M12 4 9 7M12 4l3 3M12 20l-3-3M12 20l3-3"/><path d="M4.5 8.5 19.5 15.5M4.5 15.5 19.5 8.5"/></svg></span><span class="product-highlight_lbl">18.000 BTU/h</span></li>
     {% elsif specTitle contains '12.000' or specTitle contains '12000' %}
-    <li class="product-highlight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="3"/></svg>12.000 BTU/h</li>
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M12 4 9 7M12 4l3 3M12 20l-3-3M12 20l3-3"/><path d="M4.5 8.5 19.5 15.5M4.5 15.5 19.5 8.5"/></svg></span><span class="product-highlight_lbl">12.000 BTU/h</span></li>
     {% endif %}
   </ul>
   {% endif %}
