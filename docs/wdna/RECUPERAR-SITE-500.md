@@ -51,7 +51,15 @@ Estas aparecem no `theme.liquid` e precisam existir no WDNA (não estão todas n
 
 Se você apagou ou renomeou alguma, **restaure do backup do painel**.
 
-### 4. `product-content.liquid`
+### 4. Ícones PNG (`pdp-icon-svg.liquid`)
+
+Se a **home abre** mas **todo produto** cai em “Página não encontrada!” após publicar ícones:
+
+1. **Nunca use** `decoding="async"` em tags `<img>` dentro de Liquid no WDNA — o parser trata `async` como tag e **derruba a PDP**.
+2. Confirme que **todos** os `assets/pdp-icon-*.png` foram enviados ao tema **antes** do snippet PNG.
+3. **Emergência:** em `sections/pdp-icon-svg.liquid`, mude `{% assign pdp_icons_use_png = true %}` para **`false`** (volta SVG; produto abre de novo).
+
+### 5. `product-content.liquid`
 
 Só afeta **página de produto**. Se a home já abre mas o produto não:
 

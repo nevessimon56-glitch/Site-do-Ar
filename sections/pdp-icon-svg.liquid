@@ -1,34 +1,60 @@
 {% comment %}
-  Ícones PDP — PNG recortados da vitrine AC + R32 (2026-10-06).
+  Ícones PDP — PNG vitrine (WDNA: sem decoding="async" no img — quebra Liquid).
+  Troque pdp_icons_use_png para false se faltar PNG no assets (emergência).
   {% render 'sections/pdp-icon-svg', name: 'heat-cool' %}
 {% endcomment %}
+{% assign pdp_icons_use_png = false %}
 {% case name %}
-{% when 'heat-cool' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-heat-cool.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
 {% when 'snowflake-cool' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-snowflake-cool.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
+{% if pdp_icons_use_png %}
+<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-snowflake-cool.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" />
+{% else %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18"/><path d="M12 5.5 10.2 8.5h3.6L12 5.5"/><path d="M12 18.5l-1.8-3h3.6L12 18.5"/><path d="M5.8 7.2 18.2 16.8"/><path d="M18.2 7.2 5.8 16.8"/><path d="M7.5 5.5l1.5 2.6"/><path d="M16.5 18.5l-1.5-2.6"/><path d="M16.5 5.5l-1.5 2.6"/><path d="M7.5 18.5l1.5-2.6"/></svg>
+{% endif %}
 {% when 'wind-capacity' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-snowflake-cool.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
+{% if pdp_icons_use_png %}
+<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-snowflake-cool.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" />
+{% else %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M12 4v2.5"/><path d="M12 17.5V20"/><path d="M4 12h2.5"/><path d="M17.5 12H20"/><path d="M6.3 6.3l1.8 1.8"/><path d="M15.9 15.9l1.8 1.8"/><path d="M17.7 6.3l-1.8 1.8"/><path d="M8.1 15.9l-1.8 1.8"/></svg>
+{% endif %}
 {% when 'thermo-cold' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-snowflake-cool.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
+{% if pdp_icons_use_png %}
+<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-snowflake-cool.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" />
+{% else %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3h4v2h-4z"/><path d="M11 5v12.2a3 3 0 1 0 2 0V5"/><path d="M12 18.5v2"/><path d="M9.5 20.5h5"/></svg>
+{% endif %}
 {% when 'leaf-r32' %}
-<img class="pdp-icon-img pdp-icon-img--r32" src="{{ 'assets/pdp-icon-r32.png' | themeAssetUrl }}" width="32" height="18" alt="" aria-hidden="true" decoding="async" />
+{% if pdp_icons_use_png %}
+<img class="pdp-icon-img pdp-icon-img--r32" src="{{ 'assets/pdp-icon-r32.png' | themeAssetUrl }}" width="32" height="18" alt="" aria-hidden="true" />
+{% else %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20c-5-3.5-7-7-7-10.5a7 7 0 0 1 14 0C19 13 17 16.5 12 20z"/><path d="M12 20V9"/><path d="M9.5 13.5c1.8-1.2 3.5-1.8 2.5-4.5 2.5 1 3.5 2.8 3.5 4.5"/></svg>
+{% endif %}
 {% when 'coil-copper' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-outdoor-unit.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
+{% if pdp_icons_use_png %}
+<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-outdoor-unit.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" />
+{% else %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7v10"/><path d="M18 7v10"/><path d="M6 10c4 0 4 4 8 4s4-4 8-4"/><path d="M6 14c4 0 4-4 8-4s4 4 8 4"/></svg>
+{% endif %}
 {% when 'inverter' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-indoor-unit.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
-{% when 'heat-breeze' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-heat-breeze.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
-{% when 'cool-breeze' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-cool-breeze.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
-{% when 'sun-heat' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-sun-heat.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
-{% when 'droplet' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-droplet.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
+{% if pdp_icons_use_png %}
+<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-indoor-unit.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" />
+{% else %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="4.5" width="15" height="15" rx="3.5"/><path d="M8.5 12h1l1.2-3 1.3 6 1.3-6 1.2 3H15.5"/></svg>
+{% endif %}
 {% when 'bolt' %}
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 6 13.5h5.2L10 22l8.5-12.5H13.2L13 2z"/></svg>
+{% when 'heat-cool' %}
+{% if pdp_icons_use_png %}
+<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-heat-cool.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" />
+{% else %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="12" r="2.5"/><path d="M7 8v1.2M7 14.8v1.2M4.2 12h1.2M9.8 12h1.2M5.4 9.4l-.9-.9M8.6 14.6l.9.9M8.6 9.4l.9-.9M5.4 14.6l-.9.9"/><path d="M16 9v6"/><path d="M16 10.2l-1.1 1.6h2.2L16 10.2"/><path d="M16 13.8l-1.1-1.6h2.2L16 13.8"/><path d="M13.8 12h4.4"/></svg>
+{% endif %}
 {% when 'wind-brisa' %}
-<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-cool-breeze.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" decoding="async" />
+{% if pdp_icons_use_png %}
+<img class="pdp-icon-img" src="{{ 'assets/pdp-icon-cool-breeze.png' | themeAssetUrl }}" width="20" height="20" alt="" aria-hidden="true" />
+{% else %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M4 12h14a3 3 0 1 1-3 3"/><path d="M4 16h8a2 2 0 1 1-2 2"/></svg>
+{% endif %}
 {% when 'wifi' %}
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.2 15.8a6 6 0 0 1 7.6 0"/><circle cx="12" cy="19" r="1.25" fill="currentColor" stroke="none"/></svg>
 {% when 'procel-a' %}
