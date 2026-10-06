@@ -82,7 +82,7 @@
         {% if pdpSpecHtmlForIcons != blank or pdpDescMainHtml != '' %}
         <details class="product-description product-description--highlights" open>
           <summary class="product-description_header">
-            <span class="product-description_ico-lead product-description_ico-lead--green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C10.5 5 12 3 12 3s1.5 2 2.2 3.1A7 7 0 0 1 13 20z"/></svg></span>
+            <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 6.8H21l-5.5 4 2.1 6.7L12 17.8l-5.6 4.2 2.1-6.7L3 8.8h6.8z"/></svg></span>
             <span class="product-description_title">Destaques</span>
             <span class="product-description_toggle" aria-hidden="true">{{ pdpDescChevron }}</span>
           </summary>
@@ -96,7 +96,7 @@
 
         <details class="product-description product-description--specs" open>
         <summary class="product-description_header">
-          <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span>
+          <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="17" r="2"/></svg></span>
           <span class="product-description_title">{% if pdpDescSpecs %}{{ pdpDescSpecs.name }}{% else %}Especificações{% endif %}</span>
           <span class="product-description_toggle" aria-hidden="true">{{ pdpDescChevron }}</span>
         </summary>
