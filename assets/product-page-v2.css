@@ -2489,6 +2489,14 @@
 
 /* DESCRIÇÃO + DESTAQUES + ESPECIFICAÇÕES */
 @media (min-width: 992px) {
+  #product-pdp-v2 .product-descriptions details.product-description .product-description_body,
+  #product-pdp-v2 .product-descriptions details.product-description .pdp-desc-panel {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
   #product-pdp-v2 .product-descriptions_grid {
     display: flex !important;
     flex-direction: row !important;
