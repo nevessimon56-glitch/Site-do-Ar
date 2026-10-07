@@ -2767,6 +2767,54 @@
   background: linear-gradient(180deg, #ffffff 0%, #fffbf7 100%) !important;
   border-color: #fed7aa !important;
 }
+
+/* Coluna inferior (Descrição + Destaques): fundo clarinho visível nos bloquinhos */
+#product-pdp-v2.product-v2--cycle-frio .product-description--desc {
+  background: linear-gradient(180deg, #ffffff 0%, #f4f9ff 100%) !important;
+  border-color: #c5daf0 !important;
+}
+#product-pdp-v2.product-v2--cycle-frio .product-description--highlights {
+  background: linear-gradient(180deg, #ffffff 0%, #eef6fd 50%, #e8f4fc 100%) !important;
+  border-color: #bfdbfe !important;
+}
+#product-pdp-v2.product-v2--cycle-frio .product-description--specs {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbfe 100%) !important;
+  border-color: #dbeafe !important;
+}
+#product-pdp-v2.product-v2--cycle-frio .product-description_highlights-body .product-highlight {
+  background: #eef6fd !important;
+  border-color: #bfdbfe !important;
+}
+#product-pdp-v2.product-v2--cycle-frio .product-highlight:not(.product-highlight--eco):not(.product-highlight--a):not(.product-highlight--copper) .product-highlight_ico {
+  background: #e3f2fd !important;
+  border-color: #93c5fd !important;
+  color: #1a6fe0 !important;
+}
+#product-pdp-v2.product-v2--cycle-frio .product-highlight--cool .product-highlight_ico,
+#product-pdp-v2.product-v2--cycle-frio .product-highlight--volt .product-highlight_ico,
+#product-pdp-v2.product-v2--cycle-frio .product-highlight--wifi .product-highlight_ico {
+  background: #dbeafe !important;
+  border-color: #93c5fd !important;
+  color: #1d4ed8 !important;
+}
+
+#product-pdp-v2.product-v2--cycle-qf .product-description--desc {
+  background: linear-gradient(180deg, #ffffff 0%, #fffbf7 100%) !important;
+  border-color: #fed7aa !important;
+}
+#product-pdp-v2.product-v2--cycle-qf .product-description--highlights {
+  background: linear-gradient(180deg, #ffffff 0%, #fff7ed 50%, #ffedd5 100%) !important;
+  border-color: #fdba74 !important;
+}
+#product-pdp-v2.product-v2--cycle-qf .product-description--specs {
+  background: linear-gradient(180deg, #ffffff 0%, #fff8f0 100%) !important;
+  border-color: #fed7aa !important;
+}
+#product-pdp-v2.product-v2--cycle-qf .product-description_highlights-body .product-highlight {
+  background: #fff7ed !important;
+  border-color: #fed7aa !important;
+}
+
 #product-pdp-v2.product-v2--cycle-frio .product-trust {
   background: #eef6fd !important;
   border-radius: 10px;
