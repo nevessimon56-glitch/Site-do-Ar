@@ -79,3 +79,37 @@
     pointer-events: none;
   }
 }
+
+/*
+ * Banners / anúncios (home e vitrines): theme-all aplica opacity 0.7 em todo
+ * a:hover — o banner parece “branco” no mouse ou toque. Mantém opacidade total.
+ */
+a.showcase-banners_link:hover,
+a.showcase-banners_link:focus,
+a.showcase-banners_link:active {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.showcase-banners_link:hover .banner-main_img,
+.showcase-banners_link:focus .banner-main_img,
+.showcase-banners_link:active .banner-main_img,
+.showcase-banners_link:hover img.lazy-slider,
+.showcase-banners_link:focus img.lazy-slider,
+.showcase-banners_link:active img.lazy-slider,
+.showcase-banners_link:hover picture,
+.showcase-banners_link:focus picture,
+.showcase-banners_link:active picture {
+  opacity: 1 !important;
+}
+
+.showcase-banners .showcase-banners_item:hover,
+.showcase-banners .showcase-banners_item:focus-within {
+  opacity: 1 !important;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  a.showcase-banners_link {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
