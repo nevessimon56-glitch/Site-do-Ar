@@ -1,0 +1,155 @@
+{% comment %}
+  PDP v2 — blocos inferiores da página de produto
+
+  WDNA (Configurações → Grupos → Descrições):
+  - Grupo "Descrição" (id 1) → aba Descrição no produto → product.descriptions[].text (HTML)
+  - Grupo "Especificações" (id 2) → aba Especificações (tabela TinyMCE) → product.descriptions[].text
+
+  Destaques: grade com ícone + texto (mock PDP), gerada a partir do título + Especificações.
+  Especificações: barra com 4 dados-chave + tabela completa abaixo (WDNA).
+{% endcomment %}
+
+{% assign pdpDescMain = nil %}
+{% assign pdpDescSpecs = nil %}
+
+{% for description in product.descriptions %}
+  {% if description.text != '' %}
+    {% assign dname = description.name | downcase | strip %}
+    {% if dname contains 'especifica' or dname contains 'ficha' or dname contains 'técnica' or dname contains 'tecnica' or description.id == 2 %}
+      {% if pdpDescSpecs == nil %}
+        {% assign pdpDescSpecs = description %}
+      {% endif %}
+    {% elsif pdpDescMain == nil %}
+      {% if dname contains 'descri' or description.id == 1 %}
+        {% assign pdpDescMain = description %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% for description in product.descriptions %}
+  {% if description.text != '' and pdpDescMain == nil %}
+    {% assign dname = description.name | downcase | strip %}
+    {% unless dname contains 'especifica' or dname contains 'ficha' or dname contains 'tecnica' or dname contains 'técnica' %}
+      {% assign pdpDescMain = description %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+
+{% assign pdpSpecHtmlForIcons = '' %}
+{% if pdpDescSpecs and pdpDescSpecs.text != '' %}
+  {% assign pdpSpecHtmlForIcons = pdpDescSpecs.text %}
+{% endif %}
+
+{% assign pdpHasSpecsTable = false %}
+{% if pdpDescSpecs and pdpDescSpecs.text != '' %}
+  {% assign pdpHasSpecsTable = true %}
+{% elsif product.specification and product.specification != '' %}
+  {% assign pdpHasSpecsTable = true %}
+{% endif %}
+
+{% assign pdpDescMainHtml = '' %}
+{% if pdpDescMain and pdpDescMain.text != '' %}
+  {% assign pdpDescMainHtml = pdpDescMain.text %}
+{% elsif product.shortDescription and product.shortDescription != '' %}
+  {% assign pdpDescMainHtml = product.shortDescription %}
+{% elsif product.description and product.description != '' %}
+  {% assign pdpDescMainHtml = product.description %}
+{% endif %}
+
+{% capture pdpDescChevron %}
+<svg class="product-description_chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+{% endcapture %}
+
+{% if pdpDescMainHtml != '' or pdpHasSpecsTable %}
+<section class="product-descriptions">
+  <div class="product-descriptions-content content">
+    <div class="product-descriptions-container container">
+      <div class="product-descriptions_grid">
+        {% if pdpDescMainHtml != '' %}
+        <details class="product-description product-description--desc">
+          <summary class="product-description_header">
+            <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l3 3v17H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
+            <span class="product-description_title">{% if pdpDescMain %}{{ pdpDescMain.name }}{% else %}Descrição{% endif %}</span>
+            <span class="product-description_toggle" aria-hidden="true">{{ pdpDescChevron }}</span>
+          </summary>
+          <div class="product-description_body">
+            <div class="pdp-desc-panel product-description_richtext">{{ pdpDescMainHtml }}</div>
+          </div>
+        </details>
+        {% endif %}
+
+        {% if pdpSpecHtmlForIcons != blank or pdpDescMainHtml != '' %}
+        <details class="product-description product-description--highlights">
+          <summary class="product-description_header">
+            <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 6.8H21l-5.5 4 2.1 6.7L12 17.8l-5.6 4.2 2.1-6.7L3 8.8h6.8z"/></svg></span>
+            <span class="product-description_title">Destaques</span>
+            <span class="product-description_toggle" aria-hidden="true">{{ pdpDescChevron }}</span>
+          </summary>
+          <div class="product-description_body">
+            <div class="pdp-desc-panel product-description_highlights-body">
+              {% render 'sections/product-spec-icons', product: product, specHtmlFromDescriptions: pdpSpecHtmlForIcons, pdpHighlights: true %}
+            </div>
+          </div>
+        </details>
+        {% endif %}
+
+        <details class="product-description product-description--specs">
+        <summary class="product-description_header">
+          <span class="product-description_ico-lead"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="17" r="2"/></svg></span>
+          <span class="product-description_title">{% if pdpDescSpecs %}{{ pdpDescSpecs.name }}{% else %}Especificações{% endif %}</span>
+          <span class="product-description_toggle" aria-hidden="true">{{ pdpDescChevron }}</span>
+        </summary>
+        <div class="product-description_body">
+          <div class="pdp-desc-panel">
+            {% render 'sections/product-pdp-spec-bar', product: product, specHtmlFromDescriptions: pdpSpecHtmlForIcons %}
+            {% if pdpDescSpecs %}
+              <div class="product-description_richtext product-description_specs-table product-description_specs-table--full">
+                {{ pdpDescSpecs.text }}
+              </div>
+            {% elsif product.specification and product.specification != '' %}
+              <div class="product-description_richtext product-description_specs-table product-description_specs-table--full">
+                {{ product.specification }}
+              </div>
+            {% else %}
+              <p class="product-specs-fallback">Cadastre a ficha na aba <strong>Especificações</strong> do produto no painel.</p>
+            {% endif %}
+          </div>
+        </div>
+      </details>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function () {
+  var root = document.getElementById('product-pdp-v2');
+  if (!root) return;
+  var mobileMq = window.matchMedia('(max-width: 991px)');
+  var details = root.querySelectorAll('.product-descriptions details.product-description');
+
+  function syncPdpDescPanels() {
+    details.forEach(function (el) {
+      if (mobileMq.matches) {
+        el.removeAttribute('open');
+      } else {
+        el.setAttribute('open', '');
+      }
+    });
+  }
+
+  syncPdpDescPanels();
+  if (typeof mobileMq.addEventListener === 'function') {
+    mobileMq.addEventListener('change', syncPdpDescPanels);
+  } else if (typeof mobileMq.addListener === 'function') {
+    mobileMq.addListener(syncPdpDescPanels);
+  }
+
+  root.querySelectorAll('.product-descriptions summary.product-description_header').forEach(function (summary) {
+    summary.addEventListener('click', function (event) {
+      event.stopImmediatePropagation();
+    }, true);
+  });
+})();
+</script>
+{% endif %}

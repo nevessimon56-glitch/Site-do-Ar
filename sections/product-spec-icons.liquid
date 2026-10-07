@@ -1,0 +1,335 @@
+{% comment %}
+  Ícones de especificação — pills de texto (sem SVG, compatível mobile)
+  VERSAO: 2026-10-05-spec-v5
+  Lê a aba Especificações do produto (tabela HTML), atributos e título.
+  Uso: {% render 'sections/product-spec-icons', product: product %}
+{% endcomment %}
+
+{% assign specTitle = product.title | downcase %}
+{% assign specBlob = specTitle %}
+
+{% if product.url and product.url != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.url | downcase %}
+{% endif %}
+
+{% if product.medias[0].path and product.medias[0].path != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.medias[0].path | downcase %}
+{% endif %}
+{% if product.medias[1].path and product.medias[1].path != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.medias[1].path | downcase %}
+{% endif %}
+
+{% if product.tags and product.tags != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.tags | downcase %}
+{% endif %}
+
+{% if product.shortDescription and product.shortDescription != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.shortDescription | downcase %}
+{% endif %}
+
+{% if product.seoDescription and product.seoDescription != '' %}
+  {% assign specBlob = specBlob | append: ' | ' | append: product.seoDescription | downcase %}
+{% endif %}
+
+{% capture specHtmlRaw %}
+{% if product.specification and product.specification != '' %}{{ product.specification }}{% endif %}
+{% if product.specifications and product.specifications != '' %}{{ product.specifications }}{% endif %}
+{% if product.specificationText and product.specificationText != '' %}{{ product.specificationText }}{% endif %}
+{% if product.especificacao and product.especificacao != '' %}{{ product.especificacao }}{% endif %}
+{% if product.especificacoes and product.especificacoes != '' %}{{ product.especificacoes }}{% endif %}
+{% if specHtmlFromDescriptions and specHtmlFromDescriptions != '' %}{{ specHtmlFromDescriptions }}{% endif %}
+{% if specHtmlFromDescriptions == blank %}
+  {% for _desc in product.descriptions %}
+    {% assign _dname = _desc.name | downcase | strip %}
+    {% if _dname contains 'especifica' and _desc.text != '' %}{{ _desc.text }}{% endif %}
+  {% endfor %}
+{% endif %}
+{% endcapture %}
+
+{% assign specHtmlRaw = specHtmlRaw | strip %}
+{% if specHtmlRaw != '' %}
+  {% assign specPlain = specHtmlRaw
+    | replace: '<br>', ' | '
+    | replace: '<br/>', ' | '
+    | replace: '<br />', ' | '
+    | replace: '</tr>', ' | '
+    | replace: '</td>', ' '
+    | replace: '<td>', ' '
+    | replace: '</th>', ' '
+    | replace: '<th>', ' '
+    | replace: '<tr>', ' '
+    | replace: '<tbody>', ' '
+    | replace: '</tbody>', ' '
+    | replace: '<table>', ' '
+    | replace: '</table>', ' '
+    | replace: '<p>', ' '
+    | replace: '</p>', ' '
+    | replace: '<strong>', ' '
+    | replace: '</strong>', ' '
+    | replace: '<b>', ' '
+    | replace: '</b>', ' '
+    | downcase
+  %}
+  {% assign specBlob = specBlob | append: ' | ' | append: specPlain %}
+{% endif %}
+
+{% if product.attributes and product.attributes.size > 0 %}
+  {% for attr in product.attributes %}
+    {% assign attrName = attr.name | default: attr.nome | default: '' | downcase %}
+    {% assign attrVal = '' %}
+    {% if attr.values and attr.values.size > 0 %}
+      {% assign attrVal = attr.values[0].name | default: attr.values[0].value | default: '' | downcase %}
+    {% elsif attr.valores and attr.valores.size > 0 %}
+      {% assign attrVal = attr.valores[0].nome | default: '' | downcase %}
+    {% elsif attr.value %}
+      {% assign attrVal = attr.value | downcase %}
+    {% endif %}
+    {% assign specBlob = specBlob | append: ' | ' | append: attrName | append: ':' | append: attrVal %}
+  {% endfor %}
+{% endif %}
+
+{% if product.properties and product.properties.size > 0 %}
+  {% for prop in product.properties %}
+    {% assign propName = prop.name | default: prop.nome | default: '' | downcase %}
+    {% assign propVal = prop.value | default: prop.valor | default: '' | downcase %}
+    {% assign specBlob = specBlob | append: ' | ' | append: propName | append: ':' | append: propVal %}
+  {% endfor %}
+{% endif %}
+
+{% comment %} Não usar product.description inteira — polui detecção (ex.: wi-fi em texto genérico) {% endcomment %}
+
+{% assign iconProcelA = false %}
+{% assign iconQuenteFrio = false %}
+{% assign iconFrio = false %}
+{% assign iconCobre = false %}
+{% assign iconWifi = false %}
+{% assign iconInverter = false %}
+{% assign iconVoltage = '' %}
+
+{% if product.attributes and product.attributes.size > 0 %}
+  {% for attr in product.attributes %}
+    {% assign attrNameProcel = attr.name | default: attr.nome | default: '' | downcase %}
+    {% assign attrValProcel = '' %}
+    {% if attr.values and attr.values.size > 0 %}
+      {% assign attrValProcel = attr.values[0].name | default: attr.values[0].value | default: '' | downcase %}
+    {% elsif attr.valores and attr.valores.size > 0 %}
+      {% assign attrValProcel = attr.valores[0].nome | default: '' | downcase %}
+    {% elsif attr.value %}
+      {% assign attrValProcel = attr.value | downcase %}
+    {% endif %}
+    {% if attrNameProcel contains 'procel' or attrNameProcel contains 'classificação' or attrNameProcel contains 'classificacao' or attrNameProcel contains 'eficiência' or attrNameProcel contains 'eficiencia' or attrNameProcel contains 'selo' %}
+      {% if attrValProcel contains 'classe a' or attrValProcel == 'a' or attrValProcel contains ' procel a' or attrValProcel contains 'selo a' %}
+        {% assign iconProcelA = true %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% if specBlob contains 'procel' or specBlob contains 'classificação a' or specBlob contains 'classificacao a' or specBlob contains 'classificação energética a' or specBlob contains 'classificacao energetica a' or specBlob contains 'selo a' or specBlob contains 'classe a' or specBlob contains 'eficiência energética: a' or specBlob contains 'eficiencia energetica: a' or specBlob contains 'energética: a' or specBlob contains 'energetica: a' %}
+  {% assign iconProcelA = true %}
+{% endif %}
+
+{% if specBlob contains 'ciclo: quente/frio' or specBlob contains 'ciclo: quente e frio' or specBlob contains 'ciclo quente/frio' or specBlob contains 'ciclo quente e frio' or specBlob contains 'quente/frio' or specBlob contains 'quente-frio' or specBlob contains 'quente e frio' or specBlob contains 'ciclo reverso' or specBlob contains ' q/f' or specBlob contains ' q-f' or specBlob contains '-quente-frio' or specBlob contains 'quente_frio' %}
+  {% assign iconQuenteFrio = true %}
+{% elsif specBlob contains 'ciclo: só frio' or specBlob contains 'ciclo: so frio' or specBlob contains 'ciclo só frio' or specBlob contains 'ciclo so frio' or specBlob contains 'ciclo: frio' or specBlob contains 'só frio' or specBlob contains 'so frio' or specBlob contains 'somente frio' or specBlob contains '-frio-' or specBlob contains '_frio_' or specBlob contains ' frio ' %}
+  {% assign iconFrio = true %}
+{% elsif specBlob contains 'frio' %}
+  {% unless specBlob contains 'quente' %}
+    {% assign iconFrio = true %}
+  {% endunless %}
+{% endif %}
+
+{% if specBlob contains 'inverter' or specBlob contains 'inversor' or specBlob contains 'inversão' or specBlob contains 'inversao' %}
+  {% assign iconInverter = true %}
+{% endif %}
+
+{% if specBlob contains 'cobre' or specBlob contains 'copper' %}
+  {% unless specBlob contains 'alumínio' or specBlob contains 'aluminio' %}
+    {% assign iconCobre = true %}
+  {% endunless %}
+{% endif %}
+
+{% comment %}
+  Wi-Fi: fonte conservadora (título + tabela de specs + atributos).
+  Não usa tags, SEO, URL nem mídia — costumam marcar Wi-Fi errado em janela/mecânico.
+{% endcomment %}
+{% assign specWifiBlob = specTitle %}
+{% if specHtmlRaw != '' %}
+  {% assign specWifiBlob = specWifiBlob | append: ' | ' | append: specPlain %}
+{% endif %}
+{% if product.attributes and product.attributes.size > 0 %}
+  {% for attr in product.attributes %}
+    {% assign attrName = attr.name | default: attr.nome | default: '' | downcase %}
+    {% assign attrVal = '' %}
+    {% if attr.values and attr.values.size > 0 %}
+      {% assign attrVal = attr.values[0].name | default: attr.values[0].value | default: '' | downcase %}
+    {% elsif attr.valores and attr.valores.size > 0 %}
+      {% assign attrVal = attr.valores[0].nome | default: '' | downcase %}
+    {% elsif attr.value %}
+      {% assign attrVal = attr.value | downcase %}
+    {% endif %}
+    {% assign specWifiBlob = specWifiBlob | append: ' | ' | append: attrName | append: ':' | append: attrVal %}
+  {% endfor %}
+{% endif %}
+{% if product.properties and product.properties.size > 0 %}
+  {% for prop in product.properties %}
+    {% assign propName = prop.name | default: prop.nome | default: '' | downcase %}
+    {% assign propVal = prop.value | default: prop.valor | default: '' | downcase %}
+    {% assign specWifiBlob = specWifiBlob | append: ' | ' | append: propName | append: ':' | append: propVal %}
+  {% endfor %}
+{% endif %}
+
+{% assign iconWifi = false %}
+{% assign wifiBlocked = false %}
+
+{% if specTitle contains 'mecânico' or specTitle contains 'mecanico' or specWifiBlob contains 'operação / controle | mecânico' or specWifiBlob contains 'operacao / controle | mecanico' or specWifiBlob contains 'mecânico (manual' or specWifiBlob contains 'mecanico (manual' or specWifiBlob contains 'botões rotativos' or specWifiBlob contains 'botoes rotativos' or specWifiBlob contains 'controle mecânico' or specWifiBlob contains 'controle mecanico' %}
+  {% assign wifiBlocked = true %}
+  {% assign iconInverter = false %}
+{% endif %}
+
+{% if specTitle contains 'janela' %}
+  {% unless specTitle contains 'wi-fi' or specTitle contains 'wifi' %}
+    {% assign wifiBlocked = true %}
+  {% endunless %}
+{% endif %}
+
+{% if specWifiBlob contains 'compatibilidade wi-fi: não' or specWifiBlob contains 'compatibilidade wi-fi: nao' or specWifiBlob contains 'compatibilidade wifi: não' or specWifiBlob contains 'compatibilidade wifi: nao' or specWifiBlob contains 'sem wi-fi' or specWifiBlob contains 'sem wifi' or specWifiBlob contains 'não possui wi-fi' or specWifiBlob contains 'nao possui wi-fi' or specWifiBlob contains 'não possui wifi' or specWifiBlob contains 'nao possui wifi' %}
+  {% assign wifiBlocked = true %}
+{% endif %}
+{% if specWifiBlob contains 'compatibilidade wi-fi' %}
+  {% if specWifiBlob contains 'não' or specWifiBlob contains 'nao' %}
+    {% unless specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' %}
+      {% assign wifiBlocked = true %}
+    {% endunless %}
+  {% endif %}
+{% endif %}
+{% if specWifiBlob contains 'vendido separadamente' %}
+  {% if specWifiBlob contains 'wi-fi' or specWifiBlob contains 'wifi' %}
+    {% assign wifiBlocked = true %}
+  {% endif %}
+{% endif %}
+{% if specWifiBlob contains 'kit ' and specWifiBlob contains 'smart wi-fi' %}
+  {% unless specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' %}
+    {% assign wifiBlocked = true %}
+  {% endunless %}
+{% endif %}
+
+{% unless wifiBlocked %}
+  {% if specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' or specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' or specWifiBlob contains 'wi-fi de fábrica' or specWifiBlob contains 'wi-fi de fabrica' %}
+    {% assign iconWifi = true %}
+  {% elsif specTitle contains ' wi-fi' or specTitle contains '-wi-fi' or specTitle contains 'wifi' %}
+    {% assign iconWifi = true %}
+  {% endif %}
+{% endunless %}
+
+{% if specBlob contains '220v' or specBlob contains '220 v' %}
+  {% assign iconVoltage = '220V' %}
+{% elsif specBlob contains '127v' or specBlob contains '127 v' %}
+  {% assign iconVoltage = '127V' %}
+{% elsif specBlob contains '110v' or specBlob contains '110 v' or specBlob contains '115v' or specBlob contains '115 v' %}
+  {% assign iconVoltage = '110V' %}
+{% elsif specBlob contains '380v' or specBlob contains '380 v' %}
+  {% assign iconVoltage = '380V' %}
+{% elsif specBlob contains 'bivolt' or specBlob contains 'bi-volt' or specBlob contains 'bi volt' %}
+  {% assign iconVoltage = 'Bivolt' %}
+{% endif %}
+
+{% assign hasSpecIcons = false %}
+{% if iconProcelA or iconQuenteFrio or iconFrio or iconCobre or iconWifi or iconInverter or iconVoltage != '' %}
+  {% assign hasSpecIcons = true %}
+{% endif %}
+
+{% assign pdpBrisaSuave = false %}
+{% if specBlob contains 'brisa suave' %}
+  {% assign pdpBrisaSuave = true %}
+{% endif %}
+{% assign pdpR32 = false %}
+{% if specBlob contains 'r-32' or specBlob contains 'r32' or specBlob contains 'gás r-32' or specBlob contains 'gas r-32' %}
+  {% assign pdpR32 = true %}
+{% endif %}
+{% assign pdpArea = '' %}
+{% if specBlob contains '30 m²' or specBlob contains '30m²' or specBlob contains '30 m2' or specBlob contains 'até 30' or specBlob contains 'ate 30' %}
+  {% assign pdpArea = 'Até 30 m²' %}
+{% elsif specBlob contains '25 m²' or specBlob contains '25m²' %}
+  {% assign pdpArea = 'Até 25 m²' %}
+{% elsif specBlob contains '20 m²' or specBlob contains '20m²' %}
+  {% assign pdpArea = 'Até 20 m²' %}
+{% endif %}
+
+{% if pdpHighlights %}
+  {% assign hasPdpHighlights = false %}
+  {% if pdpBrisaSuave or iconWifi or iconProcelA or pdpR32 or pdpArea != '' or iconInverter or iconQuenteFrio or iconFrio or iconCobre or iconVoltage != '' %}
+    {% assign hasPdpHighlights = true %}
+  {% endif %}
+  {% if hasPdpHighlights %}
+  <ul class="product-highlights" data-pdp-highlights="v1" aria-label="Destaques do produto">
+    {% if pdpBrisaSuave %}
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wind-brisa' %}</span><span class="product-highlight_lbl">Brisa Suave</span></li>
+    {% endif %}
+    {% if iconWifi %}
+    <li class="product-highlight product-highlight--wifi"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'wifi' %}</span><span class="product-highlight_lbl">Wi-Fi integrado</span></li>
+    {% endif %}
+    {% if iconProcelA %}
+    <li class="product-highlight product-highlight--a"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'procel-a' %}</span><span class="product-highlight_lbl">Classificação A</span></li>
+    {% endif %}
+    {% if iconInverter %}
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'inverter' %}</span><span class="product-highlight_lbl">Tecnologia Inverter</span></li>
+    {% endif %}
+    {% if pdpR32 %}
+    <li class="product-highlight product-highlight--eco"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'leaf-r32' %}</span><span class="product-highlight_lbl">R-32 ecológico</span></li>
+    {% endif %}
+    {% if pdpArea != '' %}
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'area-home' %}</span><span class="product-highlight_lbl">{{ pdpArea }}</span></li>
+    {% endif %}
+    {% if iconQuenteFrio %}
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'heat-cool' %}</span><span class="product-highlight_lbl">Quente e Frio</span></li>
+    {% endif %}
+    {% if iconFrio and iconQuenteFrio == false %}
+    <li class="product-highlight product-highlight--cool"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'snowflake-cool' %}</span><span class="product-highlight_lbl">Só Frio</span></li>
+    {% endif %}
+    {% if iconCobre %}
+    <li class="product-highlight product-highlight--copper"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'coil-copper' %}</span><span class="product-highlight_lbl">Serpentina de Cobre</span></li>
+    {% endif %}
+    {% if iconVoltage != '' %}
+    <li class="product-highlight product-highlight--volt"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
+    {% endif %}
+  </ul>
+  {% else %}
+  <ul class="product-highlights product-highlights--fallback" data-pdp-highlights="fallback" aria-label="Destaques do produto">
+    {% if iconInverter %}
+    <li class="product-highlight"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'inverter' %}</span><span class="product-highlight_lbl">Tecnologia Inverter</span></li>
+    {% endif %}
+    {% if iconVoltage != '' %}
+    <li class="product-highlight product-highlight--volt"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span><span class="product-highlight_lbl">{{ iconVoltage }}</span></li>
+    {% endif %}
+    {% if specTitle contains '18.000' or specTitle contains '18000' %}
+    <li class="product-highlight product-highlight--cool"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'snowflake-cool' %}</span><span class="product-highlight_lbl">18.000 BTU/h</span></li>
+    {% elsif specTitle contains '12.000' or specTitle contains '12000' %}
+    <li class="product-highlight product-highlight--cool"><span class="product-highlight_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'snowflake-cool' %}</span><span class="product-highlight_lbl">12.000 BTU/h</span></li>
+    {% endif %}
+  </ul>
+  {% endif %}
+{% elsif hasSpecIcons %}
+<ul class="showcase-spec-bar" data-spec-icons="v4" aria-label="Características do produto">
+  {% if iconProcelA %}
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--procel" title="Classificação A — Procel">A</li>
+  {% endif %}
+  {% if iconQuenteFrio %}
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cycle-qf" title="Quente e Frio">Q/F</li>
+  {% endif %}
+  {% if iconFrio and iconQuenteFrio == false %}
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cycle-frio" title="Frio">Frio</li>
+  {% endif %}
+  {% if iconInverter %}
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--inverter" title="Tecnologia Inverter">Inverter</li>
+  {% endif %}
+  {% if iconCobre %}
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--cobre" title="Serpentina de Cobre">Cobre</li>
+  {% endif %}
+  {% if iconVoltage != '' %}
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--voltage" title="{{ iconVoltage }}">{{ iconVoltage }}</li>
+  {% endif %}
+  {% if iconWifi %}
+  <li class="showcase-spec-bar__tag showcase-spec-bar__tag--wifi" title="Wi-Fi">Wi-Fi</li>
+  {% endif %}
+</ul>
+{% endif %}
