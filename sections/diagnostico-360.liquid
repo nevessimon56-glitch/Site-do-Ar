@@ -1,7 +1,6 @@
 {% comment %}
   Diagnóstico Clima 360 — versão isolada via iframe srcdoc.
-  O HTML do quiz fica em <script type="text/plain"> para evitar que
-  </script> interno quebre o JavaScript da página pai.
+  O HTML do quiz fica em <template> para que </script> interno não quebre o parser da página pai.
 {% endcomment %}
 
 <style>
@@ -25,7 +24,7 @@
   <iframe id="diag360-frame" title="Diagnóstico Clima 360" scrolling="no"></iframe>
 </div>
 
-<script type="text/plain" id="diag360-srcdoc"><!doctype html>
+<template id="diag360-srcdoc"><!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
@@ -592,7 +591,7 @@
 })();
 </script>
 </body>
-</html></script>
+</html></template>
 
 <script>
 (function () {
@@ -600,7 +599,7 @@
   var frame = document.getElementById('diag360-frame');
   if (!src || !frame) return;
 
-  frame.srcdoc = src.textContent;
+  frame.srcdoc = src.innerHTML;
 
   window.addEventListener('message', function (e) {
     if (e.data && e.data.type === 'diag360-resize' && e.data.h) {
