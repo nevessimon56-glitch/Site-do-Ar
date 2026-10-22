@@ -1,7 +1,6 @@
 {% comment %}
   Diagnóstico Clima 360 — versão isolada via iframe srcdoc.
-  O HTML do quiz fica em <script type="text/plain"> para evitar que
-  </script> interno quebre o JavaScript da página pai.
+  O HTML do quiz fica em <template> para que </script> interno não quebre o parser da página pai.
 {% endcomment %}
 
 <style>
@@ -25,7 +24,7 @@
   <iframe id="diag360-frame" title="Diagnóstico Clima 360" scrolling="no"></iframe>
 </div>
 
-<script type="text/plain" id="diag360-srcdoc"><!doctype html>
+<template id="diag360-srcdoc"><!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
@@ -40,7 +39,7 @@
     background-image:
       radial-gradient(ellipse 60% 40% at 10% 0%,rgba(249,115,22,.12),transparent),
       radial-gradient(ellipse 50% 50% at 90% 100%,rgba(59,130,246,.10),transparent);
-    color:#f1f5f9;line-height:1.5;min-height:100vh;
+    color:#f1f5f9;line-height:1.5;min-height:0;
     --accent:#f97316;--accent2:#fb923c;--glow:rgba(249,115,22,.25);
     --surface:#111827;--surface2:#1a2235;--border:rgba(255,255,255,.08);
     --muted:#64748b;--muted2:#94a3b8;--cyan:#22d3ee;
@@ -51,9 +50,12 @@
     padding:20px 32px;border-bottom:1px solid var(--border);
     background:rgba(10,14,26,.9);backdrop-filter:blur(12px);
     position:sticky;top:0;z-index:10}
-  .d-logo{display:flex;align-items:center;text-decoration:none;line-height:0}
-  .d-logo-img{height:40px;width:auto;max-width:180px;object-fit:contain;display:block}
-  .d-logo img+img{display:none!important}
+  .d-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1rem;
+    letter-spacing:-.02em;color:#f1f5f9}
+  .d-logo-icon{width:36px;height:36px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;place-items:center;font-size:.75rem;font-weight:900;color:#fff;
+    box-shadow:0 0 20px var(--glow)}
   .d-header-badge{padding:6px 12px;border-radius:999px;
     background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);
     color:var(--accent2);font-size:.78rem;font-weight:700;
@@ -243,11 +245,10 @@
 </style>
 </head>
 <body>
+<div id="diag360-root">
 
 <header class="d-header">
-  <a class="d-logo" href="/" target="_top" title="Site Do Ar" aria-label="Site Do Ar">
-    <img class="d-logo-img" src="https://salescdn.net/XOFBUXAbeaqnTcy-gCa7vQrXkio=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/1777059085610.webp" alt="Site Do Ar" width="180" height="40">
-  </a>
+  <a class="d-logo" href="/" target="_top"><span class="d-logo-icon">360</span> Site Do Ar</a>
   <span class="d-header-badge">Quiz avançado</span>
 </header>
 
@@ -332,8 +333,8 @@
         <p class="d-result-text" id="resText"></p>
         <div class="d-result-badges" id="resBadges"></div>
         <div class="d-result-ctas">
-          <a class="d-btn-products" href="/" target="_top">🛒 Ver produtos indicados</a>
-          <a class="d-btn-whatsapp" href="https://wa.me/" target="_top">💬 Falar com especialista</a>
+          <a class="d-btn-products" id="resProducts" href="/busca" target="_top">🛒 Ver produtos indicados</a>
+          <a class="d-btn-whatsapp" id="resWhatsapp" href="https://wa.me/5519984176960" target="_top" rel="noopener noreferrer">💬 Falar com especialista</a>
         </div>
       </div>
       <div class="d-route-card">
@@ -344,6 +345,8 @@
     </div>
   </div>
 </section>
+
+</div>
 
 <script>
 (function(){
@@ -359,10 +362,10 @@
     {id:'tamanho',title:'Qual o tamanho aproximado do ambiente?',hint:'O tamanho é o principal fator para definir a capacidade ideal em BTUs.',
      fact:'Cada m² adicional exige cerca de 600 BTUs a mais de capacidade.',
      options:[
-      {v:'p',emoji:'📐',t:'Até 15 m²',d:'Pequeno',btu:9000},
-      {v:'m',emoji:'📏',t:'16 a 25 m²',d:'Médio',btu:12000},
-      {v:'g',emoji:'📊',t:'26 a 40 m²',d:'Grande',btu:18000},
-      {v:'xg',emoji:'🏠',t:'Acima de 40 m²',d:'Muito grande',btu:24000}
+      {v:'p',emoji:'📐',t:'Até 15 m²',d:'Pequeno',btu:0},
+      {v:'m',emoji:'📏',t:'16 a 25 m²',d:'Médio',btu:0},
+      {v:'g',emoji:'📊',t:'26 a 40 m²',d:'Grande',btu:0},
+      {v:'xg',emoji:'🏠',t:'Acima de 40 m²',d:'Muito grande',btu:0}
      ],peso:{potencia:4}},
     {id:'pessoas',title:'Quantas pessoas usam o ambiente?',hint:'Cada pessoa adiciona calor ao espaço.',
      fact:'Cada pessoa em repouso emite cerca de 600 BTUs por hora.',
@@ -381,7 +384,7 @@
       {v:'todo',emoji:'🌞',t:'Sol o dia todo',d:'Insolação intensa',btu:2500}
      ],peso:{potencia:2}},
     {id:'rotina',title:'Quantas horas por dia será usado?',hint:'Uso intenso pede modelos mais eficientes.',
-     fact:'Modelos Inverter economizam até 40% em uso prolongado.',
+     fact:'Modelos Inverter ajustam a potência conforme a necessidade e tendem a consumir menos em uso prolongado.',
      options:[
       {v:'pouco',emoji:'⏰',t:'Até 4 horas',d:'Uso esporádico',btu:0},
       {v:'medio',emoji:'🕐',t:'4 a 8 horas',d:'Uso moderado',btu:0},
@@ -389,7 +392,7 @@
       {v:'24h',emoji:'🕛',t:'Mais de 12 horas',d:'Uso contínuo',btu:0}
      ],peso:{economia:3,tecnologia:2}},
     {id:'prio',title:'O que é mais importante para você?',hint:'Vamos priorizar o que mais importa.',
-     fact:'A escolha certa pode reduzir a conta de luz em até 50%.',
+     fact:'Eficiência energética e hábitos de uso influenciam diretamente o consumo na conta de luz.',
      options:[
       {v:'eco',emoji:'💰',t:'Economia',d:'Conta de luz baixa',btu:0},
       {v:'conf',emoji:'❄️',t:'Conforto',d:'Temperatura ideal',btu:0},
@@ -405,7 +408,7 @@
       {v:'max',emoji:'🤫',t:'Essencial',d:'Sono leve',btu:0}
      ],peso:{silencio:4}},
     {id:'tech',title:'Quer recursos inteligentes?',hint:'Wi-Fi, app e comando de voz.',
-     fact:'90% dos lançamentos top de linha já vêm com Wi-Fi integrado.',
+     fact:'Muitos modelos atuais oferecem Wi-Fi e controle pelo celular — confira a ficha do produto.',
      options:[
       {v:'nao',emoji:'🎛',t:'Não preciso',d:'Controle simples',btu:0},
       {v:'wifi',emoji:'📶',t:'Wi-Fi',d:'Controle pelo celular',btu:0},
@@ -413,7 +416,7 @@
       {v:'full',emoji:'🤖',t:'Tudo integrado',d:'Casa inteligente',btu:0}
      ],peso:{tecnologia:4}},
     {id:'orcamento',title:'Qual seu orçamento?',hint:'Filtramos as opções dentro do seu range.',
-     fact:'Modelos Inverter custam 20-30% mais, mas se pagam em 2 anos.',
+     fact:'Modelos Inverter costumam ter preço inicial maior; compare consumo e garantia na ficha técnica.',
      options:[
       {v:'eco',emoji:'💵',t:'Até R$ 2.500',d:'Custo-benefício',btu:0},
       {v:'med',emoji:'💴',t:'R$ 2.500 a 4.000',d:'Intermediário',btu:0},
@@ -421,7 +424,7 @@
       {v:'pre',emoji:'💎',t:'Acima de R$ 6.000',d:'Premium',btu:0}
      ],peso:{economia:2}},
     {id:'urgencia',title:'Qual sua urgência?',hint:'Vamos priorizar entrega rápida se necessário.',
-     fact:'Pedidos até as 14h podem ser despachados no mesmo dia.',
+     fact:'Prazos de entrega variam conforme região, estoque e transportadora — confirmamos no orçamento.',
      options:[
       {v:'ja',emoji:'⚡',t:'Preciso agora',d:'Entrega rápida',btu:0},
       {v:'semana',emoji:'📅',t:'Esta semana',d:'Em até 7 dias',btu:0},
@@ -463,8 +466,14 @@
     resTitle:document.getElementById('resTitle'),
     resText:document.getElementById('resText'),
     resBadges:document.getElementById('resBadges'),
-    resRoute:document.getElementById('resRoute')
+    resRoute:document.getElementById('resRoute'),
+    resProducts:document.getElementById('resProducts'),
+    resWhatsapp:document.getElementById('resWhatsapp')
   };
+
+  var WHATSAPP_NUMBER = '5519984176960';
+  var ORCAMENTO_TEXT = {eco:'até R$ 2.500',med:'R$ 2.500 a R$ 4.000',top:'R$ 4.000 a R$ 6.000',pre:'acima de R$ 6.000'};
+  var URGENCIA_TEXT = {ja:'entrega o mais rápido possível',semana:'entrega em até 7 dias',mes:'sem urgência — pode aguardar o prazo normal',pesq:'você está comparando opções'};
 
   els.stepTotal.textContent = questions.length;
 
@@ -506,13 +515,28 @@
     notifyH();
   }
 
+  var COMMERCIAL_BTU = [9000,12000,18000,24000,30000,36000];
+  function snapCommercialBtu(raw){
+    var n = Math.max(raw, COMMERCIAL_BTU[0]);
+    for(var i = 0; i < COMMERCIAL_BTU.length; i++){
+      if(n <= COMMERCIAL_BTU[i]) return COMMERCIAL_BTU[i];
+    }
+    return COMMERCIAL_BTU[COMMERCIAL_BTU.length - 1];
+  }
+
   function recalc(){
     var scores = {economia:0,conforto:0,rapidez:0,silencio:0,tecnologia:0,potencia:0};
     var btu = 9000;
     questions.forEach(function(q){
       var v = state.answers[q.id]; if(!v) return;
       var opt = q.options.find(function(x){return x.v===v;});
-      if(opt && opt.btu) btu += opt.btu;
+      if(opt && opt.btu){
+        if(q.id === 'ambiente'){
+          btu = opt.btu;
+        } else if(q.id === 'pessoas' || q.id === 'sol'){
+          btu += opt.btu;
+        }
+      }
       if(q.peso) Object.keys(q.peso).forEach(function(k){scores[k]+=q.peso[k];});
       if(q.id==='prio'){
         var map = {eco:'economia',conf:'conforto',sil:'silencio',tec:'tecnologia'};
@@ -520,7 +544,7 @@
       }
     });
     state.scores = scores;
-    state.btu = Math.min(btu,36000);
+    state.btu = snapCommercialBtu(btu);
     els.heroBtu.textContent = fmt(state.btu);
     els.sideBtu.textContent = fmt(state.btu);
     prios.forEach(function(p){
@@ -545,6 +569,14 @@
     if(state.step>0){state.step--;renderQ();}
   });
 
+  function recommendedLine(){
+    var rot = state.answers.rotina;
+    var prio = state.answers.prio;
+    if(rot === 'muito' || rot === '24h' || prio === 'eco') return 'Inverter';
+    if(state.answers.orcamento === 'eco') return 'convencional de boa eficiência ou Inverter';
+    return 'Inverter';
+  }
+
   function buildResult(){
     els.quizCard.style.display='none';
     document.querySelector('.d-sidebar').style.display='none';
@@ -552,31 +584,49 @@
     var s = state.scores;
     var topKey = Object.keys(s).reduce(function(a,b){return s[a]>=s[b]?a:b;});
     var topLabel = (prios.find(function(p){return p.key===topKey;})||{}).label||'Conforto';
+    var line = recommendedLine();
+    var orcTxt = ORCAMENTO_TEXT[state.answers.orcamento] || 'seu orçamento';
+    var urgTxt = URGENCIA_TEXT[state.answers.urgencia] || 'conforme disponibilidade';
+    var btuSlug = state.btu + ' btus';
+    var productsUrl = '/busca?categorias=' + encodeURIComponent(btuSlug);
+    var waMsg = 'Olá! Fiz o Diagnóstico Clima 360. Indicação: ' + fmt(state.btu) + ' BTUs, foco em ' + topLabel.toLowerCase() + ', faixa ' + orcTxt + '. Prioridade: ' + urgTxt + '.';
     els.resTitle.textContent = 'Ar-condicionado '+fmt(state.btu)+' BTUs';
-    els.resText.textContent = 'Com base nas suas respostas, o foco principal é '+topLabel.toLowerCase()+'. Recomendamos um modelo de '+fmt(state.btu)+' BTUs adequado ao seu ambiente e rotina.';
-    els.resBadges.innerHTML = '<span class="d-badge hl">'+fmt(state.btu)+' BTUs</span><span class="d-badge">Foco: '+topLabel+'</span>';
-    els.resRoute.textContent = 'Modelos '+fmt(state.btu)+' BTUs com prioridade em '+topLabel.toLowerCase()+'. Indicamos linha Inverter para máxima eficiência.';
+    els.resText.textContent = 'Com base nas suas respostas, o foco principal é '+topLabel.toLowerCase()+'. Para '+orcTxt+', priorizamos '+urgTxt+'. Recomendamos '+fmt(state.btu)+' BTUs em linha '+line+'.';
+    els.resBadges.innerHTML = '<span class="d-badge hl">'+fmt(state.btu)+' BTUs</span><span class="d-badge">Foco: '+topLabel+'</span><span class="d-badge">'+line+'</span>';
+    els.resRoute.textContent = 'Veja modelos de '+fmt(state.btu)+' BTUs com ênfase em '+topLabel.toLowerCase()+'. Linha sugerida: '+line+'.';
+    if(els.resProducts) els.resProducts.href = productsUrl;
+    if(els.resWhatsapp) els.resWhatsapp.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waMsg);
     els.heroPct.textContent='100';
     els.heroBar.style.width='100%';
     els.heroStatus.textContent='Diagnóstico concluído';
     notifyH();
   }
 
+  function measureHeight(){
+    var root = document.getElementById('diag360-root');
+    if(root) return root.offsetHeight;
+    return Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  }
+
   function notifyH(){
     try{
-      window.parent.postMessage({type:'diag360-resize',h:document.body.scrollHeight},'*');
+      var h = measureHeight();
+      var origin = '*';
+      try { if(document.referrer) origin = new URL(document.referrer).origin; } catch(err){}
+      window.parent.postMessage({type:'diag360-resize', h: h}, origin);
     }catch(e){}
   }
 
   initBars(); recalc(); renderQ();
   window.addEventListener('load',notifyH);
   if(typeof ResizeObserver!=='undefined'){
-    new ResizeObserver(notifyH).observe(document.body);
+    var rootEl = document.getElementById('diag360-root');
+    if(rootEl) new ResizeObserver(notifyH).observe(rootEl);
   }
 })();
 </script>
 </body>
-</html></script>
+</html></template>
 
 <script>
 (function () {
@@ -584,11 +634,12 @@
   var frame = document.getElementById('diag360-frame');
   if (!src || !frame) return;
 
-  frame.srcdoc = src.textContent;
+  frame.srcdoc = src.innerHTML;
 
   window.addEventListener('message', function (e) {
-    if (e.data && e.data.type === 'diag360-resize' && e.data.h) {
-      frame.style.height = (e.data.h + 20) + 'px';
+    if (!frame.contentWindow || e.source !== frame.contentWindow) return;
+    if (e.data && e.data.type === 'diag360-resize' && typeof e.data.h === 'number' && e.data.h > 0) {
+      frame.style.height = e.data.h + 'px';
     }
   });
 })();

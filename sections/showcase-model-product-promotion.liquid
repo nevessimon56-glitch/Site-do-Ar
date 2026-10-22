@@ -1,0 +1,180 @@
+{% assign productPricePrimary = product.price %}
+{% if product.primaryPrice %}
+    {% assign productPricePrimary = product.primaryPrice %}
+{% endif %}
+{% if product.secondaryPrice %}
+    {% assign productPriceSecond = product.secondaryPrice %}
+{% endif %}
+<div class="showcase-item">
+    <div class="showcase-product card" itemscope itemtype="http://schema.org/Product">
+        <div class="card-left">
+            <div class="showcase-product_image card-image">
+                <a class="showcase-product_link showcase-product_link__image" href="{{ product.url }}">
+                    {% if product.medias[0].path != blank %}
+                        <img class="lazy" data-src="{{ product.medias[0].path | imgUrl: 250 }}" alt="{{ product.title }}">
+                        <meta itemprop="image" content="{{ product.medias[0].path | imgUrl: 250 }}">
+                    {% else %}
+                        {{ themeConfig.icons.image }}
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+        <div class="card-right">
+            <div class="card-header">
+                <h3>
+                    <a class="showcase-product_link showcase-product_link_title" href="{{ product.url }}">
+                    <span itemprop="name">
+                        {{ product.title }}
+                    </span>
+                    </a>
+                </h3>
+            </div>
+            <div class="card-footer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                {% if product.manageStock == false or product.stockTotal > 0 %}
+                    {% assign kitOptionsVisiblePrice = false %}
+                    {% if product.price.basePrice == blank %}
+                        {% assign kitOptionsVisiblePrice = true %}
+                    {% elsif product.price.basePrice and product.price.basePrice > 0 %}
+                        {% assign kitOptionsVisiblePrice = true %}
+                    {% endif %}
+                    {% if kitOptionsVisiblePrice == true %}
+                        {% if themeConfig.price.type == 'show' or themeConfig.price.type == 'show-logged' %}
+                            {% assign mainPricePrimary = productPricePrimary.price %}
+                            {% if productPricePrimary.promotionPrice > 0 %}
+                                {% assign mainPricePrimary = productPricePrimary.promotionPrice %}
+                                {% assign promotionPrice = productPricePrimary.price %}
+                            {% endif %}
+                            {% assign classShowcaseLoginPrice = '' %}
+                            {% if themeConfig.price.type == 'show-logged' %}
+                                {% assign classShowcaseLoginPrice = ' login-btn_logged d-hide' %}
+                            {% endif %}
+                            <div class="showcase-prices{{ classShowcaseLoginPrice }}">
+                                {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                                    <del class="showcase-prices_strike">
+                                        {{ promotionPrice | money }}
+                                    </del>
+                                {% endif %}
+                                <div class="showcase-prices_price">
+                                    {{ mainPricePrimary | money }}
+                                </div>
+                                {% if productPriceSecond %}
+                                    {% if productPriceSecond.installment > 1 %}
+                                        <p class="showcase-prices_plots">
+                                            ou {{ productPriceSecond.installment }}x
+                                            de {{ productPriceSecond.installmentValue | money }} no cartão
+                                        </p>
+                                    {% else %}
+                                        <p class="showcase-prices_plots">
+                                            ou <span>{{ productPriceSecond.price | money }}</span> à vista
+                                        </p>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    {% case themeConfig.buyAction.type %}
+                        {% when "chat-buy" %}
+                            <!-- chat-buy -->
+                            {% if themeConfig.buyAction.plugin %}
+                                {% assign msgChatBuy = themeConfig.buyAction.plugin | msgChatBuyProduct: product, themeConfig.price.type %}
+                                <a class="showcase-product_buy btn{% if themeConfig.price.type == 'hide'%} showcase-product_buy__full{% endif %}"
+                                        {% if product.kitOptions.size > 0  %}
+                                            href="{{ product.url }}"
+                                        {% else %}
+                                            href="javascript:void(0)"
+                                            onclick="{{ themeConfig.buyAction.plugin | actionBtnChatBuy: msgChatBuy }}"
+                                        {% endif %}
+                                >
+                                    {{ themeConfig.buyAction.plugin | textBtnChatBuy: themeConfig.price.type }}
+                                </a>
+                            {% else %}
+                                <a class="showcase-product_buy btn"
+                                        {% if product.kitOptions.size > 0  %}
+                                            href="{{ product.url }}"
+                                        {% else %}
+                                            href="javascript:void(0)"
+                                            onclick="handleAddToCart('{{ product.id }}')"
+                                        {% endif %}
+                                >
+                                    Comprar
+                                </a>
+                            {% endif %}
+                        {% when "login" %}
+                            <!-- login -->
+                            {% assign classBtnBuy = ' login-btn_logged d-hide' %}
+                            {% assign classBtnLogin = ' login-btn_not_logged d-hide' %}
+                            <a class="showcase-product_buy btn{{ classBtnBuy }}"
+                                    {% if product.kitOptions.size > 0  %}
+                                        href="{{ product.url }}"
+                                    {% else  %}
+                                        href="javascript:void(0)"
+                                        onclick="handleAddToCart('{{ product.id }}')"
+                                    {% endif  %}
+                            >
+                                Comprar
+                            </a>
+                            <a class="showcase-product_buy showcase-product_login btn{{ classBtnLogin }} showcase-product_buy__full"
+                               href="javascript:void(0)"
+                               onclick="openSideNavOverlay('.sidenav-overlay_account', true)">
+                                Fazer Login
+                            </a>
+                        {% when "cart-add" %}
+                            <!-- cart-add -->
+                            <a class="showcase-product_buy btn"
+                                    {% if product.kitOptions.size > 0  %}
+                                        href="{{ product.url }}"
+                                    {% else %}
+                                        href="javascript:void(0)"
+                                        onclick="handleAddToCart('{{ product.id }}')"
+                                    {% endif %}
+                            >
+                                Comprar
+                            </a>
+                    {% endcase %}
+                {% else %}
+                    {% assign classBtnBuy = '' %}
+                    {% if themeConfig.price.type == 'show-logged' or  themeConfig.buyAction.type == 'hide' %}
+                        {% assign classBtnBuy = 'login-btn_logged d-hide' %}
+                    {% endif %}
+                    <div class="showcase-prices showcase-prices_out-of-stock {{ classBtnBuy }}">
+                        <p class="showcase-prices_price">
+                            Desculpe, indisponível.
+                        </p>
+                    </div>
+                    {% assign subjectContact = 'subject=Avise-me quando o produto estiver disponível' %}
+                    {% assign messageContact = 'message=Nome: ' | append: product.title | append: '%0A' | append: 'Produto id: ' | append: product.id %}
+                    {% if product.sku %}
+                        {% assign messageContact = messageContact | append: '%0A' | append: 'Referência: ' | append: product.sku %}
+                    {% endif %}
+                    {% assign linkContact = '/pagina/fale-conosco?' | append: subjectContact | append: '&' | append: messageContact %}
+                    <a class="showcase-product_buy showcase-product_buy_out-of-stock btn  {{ classBtnBuy }}" href="{{ linkContact }}">
+                        Avise-me
+                    </a>
+                    {% if themeConfig.price.type == 'show-logged' %}
+                        <!-- Login -->
+                        {% assign classBtnLogin = ' login-btn_not_logged d-hide' %}
+                        <a class="showcase-product_buy showcase-product_login btn{{ classBtnLogin }} showcase-product_buy__full"
+                           href="javascript:void(0)"
+                           onclick="openSideNavOverlay('.sidenav-overlay_account', true)">
+                            Fazer Login
+                        </a>
+                    {% endif %}
+                {% endif %}
+                <link itemprop="availability" href="http://schema.org/InStock"/>
+                <meta itemprop="description" content="{{ product.title }}"/>
+                <meta itemprop="price" content="{{ mainPricePrimary }}"/>
+                <meta itemprop="priceCurrency" content="BRL"/>
+                <meta itemprop="sku" content="{{ product.sku }}"/>
+                <meta itemprop="url" content="{{ product.slug | linkProduct: product.id }}"/>
+                {% assign datePromotionEnd = product.price.datePromotionEnd %}
+                {% if datePromotionEnd == null %}
+                    {% assign days = 7 | times: 86400 %}
+                    {% assign datePromotionEnd = "now" | date: "%s" | plus: days | date: "%Y-%m-%d %H:%M" %}
+                    <meta itemprop="priceValidUntil" content="{{ datePromotionEnd }}"/>
+                {% else %}
+                    <meta itemprop="priceValidUntil" content="{{ datePromotionEnd }}"/>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

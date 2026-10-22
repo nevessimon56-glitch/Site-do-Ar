@@ -1,0 +1,67 @@
+{% assign iconCookie = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 682.66669 682.66669"><defs><clipPath id="clipPath1217"><path d="M 0,512 H 512 V 0 H 0 Z"></path></clipPath></defs><g transform="matrix(1.3333333,0,0,-1.3333333,0,682.66667)"><g transform="translate(259.4346,496.9565)"><path d="m 0,0 c -6.657,-33.685 -35.229,-59.476 -70.242,-61.925 6.425,-23.554 2.714,-50.913 -12.376,-74.632 -15.562,-24.463 -39.761,-39.6 -64.62,-43.192 0.338,-2.923 0.518,-5.895 0.518,-8.909 0,-42.624 -34.553,-77.177 -77.177,-77.177 -6.735,0 -13.266,0.867 -19.494,2.487 11.299,-122.6 114.408,-218.609 239.956,-218.609 133.101,0 241,107.9 241,241 C 237.565,-109.004 131.515,-1.839 0,0 Z" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(213.6865,189.2998)"><path d="m 0,0 c 0,-20.443 -16.572,-37.015 -37.016,-37.015 -20.442,0 -37.014,16.572 -37.014,37.015 0,20.443 16.572,37.015 37.014,37.015 C -16.572,37.015 0,20.443 0,0 Z" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(341.7266,384.0034)"><path d="m 0,0 c 0,-22.046 -17.871,-39.917 -39.917,-39.917 -22.045,0 -39.917,17.871 -39.917,39.917 0,22.045 17.872,39.917 39.917,39.917 C -17.871,39.917 0,22.045 0,0 Z" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(363.3721,149.5977)"><path d="m 0,0 c 0,-19.511 -15.817,-35.328 -35.328,-35.328 -19.512,0 -35.328,15.817 -35.328,35.328 0,19.511 15.816,35.328 35.328,35.328 C -15.817,35.328 0,19.511 0,0 Z" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(433.7578,277.2319)"><path d="m 0,0 c 0,-19.511 -15.816,-35.328 -35.327,-35.328 -19.512,0 -35.328,15.817 -35.328,35.328 0,19.511 15.816,35.328 35.328,35.328 C -15.816,35.328 0,19.511 0,0 Z" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(398.4297,374.8511)"><path d="M 0,0 V 0" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(429.8486,184.9253)"><path d="M 0,0 V 0" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(206.0029,297.2319)"><path d="M 0,0 V 0" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(236.0029,85.2319)"><path d="M 0,0 V 0" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(301.8096,285.2319)"><path d="M 0,0 V 0" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(270.8467,228.5791)"><path d="M 0,0 V 0" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity=""></path></g><g transform="translate(75.6553,184.9253)"><path d="M 0,0 V 0" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(127.6553,459.9849)"><path d="m 0,0 c 0,-20.443 -16.572,-37.015 -37.016,-37.015 -20.442,0 -37.014,16.572 -37.014,37.015 0,20.443 16.572,37.015 37.014,37.015 C -16.572,37.015 0,20.443 0,0 Z" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g><g transform="translate(15,349.8511)"><path d="M 0,0 V 0" fill="none" stroke="#858585" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none"></path></g></g></svg>' %}
+<div x-data="setupCookie()" x-init="getInitCookie()">
+    <div class="modal modal-msg-cookie" :class="state.isOpenModal ? 'active' : ''">
+        <a href="javascript:void(0)" class="modal-overlay" aria-label="Fechar" @click="closeModalCookie()"></a>
+        <div class="modal-container">
+            <div class="modal-header">
+                <a href="javascript:void(0)" class="btn btn-clear float-right" aria-label="Fechar" @click="closeModalCookie()"></a>
+            </div>
+            <div class="modal-body">
+                {{ iconCookie }}
+                <h2>Desbloqueie os Cookies</h2>
+                <p>Com cookie bloqueado, não terá total funcionalidade neste site.</p>
+                <p>Então por favor, vá para configuração do seu navegador e permita cookies.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function setupCookie() {
+        const state = {
+            isOpenModal: false,
+        }
+        function getInitCookie() {
+            if(this.checkCookie() === 'blocked'){
+                this.openModalCookie();
+            }
+        }
+        function openModalCookie() {
+            this.state.isOpenModal = true;
+            var elsHeader = document.querySelectorAll('.header');
+            for (var i = 0; i < elsHeader.length; i++) {
+                elsHeader[i].style.zIndex = '9';
+            }
+        }
+
+        function closeModalCookie() {
+            this.state.isOpenModal = false;
+            var elsHeader = document.querySelectorAll('.header');
+            for (var i = 0; i < elsHeader.length; i++) {
+                elsHeader[i].removeAttribute("style");
+            }
+        }
+        function checkCookie(){
+            var cookieEnabled = navigator.cookieEnabled;
+            if (!cookieEnabled){
+                document.cookie = "testcookie";
+                cookieEnabled = document.cookie.indexOf("testcookie")!=-1;
+            }
+            return cookieEnabled || 'blocked';
+        }
+        return {
+            state,
+            openModalCookie,
+            closeModalCookie,
+            getInitCookie,
+            checkCookie,
+        };
+    }
+</script>
+<style>
+    .modal-msg-cookie .btn { border: none !important; box-shadow: none !important; }
+    .modal-msg-cookie .btn:focus, .modal-msg-cookie .btn:hover { color: #b3b3b3; }
+    .modal-msg-cookie .modal-body svg > * { fill: #858585 !important; }
+    .modal-msg-cookie .modal-body svg { display: table; fill: #858585 !important; height: 60px; margin-bottom: 32px; margin-left: auto; margin-right: auto; width: 60px; }
+    .modal-msg-cookie .modal-body { padding-bottom: 60px; padding-top: 20px; text-align: center; }
+    .modal-msg-cookie { color: #333; fill: #858585; }
+</style>
