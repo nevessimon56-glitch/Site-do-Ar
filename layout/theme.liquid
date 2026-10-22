@@ -262,7 +262,7 @@
             },
         }
     }
-    window.__storeCustomer = {% if customer.customerId %}{
+    window.__storeCustomer = {% if customer and customer.customerId %}{
         customerId: {{ customer.customerId | json }},
         email: {{ customer.email | json }},
         cellphone: {{ customer.cellphone | json }},
