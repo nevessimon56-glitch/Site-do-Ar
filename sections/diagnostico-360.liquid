@@ -39,7 +39,7 @@
     background-image:
       radial-gradient(ellipse 60% 40% at 10% 0%,rgba(249,115,22,.12),transparent),
       radial-gradient(ellipse 50% 50% at 90% 100%,rgba(59,130,246,.10),transparent);
-    color:#f1f5f9;line-height:1.5;min-height:100vh;
+    color:#f1f5f9;line-height:1.5;min-height:0;
     --accent:#f97316;--accent2:#fb923c;--glow:rgba(249,115,22,.25);
     --surface:#111827;--surface2:#1a2235;--border:rgba(255,255,255,.08);
     --muted:#64748b;--muted2:#94a3b8;--cyan:#22d3ee;
@@ -245,6 +245,7 @@
 </style>
 </head>
 <body>
+<div id="diag360-root">
 
 <header class="d-header">
   <a class="d-logo" href="/" target="_top"><span class="d-logo-icon">360</span> Site Do Ar</a>
@@ -332,8 +333,8 @@
         <p class="d-result-text" id="resText"></p>
         <div class="d-result-badges" id="resBadges"></div>
         <div class="d-result-ctas">
-          <a class="d-btn-products" href="/" target="_top">🛒 Ver produtos indicados</a>
-          <a class="d-btn-whatsapp" href="https://wa.me/" target="_top">💬 Falar com especialista</a>
+          <a class="d-btn-products" id="resProducts" href="/busca" target="_top">🛒 Ver produtos indicados</a>
+          <a class="d-btn-whatsapp" id="resWhatsapp" href="https://wa.me/5519984176960" target="_top" rel="noopener noreferrer">💬 Falar com especialista</a>
         </div>
       </div>
       <div class="d-route-card">
@@ -344,6 +345,8 @@
     </div>
   </div>
 </section>
+
+</div>
 
 <script>
 (function(){
@@ -463,8 +466,14 @@
     resTitle:document.getElementById('resTitle'),
     resText:document.getElementById('resText'),
     resBadges:document.getElementById('resBadges'),
-    resRoute:document.getElementById('resRoute')
+    resRoute:document.getElementById('resRoute'),
+    resProducts:document.getElementById('resProducts'),
+    resWhatsapp:document.getElementById('resWhatsapp')
   };
+
+  var WHATSAPP_NUMBER = '5519984176960';
+  var ORCAMENTO_TEXT = {eco:'até R$ 2.500',med:'R$ 2.500 a R$ 4.000',top:'R$ 4.000 a R$ 6.000',pre:'acima de R$ 6.000'};
+  var URGENCIA_TEXT = {ja:'entrega o mais rápido possível',semana:'entrega em até 7 dias',mes:'sem urgência — pode aguardar o prazo normal',pesq:'você está comparando opções'};
 
   els.stepTotal.textContent = questions.length;
 
@@ -560,6 +569,14 @@
     if(state.step>0){state.step--;renderQ();}
   });
 
+  function recommendedLine(){
+    var rot = state.answers.rotina;
+    var prio = state.answers.prio;
+    if(rot === 'muito' || rot === '24h' || prio === 'eco') return 'Inverter';
+    if(state.answers.orcamento === 'eco') return 'convencional de boa eficiência ou Inverter';
+    return 'Inverter';
+  }
+
   function buildResult(){
     els.quizCard.style.display='none';
     document.querySelector('.d-sidebar').style.display='none';
@@ -567,26 +584,44 @@
     var s = state.scores;
     var topKey = Object.keys(s).reduce(function(a,b){return s[a]>=s[b]?a:b;});
     var topLabel = (prios.find(function(p){return p.key===topKey;})||{}).label||'Conforto';
+    var line = recommendedLine();
+    var orcTxt = ORCAMENTO_TEXT[state.answers.orcamento] || 'seu orçamento';
+    var urgTxt = URGENCIA_TEXT[state.answers.urgencia] || 'conforme disponibilidade';
+    var btuSlug = state.btu + ' btus';
+    var productsUrl = '/busca?categorias=' + encodeURIComponent(btuSlug);
+    var waMsg = 'Olá! Fiz o Diagnóstico Clima 360. Indicação: ' + fmt(state.btu) + ' BTUs, foco em ' + topLabel.toLowerCase() + ', faixa ' + orcTxt + '. Prioridade: ' + urgTxt + '.';
     els.resTitle.textContent = 'Ar-condicionado '+fmt(state.btu)+' BTUs';
-    els.resText.textContent = 'Com base nas suas respostas, o foco principal é '+topLabel.toLowerCase()+'. Recomendamos um modelo de '+fmt(state.btu)+' BTUs adequado ao seu ambiente e rotina.';
-    els.resBadges.innerHTML = '<span class="d-badge hl">'+fmt(state.btu)+' BTUs</span><span class="d-badge">Foco: '+topLabel+'</span>';
-    els.resRoute.textContent = 'Modelos '+fmt(state.btu)+' BTUs com prioridade em '+topLabel.toLowerCase()+'. Indicamos linha Inverter para máxima eficiência.';
+    els.resText.textContent = 'Com base nas suas respostas, o foco principal é '+topLabel.toLowerCase()+'. Para '+orcTxt+', priorizamos '+urgTxt+'. Recomendamos '+fmt(state.btu)+' BTUs em linha '+line+'.';
+    els.resBadges.innerHTML = '<span class="d-badge hl">'+fmt(state.btu)+' BTUs</span><span class="d-badge">Foco: '+topLabel+'</span><span class="d-badge">'+line+'</span>';
+    els.resRoute.textContent = 'Veja modelos de '+fmt(state.btu)+' BTUs com ênfase em '+topLabel.toLowerCase()+'. Linha sugerida: '+line+'.';
+    if(els.resProducts) els.resProducts.href = productsUrl;
+    if(els.resWhatsapp) els.resWhatsapp.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waMsg);
     els.heroPct.textContent='100';
     els.heroBar.style.width='100%';
     els.heroStatus.textContent='Diagnóstico concluído';
     notifyH();
   }
 
+  function measureHeight(){
+    var root = document.getElementById('diag360-root');
+    if(root) return root.offsetHeight;
+    return Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  }
+
   function notifyH(){
     try{
-      window.parent.postMessage({type:'diag360-resize',h:document.body.scrollHeight},'*');
+      var h = measureHeight();
+      var origin = '*';
+      try { if(document.referrer) origin = new URL(document.referrer).origin; } catch(err){}
+      window.parent.postMessage({type:'diag360-resize', h: h}, origin);
     }catch(e){}
   }
 
   initBars(); recalc(); renderQ();
   window.addEventListener('load',notifyH);
   if(typeof ResizeObserver!=='undefined'){
-    new ResizeObserver(notifyH).observe(document.body);
+    var rootEl = document.getElementById('diag360-root');
+    if(rootEl) new ResizeObserver(notifyH).observe(rootEl);
   }
 })();
 </script>
@@ -602,8 +637,9 @@
   frame.srcdoc = src.innerHTML;
 
   window.addEventListener('message', function (e) {
-    if (e.data && e.data.type === 'diag360-resize' && e.data.h) {
-      frame.style.height = (e.data.h + 20) + 'px';
+    if (!frame.contentWindow || e.source !== frame.contentWindow) return;
+    if (e.data && e.data.type === 'diag360-resize' && typeof e.data.h === 'number' && e.data.h > 0) {
+      frame.style.height = e.data.h + 'px';
     }
   });
 })();
