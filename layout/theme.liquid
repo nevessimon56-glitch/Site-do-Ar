@@ -166,8 +166,22 @@
         loadInputMask();
     });
     function loadFilesJSDefer() {
+        if (window.__wdnaThemeDeferLoading) {
+            return;
+        }
+        if (document.querySelector('script[data-wdna-theme-defer="1"]')) {
+            return;
+        }
+        window.__wdnaThemeDeferLoading = true;
         var all_defer_script = document.createElement('script');
+        all_defer_script.setAttribute('data-wdna-theme-defer', '1');
         all_defer_script.setAttribute('src', '{{ 'assets/theme-defer.js' | themeAssetUrl }}');
+        all_defer_script.onerror = function () {
+            window.__wdnaThemeDeferLoading = false;
+            if (all_defer_script.parentNode) {
+                all_defer_script.parentNode.removeChild(all_defer_script);
+            }
+        };
         document.querySelector('body').appendChild(all_defer_script);
     }
 
@@ -303,7 +317,11 @@
     {{ script.code }}
 {%- endfor -%}
 
-{% comment %} Popup Diagnóstico 360: CSS em assets/theme-custom.css; omitido no checkout {% endcomment %}
+{% comment %}
+  Popup Diagnóstico 360: CSS em assets/theme-custom.css.
+  HTML omitido só quando checkout (templates/checkout.liquid). Página de pedido (checkout-order) ainda recebe o markup; JS bloqueia via .checkout-main (allowPopupPage).
+  order.id no layout não está referenciado em outro arquivo — não usar até validar escopo global no staging WDNA.
+{% endcomment %}
 {% unless checkout %}
 <div id="diag360backdrop" aria-hidden="true"></div>
 <div id="diag360pop" role="dialog" aria-modal="true" aria-labelledby="d360title" hidden>

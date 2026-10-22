@@ -268,7 +268,7 @@
       <div class="d-progress-hero"><span id="heroBar"></span></div>
     </div>
     <div class="d-stat-card">
-      <div class="d-stat-val" id="heroBtu">9.000</div>
+      <div class="d-stat-val" id="heroBtu">—</div>
       <div class="d-stat-label">Faixa de BTUs</div>
     </div>
     <div class="d-stat-card span2">
@@ -292,7 +292,7 @@
     </div>
     <div class="d-sidebar-card">
       <div class="d-live-btu">
-        <div class="d-btu-val" id="sideBtu">9.000</div>
+        <div class="d-btu-val" id="sideBtu">—</div>
         <div class="d-btu-label">BTUs estimados</div>
       </div>
     </div>
@@ -366,7 +366,7 @@
       {v:'m',emoji:'📏',t:'16 a 25 m²',d:'Médio',btu:0},
       {v:'g',emoji:'📊',t:'26 a 40 m²',d:'Grande',btu:0},
       {v:'xg',emoji:'🏠',t:'Acima de 40 m²',d:'Muito grande',btu:0}
-     ],peso:{potencia:4}},
+     ],peso:{}},
     {id:'pessoas',title:'Quantas pessoas usam o ambiente?',hint:'Cada pessoa adiciona calor ao espaço.',
      fact:'Cada pessoa em repouso emite cerca de 600 BTUs por hora.',
      options:[
@@ -485,6 +485,16 @@
 
   function fmt(n){return n.toLocaleString('pt-BR');}
 
+  function updateBtuDisplay(){
+    if(!state.answers.ambiente){
+      els.heroBtu.textContent = '—';
+      els.sideBtu.textContent = '—';
+      return;
+    }
+    els.heroBtu.textContent = fmt(state.btu);
+    els.sideBtu.textContent = fmt(state.btu);
+  }
+
   function renderQ(){
     var q = questions[state.step];
     els.stepNum.textContent = state.step+1;
@@ -544,9 +554,10 @@
       }
     });
     state.scores = scores;
-    state.btu = snapCommercialBtu(btu);
-    els.heroBtu.textContent = fmt(state.btu);
-    els.sideBtu.textContent = fmt(state.btu);
+    if(state.answers.ambiente){
+      state.btu = snapCommercialBtu(btu);
+    }
+    updateBtuDisplay();
     prios.forEach(function(p){
       var el = els.bars.querySelector('[data-bar="'+p.key+'"]');
       var lbl = els.bars.querySelector('[data-k="'+p.key+'"]');
@@ -588,6 +599,7 @@
     var orcTxt = ORCAMENTO_TEXT[state.answers.orcamento] || 'seu orçamento';
     var urgTxt = URGENCIA_TEXT[state.answers.urgencia] || 'conforme disponibilidade';
     var btuSlug = state.btu + ' btus';
+    /* URL query categorias: mesmo padrão do filtro Ciclo em sections/search-filter.liquid (~262) para base todos-os-produtos; filtro BTU no tema usa linkPreviousCategory — validar no staging WDNA. */
     var productsUrl = '/busca?categorias=' + encodeURIComponent(btuSlug);
     var waMsg = 'Olá! Fiz o Diagnóstico Clima 360. Indicação: ' + fmt(state.btu) + ' BTUs, foco em ' + topLabel.toLowerCase() + ', faixa ' + orcTxt + '. Prioridade: ' + urgTxt + '.';
     els.resTitle.textContent = 'Ar-condicionado '+fmt(state.btu)+' BTUs';

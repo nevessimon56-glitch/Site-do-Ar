@@ -17,10 +17,17 @@
             <div class="navbar">
                 <div class="navbar-section">
                     <a class="logo" href="/" title="{{ store.name }}">
-                        {% if product.id or search %}
-                            <span class="logo-store-name">{{ store.name }}</span>
-                        {% else %}
+                        {% comment %} H1 no logo: só home. path '/'|'' igual layout/theme.liquid (canonical). Sem evidência de outro path de home no repo; search truthy na home — validar no staging. {% endcomment %}
+                        {% assign logoUseH1 = false %}
+                        {% unless product.id or search %}
+                            {% if currentPage.path == '/' or currentPage.path == '' %}
+                                {% assign logoUseH1 = true %}
+                            {% endif %}
+                        {% endunless %}
+                        {% if logoUseH1 %}
                             <h1 class="logo-store-name">{{ store.name }}</h1>
+                        {% else %}
+                            <span class="logo-store-name">{{ store.name }}</span>
                         {% endif %}
                         {% if  theme.logo.path %}
                             <picture>
