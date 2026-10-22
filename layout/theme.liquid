@@ -35,8 +35,25 @@
 {% assign seoImageType = '' %}
 {% assign seoImageWidth = '' %}
 {% assign seoImageHeight = '' %}
+{% assign seoOgType = 'website' %}
+{% if product.id %}
+    {% assign seoOgType = 'product' %}
+{% endif %}
+{% assign seoSiteName = store.name %}
+{% assign seoPageUrl = store.url %}
+{% if product.id and product.slug %}
+    {% assign seoPageUrl = product.slug | linkProduct: product.id %}
+{% elsif currentPage.path and currentPage.path != '' %}
+    {% assign storeUrlBase = store.url %}
+    {% if storeUrlBase contains 'https://' or storeUrlBase contains 'http://' %}
+        {% assign seoPageUrl = storeUrlBase | append: currentPage.path %}
+    {% else %}
+        {% assign seoPageUrl = 'https://' | append: storeUrlBase | append: currentPage.path %}
+    {% endif %}
+{% endif %}
+
 {% if product.medias[0].path %}
-    {% assign seoImage = product.medias[0].path | imgUrl: 200 %}
+    {% assign seoImage = product.medias[0].path | imgUrl: 1200 %}
     {% if product.medias[0].mimeType %}
         {% assign seoImageType = product.medias[0].mimeType %}
     {% endif %}
@@ -65,9 +82,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <!-- Title -->
-    <title>
-        {{ seoTitle }}
-    </title>
+    <title>{{ seoTitle | strip }}</title>
     
 
 
@@ -75,8 +90,8 @@
     <meta http-equiv="Content-Language" content="pt-br">
 
     <!-- SEO -->
-    <meta name="description" content="{{ seoDescription }}">
-    <meta name="keywords" content="{{ seoKeywords }}">
+    <meta name="description" content="{{ seoDescription | strip }}">
+    <link rel="canonical" href="{{ seoPageUrl }}">
 
     <!-- Theme Color -->
     <meta name="theme-color" content="{{ themeConfig.color }}"/>
@@ -100,30 +115,29 @@
     <!-- Preconnect - Fonts -->
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
-    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-semibold.woff2" type="font/woff2" crossorigin="anonymous">
-    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-black.woff2" type="font/woff2" crossorigin="anonymous">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary"/>
     <meta name="twitter:title" content="{{ seoTitle }}"/>
     <meta name="twitter:image" content="{{ seoImage }}"/>
-    <meta name="twitter:url" content="{{ store.url }}"/>
+    <meta name="twitter:url" content="{{ seoPageUrl }}"/>
     <meta name="twitter:description" content="{{ seoDescription }}">
 
     <!-- Open Graph -->
     <meta property="og:locale" content="pt-BR"/>
     <meta property="og:title" content="{{ seoTitle }}"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:url" content="{{ store.url }}"/>
+    <meta property="og:type" content="{{ seoOgType }}"/>
+    <meta property="og:url" content="{{ seoPageUrl }}"/>
     <meta property="og:image" content="{{ seoImage }}"/>
-    <meta property="og:image:width" content="{{ seoImageWidth }}"/>
-    <meta property="og:image:height" content="{{ seoImageHeight }}"/>
+    {% if seoImageWidth != '' %}<meta property="og:image:width" content="{{ seoImageWidth }}"/>{% endif %}
+    {% if seoImageHeight != '' %}<meta property="og:image:height" content="{{ seoImageHeight }}"/>{% endif %}
     {% if seoImageType != '' %}<meta property="og:image:type" content="{{ seoImageType }}"/>{% endif %}
-    <meta property="og:site_name" content="{{ seoTitle }}"/>
+    <meta property="og:site_name" content="{{ seoSiteName }}"/>
     <meta property="og:description" content="{{ seoDescription }}"/>
 
 
     <meta name="csrf-token" content="{{ csrfToken }}">
+    <script>window.WDNA_GOOGLE_MERCHANT_ID = 5783325896;</script>
     {%- for script in scripts.header -%}
         {{ script.code }}
     {%- endfor -%}
@@ -140,13 +154,17 @@
 {% block content %}{% endblock %}
 {% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
 <script>
-    /* TODO: window.onunload-> é para não carregar cache do voltar e avançar dos navegadores Fire Fox, Safari e Safari */
-    window.onunload = function(){};
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            loadFilesJSDefer();
+            loadInputMask();
+        }
+    });
 
-    window.onload = function() {
+    window.addEventListener('load', function () {
         loadFilesJSDefer();
         loadInputMask();
-    }
+    });
     function loadFilesJSDefer() {
         var all_defer_script = document.createElement('script');
         all_defer_script.setAttribute('src', '{{ 'assets/theme-defer.js' | themeAssetUrl }}');
@@ -156,42 +174,43 @@
     captureUrlParameter();
 
     function captureUrlParameter() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let sellerInit = null;
-        let linkSellerInit = null;
-        let refInit = null;
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            let sellerInit = null;
+            let linkSellerInit = null;
+            let refInit = null;
 
-        urlParams.forEach((value, key) => {
-            if (key.toLowerCase() === 'seller') {
-                sellerInit = value;
-            }
-            if (key.toLowerCase() === 'linkseller') {
-                linkSellerInit = value;
-            }
-            if (key.toLowerCase() === 'ref') {
-                refInit = value;
-            }
-        });
+            urlParams.forEach((value, key) => {
+                if (key.toLowerCase() === 'seller') {
+                    sellerInit = value;
+                }
+                if (key.toLowerCase() === 'linkseller') {
+                    linkSellerInit = value;
+                }
+                if (key.toLowerCase() === 'ref') {
+                    refInit = value;
+                }
+            });
 
-        /* Apenas um: linkSeller > seller > ref */
-        if (linkSellerInit) {
-            localStorage.setItem('linkSeller', linkSellerInit);
-            localStorage.removeItem('seller');
-            localStorage.removeItem('ref');
-        } else if (sellerInit) {
-            localStorage.setItem('seller', sellerInit);
-            localStorage.removeItem('linkSeller');
-            localStorage.removeItem('ref');
-        } else if (refInit) {
-            localStorage.setItem('ref', refInit);
-            localStorage.removeItem('seller');
-            localStorage.removeItem('linkSeller');
-        }
+            if (linkSellerInit) {
+                localStorage.setItem('linkSeller', linkSellerInit);
+                localStorage.removeItem('seller');
+                localStorage.removeItem('ref');
+            } else if (sellerInit) {
+                localStorage.setItem('seller', sellerInit);
+                localStorage.removeItem('linkSeller');
+                localStorage.removeItem('ref');
+            } else if (refInit) {
+                localStorage.setItem('ref', refInit);
+                localStorage.removeItem('seller');
+                localStorage.removeItem('linkSeller');
+            }
+        } catch (e) {}
     }
 
     window.currencyStore = {% if store.symbolPrice %}"{{ store.symbolPrice }}"{% else %}null{% endif %};
 </script>
-<script src="{{ scripts.main.src }}"></script>
+{% if scripts.main.src %}<script src="{{ scripts.main.src }}"></script>{% endif %}
 <script>
     function setupStore() {
         return {
@@ -243,22 +262,35 @@
             },
         }
     }
-    const customer = {{ customer | json }};
+    window.__storeCustomer = {% if customer.customerId %}{
+        customerId: {{ customer.customerId | json }},
+        email: {{ customer.email | json }},
+        cellphone: {{ customer.cellphone | json }},
+        name: {{ customer.name | json }},
+        fantasyName: {{ customer.fantasyName | json }}
+    }{% else %}null{% endif %};
+    const customer = window.__storeCustomer;
 
     /*** Start - Mailbiz Account Sync Check ***/
 
     if (typeof mb_track !== 'undefined') {
-        mb_track('setRecoveryUrl', 'https://{{ store.url }}/checkout');
+        (function () {
+            var base = '{{ store.url }}';
+            var recovery = (base.indexOf('http://') === 0 || base.indexOf('https://') === 0)
+                ? base.replace(/\/$/, '') + '/checkout'
+                : 'https://' + base.replace(/\/$/, '') + '/checkout';
+            mb_track('setRecoveryUrl', recovery);
+        })();
     }
 
     if (customer) {
         if (typeof mb_track !== 'undefined') {
             window.mb_track('accountSync', {
                 user: {
-                    user_id: customer?.customerId,
-                    email: customer?.email,
-                    phone: customer?.cellphone,
-                    name: customer?.name || customer?.fantasyName,
+                    user_id: customer.customerId,
+                    email: customer.email,
+                    phone: customer.cellphone,
+                    name: customer.name || customer.fantasyName,
                 }
             });
         }

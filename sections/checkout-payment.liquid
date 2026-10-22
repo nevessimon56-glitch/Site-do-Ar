@@ -1,0 +1,826 @@
+<div class="card checkout-card checkout-card-shipping_payment">
+    <div class="card-header">
+        <details class="accordion">
+            <summary class="accordion-header">
+                <div class="card-title">
+                    {{ themeConfig.icons.truck }}
+                    <span x-text="state.shippingSelected.name"></span>
+                    <div class="card-title_icon">
+                        {{ themeConfig.icons.arrow.down }}
+                    </div>
+                </div>
+            </summary>
+            <div class="accordion-body">
+                <div class="card-title">Dados do destinatário</div>
+                <p class="card-subtitle">
+                    <span x-text="state.shippingAddress.receiver"></span>
+                    <span x-show="state.customer.document && state.shippingAddress.receiver"> - </span>
+                    <span
+                        x-show="(state.customer.document) && (state.customer.document.replace(/\D/g, '').length < 12)">CPF:
+                    </span>
+                    <span
+                        x-show="(state.customer.document) && (state.customer.document.replace(/\D/g, '').length > 12)">CNPJ:
+                    </span>
+                    <span x-text="state.customer.document" data-mask='["###.###.###-##", "##.###.###/####-##"]'></span>
+                </p>
+                <p class="card-subtitle">
+                    {% comment %}<span x-show="state.customer.phone">+55</span>{% endcomment %}
+                    <span x-text="state.customer.phone" data-mask='["(##) #####-####", "(##) ####-####"]'></span>
+                </p>
+                <p class="card-subtitle">
+                    <span x-text="state.shippingAddress.street"></span>
+                    <span x-show="state.shippingAddress.number">,</span>
+                    <span x-text="state.shippingAddress.number"></span>
+                </p>
+                <p class="card-subtitle">
+                    <span x-show="state.shippingAddress.zipcode">CEP: </span>
+                    <span x-text="state.shippingAddress.zipcode" data-mask='["#####-###", "##########"]'></span>
+                </p>
+                <p class="card-subtitle">
+                    <span x-text="state.shippingAddress.city"></span>
+                    <span x-show="state.shippingAddress.state">, </span>
+                    <span x-text="state.shippingAddress.state"></span>
+                    <span>.</span>
+                </p>
+            </div>
+        </details>
+    </div>
+</div>
+<div class="card checkout-card checkout-card-payment" id="checkout-payment">
+    <div class="card-header">
+        <div class="card-title">Forma de pagamento</div>
+    </div>
+    <div class="card-body">
+        <template x-for="(payment, index) in state.paymentCalculated.options" :key="index">
+            <div class="checkout-option checkout-option_payment"
+                x-show="state.paymentCalculated.showAll || (state.paymentSelected.methodId == payment.methodId)"
+                :class="[state.paymentCalculated.showAll ? '' : 'active']">
+                <div class="form-group">
+                    <label class="form-radio">
+                        <input type="radio" x-model="state.paymentSelected.methodId" :name="payment.name"
+                            :value="payment.methodId"
+                            :disabled="payment.errors && (payment.errors.length >= 1)"
+                            @click="handlePaymentSelected(payment)">
+                        <i class="form-icon"></i>
+                        <div class="checkout-payment-option_left">
+                            <div class="checkout-payment-option__header">
+                                <div class="checkout-payment-icon checkout-payment-icon_option">
+                                    {{ themeConfig.icons.payment.cash }}
+                                </div>
+                                <div class="checkout-payment-option__title" x-text="payment.name"></div>
+                            </div>
+                            <template x-if="payment.textCart">
+                                <div class="checkout-option_text" x-html="`${(payment.textCart).replace('\n', '<br>')}`"></div>
+                            </template>
+                        </div>
+                        <div class="checkout-payment-option_right">
+                            <template x-if="payment.firstInstallment">
+                                <template x-if="state.paymentSelected.methodId !== payment.methodId">
+                                    <p class="checkout-option_price"
+                                        x-text="StoreSDK.utils.toCurrency(payment.firstInstallment.total)"></p>
+                                </template>
+                                <template x-if="(typeof payment !== 'undefined') && state.paymentSelected.methodId === payment.methodId">
+                                    <p class="checkout-option_price" x-text="StoreSDK.utils.toCurrency(getTotal())"></p>
+                                </template>
+                            </template>
+                            <template x-if="!payment.firstInstallment && (typeof payment.total !== 'undefined')">
+                                <p class="checkout-option_price" x-text="StoreSDK.utils.toCurrency(payment.total)"></p>
+                            </template>
+                        </div>
+                    </label>
+                    <template x-if="payment.errors && (payment.errors.length >= 1)">
+                        <template x-for="(error, index) in payment.errors" :key="index">
+                            <p class="checkout-option_errors payment-errors" x-text="error.message"></p>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </template>
+        <template x-if="state.paymentCalculated.options.length > 1">
+            <div>
+                <div class="form-group" x-show="!state.paymentCalculated.showAll">
+                    <div class="checkout-more-option-box">
+                        <label class="checkout-more-option" @click="clearSelected()">
+                        <span>
+                            Mostrar todas as opções
+                        </span>
+                            {{ themeConfig.icons.arrow.down }}
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" x-show="state.paymentCalculated.showAll">
+                    <div class="checkout-more-option-box checkout-more-option-box_hide">
+                        <label class="checkout-more-option" @click="state.paymentCalculated.showAll = !state.paymentCalculated.showAll">
+                            <span>
+                                Ocultar as opções
+                            </span>
+                            {{ themeConfig.icons.arrow.down }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+<div class="card checkout-card checkout-card-finish" id="checkout-finish">
+    {%- render '__sections/checkout-payment-services', checkout: checkout -%}
+    <div class="card-footer">
+        <div class="card-title">Observações adicionais</div>
+        <div class="form-group">
+            <textarea class="form-input" name="observation" type="text" rows="3" x-model="state.observation"></textarea>
+        </div>
+        <template x-if="state.uploadCheckout?.status">
+            {% assign iconClip = "<svg xmlns='http://www.w3.org/2000/svg' width='26px' height='26px' x='0' y='0' viewBox='0 0 509.478 509.478'><path d='M254.739 509.478c-62.861 0-114.002-51.141-114.002-114.002V84.329C140.737 37.83 178.567 0 225.066 0c46.5 0 84.33 37.83 84.33 84.329v252.33c0 29.957-24.371 54.328-54.328 54.328-29.956 0-54.327-24.371-54.327-54.328V151.494h30V336.66c0 13.414 10.913 24.328 24.327 24.328 13.415 0 24.328-10.914 24.328-24.328V84.329c0-29.957-24.372-54.329-54.33-54.329-29.957 0-54.329 24.372-54.329 54.329v311.146c0 46.319 37.684 84.002 84.002 84.002s84.002-37.683 84.002-84.002V155.993h30v239.482c0 62.861-51.141 114.003-114.002 114.003z'></path></svg>" %}
+            {% assign acceptMediasCheckout = 'image/png, image/jpeg, image/jpg' %}
+            {% if checkout.uploadCheckout.formatsAccepted %}
+                {% assign acceptMediasCheckout = '' %}
+                {% for formatAccepted in checkout.uploadCheckout.formatsAccepted %}
+                    {% if formatAccepted.type != '' %}
+
+                        {% if formatAccepted.name == 'ai' %}
+                            {% assign acceptTypeTemp = '.ai, ' %}
+                        {% elsif formatAccepted.name == 'cdr' %}
+                            {% assign acceptTypeTemp = '.cdr, ' %}
+                        {% elsif formatAccepted.name == 'eps' %}
+                            {% assign acceptTypeTemp = '.eps, ' %}
+                        {% else %}
+                            {% assign acceptTypeTemp = formatAccepted.type | append: ', ' %}
+                        {% endif %}
+
+                        {% assign acceptMediasCheckout = acceptMediasCheckout | prepend: acceptTypeTemp %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <div class="card-file-upload">
+                <div class="files-upload_box">
+                    <input id="input-file-checkout" @change="uploadMediaCheckout($event)" type="file" accept="{{ acceptMediasCheckout }}" multiple/>
+                    <a class="files-added-upload"  href="javascript:void(0)" title="Selecione seu arquivo" @click="openUploadImageCheckout()">
+                        <span>Selecione seu arquivo</span>
+                    </a>
+                    <a class="btn btn-block btn-checkout_upload btn col-12" href="javascript:void(0)" title="Anexar arquivo(s)" @click="openUploadImageCheckout()">
+                        {{ iconClip }}
+                        <span>Anexar arquivo(s)</span>
+                    </a>
+                </div>
+                <template x-if="state.uploadCheckout.isRequired">
+                    <em>
+                        * Obrigatório selecionar arquivo. Adicionar arquivos nos formatos (<span x-text="state.acceptedFormatsText"></span>) máximo 3MB.
+                    </em>
+                </template>
+                <template x-if="!state.uploadCheckout.isRequired">
+                    <em>
+                        * Adicionar arquivos nos formatos (<span x-text="state.acceptedFormatsText"></span>) máximo 3MB.
+                    </em>
+                </template>
+            </div>
+        </template>
+        <a class="btn btn-block btn-checkout_next" href="javascript:void(0)" title="Fazer Pedido"
+            @click.debounce.200="handleCheckoutFinish()"
+            :disabled="state.paymentSelected.errors && (state.paymentSelected.errors.length >= 1)">
+            Fazer Pedido
+        </a>
+    </div>
+</div>
+<script>
+    function setupCheckoutPayment() {
+        const startedPaymentServices = {};
+
+        function clearSelected() {
+            this.state.paymentCalculated.showAll = true;
+            // this.state.paymentSelected = {};
+        }
+
+        function getPaymentService(paymentType) {
+            return paymentServices[paymentType];
+        }
+
+        function initPaymentServices() {
+            const initRequests = [];
+            this.state.paymentCalculated.options.forEach((payment) => {
+                if (!startedPaymentServices[payment.paymentType]) {
+                    const initRequest = this.getPaymentService(payment.paymentType).init(this, payment);
+                    startedPaymentServices[payment.paymentType] = true;
+                    initRequests.push(initRequest);
+                }
+            });
+            return Promise.all(initRequests);
+        }
+
+        function handleCheckoutFinish() {
+            if (!this.state.paymentSelected || !this.state.paymentSelected.methodId) {
+                notyf.open({ type: 'warning', message: 'Selecione uma forma de pagamento' });
+                return;
+            }
+
+            if (this.state.uploadCheckout && this.state.uploadCheckout.status && this.state.uploadCheckout.isRequired) {
+                if (this.state.mediasCheckout.length === 0) {
+                    notyf.open({type: 'warning', message: 'Anexar arquivo obrigatório.'});
+                    return;
+                }
+            }
+
+            if (this.state.isSameBillingAddress && (this.state.customer.address.receiver !== '') && !this.state.showInputsJuridical) {
+                this.state.customer.name = this.state.customer.address.receiver;
+            }
+            if (this.state.isSameBillingAddress && (this.state.customer.secondaryPhone !== '')) {
+                const phoneRecipient = this.state.customer.phone;
+                const phonePaying = this.state.customer.secondaryPhone;
+                this.state.shippingAddress.phone = phoneRecipient;
+                this.state.customer.phone = phonePaying;
+            }
+
+            const PaymentService = this.getPaymentService(this.state.paymentSelected.paymentType);
+            openLoadingMain();
+            // Realiza a validação da forma de pagamento
+            return PaymentService.validate(this).then((isValid) => {
+                if (!isValid) {
+                    closeLoadingMain();
+                    return;
+                }
+                // Realiza a finalização do pedido
+                return PaymentService.finish(this)
+                    .then((metadata) => {
+                        const customerName = this.state.customer.name || this.state.shippingAddress.receiver;
+                        let tempObservation = this.state.observation;
+                        if(this.state.mediasCheckout && this.state.mediasCheckout.length > 0){
+                            let tempObservationMediasCheckout = '';
+                            this.state.mediasCheckout.forEach((mediaCheckout) => {
+                                if (mediaCheckout !== '') {
+                                    tempObservationMediasCheckout = tempObservationMediasCheckout.concat(`${mediaCheckout}\n`);
+                                }
+                            });
+                            tempObservation = tempObservation.concat(`\n\nArquivos anexos:\n${tempObservationMediasCheckout}`);
+                        }
+                        const body = {
+                            shippingAddress: this.state.shippingAddress,
+                            paymentSelected: {
+                                methodId: this.state.paymentSelected.methodId,
+                                installment: this.state.paymentSelected.installment || 1,
+                                metadata: metadata,
+                            },
+                            customer: Object.assign({}, this.state.customer, { name: customerName }),
+                            isSameBillingAddress: this.state.isSameBillingAddress,
+                            observation: tempObservation,
+                            seller: this.state.seller,
+                            sellerId: this.state.sellerId,
+                        };
+                        localStorage.removeItem('checkoutOldPaymentSelected');
+                        localStorage.removeItem('checkoutOldShippingSelected');
+                        localStorage.removeItem('checkoutOldState');
+
+                        addPaymentInfoFacebookPixel(this.state);
+
+                        addShippingInfoGA(this.state);
+                        addPaymentInfoGA(this.state);
+                        beginCheckoutGA(this.state);
+
+                        return StoreSDK.request.post('ajax/checkout/finish', body);
+                    })
+                    .then((response) => {
+                        window.location.href = response.link;
+                        localStorage.removeItem('shippingCalculated');
+                    })
+                    .catch((error) => {
+                        closeLoadingMain();
+                        if ((error.data.code === 'user_already_exists') || (error.data.code === 'contacts_already_exists')) {
+                            const notificationError = notyf.open({
+                                type: 'info',
+                                background: 'orange',
+                                message: `${error.data.message} <a onclick="openSideNavOverlay('.sidenav-overlay_account', true)" style="text-decoration: underline; cursor: pointer; ">Clique aqui para efetuar o login e concluir sua compra!</a>`
+                            });
+                            notificationError.on('click', () => {
+                                notyf.dismiss(notificationError);
+                            });
+                        } else {
+                            if (error.data.code === 'out_of_stock') {
+                                notyf.open({
+                                    type: 'info',
+                                    background: 'orange',
+                                    message: error.data.message,
+                                    duration: 3000,
+                                });
+                                setTimeout(function () {
+                                    openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true});
+                                }, 1000);
+                            } else if (error.data.code === 'empty_cart') {
+                                notyf.open({
+                                    type: 'info',
+                                    background: 'orange',
+                                    message: error.data.message,
+                                });
+
+                                window.location.href = '/checkout';
+                            } else {
+                                notyf.open({
+                                    type: 'info',
+                                    background: 'orange',
+                                    message: error.data.message,
+                                });
+                            }
+                        }
+                    });
+            });
+        }
+
+        function filterPaymentOptions(response) {
+            const validOptions = [];
+            response.paymentCalculated.options.forEach((payment) => {
+                const paymentService = this.getPaymentService(payment.paymentType);
+                if (paymentService) {
+                    validOptions.push(payment);
+                } else {
+                    console.warn('Payment type', payment.paymentType.toUpperCase(), 'is NOT SUPORTED!');
+                }
+            });
+            return validOptions;
+        }
+
+        function handlePaymentCalculate(redirectPayment = true) {
+            if (!this.state.shippingSelected.code) {
+                return;
+            }
+            openLoadingMain();
+            const oldPaymentSelected = this.state.paymentSelected;
+            if (localStorage.getItem('checkoutOldPaymentSelected') && !oldPaymentSelected.methodId) {
+                oldPaymentSelected.methodId = Number(localStorage.getItem('checkoutOldPaymentSelected'));
+            }
+            this.state.paymentCalculated = { showAll: true, options: [] };
+
+            let shippingCalculatedTemp = localStorage.getItem('shippingCalculated');
+            if (shippingCalculatedTemp) {
+                shippingCalculatedTemp = JSON.parse(shippingCalculatedTemp);
+            }
+
+            const body = {
+                shippingSelected: {
+                    code: this.state.shippingSelected.code,
+                },
+                shippingCalculated: this.state?.shippingCalculated?.options?.length ? this.state.shippingCalculated : shippingCalculatedTemp || {},
+            };
+
+            return StoreSDK.request.post(`ajax/checkout/payments`, body)
+                .then((response) => {
+                    const options = this.filterPaymentOptions(response);
+                    if (!options.length) {
+                        setTimeout(function () {
+                            closeLoadingMain();
+                        }, 3000);
+
+                        return notyf.open({
+                            type: 'warning',
+                            message: 'Desculpe, não encontramos uma forma de pagamento disponível',
+                        });
+                    }
+
+                    if (redirectPayment) {
+                        this.state.currentStep = 'payment';
+                    }
+
+                    this.state.paymentCalculated.options = options;
+
+                    if (window.innerWidth < 992) {
+                        let codeExistsPayment = false;
+                        this.state.paymentCalculated.options.forEach((option) => {
+                            if (option.methodId === this.state.paymentSelected.methodId) {
+                                codeExistsPayment = true;
+                            }
+                        });
+
+                        if (localStorage.getItem('checkoutOldPaymentsSelected') && codeExistsPayment) {
+                            setTimeout(function () {
+                                document.getElementById("checkout-finish").scrollIntoView({ behavior: 'smooth' });
+                            }, 800);
+                        } else {
+                            setTimeout(function () {
+                                document.getElementById("checkout-payment").scrollIntoView({ behavior: 'smooth' });
+                            }, 500);
+                        }
+                    }
+
+                    return this.initPaymentServices().then(() => {
+                        closeLoadingMain();
+                        if (response.paymentCalculated.options.length === 1) {
+                            this.handlePaymentSelected(response.paymentCalculated.options[0]);
+                            this.state.shippingSelected = response.shippingSelected;
+                            // this.state.paymentCalculated.showAll = false;
+                        } else {
+                            // this.state.paymentCalculated.showAll = true;
+                            this.state.shippingSelected = response.shippingSelected;
+                            let paymentSelectedTemp;
+                            for (var index in this.state.paymentCalculated.options) {
+                                if (this.state.paymentCalculated.options[index].methodId === oldPaymentSelected.methodId) {
+                                    // Mantém o mesmo pagamento selecionado anteriormente.
+                                    paymentSelectedTemp = this.state.paymentCalculated.options[index];
+                                }
+                                if (this.state.paymentCalculated.options[index].installments && this.state.paymentCalculated.options[index].installments.length > 1) {
+                                    this.state.paymentCalculated.options[index].firstInstallment = this.state.paymentCalculated.options[index].installments[0]
+                                }
+                            }
+                            if (typeof paymentSelectedTemp !== 'undefined') {
+                                this.handlePaymentSelected(paymentSelectedTemp);
+                            }
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.error(error);
+                    closeLoadingMain();
+                    return notyf.open(
+                        {
+                            type: 'warning',
+                            message: 'Sua sessão expirou, atualize a página e tente novamente! ',
+                        }
+                    );
+                });
+        }
+
+        function handlePaymentSelected(paymentOption) {
+            paymentOption.metadata = paymentOption.metadata || {};
+
+            if ((localStorage.getItem('checkoutOldPaymentSelected') && paymentOption?.methodId) && (Number(localStorage.getItem('checkoutOldPaymentSelected')) !== Number(paymentOption?.methodId))) {
+                this.state.paymentSelected.metadata = {};
+            }
+
+            this.state.paymentSelected = paymentOption;
+            // this.state.paymentCalculated.showAll = !this.state.paymentCalculated.showAll;
+            this.getPaymentService(paymentOption.paymentType).onSelect(this);
+            localStorage.setItem('checkoutOldPaymentSelected', this.state.paymentSelected.methodId);
+            // Recarrega as máscaras de input
+            setTimeout(loadInputMask, 100);
+
+            if (this.state.coupon.code) {
+                const body = {
+                    code: this.state.coupon.code,
+                    paymentSelected: {
+                        ...this.state.paymentSelected,
+                    },
+                };
+                StoreSDK.request.post('/ajax/checkout/coupon/payments', body)
+                    .then((response) => {
+                        if (!response.coupon || !response.coupon.value) {
+                            if (!this.state.coupon.applied) {
+                                this.errors.coupon = 'Cupom inválido';
+                                this.handleChangeCoupon();
+                            }
+                            return;
+                        }
+                    })
+                    .catch((error) => {
+                        this.handleChangeCoupon();
+                        if (error.data && error.data.code && error.data.message) {
+                            this.errors.coupon = error.data.message
+                        } else {
+                            this.errors.coupon = 'Não foi possível aplicar o cupom'
+                        }
+                    });
+            }
+
+            if (window.innerWidth < 992) {
+                setTimeout(function () {
+                    document.getElementById("checkout-finish").scrollIntoView({ behavior: 'smooth' });
+                }, 500);
+            }
+        }
+
+        function handleGetCardBrand() {
+            if (this.state.paymentSelected && this.state.paymentSelected.type === 'credit-card') {
+                this.getPaymentService(this.state.paymentSelected.paymentType).getCardBrand(this);
+            }
+        }
+
+        function handleClearError() {
+            this.getPaymentService(this.state.paymentSelected.paymentType).clearError(this);
+        }
+
+        function beginCheckoutGA(state) {
+            if (typeof gtag !== 'undefined') {
+                const tempBeginCheckout = beginCheckoutGATransform(state);
+                gtag("event", "begin_checkout", tempBeginCheckout);
+            }
+        }
+
+        function beginCheckoutGATransform(state) {
+            const tempItems = state.products.map((productItem) => {
+                const tempProductItem = {
+                    currency: 'BRL',
+                    item_id: productItem.sku ? productItem.sku : productItem.id,
+                    item_name: productItem.title,
+                    price: (productItem.unitPrice).toFixed(2),
+                    quantity: productItem.quantity
+                };
+                if (productItem.categories && (productItem.categories.length > 0)) {
+                    const categorieMain = productItem.categories.reduce((categorie) => (categorie.main === true));
+                    const tempCategory = categorieMain.treeName ? categorieMain.treeName.split('##') : null;
+                    if (tempCategory) {
+                        tempCategory.forEach((category, index) => {
+                            if (index <= 0) {
+                                tempProductItem['item_category'] = category;
+                            } else {
+                                tempProductItem[`item_category${index + 1}`] = category;
+                            }
+                        });
+                    }
+                }
+                if (productItem.grids) {
+                    let tempItemVariant = '';
+                    productItem.grids.forEach((grid) => {
+                        if (grid.value) {
+                            tempItemVariant += `${grid.value} / `
+                        }
+                    });
+                    tempProductItem['item_variant'] = tempItemVariant.replace(/ \/ $/, '')
+                }
+                return tempProductItem;
+            });
+
+            const tempBeginCheckout = {
+                currency: 'BRL',
+                items: tempItems,
+                value: (state.subtotal).toFixed(2)
+            };
+
+            if (state.coupon.code) {
+                tempBeginCheckout['coupon'] = state.coupon.code;
+            }
+
+            return tempBeginCheckout;
+        }
+
+        function addPaymentInfoGA(state) {
+            if (typeof gtag !== 'undefined') {
+                const tempAddPaymentInfo = addPaymentInfoGATransform(state);
+                gtag("event", "add_payment_info", tempAddPaymentInfo);
+            }
+        }
+
+        function addPaymentInfoGATransform(state) {
+            const tempItems = state.products.map((productItem) => {
+                const tempProductItem = {
+                    currency: 'BRL',
+                    item_id: productItem.sku ? productItem.sku : productItem.id,
+                    item_name: productItem.title,
+                    price: (productItem.unitPrice).toFixed(2),
+                    quantity: productItem.quantity
+                };
+                if (productItem.categories && (productItem.categories.length > 0)) {
+                    const categorieMain = productItem.categories.reduce((categorie) => (categorie.main === true));
+                    const tempCategory = categorieMain.treeName ? categorieMain.treeName.split('##') : null;
+                    if (tempCategory) {
+                        tempCategory.forEach((category, index) => {
+                            if (index <= 0) {
+                                tempProductItem['item_category'] = category;
+                            } else {
+                                tempProductItem[`item_category${index + 1}`] = category;
+                            }
+                        });
+                    }
+                }
+                if (productItem.grids) {
+                    let tempItemVariant = '';
+                    productItem.grids.forEach((grid) => {
+                        if (grid.value) {
+                            tempItemVariant += `${grid.value} / `
+                        }
+                    });
+                    tempProductItem['item_variant'] = tempItemVariant.replace(/ \/ $/, '')
+                }
+                return tempProductItem;
+            });
+
+            const tempAddPaymentInfo = {
+                currency: 'BRL',
+                items: tempItems,
+                value: (parseFloat(state.paymentSelected.total)).toFixed(2),
+            };
+
+            if (state.coupon.code) {
+                tempAddPaymentInfo['coupon'] = state.coupon.code;
+            }
+
+            if (state.paymentSelected.name) {
+                tempAddPaymentInfo['payment_type'] = state.paymentSelected.name;
+            }
+
+            return tempAddPaymentInfo;
+        }
+
+        function addShippingInfoGA(state) {
+            if (typeof gtag !== 'undefined') {
+                const tempAddShippingInfo = addShippingInfoGATransform(state);
+                gtag("event", "add_shipping_info", tempAddShippingInfo);
+            }
+        }
+
+        function addShippingInfoGATransform(state) {
+            const tempItems = state.products.map((productItem) => {
+                const tempProductItem = {
+                    currency: 'BRL',
+                    item_id: productItem.sku ? productItem.sku : productItem.id,
+                    item_name: productItem.title,
+                    price: (productItem.unitPrice).toFixed(2),
+                    quantity: productItem.quantity
+                };
+                if (productItem.categories && (productItem.categories.length > 0)) {
+                    const categorieMain = productItem.categories.reduce((categorie) => (categorie.main === true));
+                    const tempCategory = categorieMain.treeName ? categorieMain.treeName.split('##') : null;
+                    if (tempCategory) {
+                        tempCategory.forEach((category, index) => {
+                            if (index <= 0) {
+                                tempProductItem['item_category'] = category;
+                            } else {
+                                tempProductItem[`item_category${index + 1}`] = category;
+                            }
+                        });
+                    }
+                }
+                if (productItem.grids) {
+                    let tempItemVariant = '';
+                    productItem.grids.forEach((grid) => {
+                        if (grid.value) {
+                            tempItemVariant += `${grid.value} / `
+                        }
+                    });
+                    tempProductItem['item_variant'] = tempItemVariant.replace(/ \/ $/, '')
+                }
+                return tempProductItem;
+            });
+
+            const tempAddShippingInfo = {
+                currency: 'BRL',
+                items: tempItems,
+                value: (parseFloat(state.subtotal) + (state.shippingSelected.value ? parseFloat(state.shippingSelected.value) : 0)).toFixed(2)
+            };
+
+            if (state.coupon.code) {
+                tempAddShippingInfo['coupon'] = state.coupon.code;
+            }
+
+            if (state.shippingSelected.code && state.shippingCalculated.options) {
+                const shippingSelected = state.shippingCalculated.options.filter((optionShipping) => (optionShipping.code === state.shippingSelected.code));
+                if (shippingSelected.length > 0) {
+                    tempAddShippingInfo['shipping_tier'] = shippingSelected[0].name;
+                }
+            }
+
+            return tempAddShippingInfo;
+        }
+
+        function openUploadImageCheckout() {
+            document.getElementById('input-file-checkout').click();
+        }
+
+        function validateMedias(files, state) {
+            let isValidate = false;
+            let unacceptedFiles = [];
+
+            for (var i = 0; i < files.length; i++) {
+                isValidate = state.uploadCheckout.formatsAccepted.filter((formatAccepted) => ((formatAccepted.type === files[i].type) && (files[i].type !==''))).length > 0;
+                if (!isValidate) {
+                    unacceptedFiles.push(files[i].name);
+                }
+            }
+
+            if (unacceptedFiles.length > 0) {
+                let tempText = '';
+                unacceptedFiles.forEach((unacceptedFile) => {
+                    tempText += ` / ${unacceptedFile}`;
+                });
+                tempText = 'Esses arquivos não são permitidos devido seus formatos que não são aceitos:' + tempText;
+                return {
+                    status: false,
+                    msg: tempText.replace(': /', ':')
+                };
+            }
+
+            return {
+                status: true,
+                msg: ''
+            };
+        }
+
+        async function uploadMediaCheckout(event) {
+            openLoadingMain();
+            let files = event.target.files;
+            const isValidateMedias = validateMedias(files, this.state);
+
+            if (!isValidateMedias.status) {
+                if (isValidateMedias.msg !== '') {
+                    notyf.open(
+                        {
+                            type: 'warning',
+                            message: isValidateMedias.msg,
+                        }
+                    );
+                    closeLoadingMain();
+                }
+            }
+
+            let tempFiles = '';
+            let tempFilesURL = [];
+            let countUpload = 0;
+
+            for (var i = 0; i < files.length; i++) {
+                tempFiles += `${files[i].name}; `;
+                const base64 = await convertBase64(files[i]);
+                const data = { file: base64 };
+                const tempNameFile = files[i].name;
+
+                StoreSDK.request.post(`/ajax/medias/upload`, data)
+                    .then((response) => {
+                        tempFilesURL.push(response.result.fileLink);
+
+                        countUpload += 1;
+                        if (countUpload === files.length) {
+                            closeLoadingMain();
+                        }
+                    })
+                    .catch((error) => {
+                        notyf.open(
+                            {
+                                type: 'warning',
+                                message: `Não foi possivel salvar a arquivo: ${tempNameFile}.`,
+                            }
+                        );
+
+                        countUpload += 1;
+                        if (countUpload === files.length) {
+                            closeLoadingMain();
+                        }
+                    });
+            }
+            var previewText = document.querySelectorAll('.files-added-upload');
+
+            for (var i = 0; i < previewText.length; i++) {
+                previewText[i].innerHTML = tempFiles;
+            }
+
+            this.state.mediasCheckout = tempFilesURL;
+        }
+
+        return {
+            paymentServices,
+            handlePaymentCalculate,
+            handlePaymentSelected,
+            handleGetCardBrand,
+            handleCheckoutFinish,
+            getPaymentService,
+            initPaymentServices,
+            filterPaymentOptions,
+            clearSelected,
+            handleClearError,
+            uploadMediaCheckout,
+            openUploadImageCheckout,
+            validateMedias,
+        };
+    }
+
+    function addPaymentInfoFacebookPixel(state) {
+        if (typeof fbq !== 'undefined') {
+            const tempAddPaymentInfoFacebookPixel = addPaymentInfoFacebookPixelTransform(state);
+            fbq('track', 'AddPaymentInfo', tempAddPaymentInfoFacebookPixel);
+        }
+    }
+
+    function addPaymentInfoFacebookPixelTransform(state) {
+        const result = {
+            content_ids: state.products.map((product) => (product.id)),
+            contents: state.products.map((product) => {
+                const resultProduct = {
+                    id: product.id,
+                    title: product.title,
+                    quantity: product.quantity,
+                    unitPrice: product.unitPrice,
+                    totalPrice: product.totalPrice,
+                };
+                if (product.sku) {
+                    resultProduct.sku = product.sku;
+                }
+                return resultProduct;
+            }),
+            currency: 'BRL',
+            value: parseFloat(state.paymentSelected.total).toFixed(2),
+        };
+        return result;
+    }
+</script>
+{% if checkout.uploadCheckout.status %}
+    <script>
+        const convertBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(file);
+
+                fileReader.onload = () => {
+                    resolve(fileReader.result);
+                };
+
+                fileReader.onerror = (error) => {
+                    reject(error);
+                };
+            });
+        };
+    </script>
+{% endif %}
+<style>
+    .checkout-more-option-box_hide svg { transform: rotate(180deg); }
+</style>
