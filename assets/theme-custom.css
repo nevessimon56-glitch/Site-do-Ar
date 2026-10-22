@@ -3,6 +3,18 @@
 
 
 /** Start - Header  **/
+.logo-store-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .account_link {
   color: #101010;
   font-size: 15px;
