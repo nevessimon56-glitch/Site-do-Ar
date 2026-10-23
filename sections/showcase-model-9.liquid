@@ -1,0 +1,243 @@
+<!-- Showcase Model 9 - Promotion -->
+
+{% assign isPromotion = false %}
+{% for product in showcaseSection.products %}
+    {% if product.price.datePromotionEnd and product.price.showPrice and product.price.promotionPrice > 0 %}
+        {% assign isPromotion = true %}
+        {% break %}
+    {% endif %}
+{% endfor %}
+{% if isPromotion %}
+    {% assign maximumProducts = 30 %}
+    <section class="showcase showcase-{{ showcaseSection.id }} showcase-model-{{ showcaseSection.typeId }} showcase-model-promotion" x-init="getShowcasePromotion()" x-data="setupShowcasePromotionID{{ showcaseSection.id }}()" :class="{ 'd-hide': !state.isVisibleShowcase }">
+        {% assign sectionConfig = showcaseSection.config %}
+        <div class="container">
+            <h2 class="showcase-title{{ classTitle }}" style="display: none; opacity: 0;">
+                {{ showcaseSection.name }}
+            </h2>
+            <div class="showcase-promotions">
+                <ul class="showcase-promotions-list showcase-promotions-list-{{ showcaseSection.id }} slider-products">
+                    {% assign products = showcaseSection.products %}
+                    {% if sectionConfig.rowQuantity and sectionConfig.columnQuantity %}
+                        {% assign maximumProducts = sectionConfig.rowQuantity | times: sectionConfig.columnQuantity %}
+                    {% endif %}
+                    {% if products %}
+                        {% assign products = products %}
+                    {% endif %}
+                    {% for product in products limit: maximumProducts %}
+                        {% if product.price.datePromotionEnd and product.price.showPrice and product.price.promotionPrice > 0 %}
+                            <li class="showcase-promotion-item showcase-promotion-item_{{ product.id }}">
+                                <div class="showcase-timer">
+                                    <div class="showcase-timer-box">
+                                        <div class="showcase-timer-header">
+                                            <p class="showcase-timer-title">
+                                                {{ showcaseSection.name }}
+                                            </p>
+                                        </div>
+                                        <div class="showcase-timer-content">
+                                            <p class="showcase-timer-content_title">Faltam apenas</p>
+                                            <ul class="showcase-timer-content_list">
+                                                <li class="showcase-timer-content_item">
+                                                    <p class="showcase-timer-content_number">
+                                                        <span x-text="state.countdowns['{{ product.id }}'] ? state.countdowns['{{ product.id }}'].days : 0"></span>
+                                                    </p>
+                                                    <p class="showcase-timer-content_text">
+                                                        Dias
+                                                    </p>
+                                                </li>
+                                                <li class="showcase-timer-content_item">
+                                                    <p class="showcase-timer-content_number">
+                                                        <span x-text="state.countdowns['{{ product.id }}'] ? state.countdowns['{{ product.id }}'].hours : 0"></span>
+                                                    </p>
+                                                    <p class="showcase-timer-content_text">
+                                                        Horas
+                                                    </p>
+                                                </li>
+                                                <li class="showcase-timer-content_item">
+                                                    <p class="showcase-timer-content_number">
+                                                        <span x-text="state.countdowns['{{ product.id }}'] ? state.countdowns['{{ product.id }}'].minutes : 0"></span>
+                                                    </p>
+                                                    <p class="showcase-timer-content_text">
+                                                        Minutos
+                                                    </p>
+                                                </li>
+                                                <li class="showcase-timer-content_item">
+                                                    <p class="showcase-timer-content_number">
+                                                        <span x-text="state.countdowns['{{ product.id }}'] ? state.countdowns['{{ product.id }}'].seconds : 0"></span>
+                                                    </p>
+                                                    <p class="showcase-timer-content_text">
+                                                        Segundos
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="showcase-timer-footer">
+                                            <div class="showcase-timer-footer_icon">
+                                                {{ themeConfig.icons.flags }}
+                                            </div>
+                                            <div class="showcase-timer-footer_text">
+                                                Término da promoção {{ product.price | promotionEndDate }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="showcase-promotion-product">
+                                    {%- render 'sections/showcase-model-product-promotion', product: product, themeConfig: themeConfig -%}
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+    <script>
+        const settingsSliderShowcaseModel9ID{{ showcaseSection.id }} = {
+            container: document.querySelectorAll('.showcase-model-{{ showcaseSection.typeId }}.showcase-{{ showcaseSection.id }} .slider-products')[0],
+            animateIn: "fadeIn",
+            animateOut: "fadeOut",
+            autoplay: true,
+            autoplayButtonOutput: false,
+            autoplayTimeout: 10000,
+            controls: false,
+            items: 1,
+            lazyload: true,
+            lazyloadSelector: ".lazy",
+            mode: 'gallery',
+            mouseDrag: true,
+            nav: false,
+            rewind: true,
+            speed: 1200,
+        }
+        let sliderShowcaseModel{{ showcaseSection.typeId }}ID{{ showcaseSection.id }} = tns(settingsSliderShowcaseModel9ID{{ showcaseSection.id }});
+        const productsShowcaseID{{ showcaseSection.id }} = [
+            {% for productItem in showcaseSection.products %}
+            {% if productItem.price.datePromotionEnd and productItem.price.showPrice and productItem.price.promotionPrice > 0 %}
+            {
+                id: '{{ productItem.id }}',
+                datePromotionEnd: '{{ productItem.price.datePromotionEnd }}',
+                datePromotionEndFormatted: '{{ productItem.price.datePromotionEnd | formatPromotionEndDateCountDown}}',
+                display: true,
+                displayInitial: true,
+            },
+            {% endif %}
+            {% endfor %}
+        ];
+        let promotionIntervalID{{ showcaseSection.id }} = null;
+        const showcasePromotionSectionSelector{{ showcaseSection.id }} = '.showcase-{{ showcaseSection.id }}.showcase-model-{{ showcaseSection.typeId }}';
+        const showcasePromotionListSelector{{ showcaseSection.id }} = `${showcasePromotionSectionSelector{{ showcaseSection.id }}} .slider-products`;
+
+        function clearPromotionIntervalID{{ showcaseSection.id }}() {
+            if (promotionIntervalID{{ showcaseSection.id }} !== null) {
+                clearInterval(promotionIntervalID{{ showcaseSection.id }});
+                promotionIntervalID{{ showcaseSection.id }} = null;
+            }
+        }
+
+        window.__showcasePromotionCleanups = window.__showcasePromotionCleanups || [];
+        if (!window.__showcasePromotionCleanupsRegistered) {
+            window.__showcasePromotionCleanupsRegistered = true;
+            window.addEventListener('pagehide', () => {
+                window.__showcasePromotionCleanups.forEach((cleanup) => cleanup());
+            });
+        }
+        window.__showcasePromotionCleanups.push(clearPromotionIntervalID{{ showcaseSection.id }});
+
+        function clampCountdownParts(parts) {
+            return {
+                days: Math.max(0, parts.days || 0),
+                hours: Math.max(0, parts.hours || 0),
+                minutes: Math.max(0, parts.minutes || 0),
+                seconds: Math.max(0, parts.seconds || 0),
+            };
+        }
+
+        function setupShowcasePromotionID{{ showcaseSection.id }}() {
+            // isVisibleShowcase: há ao menos uma promo ativa no state (não é toggle admin WDNA).
+            const state = {
+                isVisibleShowcase: true,
+                products: productsShowcaseID{{ showcaseSection.id }},
+                countdowns: {},
+            }
+
+            function rebuildPromotionSliderIfNeeded() {
+                const list = document.querySelector(showcasePromotionListSelector{{ showcaseSection.id }});
+                if (!list || list.querySelectorAll('.showcase-promotion-item').length === 0) {
+                    return;
+                }
+                sliderShowcaseModel{{ showcaseSection.typeId }}ID{{ showcaseSection.id }}.destroy();
+                sliderShowcaseModel{{ showcaseSection.typeId }}ID{{ showcaseSection.id }}.rebuild(settingsSliderShowcaseModel9ID{{ showcaseSection.id }});
+            }
+
+            function tickPromotion() {
+                const idsToRemove = [];
+                const nextCountdowns = { ...this.state.countdowns };
+
+                this.state.products = this.state.products.map((productItem) => {
+                    let newDisplay = productItem.display;
+
+                    if (productItem.datePromotionEndFormatted && productItem.display) {
+                        const countDownDate = new Date(productItem.datePromotionEndFormatted).getTime();
+                        const distance = countDownDate - Date.now();
+
+                        if (Number.isFinite(countDownDate)) {
+                            nextCountdowns[productItem.id] = clampCountdownParts(countdownTimer(countDownDate));
+                        }
+
+                        if (Number.isFinite(distance) && distance <= 0) {
+                            newDisplay = false;
+                            idsToRemove.push(productItem.id);
+                        }
+                    }
+
+                    return {
+                        ...productItem,
+                        display: newDisplay,
+                    };
+                });
+
+                this.state.countdowns = nextCountdowns;
+
+                if (idsToRemove.length > 0) {
+                    idsToRemove.forEach((productId) => {
+                        const elementRemove = document.querySelectorAll(`${showcasePromotionSectionSelector{{ showcaseSection.id }}} .showcase-promotion-item_${productId}`);
+                        for (let i = 0; i < elementRemove.length; i++) {
+                            elementRemove[i].parentNode.removeChild(elementRemove[i]);
+                        }
+                    });
+                    rebuildPromotionSliderIfNeeded();
+                }
+
+                this.state.isVisibleShowcase = this.state.products.some((productItem) => productItem.display);
+
+                if (!this.state.isVisibleShowcase) {
+                    clearPromotionIntervalID{{ showcaseSection.id }}();
+                }
+            }
+
+            function getShowcasePromotion() {
+                this.checkTimePromotion();
+            }
+
+            function checkTimePromotion() {
+                if (!this.state.products || this.state.products.length === 0) {
+                    return;
+                }
+                clearPromotionIntervalID{{ showcaseSection.id }}();
+                tickPromotion.call(this);
+                if (!this.state.isVisibleShowcase) {
+                    return;
+                }
+                promotionIntervalID{{ showcaseSection.id }} = setInterval(() => {
+                    tickPromotion.call(this);
+                }, 1000);
+            }
+
+            return {
+                state,
+                checkTimePromotion,
+                getShowcasePromotion,
+            }
+        }
+    </script>
+{% endif %}

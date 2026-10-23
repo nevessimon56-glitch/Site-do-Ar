@@ -1,0 +1,12 @@
+{% layout 'layout/theme' %}
+{% block content %}
+{% render 'sections/header', store: store, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
+<main class="product-main">
+    {% render 'sections/product-content', product: product, relatedProducts: relatedProducts, lastProducts: lastProducts, cart: cart, buyToGether: buyToGether, themeConfig: themeConfig, kitOptions: kitOptions, showcase: showcase, groupPurchase: groupPurchase, store: store %}
+</main>
+{% render 'sections/sidenav-shipping-calculation', product: product, cart: cart, themeConfig: themeConfig %}
+{% render 'sections/sidenav-payment-calculation', product: product, themeConfig: themeConfig %}
+{% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig %}
+{% endblock %}
+{% block script_footer %}
+{% endblock %}

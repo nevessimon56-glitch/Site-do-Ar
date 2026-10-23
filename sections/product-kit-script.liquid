@@ -1,0 +1,585 @@
+<script>
+    function setupProductKit() {
+        const state = {
+            price: {% if product.price.basePrice %}{{ product.price.basePrice }}{% else %}0{% endif %},
+            kitOptions: {{ kitOptions | json }},
+            kitOptionsSelected: [],
+            totalSelected: {
+                price: 0,
+                quantity: 0
+            },
+            product: {{ product | json }},
+        }
+
+        function updateAjaxProductKit(data) {
+            this.state = data;
+            this.getProductKit();
+        }
+
+        function getProductKit() {
+            this.state = startUpdateKitProduct(this.state);
+
+            this.state.kitOptions.forEach((kitOption, keyOption) => {
+                /***
+                 * isOpenContent
+                 * true: vai expandir conteúdo e exibir todos os itens
+                 * false: quando existe item selecionado ou opção tem apenas um item, somente nesse caso vai expandir conteúdo, demais ficará oculto.
+                 */
+                kitOption.visible = kitOption.isOpenContent;
+
+                let quantityProductSelected = 0;
+                let countProductSelected = 0;
+
+                this.state.kitOptionsSelected[keyOption] = {
+                    products: [],
+                };
+
+                kitOption.products.forEach((kitOptionProduct, key) => {
+                    this.state.kitOptionsSelected[keyOption].products[key] = {
+                        quantity: 0,
+                        price: 0,
+                        productId: 0,
+                    };
+
+                    kitOptionProduct.initialQuantity = kitOptionProduct.initialQuantity > kitOptionProduct.maxQuantity ? kitOptionProduct.maxQuantity : kitOptionProduct.initialQuantity;
+
+                    if (kitOptionProduct.manageStock) {
+                        kitOptionProduct.initialQuantity = kitOptionProduct.initialQuantity > this.state.kitOptions[keyOption].products[key].stockTotal ? this.state.kitOptions[keyOption].products[key].stockTotal : kitOptionProduct.initialQuantity;
+                    }
+
+                    /* Caso produto esteja desativado, vai ficar initialQuantity = 0 */
+                    if (!kitOptionProduct.price.status) {
+                        kitOptionProduct.initialQuantity = 0;
+                    }
+
+                    this.state.kitOptions[keyOption].products[key] = {
+                        ...kitOptionProduct,
+                        quantity: parseInt(kitOptionProduct.initialQuantity) || 0,
+                    };
+
+                    quantityProductSelected = quantityProductSelected + this.state.kitOptions[keyOption].products[key].quantity;
+                    countProductSelected = this.state.kitOptions[keyOption].products[key].quantity > 0 ? countProductSelected + 1 : countProductSelected;
+                    if ((countProductSelected <= kitOption.maxSelect) || kitOption.maxSelect <= 0) {
+                        if (quantityProductSelected <= kitOptionProduct.maxQuantity) {
+                            if (this.state.kitOptions[keyOption].products[key].quantity <= kitOptionProduct.maxQuantity) {
+                                if (this.state.kitOptions[keyOption].products[key].quantity > 0) {
+                                    this.state.kitOptions[keyOption].selected = true;
+                                    this.state.kitOptions[keyOption].products[key].selected = true;
+
+                                    this.state.kitOptionsSelected[keyOption].products[key] = {
+                                        quantity: countProductSelected,
+                                        price: kitOptionProduct.mainPrice,
+                                        productId: kitOptionProduct.id,
+                                    };
+                                } else {
+                                    this.state.kitOptions[keyOption].products[key].selected = false;
+                                }
+                            } else {
+                                this.state.kitOptions[keyOption].products[key].selected = false;
+                            }
+                        }
+                    } else {
+                        this.state.kitOptions[keyOption].products[key].quantity = 0;
+                        this.state.kitOptions[keyOption].products[key].selected = false;
+                    }
+                });
+            });
+
+            this.state = updateTotal(this.state);
+
+            this.state.kitOptionsSelected.map((itemSelected, index) => (this.state.kitOptions[index].visible = this.state.kitOptions[index].products.length <= 1 || this.state.kitOptions[index].selected || this.state.kitOptions[index].visible || false));
+
+            handleProductDefault(this.state);
+        }
+
+        function startUpdateKitProduct(state) {
+            let resultStart = state;
+            const data = JSON.parse(new URLSearchParams(location.search).get('dataCart'));
+            if (!data) {
+                return state;
+            }
+            if (resultStart.kitOptions && resultStart.kitOptions.length > 0) {
+                resultStart.kitOptions = resultStart.kitOptions.map((kitOption) => {
+                    const filterData = data.map((dataItem) => {
+                        return dataItem.products.filter((item) => (item.optionId === kitOption.id));
+                    })[0];
+                    const kitOptionItens = kitOption.products.map((kitItem) => {
+                        const isSelected = filterData.filter((item) => (item.id === kitItem.id));
+                        if (isSelected.length > 0) {
+                            return {
+                                ...kitItem,
+                                initialQuantity: isSelected[0].quantity,
+                            }
+                        } else {
+                            return {
+                                ...kitItem,
+                                initialQuantity: 0,
+                            }
+                        }
+                    });
+                    return {
+                        ...kitOption,
+                        products: kitOptionItens
+                    }
+                });
+            }
+            return resultStart;
+        }
+
+        function handleIncreaseQuantity(kitOptionId, productId) {
+            this.state = handleIncrease(kitOptionId, productId, this.state);
+            this.state = updateTotal(this.state);
+            handleProductDefault(this.state);
+        }
+
+        function handleDecreaseQuantity(kitOptionId, productId) {
+            this.state = handleDecrease(kitOptionId, productId, this.state);
+            this.state = updateTotal(this.state);
+            handleProductDefault(this.state);
+        }
+
+        function handlerCheckbox(kitOptionId, productId) {
+            const kitOptionsFilter = this.state.kitOptions.filter((kitOption) => (kitOption.id === kitOptionId));
+            const kitOptionProductsFilter = kitOptionsFilter[0].products.filter((kitOptionProduct) => (kitOptionProduct.id === productId));
+            if (kitOptionProductsFilter[0].selected) {
+                this.state = handleDecrease(kitOptionId, productId, this.state);
+                this.state = updateTotal(this.state);
+                handleProductDefault(this.state);
+            } else {
+                this.state = handleIncrease(kitOptionId, productId, this.state);
+                this.state = updateTotal(this.state);
+                handleProductDefault(this.state);
+            }
+        }
+
+        function handleDecrease(kitOptionId, productId, state) {
+            state.kitOptions.forEach((kitOption, keyOption) => {
+                if (kitOption.id === kitOptionId) {
+                    kitOption.products.forEach((kitOptionProduct, key) => {
+                        if (kitOptionProduct.id === productId) {
+                            if (kitOptionProduct.quantity > kitOptionProduct.minQuantity) {
+                                state.kitOptions[keyOption].products[key].quantity = kitOptionProduct.quantity - 1;
+                                if (state.kitOptions[keyOption].products[key].quantity > 0) {
+                                    state.kitOptions[keyOption].products[key].selected = true;
+                                } else {
+                                    state.kitOptions[keyOption].products[key].selected = false;
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            return state;
+        }
+
+        function handleIncrease(kitOptionId, productId, state) {
+            state.kitOptions.forEach((kitOption, keyOption) => {
+                if (kitOption.id === kitOptionId) {
+                    kitOption.products.forEach((kitOptionProduct, key) => {
+                        if (kitOptionProduct.id === productId) {
+                            const kitOptionProductMaxQuantity = (kitOptionProduct.maxQuantity > kitOptionProduct.stockTotal) && (kitOptionProduct.manageStock) ? kitOptionProduct.stockTotal : kitOptionProduct.maxQuantity;
+                            if ((parseInt(state.kitOptions[keyOption].products[key].quantity) + 1 <= kitOptionProductMaxQuantity) || kitOptionProductMaxQuantity <= 0) {
+                                if (kitOptionProduct.selected === true) {
+                                    if (kitOptionProduct.quantity < kitOptionProductMaxQuantity) {
+                                        state.kitOptions[keyOption].products[key].quantity = kitOptionProduct.quantity + 1;
+                                        if (state.kitOptions[keyOption].products[key].quantity > 0) {
+                                            state.kitOptions[keyOption].products[key].selected = true;
+                                        } else {
+                                            state.kitOptions[keyOption].products[key].selected = false;
+                                        }
+                                    }
+                                } else {
+                                    if ((parseInt(state.kitOptionsSelected[keyOption].count) < kitOption.maxSelect) || (kitOption.maxSelect <= 0)) {
+                                        if (kitOptionProduct.quantity < kitOptionProductMaxQuantity) {
+                                            state.kitOptions[keyOption].products[key].quantity = kitOptionProduct.quantity + 1;
+                                            if (state.kitOptions[keyOption].products[key].quantity > 0) {
+                                                state.kitOptions[keyOption].products[key].selected = true;
+                                            } else {
+                                                state.kitOptions[keyOption].products[key].selected = false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            return state;
+        }
+
+        function handleQuantity(kitOptionId, productId) {
+            this.state.kitOptions.forEach((kitOption, keyOption) => {
+                if (kitOption.id === kitOptionId) {
+                    kitOption.products.forEach((kitOptionProduct, key) => {
+                        if (kitOptionProduct.id === productId) {
+                            const kitOptionProductMaxQuantity = (kitOptionProduct.maxQuantity > kitOptionProduct.stockTotal) && (kitOptionProduct.manageStock) ? kitOptionProduct.stockTotal : kitOptionProduct.maxQuantity;
+                            if (this.state.kitOptions[keyOption].products[key].quantity <= 0) {
+                                if ((kitOptionProduct.minQuantity > 0) && (this.state.kitOptions[keyOption].products[key].quantity <= kitOptionProduct.minQuantity)) {
+                                    this.state.kitOptions[keyOption].products[key].quantity = parseInt(kitOptionProduct.minQuantity);
+                                    this.state.kitOptions[keyOption].products[key].selected = true;
+                                } else {
+                                    if (this.state.kitOptions[keyOption].products[key].quantity === '') {
+                                        this.state.kitOptions[keyOption].products[key].quantity = 0;
+                                    }
+                                    this.state.kitOptions[keyOption].products[key].selected = false;
+                                }
+                            } else {
+
+                                if (this.state.kitOptions[keyOption].products[key].quantity) {
+                                    this.state.kitOptions[keyOption].products[key].quantity = parseInt(this.state.kitOptions[keyOption].products[key].quantity);
+                                }
+
+                                if ((parseInt(this.state.kitOptionsSelected[keyOption].quantity) <= kitOption.maxQuantity) || kitOption.maxQuantity <= 0) {
+                                    if (kitOptionProduct.quantity < kitOptionProduct.minQuantity) {
+                                        this.state.kitOptions[keyOption].products[key].quantity = kitOptionProduct.minQuantity;
+                                        if (this.state.kitOptions[keyOption].products[key].quantity <= 0) {
+                                            this.state.kitOptions[keyOption].products[key].selected = false;
+                                        }
+                                    } else {
+                                        if (this.state.kitOptions[keyOption].products[key].quantity > 0) {
+                                            if (kitOptionProduct.selected === true) {
+                                                let tempKitOptionQuantity = 0;
+                                                kitOption.products.filter((kitOptionProduct2) => kitOptionProduct2.id !== productId).forEach((item) => {
+                                                    tempKitOptionQuantity = tempKitOptionQuantity + item.quantity;
+                                                });
+                                                let newKitOptionMaxQuantitySelected = parseInt(kitOption.maxQuantity) - parseInt(tempKitOptionQuantity);
+                                                if ((this.state.kitOptions[keyOption].products[key].quantity < newKitOptionMaxQuantitySelected) && (this.state.kitOptions[keyOption].products[key].quantity < kitOptionProductMaxQuantity)) {
+                                                    this.state.kitOptions[keyOption].products[key].quantity = this.state.kitOptions[keyOption].products[key].quantity;
+                                                } else {
+                                                    if (newKitOptionMaxQuantitySelected > kitOptionProductMaxQuantity) {
+                                                        this.state.kitOptions[keyOption].products[key].quantity = kitOptionProductMaxQuantity;
+                                                    } else {
+                                                        if (newKitOptionMaxQuantitySelected <= 0) {
+                                                            this.state.kitOptions[keyOption].products[key].quantity = kitOptionProduct.quantity > kitOptionProductMaxQuantity ? kitOptionProductMaxQuantity : kitOptionProduct.quantity;
+                                                        } else {
+                                                            this.state.kitOptions[keyOption].products[key].quantity = newKitOptionMaxQuantitySelected;
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                let newKitOptionMaxQuantity = parseInt(kitOption.maxQuantity) - parseInt(this.state.kitOptionsSelected[keyOption].quantity);
+                                                if ((this.state.kitOptions[keyOption].products[key].quantity < newKitOptionMaxQuantity) && (this.state.kitOptions[keyOption].products[key].quantity < kitOptionProductMaxQuantity)) {
+                                                    this.state.kitOptions[keyOption].products[key].quantity = this.state.kitOptions[keyOption].products[key].quantity;
+                                                } else {
+                                                    if ((newKitOptionMaxQuantity > kitOptionProductMaxQuantity)) {
+                                                        this.state.kitOptions[keyOption].products[key].quantity = kitOptionProductMaxQuantity;
+                                                    } else {
+                                                        if (newKitOptionMaxQuantity <= 0) {
+                                                            this.state.kitOptions[keyOption].products[key].quantity = kitOptionProduct.quantity > kitOptionProductMaxQuantity ? kitOptionProductMaxQuantity : kitOptionProduct.quantity;
+                                                        } else {
+                                                            this.state.kitOptions[keyOption].products[key].quantity = newKitOptionMaxQuantity;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (this.state.kitOptions[keyOption].products[key].quantity > 0) {
+                                        this.state.kitOptions[keyOption].products[key].selected = true;
+                                    } else {
+                                        this.state.kitOptions[keyOption].products[key].selected = false;
+                                    }
+                                } else {
+                                    this.state.kitOptions[keyOption].products[key].quantity = 0;
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            this.state = updateTotal(this.state);
+            handleProductDefault(this.state);
+        }
+
+        function addQuantity(kitOptionId, productId) {
+            this.state.kitOptions.forEach((kitOption, keyOption) => {
+                if (kitOption.id === kitOptionId) {
+                    if (kitOption.maxSelect <= 0) {
+                        kitOption.products.forEach((kitOptionProduct, key) => {
+                            if (kitOptionProduct.id === productId) {
+                                const kitOptionProductMaxQuantity = (kitOptionProduct.maxQuantity > kitOptionProduct.stockTotal) && (kitOptionProduct.manageStock) ? kitOptionProduct.stockTotal : kitOptionProduct.maxQuantity;
+                                if (kitOptionProduct.selected === false) {
+                                    if (kitOptionProduct.quantity < kitOptionProductMaxQuantity) {
+                                        this.state.kitOptions[keyOption].products[key].quantity = kitOptionProduct.quantity + 1;
+                                        this.state.kitOptions[keyOption].products[key].selected = true;
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        if ((parseInt(this.state.kitOptionsSelected[keyOption].quantity) + 1 <= kitOption.maxQuantity)) {
+                            kitOption.products.forEach((kitOptionProduct, key) => {
+                                if (kitOptionProduct.id === productId) {
+                                    const kitOptionProductMaxQuantity = (kitOptionProduct.maxQuantity > kitOptionProduct.stockTotal) && (kitOptionProduct.manageStock) ? kitOptionProduct.stockTotal : kitOptionProduct.maxQuantity;
+                                    if (kitOptionProduct.selected === false) {
+                                        if ((parseInt(this.state.kitOptionsSelected[keyOption].count) < kitOption.maxSelect)) {
+                                            if (kitOptionProduct.quantity < kitOptionProductMaxQuantity) {
+                                                this.state.kitOptions[keyOption].products[key].quantity = kitOptionProduct.quantity + 1;
+                                                if (this.state.kitOptions[keyOption].products[key].quantity > 0) {
+                                                    this.state.kitOptions[keyOption].products[key].selected = true;
+                                                } else {
+                                                    this.state.kitOptions[keyOption].products[key].selected = false;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+            this.state = updateTotal(this.state);
+            handleProductDefault(this.state);
+        }
+
+        function saveStorage(state) {
+            let dataStorage = [];
+            state.kitOptions.forEach((kitOption, indexOption) => {
+                dataStorage[indexOption] = {
+                    products: [],
+                }
+                kitOption.products.forEach((item, index) => {
+                    dataStorage[indexOption].products[index] = {
+                        initialQuantity: item.quantity,
+                        quantity: item.quantity,
+                    }
+                });
+            });
+            localStorage.setItem('productKit', JSON.stringify(dataStorage));
+        }
+
+        function updateTotal(state) {
+            let totalQuantity = 0;
+            let totalPrice = 0;
+            let totalResult = {
+                quantity: 0,
+                price: 0,
+            };
+            state.kitOptionsSelected = [];
+
+            state.kitOptions.forEach((kitOption, index) => {
+                state.kitOptionsSelected[index] = {
+                    ...state.kitOptionsSelected[index],
+                    quantity: 0,
+                    isMaximum: false,
+                    count: 0,
+                };
+                let totalQuantityKitOption = 0;
+                let totalCountKitOption = 0;
+
+                kitOption.products.forEach((kitOptionProduct) => {
+                    if (isNaN(parseInt(kitOptionProduct.quantity))) {
+                        kitOptionProduct.quantity = 0;
+                    }
+                    totalPrice = parseFloat(totalPrice) + (parseFloat(kitOptionProduct.mainPrice) * parseInt(kitOptionProduct.quantity));
+                    totalQuantity = parseInt(totalQuantity) + parseInt(kitOptionProduct.quantity);
+                    totalCountKitOption = kitOptionProduct.quantity > 0 ? totalCountKitOption + 1 : totalCountKitOption;
+                    totalQuantityKitOption = parseInt(totalQuantityKitOption) + parseInt(kitOptionProduct.quantity);
+                });
+
+                state.kitOptionsSelected[index].count = totalCountKitOption;
+                state.kitOptionsSelected[index].quantity = totalQuantityKitOption;
+                state.kitOptionsSelected[index].isMaximum = totalQuantityKitOption >= kitOption.maxQuantity;
+            });
+
+            totalResult.quantity = totalQuantity;
+            totalResult.priceOriginal = totalPrice + state.price;
+            totalResult.price = totalResult.priceOriginal;
+            totalResult.tax = 0;
+
+            const secondaryPriceMethodId = '{{ store.secondaryPriceMethodId }}';
+            if (secondaryPriceMethodId) {
+                window.dispatchEvent(
+                    new CustomEvent(
+                        "update-total-second-price",
+                        {
+                            detail: {
+                                price: totalResult.priceOriginal,
+                                secondaryPriceMethodId: secondaryPriceMethodId
+                            }
+                        }
+                    )
+                );
+            }
+
+            if (state.product.primaryPrice) {
+                if (!state.product.primaryPrice.discountPercentage) {
+                    totalResult.tax = state.product.primaryPrice.tax;
+                } else {
+                    totalResult.tax = -(totalResult.priceOriginal * (state.product.primaryPrice.discountPercentage / 100));
+                }
+                totalResult.price = totalResult.priceOriginal + totalResult.tax;
+                totalResult.price = totalResult.price > 0 ? totalResult.price : 0;
+            }
+            let dataReturn = {
+                ...state,
+                totalSelected: totalResult
+            };
+
+            return dataReturn;
+        }
+
+        function cleanProductsSelecteds(kitOptionId) {
+            this.state.kitOptions.forEach((kitOption, keyOption) => {
+                if (kitOption.id === kitOptionId) {
+                    kitOption.products.forEach((kitOptionProduct, key) => {
+                        this.state.kitOptions[keyOption].products[key].quantity = 0;
+                        this.state.kitOptions[keyOption].products[key].selected = false;
+                    });
+                }
+            });
+            this.state = updateTotal(this.state);
+            handleProductDefault(this.state);
+        }
+
+        function openKitOption(index) {
+            this.state.kitOptions.map(() => (this.state.kitOptions[index].visible = true));
+            this.state.kitOptions[index].loadLazy = true;
+        }
+
+        function addKitProductsToCart() {
+            let result = [];
+            let error = [];
+            openLoadingMain();
+
+            this.state.kitOptions.forEach((kitOption, indexOption) => {
+                if (kitOption.products?.length) {
+                    kitOption.products.forEach((product, indexProduct) => {
+                        if (product.minQuantity > 0 && product.minQuantity > product.quantity) {
+                            notyf.open(
+                                {
+                                    type: 'warning',
+                                    message: `Opção ${kitOption.name}<br>Produto ${product.title}: <br>Escolha no mínimo ${product.minQuantity > 1 ? product.minQuantity + ' opções' : 'uma opção'}.`,
+                                }
+                            );
+
+                            error = [
+                                ...error,
+                                {
+                                    index: indexOption,
+                                }
+                            ];
+                        }
+                    });
+                }
+                if ((this.state.kitOptionsSelected[indexOption].count * this.state.kitOptionsSelected[indexOption].quantity) < kitOption.minQuantity) {
+                    notyf.open(
+                        {
+                            type: 'warning',
+                            message: kitOption.alertMessage || `${kitOption.name}: Quantidade mínimo ${kitOption.minQuantity}.`,
+                        }
+                    );
+                    error = [
+                        ...error,
+                        {
+                            index: indexOption,
+                        }
+                    ];
+                } else {
+                    kitOption.products.forEach((kitOptionProduct) => {
+                        if (kitOptionProduct.quantity > 0) {
+                            result = [
+                                ...result,
+                                {
+                                    id: kitOptionProduct.id,
+                                    quantity: kitOptionProduct.quantity,
+                                    optionId: kitOption.id,
+                                    optionName: kitOption.name,
+                                }
+                            ];
+                        }
+                    });
+                }
+            });
+
+            if (error.length > 0) {
+                setTimeout(function () {
+                    document.getElementById("showcase-kit_" + error[0].index).scrollIntoView({behavior: 'smooth'});
+                    closeLoadingMain();
+                }, 500);
+            } else {
+                if (result.length > 0) {
+                    const newProduct = [
+                        {
+                            "id": Number({{ product.id }}),
+                            "quantity": 1,
+                            "products": result
+                        }
+                    ];
+                    const data = JSON.parse(new URLSearchParams(location.search).get('dataCart'));
+                    if (data) {
+                        newProduct[0].tempUid = data[0].uid;
+                    }
+
+                    window.dispatchEvent(
+                        new CustomEvent("cart-add", {detail: newProduct})
+                    );
+                    openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: false});
+                    closeLoadingMain();
+                }
+            }
+        }
+
+        function handleProductDefault(state) {
+            if (state.kitOptions && state.totalSelected) {
+                let kitOptionsProducts = [];
+                let errorProductKit = [];
+                state.kitOptions.forEach((kitOption, indexOption) => {
+                    if ((state.kitOptionsSelected[indexOption].count * state.kitOptionsSelected[indexOption].quantity) < kitOption.minQuantity) {
+                        errorProductKit = [
+                            ...errorProductKit,
+                            {
+                                alertMessage: kitOption.alertMessage || `${kitOption.name}: Quantidade mínimo ${kitOption.minQuantity}.`,
+                                index: indexOption,
+                            }
+                        ];
+                    }
+                    kitOption.products.forEach((product) => {
+                        if (product.quantity > 0) {
+                            kitOptionsProducts = [
+                                ...kitOptionsProducts,
+                                {
+                                    id: product.id,
+                                    quantity: product.quantity,
+                                    title: product.title,
+                                    price: product.mainPrice,
+                                }
+                            ]
+                        }
+                    });
+                });
+                window.dispatchEvent(
+                    new CustomEvent(
+                        "change-product-kit",
+                        {
+                            detail:
+                                {
+                                    totalSelected: state.totalSelected,
+                                    products: kitOptionsProducts,
+                                    errorProductKit: errorProductKit
+                                }
+                        }
+                    )
+                );
+            }
+        }
+
+        return {
+            state,
+            getProductKit,
+            handleIncreaseQuantity,
+            handleDecreaseQuantity,
+            handleQuantity,
+            addQuantity,
+            cleanProductsSelecteds,
+            openKitOption,
+            addKitProductsToCart,
+            handleProductDefault,
+            handlerCheckbox,
+            updateAjaxProductKit,
+            updateTotal
+        }
+    }
+</script>
