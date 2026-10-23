@@ -34,11 +34,11 @@
 | 13 | `assets/theme-all.css` | Crítico | Sim |
 | 14 | `assets/theme-custom.css` | Atenção | Sim (Git > colagem Ly; ver #14) |
 | 15 | `assets/theme-defer.js` | Atenção | Sim (= colagem “THEME SCRIPTS”) |
-| — | `assets/theme.js` (bundle vendors + init) | Atenção | Sim — ver relação #15 |
 | 16 | `assets/theme-plugins.css` | Informativo / Atenção | Sim (= colagem formatada; repo 1 linha ~80 KiB) |
 | 17 | `assets/theme-solar-calculator.css` | Atenção / Crítico (legado) | Sim (= colagem formatada; repo 1 linha ~71 KiB) |
+| 18 | `assets/theme.js` | Atenção | Sim (~289 KiB vendors+init; colagem = repo) |
 
-**Progresso vs 107 itens WDNA:** 17 arquivos catalogados aqui (~16%).
+**Progresso vs 107 itens WDNA:** 18 arquivos catalogados aqui (~17%).
 
 ---
 
@@ -417,6 +417,39 @@
 **Verificar depois:** pareamento com `assets/theme-solar-calculator.js` (Select2 init, jQuery UI slider); template de página no admin (produtos abaixo do form); se classes Aldo (`consultaCarrinho-flutuante`) existem no HTML publicado; lazy-load ou split CSS vendors.
 
 **Registro G (compacto):** `theme-solar-calculator.css` | Atenção/Crítico legado | SOL-CSS-001..013 | Select2+UI+Selectize bundle; Wayback Aldo; WebForms ID; page-only load
+
+---
+
+## 18. `assets/theme.js`
+
+**Função:** Monólito **síncrono no `<head>`** (`layout/theme.liquid`): bloco **VENDORS** (vanilla-lazyload 16.1.0, tiny-slider 2.9.3, Notyf 3.0.0 **classe**, MetisMenu 1.2.1, Alpine.js 2.8.1, Maska 1.4.1, Socket.IO client 4.0.1, noUiSlider 14.7.0, PhotoSwipe 4.1.3 + UI) + **THEME SCRIPTS** (~2,1k linhas): init `DOMContentLoaded`, lazy-load, dezenas de carrosséis `tns`, overlays busca/carrinho/conta/mobile, cookies `viewType`, galeria PDP PhotoSwipe, `handleAddToCart` + eventos carrinho, `setupCustomer`, máscaras, utilitários. **Instância global `notyf`** fica em `theme-defer.js` (após `window.load`).
+
+**Veredito:** Atenção — bundle pesado e vendors desatualizados; bugs concretos (`selectsCustom2`, race `notyf`); acoplamento forte a markup WDNA e a `theme-defer.js` / `StoreSDK`.
+
+**Achados:**
+
+| ID | Sev. | Conf. | Nota |
+|----|------|-------|------|
+| THM-JS-001 | **Alta** | Alta | `notyf.open()` em `handleAddToCart` / `setupCustomer` antes de `const notyf = new Notyf(...)` em `theme-defer.js` (`window.load`) → `ReferenceError` em kit com erro ou login rápido |
+| THM-JS-002 | **Alta** | Alta | ~**216 KiB** vendors + ~**80 KiB** tema (**~296 KiB** total) parse/exec **em todas as páginas** (incl. checkout parcial) — TBT/LCP |
+| THM-JS-003 | **Alta** | Média | Alpine **2.8.1** (legado): expressões via `new Function` / `with($data)` — CSP `unsafe-eval` e superfície XSS se markup comprometido |
+| THM-JS-004 | **Alta** | Alta | `onChangeFormGroupSideOverlay`: `selectsCustom2(inputsCustom2[i])` trata NodeList como função — quebra foco/flutuante em **selects** do sidenav |
+| THM-JS-005 | Média | Alta | `document.addEventListener("DOMContentLoaded", …)` com `e.stopImmediatePropagation()` — pode impedir outros listeners no mesmo evento |
+| THM-JS-006 | Média | Alta | `slidersStore` / banners: `container: document.querySelectorAll('…')[i]` **global** — múltiplos carrosséis na mesma página podem inicializar o slider errado |
+| THM-JS-007 | Média | Alta | `vanillaLazyload()` / `new LazyLoad` sem `destroy` — `handlerProductEvents(true)` após AJAX PDP pode duplicar observers |
+| THM-JS-008 | Média | Alta | Socket.IO **4.0.1** no bundle global; uso real só `templates/checkout-order.liquid` — peso morto na maior parte do site |
+| THM-JS-009 | Média | Média | noUiSlider no bundle global; init inline em `search.liquid` — OK, mas poderia ser defer/page-specific |
+| THM-JS-010 | Média | Alta | `openPhotoSwipe` monta lista só de `.product-gallery_desktop` — zoom lightbox pode ignorar imagens só na galeria mobile |
+| THM-JS-011 | Média | Alta | `handleAddToCart` chama `closeLoadingMain()` nos fluxos simples **sem** `openLoadingMain()` correspondente — inconsistente vs kit |
+| THM-JS-012 | Média | Média | `isMobile` UA sniff duplicado (theme + padrões WDNA) — diverge de CSS/`matchMedia`; `renderViewTypeSearch` força lista em mobile |
+| THM-JS-013 | Baixa | Alta | `console.log` em produção (`handleAddToCart`, login Mailbiz) |
+| THM-JS-014 | Baixa | Alta | Vendors EOL: PhotoSwipe 4.1.3, noUiSlider 14.7.0, Socket.IO 4.0.1 — patches de segurança/compat |
+| THM-JS-015 | Informativa | Alta | Divisão WDNA: cookies/viewType init aqui; toggles busca em `theme-defer.js` (`THDEF-JS-011`) |
+| THM-JS-016 | Informativa | Alta | `setupCustomer` + overlays usados em `sidenav-overlay-account.liquid`, header, checkout — depende `StoreSDK` (`scripts.main`) |
+
+**Verificar depois:** PDP kit (notyf antes do load); sidenav conta com `<select>`; home com 2+ vitrines mesmo `showcase-slider-N`; pedido pós-checkout (socket); galeria mobile + zoom; CSP admin; comparar peso com code-splitting defer.
+
+**Registro G (compacto):** `theme.js` | Atenção | THM-JS-001..016 | monolith head; notyf race; selectsCustom2 bug; tns index global; Alpine 2.8
 
 ---
 
