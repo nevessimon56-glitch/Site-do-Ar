@@ -18,7 +18,8 @@
 | **Última alteração confirmada (código)** | Commits `570e79e`, `c209d8b`, `b7496bb` em `sections/showcase-model-9.liquid` — **23 out 2026**, ~14:42–14:46 (America/Sao_Paulo), via histórico Git |
 | **Alterações locais não commitadas** | `assets/theme-custom.css` (+1182 linhas vs HEAD), `sections/product-content.liquid`; untracked: `sections/product-reviews.liquid`, zips de import na raiz — **preservar** |
 | **Publicação WDNA** | **Não confirmada** para modelo 9 (PR #44). Demais arquivos: **desconhecido** sem evidência do usuário |
-| **Última investigação** | `assets/theme-all.css` — achados ALL-CSS-001..009 **confirmados no arquivo** (23 out 2026); **correção não aplicada** |
+| **Última alteração (código)** | `assets/theme-all.css` — patch ALL-CSS-001/002 aplicado localmente (**23 out 2026**); 15436 linhas, ~322 KiB |
+| **Última investigação** | ALL-CSS-003..009 permanecem **pendentes** (hover `.product-main` removido do tail duplicado — ver PEN-ALL-003) |
 | **Último teste confirmado** | **Análise estática** ZIP×workspace; **TST-STATIC-003** `theme-all.css`; **Teste WDNA modelo 9:** **0/7 — bloqueado**: cenário de promoção de teste **não criado** (informado 23 out 2026) |
 | **Próxima ação autorizada (processo)** | **Código:** correção `theme-all.css` **somente após** autorização explícita pós-diagnóstico ALL-CSS. **Modelo 9:** smoke WDNA **pendente** até publicação confirmada **e** cenário promo de teste. |
 
@@ -36,6 +37,7 @@
 | 23 out 2026 | Item 7 datas inválidas | Risco negócio | **Decisão:** não adotar opção B (ocultar por NaN) automaticamente; preferir impedir publicação na origem WDNA | Evitar esconder promo legítima | Pendente observação loja | N/C | Decisão usuário |
 | 23 out 2026 | Prompt mestre evolução segura | Regras de preservação | Registro de restrições (seção E abaixo) | Continuidade do projeto | N/A | N/A | Instrução usuário |
 | 23 out 2026 | `assets/theme-all.css` | ALL-CSS-001..009 | **Investigação read-only** concluída; duplicação + `{` não fechado **confirmados**; arquivo **idêntico ao export ZIP** | Prioridade auditoria | TST-STATIC-003 | N/C (presume-se igual export na loja) | Seção I + `AUDITORIA-ARQUIVOS-CONSOLIDACAO.md` §13 |
+| 23 out 2026 | `assets/theme-all.css` | ALL-CSS-001, ALL-CSS-002 | **Patch estrutural local:** removida 2ª cópia **L15426–L30840** (= L1–L15415); completado `@media` L15417 com regras L30852–L30861; EOF balanceado; 4× `@font-face` | Duplicação comprovada byte-a-byte | TST-STATIC-004 | **Não publicado** | Diff −15455 linhas; ver seção I |
 | 23 out 2026 | Modelo 9 WDNA | Validação 7 cenários | **Não concluída** — usuário: **sem cenário de promoção de teste** montado | Impossível smoke real | **Não executado** | N/C | Instrução usuário 23 out 2026 |
 
 ---
@@ -66,9 +68,9 @@
 
 | ID | Descrição | Arquivo | Gravidade | Situação | Próxima ação |
 |----|-----------|---------|-----------|----------|--------------|
-| PEN-ALL-001 | ALL-CSS-001 — `@media` L15417 não fechado; ~L15426–30841 ≈ **2ª cópia** do bundle (~645 KiB → ~30890 lin) | `assets/theme-all.css` | **Crítica** | **Investigado; correção proposta, não aplicada** | Autorizar patch **estrutural mínimo** (seção I); validar desktop busca/PDP/vitrine |
-| PEN-ALL-002 | ALL-CSS-002 — cauda L30872–30881 + `}` EOF depth +1 | idem | Alta | **Confirmado** | Remover bloco órfão + fechar `@media` L15417 com regras L30843–30861 |
-| PEN-ALL-003 | ALL-CSS-003 — `.product-main:hover` L30864–30871 e duplicata L30884–30891 | idem | Alta | **Confirmado** (efeito pode ser neutralizado por `theme-custom.css` L679–681) | Decidir se remove duplicatas em `theme-all` ou mantém override custom |
+| PEN-ALL-001 | ALL-CSS-001 — 2ª cópia L15426–L30840 removida; `@media` L15417 fechado L15436 | `assets/theme-all.css` | **Crítica** | **Corrigido localmente** — aguardando revisão + publicação WDNA | Teste visual desktop ≥992px busca potência, vitrine, PDP, checkout |
+| PEN-ALL-002 | ALL-CSS-002 — cauda órfã eliminada com remoção do tail | idem | Alta | **Corrigido localmente** (mesmo patch) | Idem PEN-ALL-001 |
+| PEN-ALL-003 | ALL-CSS-003 — `.product-main:hover` existia só no tail removido | idem | Alta | **Pendente decisão** — regras **não** reintroduzidas em `theme-all` | Avaliar se hover PDP deve voltar em `theme-all` ou só via `theme-custom.css` L679–681 |
 | PEN-ALL-004 | ALL-CSS-004 — `*:focus { outline: none }` L49–51 | idem | Média | **Confirmado** | Correção a11y **separada** (focus-visible); risco teclado |
 | PEN-ALL-005 | ALL-CSS-005 — 8× `@font-face` Akhand CDN (4+4 duplicados) | idem | Média | **Confirmado** | Remove duplicata com PEN-ALL-001; preload já em `theme.liquid` L116–117 |
 | PEN-ALL-006 | ALL-CSS-006 — sem `prefers-reduced-motion` | idem | Média | **Confirmado** | Opcional; não acoplar à remoção da duplicação |
@@ -102,6 +104,8 @@
 | TST-WDNA-001..007 | Teste loja | Modelo 9 checklist 7 cenários | **Não confirmado** | **0/7** informados pelo usuário |
 | TST-WDNA-PUB | Publicação | Arquivos PR #44 na WDNA | **Não confirmado** | Não propor teste loja até publicação confirmada |
 | TST-STATIC-003 | Análise estática | `assets/theme-all.css` ALL-CSS-001..009 | **Executado** 23 out 2026 | Arquivo = export ZIP; chaves `{`/`}` desbalanceadas (+1 EOF) |
+| TST-STATIC-004 | Análise estática pós-patch | ALL-CSS-001/002 | **Executado** 23 out 2026 | 15436 lin; brace depth 0; 4× `@font-face`; dup L15426–30840 ≡ L1–15415; **sem** validação visual |
+| TST-WDNA-ALL | Teste loja | CSS após publicar `theme-all.css` | **Não executado** | Busca filtro potência, PDP, vitrine desktop/mobile |
 
 **Regra:** hipótese ou código local **≠** teste WDNA aprovado.
 
@@ -133,6 +137,7 @@
 | `sections/showcase-model-9.liquid` | PR #44 — timers, expiração, lifecycle | **Sim** (branch `cursor/model-9-timer-consumer-b192`, commits até `b7496bb`) | **Não confirmado** | **Não** |
 | `assets/theme-custom.css` | Evolução visual (diff local grande) | **Parcial** (não commitado) | **Não confirmado** | **Não** |
 | `sections/product-content.liquid` | Ajustes PDP locais | **Parcial** (não commitado) | **Não confirmado** | **Não** |
+| `assets/theme-all.css` | ALL-CSS-001/002 — remoção 2ª cópia + fechamento `@media` potência | **Sim** (patch local commitado) | **Não** | **Não** |
 
 **Demais arquivos:** sem evidência de alteração pendente de publicação além dos 14 modificados vs export (ver análise comparativa na sessão 23 out 2026).
 
@@ -150,28 +155,35 @@
 6. **PEN-THM-*** — bugs JS após reprodução na loja.
 
 **Próxima correção mínima de código (proposta — aguardando autorização):**  
-**Opção A (prioridade técnica):** patch estrutural em `assets/theme-all.css` conforme seção **I** (remover 2ª cópia L15426–30841, completar `@media` L15417, limpar cauda L30872–30891). **Opção B:** modelo 9 após **PEN-M9-000** (cenário promo teste) + publicação. **Não executar** sem autorização explícita.
+**Publicar e testar** `assets/theme-all.css` na WDNA (TST-WDNA-ALL). **Modelo 9:** após **PEN-M9-000**. **ALL-CSS-003+:** somente se autorizado.
 
 ---
 
 ## I. Investigação `assets/theme-all.css` (23 out 2026)
 
-**Arquivo:** 30890 linhas, 645011 bytes. **Idêntico** ao export `site-do-ar-(novo)-20260701185346601.zip`.  
+**Arquivo (pós-patch 23 out 2026):** 15436 linhas, ~322 KiB (antes: 30891 lin, ~645 KiB).  
 **Carga:** `layout/theme.liquid` → `theme-plugins.css` → **`theme-all.css`** → `theme-custom.css`.
 
-**Resumo ALL-CSS (detalhe na resposta da sessão 23 out 2026):**
+**Patch ALL-CSS-001/002 aplicado (evidência):**
 
-| ID | Linhas (evidência) | Tipo | Correção mínima sugerida |
-|----|-------------------|------|---------------------------|
-| 001 | L15417 `@media` aberto; L15426 reinício `@font-face` | **Erro estrutural / duplicação ~50% arquivo** | Remover L15426–30841; completar media com L30843–30861 |
-| 002 | L30872–30881 indent órfão; brace balance +1 | **Erro estrutural** | Excluir com cauda duplicada; garantir `}` balanceado |
-| 003 | L30864–30871, L30888–30891 | **Regra duplicada + UX** | Remover duplicatas; notar override `theme-custom.css` L679–681 |
-| 004 | L49–51 | **Decisão de design / risco a11y** | `focus-visible` posterior, escopo separado |
-| 005 | L1–35 + L15426+ | **Duplicação + dependência CDN** | Corrigida ao remover 2ª cópia |
-| 006 | 0 matches `prefers-reduced-motion` | **Risco UX** | Opcional |
-| 007 | 68× `!important` | **Risco cascata** | Recontar pós-fix 001 |
-| 008 | L4 etc. `U+000-5FF` | **Possível typo** | `U+0000-05FF` se autorizado |
-| 009 | L13357, L28782 `.product-main` | **Informativo (duplicação)** | Resolvido com 001 |
+- Removido bloco **L15426–L30840** (1-based), verificado **idêntico** a L1–L15415.
+- Preservado L1–L15425; completado `@media (min-width: 992px)` aberto em L15417 com regras `.form-group_potencia .form-input` (ex-L30852–30861); fechamento `}` em L15436.
+- Removidos tail L30864–30891 (`.product-main:hover` duplicado + órfãos) — **ALL-CSS-003 pendente**.
+- Validação estática: profundidade `{`/`}` = 0 no EOF; **4** declarações `@font-face` (somente topo).
+
+**Resumo ALL-CSS (achados restantes):**
+
+| ID | Status pós-patch |
+|----|------------------|
+| 001 | **Corrigido localmente** |
+| 002 | **Corrigido localmente** |
+| 003 | **Pendente** — hover `.product-main` não está mais em `theme-all`; mitigação possível via `theme-custom.css` |
+| 004 | **Pendente** — `*:focus { outline: none }` L49–51 |
+| 005 | **Resolvido** (fontes duplicadas removidas com 001) |
+| 006 | **Pendente** — sem `prefers-reduced-motion` |
+| 007 | **Pendente** — recontar `!important` (~metade do arquivo removida) |
+| 008 | **Pendente** — `unicode-range` L4+ |
+| 009 | **Resolvido** (`.product-main` duplicado na 2ª cópia removida) |
 
 **Dependências:** `sections/search-filter.liquid` (`.form-group_potencia`, `.search-filter-body_potencia`); PDP `.product-main` + `sections/product-content.liquid`; vitrine/showcase na 1ª metade do arquivo; `theme-custom.css` mitiga hover PDP.
 
