@@ -10,7 +10,7 @@
 ## Como usar
 
 - Cada arquivo tem **veredito**, **achados (ID + severidade + confiança)** e **verificar depois** na auditoria geral.
-- IDs preservam o prefixo usado em cada resposta (`FAV-*`, `HDR-*`, `MEGA-*`, `CMP-*`, `PHV-*`, `PDP2-*`, `PV2-*`, `ALL-CSS-*`, `CUS-CSS-*`, `THDEF-JS-*`, `THM-JS-*`).
+- IDs preservam o prefixo usado em cada resposta (`FAV-*`, `HDR-*`, `MEGA-*`, `CMP-*`, `PHV-*`, `PDP2-*`, `PV2-*`, `ALL-CSS-*`, `CUS-CSS-*`, `THDEF-JS-*`, `THM-JS-*`, `PLG-CSS-*`).
 - **Git:** nem todos os arquivos abaixo existem no checkout local; ver coluna *No repo*.
 
 ---
@@ -35,8 +35,9 @@
 | 14 | `assets/theme-custom.css` | Atenção | Sim (Git > colagem Ly; ver #14) |
 | 15 | `assets/theme-defer.js` | Atenção | Sim (= colagem “THEME SCRIPTS”) |
 | — | `assets/theme.js` (bundle vendors + init) | Atenção | Sim — ver relação #15 |
+| 16 | `assets/theme-plugins.css` | Informativo / Atenção | Sim (= colagem formatada; repo 1 linha ~80 KiB) |
 
-**Progresso vs 107 itens WDNA:** 15 arquivos catalogados aqui (~14%).
+**Progresso vs 107 itens WDNA:** 16 arquivos catalogados aqui (~15%).
 
 ---
 
@@ -51,6 +52,7 @@
 | Custom Ly + hover | `CUS-CSS-001` regras conflitantes em `.product-related` / vitrine; `CUS-CSS-010` mitiga `ALL-CSS-003` (`.product-main:hover`) |
 | Header dual | `CUS-CSS-015` header legado `.header` vs `header-v2.css` (laranja) — ordem de CSS decide vitória |
 | JS tema | `theme.js` (~292 KiB vendors) + `theme-defer.js` (window `load`); `THDEF-JS-*` PDP/busca; `setCookie`/`Notyf` em `theme.js` |
+| CSS stack | `theme-plugins.css` (Spectre+plugins) → `theme-all.css` → `theme-custom.css`; `PLG-CSS-*` `.btn`/`.card` vs identidade azul |
 | PDP duplicidade | Folha **#product-pdp-v2** (PDP2) vs folha **.product-v2** (PV2) — confirmar qual(is) entram no manifest |
 | Sync WDNA ↔ Git | ~18+ itens possivelmente só no editor; export delta omite padrão/vazio |
 
@@ -356,6 +358,33 @@
 **Verificar depois:** ordem `theme.js` → defer; origem global `StoreSDK`; `sections/product-content.liquid` chamadas `handleProductVariation`; duplicar testes com filtros BTU + `theme-custom` ocultando categorias.
 
 **Registro G (compacto):** `theme-defer.js` | Atenção | THDEF-JS-001..011 | PDP AJAX; filter submit; Notyf; paste=defer not theme.js
+
+---
+
+## 16. `assets/theme-plugins.css`
+
+**Função:** Bundle CSS de **plugins + framework base WDNA** (normalização HTML5, **Spectre.css** ~0.5.x: tipografia rem, `.btn`, `.form-*`, grid `.col-*`, `.card`, `.navbar`, utilitários), mais estilos **tiny-slider** (`.tns-*`), **MetisMenu**, **Notyf**, **PhotoSwipe 4.1.3**, **noUiSlider 14.7.0**. Primeira folha no layout (`theme-plugins.css` → `theme-all.css` → `theme-custom.css`).
+
+**Veredito:** **Informativo com pontos de atenção** — conteúdo **vendor/padrão WDNA** (não custom Site do Ar); risco principal é **cascata e colisão de classes** com `theme-all` / customizações, não “bug” interno do arquivo.
+
+**Achados:**
+
+| ID | Sev. | Conf. | Nota |
+|----|------|-------|------|
+| PLG-CSS-001 | Informativa | Alta | Monólito ~80 KiB (repo: **1 linha minificada**); colagem do thread = mesma base **pretty-printed** |
+| PLG-CSS-002 | Média | Alta | Paleta Spectre primária `#080808` / focus `rgba(87,85,217,.2)` — **≠** identidade `#2c77bb` em `theme-all` / `theme-custom` |
+| PLG-CSS-003 | Média | Alta | Links `a { outline: none }` + hover `outline-width: 0` — somado a ALL-CSS-004 / CUS — foco teclado frágil |
+| PLG-CSS-004 | Média | Alta | Colisão de API: `.btn`, `.card`, `.navbar`, `.timeline`, `.form-checkbox` usados no markup WDNA e re-estilizados depois |
+| PLG-CSS-005 | Média | Média | Empilhamento z-index: `.menu` 300, `.modal` 400, `.pswp` 1500, `.notyf` **9999** — compare/header custom deve respeitar ordem |
+| PLG-CSS-006 | Média | Alta | PhotoSwipe: sprites `https://salescdn.net/static/plugins/photoswipe/4.1.3/` (png/svg/gif) — dependência CDN |
+| PLG-CSS-007 | Baixa | Alta | Grid `.col-lg-*` etc. com breakpoints WDNA (991/767/575/480/1399) — **não** é Bootstrap; documentar para evitar confusão |
+| PLG-CSS-008 | Baixa | Média | `.dropdown .menu:hover { display:block }` — menus só hover; teclado/touch dependem de `:focus` em `.dropdown-toggle` |
+| PLG-CSS-009 | Baixa | Média | Legado IE (`filter: alpha`, `-ms-`, vendor prefixes) — peso morto em browsers modernos |
+| PLG-CSS-010 | Informativa | Alta | Checkboxes `.form-checkbox input` com clip 1px — padrão Spectre OK; `theme-custom` chip de marca altera padrão |
+
+**Verificar depois:** PDP zoom/galeria (PhotoSwipe + tns); filtros busca (noUiSlider se usado); Notyf vs modais; vitrine `.showcase-product.card` herdando `.card` Spectre antes de CUS-CSS.
+
+**Registro G (compacto):** `theme-plugins.css` | Inf./Atenção | PLG-CSS-001..010 | Spectre+plugins bundle; cascade; CDN photoswipe; z-index notyf
 
 ---
 
