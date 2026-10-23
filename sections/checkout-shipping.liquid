@@ -1,0 +1,738 @@
+<div class="card checkout-card checkout-card-shipping" x-show="!state.shippingCalculated.options.length">
+    <div class="card-header">
+        <div class="card-title">Entrega</div>
+    </div>
+    <div class="card-body">
+        <div class="form-group form-group_custom d-hide">
+            <label class="form-label">País</label>
+            <select class="form-select" id="shipping-country" x-model="state.shippingAddress.country"
+                    autocomplete="country">
+                <option :value="'BR'">Brasil</option>
+                <option :value="'US'">Estados Unidos</option>
+            </select>
+        </div>
+        <div class="form-group form-group_custom form-group_cep" :class="{ 'has-error': !!errors.zipcode , 'onFocus': !state.shippingAddress.zipcode }">
+            <label class="form-label">CEP</label>
+            <input id="shipping-zipcode" autofocus class="form-input masked-input" name="shipping-zipcode" type="tel" autocomplete="postal-code" data-mask='#####-###'
+                   x-model="state.shippingAddress.zipcode" @keydown.enter="handleShippingCalculate()">
+            <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" title="Não sei meu CEP" target="_blank">
+                Não sei meu CEP
+            </a>
+            <p x-show="errors.zipcode" class="form-input-hint" x-text="errors.zipcode"></p>
+        </div>
+        <div class="form-group form-group_shipping__last">
+            {% if customer == null %}
+                <label class="checkout-link-login">
+                    <span>
+                        Você já tem uma conta?
+                    </span>
+                    <a href="javascript:void(0)" title="Você já tem uma conta? Fazer login" onclick="openSideNavOverlay('.sidenav-overlay_account', true)">
+                        Fazer login
+                    </a>
+                </label>
+            {% endif %}
+            <a class="btn btn-login btn-checkout_next" href="javascript:void(0)" title="Continuar"
+                @click.debounce.250="handleShippingCalculate()">
+                Continuar
+            </a>
+        </div>
+    </div>
+</div>
+<div class="card checkout-card checkout-card-shipping_info" x-show="state.shippingCalculated.options.length" id="checkout-shipping_info">
+    <div class="card-header">
+        <div class="card-title">
+            <span x-show="!state.shippingSelected.code">Selecionar entrega</span>
+            <span x-show="state.shippingSelected.code">Entrega</span>
+            <div class="form-group">
+                <a class="btn" href="javascript:void(0)" title="Alterar CEP" @click="handleZipcodeChange()">
+                    Alterar CEP <span x-text="state.shippingAddress.zipcode"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <template
+            x-for="(option, index) in state.shippingCalculated.options"
+            :key="index"
+        >
+            <div class="checkout-option checkout-option_shipping"
+                x-show="state.shippingCalculated.showAll || (state.shippingSelected.code == option.code)"
+                :class="[
+                    state.shippingCalculated.showAll ? '' : 'active',
+                    (option.errors && (option.errors.length >= 1)) ? 'disabled' : '',
+                ]"
+            >
+                <div class="form-group">
+                    <label class="form-radio">
+                        <input
+                            type="radio"
+                            x-model="state.shippingSelected.code"
+                            :name="option.name"
+                            :value="option.code"
+                            @click="$nextTick(() => handleShippingSelected())"
+                            :disabled="option.errors && (option.errors.length >= 1)"
+                        >
+                        <i class="form-icon"></i>
+                        <div class="checkout-option_left">
+                            <div>
+                                <p class="checkout-option_title" x-text="option.name"></p>
+                                <template x-if="option.deadlineText">
+                                    <p class="checkout-option_text" x-text="option.deadlineText"></p>
+                                </template>
+                                <template x-if="option.shippings[0].tagMetadata?.pontoKangu">
+                                    <p class="checkout-option_text" x-text="option.shippings[0].tagMetadata?.pontoKanguText"></p>
+                                </template>
+                            </div>
+                        </div>
+                        <div class="checkout-option_right">
+                            <template x-if="option.toCombine">
+                                <p class="checkout-option_price" x-text="'A combinar'"></p>
+                            </template>
+                            <template x-if="option.value === 0 && !option.toCombine">
+                                <p class="checkout-option_price" x-text="'Grátis'"></p>
+                            </template>
+                            <template x-if="option.value > 0 && !option.toCombine">
+                                <p class="checkout-option_price" x-text="StoreSDK.utils.toCurrency(option.value)"></p>
+                            </template>
+                        </div>
+                    </label>
+                    <template x-if="option.errors && (option.errors.length >= 1)">
+                        <div class="checkout-option_errors">
+                            <template x-for="(errorItem, idx) in option.errors" :key="idx">
+                                <div x-show="errorItem.showItems || (idx == 0)">
+                                    <p x-show="!errorItem.items" x-text="errorItem.message"></p>
+                                    <template x-if="errorItem.items">
+                                        <label class="checkout-more-option_errors" @click="errorItem.showItems = errorItem.showItems ? false : true ">
+                                            <span x-text="errorItem.message"></span>
+                                            {{ themeConfig.icons.arrow.down }}
+                                        </label>
+                                        <span x-show="errorItem.showItems">
+                                            <template x-for="(productIdError) in errorItem.items" :key="productIdError">
+                                                <p class="checkout-option_errors-items"
+                                                x-text="`${(state.products.find((product) => product.id == productIdError)).title.substr(0, 60)}`"
+                                                ></p>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+        <template x-if="state.shippingCalculated.options.length > 1">
+            <div class="form-group" x-show="!state.shippingCalculated.showAll">
+                <div class="checkout-more-option-box">
+                    <label class="checkout-more-option" @click="state.shippingCalculated.showAll = true">
+                            <span>
+                                Mostrar todas as opções
+                            </span>
+                        {{ themeConfig.icons.arrow.down }}
+                    </label>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+<div class="card checkout-card checkout-card-user" x-show="state.shippingCalculated.options.length && state.shippingSelected.code" id="checkout-user">
+    <div class="form-group form-group_new__address">
+        <label class="form-checkbox">
+            <input type="checkbox" x-model="state.isSameBillingAddress">
+            <i class="form-icon"></i>
+            <span>
+                Presentear / enviar para outra pessoa.
+            </span>
+        </label>
+    </div>
+    <div class="card-header card-header_address1">
+        <div class="card-title" x-text="`${state.isSameBillingAddress ? 'Dados do destinatário / presenteado': 'Dados do destinatário'}`"></div>
+    </div>
+    <div class="card-footer card-footer_address card-body_address1">
+        <div class="form-group form-group_custom form-group_name" :class="{ 'has-error': !!errors.shipping.receiver , 'onFocus': !state.shippingAddress.receiver }">
+            <label class="form-label">Nome *</label>
+            <input class="form-input" name="shipping-receiver" type="text" x-model="state.shippingAddress.receiver" autocomplete="name" required>
+            <p x-show="errors.shipping.receiver" class="form-input-hint" x-text="errors.shipping.receiver"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_phone" :class="{ 'has-error': !!errors.shipping.phone , 'onFocus': !state.customer.phone }">
+            <label class="form-label">Telefone *</label>
+            <input class="form-input masked-input" name="customer-phone" type="tel" autocomplete="tel"
+                   data-mask='["(##) #####-####", "(##) ####-####"]' x-model="state.customer.phone">
+            <p x-show="errors.shipping.phone" class="form-input-hint" x-text="errors.shipping.phone"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_street" :class="{ 'has-error': errors.shipping.street , 'onFocus': !state.shippingAddress.street }">
+            <label class="form-label">Endereço *</label>
+            <input class="form-input" name="shipping-street" type="text" x-model="state.shippingAddress.street" autocomplete="street-address" required>
+            <p x-show="errors.shipping.street" class="form-input-hint" x-text="errors.shipping.street"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_number" :class="{ 'has-error': errors.shipping.number , 'onFocus': !state.shippingAddress.number }">
+            <label class="form-label">Número *</label>
+            <input class="form-input" name="shipping-number" type="text" x-model="state.shippingAddress.number" required>
+            <p x-show="errors.shipping.number" class="form-input-hint" x-text="errors.shipping.number"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_complement" :class="{ 'onFocus': JSON.stringify(state.shippingAddress.complement) === 'null' }">
+            <label class="form-label">Complemento</label>
+            <input class="form-input" name="shipping-complement" type="text" x-model="state.shippingAddress.complement">
+        </div>
+        <div class="form-group form-group_custom form-group_district" :class="{ 'has-error': errors.shipping.district , 'onFocus': !state.shippingAddress.district }">
+            <label class="form-label">Bairro *</label>
+            <input class="form-input" name="shipping-district" type="text" x-model="state.shippingAddress.district">
+            <p x-show="errors.shipping.district" class="form-input-hint" x-text="errors.shipping.district"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_city" :class="{ 'has-error': errors.shipping.city , 'onFocus': !state.shippingAddress.city }">
+            <label class="form-label">Cidade *</label>
+            <input class="form-input" name="shipping-city" type="text" x-model="state.shippingAddress.city">
+            <p x-show="errors.shipping.city" class="form-input-hint" x-text="errors.shipping.city"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_state" :class="{ 'has-error': errors.shipping.state }">
+            <label class="form-label">Estado *</label>
+            <select x-model="state.shippingAddress.state" class="form-select">
+                <template x-for="federation in state.states">
+                    <option x-text="federation.value" :value="federation.value"></option>
+                </template>
+            </select>
+            <p x-show="errors.shipping.state" class="form-input-hint" x-text="errors.shipping.state"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_zipcode" :class="{ 'onFocus': !state.shippingAddress.zipcode }">
+            <label class="form-label">CEP *</label>
+            <input class="form-input" name="shipping-zipcode" type="tel" x-model="state.shippingAddress.zipcode" @click="handleZipcodeChange()" disabled autocomplete="postal-code" required>
+            <a href="javascript:void(0);" title="Alterar CEP" @click="handleZipcodeChange()">
+                Alterar CEP
+            </a>
+        </div>
+    </div>
+    <div class="card-header card-header_address2">
+        <div class="card-title" x-text="`${state.isSameBillingAddress ? 'Dados de quem está enviando / presenteando': 'Informe um email e documento'}`"></div>
+    </div>
+    <div class="card-body card-body_address2">
+        <div class="columns">
+            <div class="column col-6 col-md-12">
+
+                <div class="form-group form-group_custom form-group_email" :class="{ 'has-error': !!errors.shipping.email , 'onFocus': !state.customer.email }">
+                    <label class="form-label">Email *</label>
+                    <input class="form-input masked-input" name="customer-email" type="email" autocomplete="email" x-model="state.customer.email">
+                    <p x-show="errors.shipping.email" class="form-input-hint" x-text="errors.shipping.email"></p>
+                </div>
+            </div>
+
+            {% assign acceptedDocuments = '' %}
+            {% if store.acceptedDocuments %}
+                {% if store.acceptedDocuments.size == 1 %}
+                    {% for acceptedDocument in store.acceptedDocuments %}
+                        {% assign acceptedDocuments = acceptedDocument %}
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+            {% if acceptedDocuments == 'cpf' %}
+                <div class="column col-6 col-md-12">
+                    <div class="form-group form-group_custom form-group_document" :class="{ 'has-error': !!errors.shipping.document , 'onFocus': !state.customer.document }">
+                        <label class="form-label">CPF *</label>
+                        <input class="form-input masked-input" name="customer-document" type="tel" data-mask='###.###.###-##' x-model="state.customer.document">
+                        <p x-show="errors.shipping.document" class="form-input-hint" x-text="errors.shipping.document"></p>
+                    </div>
+                </div>
+            {% elsif acceptedDocuments == 'cnpj' %}
+                <div class="column col-6 col-md-12">
+                    <div class="form-group form-group_custom form-group_document" :class="{ 'has-error': !!errors.shipping.document , 'onFocus': !state.customer.document }">
+                        <label class="form-label">CNPJ *</label>
+                        <input class="form-input masked-input" name="customer-document" type="tel" data-mask='##.###.###/####-##' x-model="state.customer.document">
+                        <p x-show="errors.shipping.document" class="form-input-hint" x-text="errors.shipping.document"></p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="column col-6 col-md-12">
+                    <div class="form-group form-group_custom form-group_document" :class="{ 'has-error': !!errors.shipping.document , 'onFocus': !state.customer.document }">
+                        <label class="form-label">CPF ou CNPJ *</label>
+                        <input class="form-input masked-input" name="customer-document" type="tel" data-mask='["###.###.###-##", "##.###.###/####-##"]' x-model="state.customer.document" @keyup="handlerDocument()">
+                        <p x-show="errors.shipping.document" class="form-input-hint" x-text="errors.shipping.document"></p>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+        <div x-show="state.showInputsJuridical === true && !state.isSameBillingAddress" class="columns">
+            <div class="column col-12 col-md-12">
+                <div x-show="state.showInputsJuridical === true" class="form-group form-group_custom form-group_name" :class="{ 'has-error': !!errors.shipping.fantasyName , 'onFocus': state.customer.fantasyName === '' || typeof state.customer.fantasyName === 'undefined' }">
+                    <label class="form-label">Nome Fantasia *</label>
+                    <input name="address-receiver" class="form-input" type="text" autocomplete="name" x-model="state.customer.fantasyName">
+                    <p x-show="errors.shipping.fantasyName" class="form-input-hint" x-text="errors.shipping.fantasyName"></p>
+                </div>
+            </div>
+            <div class="column col-6 col-md-12">
+                <div class="form-group form-group_custom" :class="{ 'onFocus': !state.customer.secondaryDocument }">
+                    <label class="form-label" for="state-registration">
+                        Inscrição Estadual
+                    </label>
+                    <input
+                            id="state-registration"
+                            name="state-registration"
+                            class="form-input masked-input"
+                            type="text"
+                            x-model="state.customer.secondaryDocument"
+                    >
+                </div>
+            </div>
+            <div class="column col-6 col-md-12">
+                <div class="form-group form-group_custom"
+                     :class="{ 'has-error': !!errors.shipping.name, 'onFocus': !state.customer.name }">
+                    <label class="form-label" for="corporate-name">Razão social *</label>
+                    <input
+                            id="corporate-name"
+                            name="corporate-name"
+                            class="form-input"
+                            autocomplete="organization"
+                            autofocus="autofocus"
+                            type="text"
+                            x-model="state.customer.name"
+                            required
+                    >
+                    <p x-show="errors.shipping.name" class="form-input-hint" x-text="errors.shipping.name"></p>
+                </div>
+            </div>
+        </div>
+
+
+        {% assign sellerViewTypeId = 0 %}
+        {% if store.sellerViewTypeId %}
+            {% assign sellerViewTypeId = store.sellerViewTypeId %}
+        {% endif %}
+
+        {% if sellerViewTypeId == 2 %}
+            <div class="form-group form-group_custom">
+                <label class="form-label">Vendedor</label>
+                <select x-model="state.seller.id" class="form-select" @change="handleSeller(state.seller.id, state.sellers)">
+                    <template x-for="(seller, index) in state.sellers" :key="index">
+                        <option x-text="seller.name" :value="seller.id"></option>
+                    </template>
+                </select>
+            </div>
+        {% endif %}
+
+        {% if sellerViewTypeId == 3 %}
+            <div class="form-group form-group_custom" :class="{ 'has-error': !!errors.shipping.seller }">
+                <label class="form-label">Vendedor *</label>
+                <select x-model="state.seller.id" class="form-select" @change="handleSeller(state.seller.id, state.sellers)" required>
+                    <template x-for="(seller, index) in state.sellers" :key="index">
+                        <option x-text="seller.name" :value="seller.id"></option>
+                    </template>
+                </select>
+                <p x-show="errors.shipping.seller" class="form-input-hint" x-text="errors.shipping.seller"></p>
+            </div>
+        {% endif %}
+        <div class="form-group" x-show="!state.isSameBillingAddress" @click="isSameBillingAddressChange()">
+            <a class="btn btn-block btn-checkout_next"
+                href="javascript:void(0)"
+                title="Continuar"
+                @click.debounce.100="state.shippingSelected.errors && (state.shippingSelected.errors.length >= 1) ? '' : handleContinueToPayment()"
+                :disabled="state.shippingSelected.errors && (state.shippingSelected.errors.length >= 1)"
+                x-show="!state.isSameBillingAddress"
+            >Continuar</a>
+        </div>
+    </div>
+    <div class="card-footer card-footer_address2" x-show="state.isSameBillingAddress">
+        <div x-show="state.showInputsJuridical === true" class="form-group form-group_custom" :class="{ 'has-error': !!errors.shipping.fantasyName , 'onFocus': !state.customer.address.receiver }">
+            <label class="form-label">Nome Fantasia *</label>
+            <input name="address-receiver" class="form-input" type="text" autocomplete="name" x-model="state.customer.fantasyName">
+            <p x-show="errors.shipping.fantasyName" class="form-input-hint" x-text="errors.shipping.fantasyName"></p>
+        </div>
+        <div x-show="state.showInputsJuridical === true" class="form-group form-group_custom form-group_name"
+             :class="{ 'has-error': !!errors.shipping.name, 'onFocus': !state.customer.name }">
+            <label class="form-label" for="corporate-name">Razão social *</label>
+            <input
+                    id="corporate-name"
+                    name="corporate-name"
+                    class="form-input"
+                    autocomplete="organization"
+                    autofocus="autofocus"
+                    type="text"
+                    x-model="state.customer.name"
+                    required
+            >
+            <p x-show="errors.shipping.name" class="form-input-hint" x-text="errors.shipping.name"></p>
+        </div>
+        <div x-show="state.showInputsJuridical === false" class="form-group form-group_custom form-group_name" :class="{ 'has-error': !!errors.shipping.billingReceiver , 'onFocus': !state.customer.address.receiver }">
+            <label class="form-label">Nome *</label>
+            <input name="address-receiver" class="form-input" type="text" autocomplete="name" x-model="state.customer.address.receiver">
+            <p x-show="errors.shipping.billingReceiver" class="form-input-hint" x-text="errors.shipping.billingReceiver"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_phone" :class="{ 'has-error': !!errors.shipping.billingPhone , 'onFocus': !state.customer.secondaryPhone }">
+            <label class="form-label">Telefone *</label>
+            <input name="customer-secondary-phone" class="form-input masked-input" type="tel" autocomplete="tel" required x-model="state.customer.secondaryPhone" data-mask='["(##) #####-####", "(##) ####-####"]'>
+            <p x-show="errors.shipping.billingPhone" class="form-input-hint" x-text="errors.shipping.billingPhone"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_zipcode" :class="{ 'has-error': !!errors.shipping.billingZipcode , 'onFocus': !state.customer.address.zipcode }">
+            <label class="form-label">CEP *</label>
+            <input name="address-zipcode" class="form-input masked-input" type="tel" autocomplete="postal-code" data-mask='#####-###' @focusout="handleBillingZipcodeChange()" x-model="state.customer.address.zipcode">
+            <p x-show="errors.shipping.billingZipcode" class="form-input-hint" x-text="errors.shipping.billingZipcode"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_street" :class="{ 'has-error': !!errors.shipping.billingStreet , 'onFocus': !state.customer.address.street }">
+            <label class="form-label">Endereço *</label>
+            <input name="address-street" class="form-input" type="text" autocomplete="street-address" x-model="state.customer.address.street">
+            <p x-show="errors.shipping.billingStreet" class="form-input-hint" x-text="errors.shipping.billingStreet"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_number" :class="{ 'has-error': !!errors.shipping.billingNumber , 'onFocus': !state.customer.address.number }">
+            <label class="form-label">Número *</label>
+            <input name="address-number" class="form-input" type="text" x-model="state.customer.address.number">
+            <p x-show="errors.shipping.billingNumber" class="form-input-hint" x-text="errors.shipping.billingNumber"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_complement" :class="{ 'onFocus': JSON.stringify(state.customer.address.complement) === 'null' }">
+            <label class="form-label">Complemento (opcional)</label>
+            <input name="address-complement" class="form-input" type="text" x-model="state.customer.address.complement">
+        </div>
+        <div class="form-group form-group_custom form-group_district" :class="{ 'has-error': !!errors.shipping.billingDistrict , 'onFocus': !state.customer.address.district }">
+            <label class="form-label">Bairro *</label>
+            <input name="address-district" class="form-input" type="text" x-model="state.customer.address.district">
+            <p x-show="errors.shipping.billingDistrict" class="form-input-hint" x-text="errors.shipping.billingDistrict"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_city" :class="{ 'has-error': !!errors.shipping.billingCity , 'onFocus': !state.customer.address.city }">
+            <label class="form-label">Cidade *</label>
+            <input name="address-city" class="form-input" type="text" x-model="state.customer.address.city">
+            <p x-show="errors.shipping.billingCity" class="form-input-hint" x-text="errors.shipping.billingCity"></p>
+        </div>
+        <div class="form-group form-group_custom form-group_state" :class="{ 'has-error': !!errors.shipping.billingState }">
+            <label class="form-label">Estado  *</label>
+            <select x-model="state.customer.address.state" class="form-select">
+                <template x-for="federation in state.states">
+                    <option x-text="federation.value" :value="federation.value"></option>
+                </template>
+            </select>
+            <p x-show="errors.shipping.billingState" class="form-input-hint" x-text="errors.shipping.billingState"></p>
+        </div>
+        <div class="form-group">
+            <a class="btn btn-block btn-checkout_next"
+                href="javascript:void(0)"
+                title="Continuar"
+                @click.debounce.250="handleContinueToPayment()"
+                :disabled="state.shippingSelected.errors && (state.shippingSelected.errors.length >= 1)"
+            >
+                Continuar
+            </a>
+        </div>
+    </div>
+</div>
+<script>
+    function setupCheckoutShipping() {
+        const cart = {{ cart | json }};
+        if (typeof mb_track !== 'undefined') {
+            window.mb_track('checkoutStep', {
+                checkout: {
+                    cart_id: cart.id,
+                    step: 1,
+                    total_steps: 2,
+                    step_name: 'SHIPPING',
+                }
+            });
+        }
+
+        function handlerDocument() {
+            if (this.state.customer.document.length > 14) {
+                this.state.showInputsJuridical = true;
+                this.state.customer.typePerson = 'J';
+            } else {
+                this.state.showInputsJuridical = false;
+                this.state.customer.typePerson = 'F';
+            }
+        }
+        function getAddressData(country, zipcode) {
+            const addressUrl = `/ajax/address/${country}/${zipcode}`;
+            return StoreSDK.request.get(addressUrl)
+                .then((response) => response.address);
+        }
+
+        function validateShippingZipcode() {
+            this.errors.zipcode = '';
+            if (!this.state.shippingAddress.zipcode) {
+                this.errors.zipcode = 'Informe o CEP de entrega';
+                return false;
+            }
+            return true;
+        }
+
+        function validateShipppingAddress() {
+            const errors = {};
+
+            /*** Remover espaços brancos ***/
+            this.state.shippingAddress.receiver = StoreSDK.utils.removeBlankSpaces(this.state.shippingAddress.receiver);
+            this.state.shippingAddress.street = StoreSDK.utils.removeBlankSpaces(this.state.shippingAddress.street);
+            this.state.shippingAddress.district = StoreSDK.utils.removeBlankSpaces(this.state.shippingAddress.district);
+            this.state.shippingAddress.city = StoreSDK.utils.removeBlankSpaces(this.state.shippingAddress.city);
+            this.state.shippingAddress.number = StoreSDK.utils.removeBlankSpaces(this.state.shippingAddress.number);
+            this.state.customer.email = StoreSDK.utils.removeBlankSpaces(this.state.customer.email);
+            if ((this.state.showInputsJuridical)) {
+                this.state.customer.name = StoreSDK.utils.removeBlankSpaces(this.state.customer.name);
+                this.state.customer.fantasyName = StoreSDK.utils.removeBlankSpaces(this.state.customer.fantasyName);
+            }
+
+            if(!StoreSDK.utils.validateFullName(this.state.shippingAddress.receiver)) errors.receiver = 'Informar o nome completo do destinatário';
+
+            if (!this.state.customer.document) {
+                errors.document = 'Informe o documento'
+            } else {
+                if ((this.state.acceptedDocuments.length === 1) && this.state.acceptedDocuments.some((document) => (document === 'cnpj'))) {
+                    if (!StoreSDK.utils.validateCnpj(this.state.customer.document)) {
+                        errors.document = 'Informe o CNPJ corretamente';
+                    }
+                } else if ((this.state.acceptedDocuments.length === 1) && this.state.acceptedDocuments.some((document) => (document === 'cpf'))) {
+                    if (!StoreSDK.utils.validateCpf(this.state.customer.document)) {
+                        errors.document = 'Informe o CPF corretamente';
+                    }
+                } else {
+                    if (this.state.customer.document.length > 14) {
+                        if (!StoreSDK.utils.validateCnpj(this.state.customer.document)) {
+                            errors.document = 'Informe o CNPJ corretamente';
+                        }
+                    } else {
+                        if (!StoreSDK.utils.validateCpf(this.state.customer.document)) {
+                            errors.document = 'Informe o CPF corretamente';
+                        }
+                    }
+                }
+            }
+            if (!this.state.customer.phone) errors.phone = 'Informe o telefone';
+            if (this.state.customer.phone && ((this.state.customer.phone.length < 14) || (this.state.customer.phone.match(/(\d+)/)[0] < 1))) errors.phone = 'Informe o telefone corretamente';
+
+            if (!this.state.customer.email) errors.email = 'Informe o email';
+            if (this.state.customer.email && (!StoreSDK.utils.validateEmail(this.state.customer.email))) errors.email = 'Informe o email corretamente';
+
+            if (!this.state.shippingAddress.street) errors.street = 'Informe o endereço';
+            if (!this.state.shippingAddress.number) errors.number = 'Informe o número';
+            if (!this.state.shippingAddress.district) errors.district = 'Informe o bairro';
+            if (!this.state.shippingAddress.city) errors.city = 'Informe a cidade';
+            if (!this.state.shippingAddress.state) errors.state = 'Informe o estado';
+
+            if (this.state.isSameBillingAddress) {
+                /*** Remover espaços brancos ***/
+                this.state.customer.address.receiver = StoreSDK.utils.removeBlankSpaces(this.state.customer.address.receiver);
+                this.state.customer.address.street = StoreSDK.utils.removeBlankSpaces(this.state.customer.address.street);
+                this.state.customer.address.number = StoreSDK.utils.removeBlankSpaces(this.state.customer.address.number);
+                this.state.customer.address.district = StoreSDK.utils.removeBlankSpaces(this.state.customer.address.district);
+                this.state.customer.address.city = StoreSDK.utils.removeBlankSpaces(this.state.customer.address.city);
+
+                if (this.state.showInputsJuridical) {
+                    if (!this.state.customer.fantasyName) errors.fantasyName = 'Informe o nome fantasia';
+                } else {
+                    if (!StoreSDK.utils.validateFullName(this.state.customer.address.receiver)) errors.billingReceiver = 'Informe o nome completo';
+                }
+
+                if(!StoreSDK.utils.validateFullName(this.state.customer.address.receiver)) errors.billingReceiver = 'Informar o nome completo';
+                if (!this.state.customer.secondaryPhone) errors.billingPhone = 'Informe o telefone';
+                if (this.state.customer.secondaryPhone && ((this.state.customer.secondaryPhone.length < 14) || (this.state.customer.secondaryPhone.match(/(\d+)/)[0] < 1))) errors.billingPhone = 'Informe o telefone corretamente';
+
+                if (!this.state.customer.address.street) errors.billingStreet = 'Informe o endereço';
+                if (!this.state.customer.address.number) errors.billingNumber = 'Informe o número';
+                if (!this.state.customer.address.district) errors.billingDistrict = 'Informe o bairro';
+                if (!this.state.customer.address.city) errors.billingCity = 'Informe a cidade';
+                if (!this.state.customer.address.state) errors.billingState = 'Informe o estado';
+
+                if (!this.state.customer.address.zipcode) errors.billingZipcode = 'Informe o CEP';
+                if (this.state.customer.address.zipcode && ((this.state.customer.address.zipcode.length < 9) || (this.state.customer.address.zipcode.match(/(\d+)/)[0] < 1))) errors.billingZipcode = 'Informe o CEP corretamente';
+            }
+
+            if ((this.state.showInputsJuridical)) {
+                if (!this.state.customer.name) errors.name = 'Informe a Razão Social';
+                if (!this.state.customer.fantasyName) errors.fantasyName = 'Informe o nome fantasia';
+            }
+            this.errors.shipping = errors;
+            if (this.state.sellerViewTypeId === 3) {
+                if ((!this.state.seller.id || this.state.seller.id === 'null')|| !this.state.seller.name) errors.seller = 'Informe o vendedor';
+            }
+            return Object.keys(errors).length === 0;
+        }
+
+        function handleShippingCalculate() {
+            if (!this.validateShippingZipcode()) {
+                return;
+            }
+
+            if (typeof mb_track !== 'undefined') {
+                window.mb_track('cartSetPostalCode', {
+                    cart_id: cart.id,
+                    postal_code: this.state.shippingAddress?.zipcode,
+                });
+            }
+
+            openLoadingMain();
+            const body = {
+                zipcode: this.state.shippingAddress.zipcode,
+                country: this.state.shippingAddress.country,
+            };
+
+            localStorage.setItem('customer_zipcode', body.zipcode)
+            localStorage.setItem('customer_country', body.country)
+            // Cálculo de frete
+            StoreSDK.request.post('ajax/checkout/shippings', body)
+                .then((response) => {
+                    closeLoadingMain();
+                    if (!response.shippingCalculated.options.length) {
+                        return notyf.open({
+                            type: 'warning',
+                            message: 'Desculpe, não encontramos um serviço de entrega para o seu endereço',
+                        });
+                    }
+                    if (response.shippingCalculated.options.length === 1) {
+                        this.state.shippingSelected.code = response.shippingCalculated.options[0].code;
+                        this.state.shippingSelected.toCombine = response.shippingCalculated.options[0].toCombine;
+                    }
+
+                    this.state.shippingCalculated.options = response.shippingCalculated.options;
+                    localStorage.setItem('shippingCalculated', JSON.stringify(this.state.shippingCalculated));
+
+                    /*** Carregar os pagamentos ***/
+                    this.handlePaymentCalculate(false);
+
+                    let codeExistsShipping = false;
+                    response.shippingCalculated.options.forEach((option) => {
+                        if (option.code === this.state.shippingSelected.code) {
+                            codeExistsShipping = true;
+                        }
+                    });
+
+                    this.state.shippingCalculated.showAll = localStorage.getItem('checkoutOldShippingSelected') && codeExistsShipping ? false : true;
+
+                    if (window.innerWidth < 992) {
+                        if (this.state.shippingCalculated.showAll) {
+                            setTimeout(function () {
+                                document.getElementById("checkout-shipping_info").scrollIntoView({behavior: 'smooth'});
+                            }, 500);
+                        } else {
+                            setTimeout(function () {
+                                document.getElementById("checkout-user").scrollIntoView({behavior: 'smooth'});
+                            }, 500);
+                        }
+                    }
+
+                    if (this.state.shippingSelected.code) {
+                        const options = this.state.shippingCalculated.options.find((shipping) => shipping.code === this.state.shippingSelected.code);
+                        if (options?.errors && options.errors.length) {
+                            this.state.shippingSelected.errors = options.errors;
+                        } else {
+                            this.state.shippingSelected.errors = undefined;
+                            /*** Atualizar os pagamentos ***/
+                            // this.handlePaymentCalculate(false);
+
+                            this.state.shippingSelected.toCombine = options.toCombine || false;
+                        }
+                    }
+
+                }).catch((error) => {
+                    console.error(error);
+                    notyf.open({
+                            type: 'warning',
+                            message: 'Desculpe, atualize a página e tente novamente!',
+                        });
+                closeLoadingMain();
+            });
+
+            if (this.state.shippingAddress.zipcode !== this.state.customerAddress.zipcode) {
+                // Autocomplete de endereço
+                getAddressData(body.country, body.zipcode)
+                    .then((address) => {
+                        if (address) {
+                            this.state.shippingAddress.street = address.street;
+                            this.state.shippingAddress.district = address.district;
+                            this.state.shippingAddress.city = address.city;
+                            this.state.shippingAddress.state = address.state;
+                        }
+                    });
+            }
+
+            if (this.state.customer.document.length > 14) {
+                this.state.showInputsJuridical = true;
+            }
+        }
+
+        function handleZipcodeChange() {
+            this.state.shippingCalculated = { showAll: true, options: [] };
+            this.state.shippingSelected = {};
+            if (this.state.paymentSelected.methodId) {
+                this.state.paymentSelected = {};
+                this.handlePaymentCalculate(false);
+            }
+        }
+
+        function handleShippingSelected() {
+            // TODO: não faz sentido chamar aqui e chamar la embaixo novamente
+            // if (this.state.paymentSelected.methodId) {
+            //     /*** Carregar os pagamentos **/
+            //     this.handlePaymentCalculate(false);
+            // }
+
+            this.state.shippingCalculated.showAll = false;
+            // Deve verificar novamente o cupom se o frete mudar.
+            localStorage.setItem('checkoutOldShippingSelected',this.state.shippingSelected.code);
+
+            if (this.state.shippingSelected.code && (this.state.shippingCalculated && this.state.shippingCalculated.options && this.state.shippingCalculated.options.length > 0)) {
+                const optionsShipping = this.state.shippingCalculated.options.find((shipping) => shipping.code === this.state.shippingSelected.code);
+                this.state.shippingSelected.toCombine = optionsShipping.toCombine || false;
+            }
+
+            if (this.state.coupon.code) {
+                this.handleCouponApply();
+            }
+
+            if (this.state.paymentSelected.methodId) {
+                /*** Atualizar os pagamentos **/
+                this.handlePaymentCalculate(false);
+            }
+
+            if (window.innerWidth < 992) {
+                setTimeout(function () {
+                    document.getElementById("checkout-user").scrollIntoView({behavior: 'smooth'});
+                }, 500);
+            }
+            // Deve verificar se o frete contem erros.
+            const options = this.state.shippingCalculated.options.find((shipping) => shipping.code === this.state.shippingSelected.code);
+            if (options?.errors && options.errors.length) {
+                this.state.shippingSelected.errors = options.errors;
+            } else {
+                this.state.shippingSelected.errors = undefined;
+            }
+        }
+
+        function handleBillingZipcodeChange() {
+            if (!this.state.customer.address.zipcode) {
+                return;
+            }
+            getAddressData(
+                this.state.customer.address.country,
+                this.state.customer.address.zipcode
+            ).then((address) => {
+                if (address) {
+                    this.state.customer.address.street = address.street;
+                    this.state.customer.address.district = address.district;
+                    this.state.customer.address.city = address.city;
+                    this.state.customer.address.state = address.state;
+                }
+            });
+        }
+
+        function handleContinueToPayment() {
+            localStorage.setItem('checkoutOldState', JSON.stringify({ 'shippingAddress': this.state.shippingAddress, 'customer': this.state.customer, 'isSameBillingAddress': this.state.isSameBillingAddress }));
+            if (!this.validateShipppingAddress()) {
+                return;
+            }
+            this.handlePaymentCalculate();
+        }
+
+        function isSameBillingAddressChange() {
+            this.state.customer.secondaryPhone = '';
+        }
+
+        function handleSeller(sellerId, sellers) {
+            this.state.seller.name = sellers.find((seller) => seller.id == sellerId).name;
+        }
+
+        return {
+            handleShippingCalculate,
+            handleContinueToPayment,
+            handleZipcodeChange,
+            handleShippingSelected,
+            handleBillingZipcodeChange,
+            validateShippingZipcode,
+            validateShipppingAddress,
+            handlerDocument,
+            isSameBillingAddressChange,
+            handleSeller,
+        };
+    }
+</script>
