@@ -134,6 +134,15 @@
             }
         }
 
+        window.__showcasePromotionCleanups = window.__showcasePromotionCleanups || [];
+        if (!window.__showcasePromotionCleanupsRegistered) {
+            window.__showcasePromotionCleanupsRegistered = true;
+            window.addEventListener('pagehide', () => {
+                window.__showcasePromotionCleanups.forEach((cleanup) => cleanup());
+            });
+        }
+        window.__showcasePromotionCleanups.push(clearPromotionIntervalID{{ showcaseSection.id }});
+
         function clampCountdownParts(parts) {
             return {
                 days: Math.max(0, parts.days || 0),
@@ -144,6 +153,7 @@
         }
 
         function setupShowcasePromotionID{{ showcaseSection.id }}() {
+            // isVisibleShowcase: há ao menos uma promo ativa no state (não é toggle admin WDNA).
             const state = {
                 isVisibleShowcase: true,
                 products: productsShowcaseID{{ showcaseSection.id }},
@@ -215,6 +225,9 @@
                 }
                 clearPromotionIntervalID{{ showcaseSection.id }}();
                 tickPromotion.call(this);
+                if (!this.state.isVisibleShowcase) {
+                    return;
+                }
                 promotionIntervalID{{ showcaseSection.id }} = setInterval(() => {
                     tickPromotion.call(this);
                 }, 1000);
