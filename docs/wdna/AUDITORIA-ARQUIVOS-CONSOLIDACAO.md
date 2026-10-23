@@ -10,7 +10,7 @@
 ## Como usar
 
 - Cada arquivo tem **veredito**, **achados (ID + severidade + confiança)** e **verificar depois** na auditoria geral.
-- IDs preservam o prefixo usado em cada resposta (`FAV-*`, `HDR-*`, `MEGA-*`, `CMP-*`, `PHV-*`, `PDP2-*`, `PV2-*`, `ALL-CSS-*`, `CUS-CSS-*`).
+- IDs preservam o prefixo usado em cada resposta (`FAV-*`, `HDR-*`, `MEGA-*`, `CMP-*`, `PHV-*`, `PDP2-*`, `PV2-*`, `ALL-CSS-*`, `CUS-CSS-*`, `THDEF-JS-*`, `THM-JS-*`).
 - **Git:** nem todos os arquivos abaixo existem no checkout local; ver coluna *No repo*.
 
 ---
@@ -33,8 +33,10 @@
 | 12 | PDP base `.product-v2` (caminho não informado na colagem) | Atenção | Não |
 | 13 | `assets/theme-all.css` | Crítico | Sim |
 | 14 | `assets/theme-custom.css` | Atenção | Sim (Git > colagem Ly; ver #14) |
+| 15 | `assets/theme-defer.js` | Atenção | Sim (= colagem “THEME SCRIPTS”) |
+| — | `assets/theme.js` (bundle vendors + init) | Atenção | Sim — ver relação #15 |
 
-**Progresso vs 107 itens WDNA:** 14 arquivos catalogados aqui (~13%).
+**Progresso vs 107 itens WDNA:** 15 arquivos catalogados aqui (~14%).
 
 ---
 
@@ -48,6 +50,7 @@
 | Bundle base | `ALL-CSS-001` duplica ~15,3k linhas dentro de `@media (min-width: 992px)` — cascata desktop imprevisível vs `theme-custom.css` / folhas PDP |
 | Custom Ly + hover | `CUS-CSS-001` regras conflitantes em `.product-related` / vitrine; `CUS-CSS-010` mitiga `ALL-CSS-003` (`.product-main:hover`) |
 | Header dual | `CUS-CSS-015` header legado `.header` vs `header-v2.css` (laranja) — ordem de CSS decide vitória |
+| JS tema | `theme.js` (~292 KiB vendors) + `theme-defer.js` (window `load`); `THDEF-JS-*` PDP/busca; `setCookie`/`Notyf` em `theme.js` |
 | PDP duplicidade | Folha **#product-pdp-v2** (PDP2) vs folha **.product-v2** (PV2) — confirmar qual(is) entram no manifest |
 | Sync WDNA ↔ Git | ~18+ itens possivelmente só no editor; export delta omite padrão/vazio |
 
@@ -325,6 +328,34 @@
 **Verificar depois:** body classes `page-product` / `product-page`; markup footer novo; coexistência header v2; filtros busca após ocultar categorias; ALL-CSS-003 + CUS-CSS-010 na PDP real.
 
 **Registro G (compacto):** `theme-custom.css` | Atenção | CUS-CSS-001..016 | hover conflicts; !important; filters hidden; dual header; paste≠Git
+
+---
+
+## 15. `assets/theme-defer.js`
+
+**Função:** Scripts WDNA adiados (`loadFilesJSDefer` em `theme.liquid` após `window.load`): Notyf global, copiar URL, toggle senha, grid/lista busca + cookie `viewType`, auto-submit filtros (potência BTU), AJAX PDP (`handleProductVariation` / `handleProductPriceGroup` → eventos `update-ajax-product*`), utilitários URL. **A colagem do thread é este arquivo** (não o monólito `theme.js`).
+
+**Veredito:** Atenção — lógica core PDP/busca; bugs clássicos (loop `var`, mutação de state, API copy obsoleta); depende de `Notyf`, `StoreSDK`, `setCookie`/`getCookie` definidos antes/no `theme.js`.
+
+**Achados:**
+
+| ID | Sev. | Conf. | Nota |
+|----|------|-------|------|
+| THDEF-JS-001 | Alta | Alta | `productJSONTransform`: `stateTemp = state` muta objeto Alpine in-place — efeitos colaterais |
+| THDEF-JS-002 | Alta | Alta | Submit filtro potência: `preventDefault` + `this.submit()` nativo — frágil; loops aninhados reutilizam `var x` |
+| THDEF-JS-003 | Média | Alta | Toggle senha altera **todos** `.form-icon_password__hide/show` da página, não só o grupo clicado |
+| THDEF-JS-004 | Média | Alta | `copyLinkLocation`: `document.execCommand('copy')` depreciado; `el.style = {display:'none'}` não oculta textarea |
+| THDEF-JS-005 | Média | Alta | `productJsonKitTransform`: `kitOptions.length < 0` sempre falso — guarda morta |
+| THDEF-JS-006 | Média | Média | `productJsonGroupPurchaseTransform`: compara `groupPurchase < 0` (array) — condição incorreta |
+| THDEF-JS-007 | Média | Alta | `search-view_link`: `document.querySelector(...)` sem null-check — erro se markup ausente |
+| THDEF-JS-008 | Média | Alta | Carregamento só após `window.load` — funções PDP indisponíveis até load completo (race se script inline cedo) |
+| THDEF-JS-009 | Baixa | Alta | Cabeçalho falso `VENDORS` / `THEME SCRIPTS` sem vendors no arquivo |
+| THDEF-JS-010 | Baixa | Alta | `window.onload` vazio (~L9) — ruído |
+| THDEF-JS-011 | Informativa | Alta | Busca: estado inicial em `theme.js` `renderViewTypeSearch()`; cliques em `theme-defer.js` — divisão intencional WDNA |
+
+**Verificar depois:** ordem `theme.js` → defer; origem global `StoreSDK`; `sections/product-content.liquid` chamadas `handleProductVariation`; duplicar testes com filtros BTU + `theme-custom` ocultando categorias.
+
+**Registro G (compacto):** `theme-defer.js` | Atenção | THDEF-JS-001..011 | PDP AJAX; filter submit; Notyf; paste=defer not theme.js
 
 ---
 
