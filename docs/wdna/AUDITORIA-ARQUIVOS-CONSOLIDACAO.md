@@ -10,7 +10,7 @@
 ## Como usar
 
 - Cada arquivo tem **veredito**, **achados (ID + severidade + confiança)** e **verificar depois** na auditoria geral.
-- IDs preservam o prefixo usado em cada resposta (`FAV-*`, `HDR-*`, `MEGA-*`, `CMP-*`, `PHV-*`, `PDP2-*`, `PV2-*`, `ALL-CSS-*`, `CUS-CSS-*`, `THDEF-JS-*`, `THM-JS-*`, `PLG-CSS-*`).
+- IDs preservam o prefixo usado em cada resposta (`FAV-*`, `HDR-*`, `MEGA-*`, `CMP-*`, `PHV-*`, `PDP2-*`, `PV2-*`, `ALL-CSS-*`, `CUS-CSS-*`, `THDEF-JS-*`, `THM-JS-*`, `PLG-CSS-*`, `SOL-CSS-*`).
 - **Git:** nem todos os arquivos abaixo existem no checkout local; ver coluna *No repo*.
 
 ---
@@ -36,8 +36,9 @@
 | 15 | `assets/theme-defer.js` | Atenção | Sim (= colagem “THEME SCRIPTS”) |
 | — | `assets/theme.js` (bundle vendors + init) | Atenção | Sim — ver relação #15 |
 | 16 | `assets/theme-plugins.css` | Informativo / Atenção | Sim (= colagem formatada; repo 1 linha ~80 KiB) |
+| 17 | `assets/theme-solar-calculator.css` | Atenção / Crítico (legado) | Sim (= colagem formatada; repo 1 linha ~71 KiB) |
 
-**Progresso vs 107 itens WDNA:** 16 arquivos catalogados aqui (~15%).
+**Progresso vs 107 itens WDNA:** 17 arquivos catalogados aqui (~16%).
 
 ---
 
@@ -53,6 +54,7 @@
 | Header dual | `CUS-CSS-015` header legado `.header` vs `header-v2.css` (laranja) — ordem de CSS decide vitória |
 | JS tema | `theme.js` (~292 KiB vendors) + `theme-defer.js` (window `load`); `THDEF-JS-*` PDP/busca; `setCookie`/`Notyf` em `theme.js` |
 | CSS stack | `theme-plugins.css` (Spectre+plugins) → `theme-all.css` → `theme-custom.css`; `PLG-CSS-*` `.btn`/`.card` vs identidade azul |
+| Simulador solar | `sections/page-solar-calculator.liquid` carrega **só nesta página** `theme-solar-calculator.css` (~71 KiB vendors+Aldo); `SOL-CSS-*` ↔ IDs WebForms `ctl00_ContentPlaceHolder1_*`; vitrine `page-solar-calculator-products.liquid` ↔ `.products-view` |
 | PDP duplicidade | Folha **#product-pdp-v2** (PDP2) vs folha **.product-v2** (PV2) — confirmar qual(is) entram no manifest |
 | Sync WDNA ↔ Git | ~18+ itens possivelmente só no editor; export delta omite padrão/vazio |
 
@@ -385,6 +387,36 @@
 **Verificar depois:** PDP zoom/galeria (PhotoSwipe + tns); filtros busca (noUiSlider se usado); Notyf vs modais; vitrine `.showcase-product.card` herdando `.card` Spectre antes de CUS-CSS.
 
 **Registro G (compacto):** `theme-plugins.css` | Inf./Atenção | PLG-CSS-001..010 | Spectre+plugins bundle; cascade; CDN photoswipe; z-index notyf
+
+---
+
+## 17. `assets/theme-solar-calculator.css`
+
+**Função:** Folha **condicional** do simulador solar (`sections/page-solar-calculator.liquid`, fim da section). Monólito ~**71 KiB** (repo: 1 linha minificada; colagem = mesma base formatada): **Select2** (default + classic), **Bootstrap-Typeahead** (`.typeahead-*`), reset parcial de formulários, **jQuery UI 1.12** (accordion, datepicker, dialog, slider, tabs, sprite `.ui-icon-*` sem `background-image` de tema — ícones provavelmente dependem de JS/CDN), **Selectize**, bloco legado **Aldo Solar** (header flutuante, busca, footer, `#0066a1`), utilitários (`.block-screen`, `.cssload-loader`), overrides WDNA em `.page-form-solar-calculator` + Select2 alinhado a `#080808`, e layout `.products-view` / vitrine de resultados.
+
+**Veredito:** **Atenção com achados críticos de legado** — página isolada, mas bundle carrega **CSS morto + URLs quebradas + acoplamento WebForms**; risco de UX (placeholder, foco) e peso de rede.
+
+**Achados:**
+
+| ID | Sev. | Conf. | Nota |
+|----|------|-------|------|
+| SOL-CSS-001 | **Alta** | Alta | `background-image` Wayback `/web/20181228001901im_/https://www.aldo.com.br/Images/...` em `.logo-header-flutuante*` — **não é Site do Ar**; imagens quebradas se classes existirem no DOM |
+| SOL-CSS-002 | **Alta** | Alta | ~70 KiB de **vendors empilhados** (Select2+UI+Selectize+Typeahead) + legado Aldo — só uma fração usada em `.page-form-solar-calculator` |
+| SOL-CSS-003 | Média | Alta | `.cssload-loader` referencia `animation: cssload-load` — **sem `@keyframes cssload-load`** no arquivo → loader estático |
+| SOL-CSS-004 | Média | Alta | `#select2-ctl00_ContentPlaceHolder1_dropEstadosSimulador-results>li:first-child{display:none}` — acoplamento a ID ASP.NET do `<select>` em `page-solar-calculator.liquid` |
+| SOL-CSS-005 | Média | Alta | `z-index: 9999999` (`.block-screen*`) e `999999` (`.consultaCarrinho-flutuante`) — guerra com Notyf/PhotoSwipe/header (`PLG-CSS-005`) |
+| SOL-CSS-006 | Média | Alta | Seletores **globais na folha da página**: `p{font-size:1.15em}`, reset `button/input/...` — afetam todo markup da página (Spectre + simulador) |
+| SOL-CSS-007 | Média | Alta | `.page-form-solar-calculator ... .select2-selection__placeholder{color:#f9f9f9}` — placeholder quase invisível em fundo claro |
+| SOL-CSS-008 | Média | Alta | Paleta legado Aldo `#0066a1` / `#003d96` vs identidade `#2c77bb` / `#080808` no tail do arquivo |
+| SOL-CSS-009 | Média | Alta | `.a-reset:focus{outline:none !important}` — remove foco visível em links resetados |
+| SOL-CSS-010 | Baixa | Alta | jQuery UI `.ui-icon-*` só com `background-position` — **sprite sheet ausente** no CSS; sliders/datepickers podem ficar sem ícone |
+| SOL-CSS-011 | Baixa | Média | Duplicação de regras Typeahead (`.typeahead-filter:hover` repetido); IE `filter: alpha` / gradientes DX |
+| SOL-CSS-012 | Informativa | Alta | Tail WDNA: highlight Select2 `#080808`, bordas `#d9d9d9` — coerente com `theme-all` / Spectre |
+| SOL-CSS-013 | Informativa | Média | `.products-view` + media queries vitrine — relevante se `page-solar-calculator-products.liquid` na mesma página |
+
+**Verificar depois:** pareamento com `assets/theme-solar-calculator.js` (Select2 init, jQuery UI slider); template de página no admin (produtos abaixo do form); se classes Aldo (`consultaCarrinho-flutuante`) existem no HTML publicado; lazy-load ou split CSS vendors.
+
+**Registro G (compacto):** `theme-solar-calculator.css` | Atenção/Crítico legado | SOL-CSS-001..013 | Select2+UI+Selectize bundle; Wayback Aldo; WebForms ID; page-only load
 
 ---
 
