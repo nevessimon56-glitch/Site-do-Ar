@@ -10,7 +10,7 @@
 ## Como usar
 
 - Cada arquivo tem **veredito**, **achados (ID + severidade + confiança)** e **verificar depois** na auditoria geral.
-- IDs preservam o prefixo usado em cada resposta (`FAV-*`, `HDR-*`, `MEGA-*`, `CMP-*`, `PHV-*`, `PDP2-*`, `PV2-*`).
+- IDs preservam o prefixo usado em cada resposta (`FAV-*`, `HDR-*`, `MEGA-*`, `CMP-*`, `PHV-*`, `PDP2-*`, `PV2-*`, `ALL-CSS-*`, `CUS-CSS-*`).
 - **Git:** nem todos os arquivos abaixo existem no checkout local; ver coluna *No repo*.
 
 ---
@@ -32,8 +32,9 @@
 | 11 | PDP estendido `#product-pdp-v2` (caminho não informado na colagem) | Atenção | Não |
 | 12 | PDP base `.product-v2` (caminho não informado na colagem) | Atenção | Não |
 | 13 | `assets/theme-all.css` | Crítico | Sim |
+| 14 | `assets/theme-custom.css` | Atenção | Sim (Git > colagem Ly; ver #14) |
 
-**Progresso vs 107 itens WDNA:** 13 arquivos catalogados aqui (~12%).
+**Progresso vs 107 itens WDNA:** 14 arquivos catalogados aqui (~13%).
 
 ---
 
@@ -45,6 +46,8 @@
 | Hover imagem | `PHV-JS-005` ↔ `mega-menu.js` / `__SDA_HOVER_V2__`; `PHV-CSS-001` ↔ ordem CSS em `theme.liquid` |
 | Header laranja | `PHV-CSS-*` overrides vs `header-v2.css`, `theme-custom.css` |
 | Bundle base | `ALL-CSS-001` duplica ~15,3k linhas dentro de `@media (min-width: 992px)` — cascata desktop imprevisível vs `theme-custom.css` / folhas PDP |
+| Custom Ly + hover | `CUS-CSS-001` regras conflitantes em `.product-related` / vitrine; `CUS-CSS-010` mitiga `ALL-CSS-003` (`.product-main:hover`) |
+| Header dual | `CUS-CSS-015` header legado `.header` vs `header-v2.css` (laranja) — ordem de CSS decide vitória |
 | PDP duplicidade | Folha **#product-pdp-v2** (PDP2) vs folha **.product-v2** (PV2) — confirmar qual(is) entram no manifest |
 | Sync WDNA ↔ Git | ~18+ itens possivelmente só no editor; export delta omite padrão/vazio |
 
@@ -289,6 +292,39 @@
 **Verificar depois:** diff editor WDNA vs Git pós-export; impacto desktop em vitrine, busca/filtro potência e PDP; ordem final `theme-plugins.css` → `theme-all.css` → `theme-custom.css` → assets v2 (header, mega-menu, hover).
 
 **Registro G (compacto):** `theme-all.css` | Crítico | ALL-CSS-001..009 | desktop duplicate @992px; tail syntax; PDP hover; focus; fonts CDN
+
+---
+
+## 14. `assets/theme-custom.css`
+
+**Função:** Folha de customização agregada (“Custom Ly 2024-10-21”): header legado WDNA, faixa topo CDN, vitrine/preços, neutralização de “pulo” na PDP, footer premium (CTA + grid), cards showcase, botões (checkout/filtro/comprar/login), filtros busca (BTU, marcas chip, sticky), mobile “todos produtos”. Carregada **por último** entre bundles base (`theme.liquid` → após `theme-all.css`).
+
+**Veredito:** Atenção — arquivo funcional e rico, porém **camadas empilhadas**, **169× `!important`**, regras de hover **auto-conflitantes** e divergência **colagem vs Git** (repo ~3,3k linhas com tokens Fase 2A e blocos PDP 2B+; colagem do thread ≈ núcleo Ly sem trecho final pix verde `#15803d` presente só na colagem).
+
+**Achados:**
+
+| ID | Sev. | Conf. | Nota |
+|----|------|-------|------|
+| CUS-CSS-001 | Alta | Alta | `.product-related .showcase-product.card:hover` (−8px) vs bloco posterior “Remove pulo” (`transform: none`) — intenção ambígua; cards `.card` mantêm lift |
+| CUS-CSS-002 | Alta | Média | `.showcase-products .showcase-product:hover { transform: none }` pode anular hovers em cards **sem** classe `.card` |
+| CUS-CSS-003 | Média | Alta | Marcador `/*** START - Custom Ly 2024-10-21 ***/` duplicado (~L1 e ~L1000) — crescimento orgânico / difícil diff |
+| CUS-CSS-004 | Média | Alta | Dois blocos `:root` no Git (tokens `--pdp-*` ~L9 + footer ~L1019); colagem só footer |
+| CUS-CSS-005 | Média | Alta | Footer: variáveis CSS depois overrides sólidos/gradiente repetidos (~L1570+) |
+| CUS-CSS-006 | Média | Alta | `.top-content img { content: url(salescdn…) }` — URL hardcoded; repo ≠ colagem (banner distinto) |
+| CUS-CSS-007 | Alta | Média | `.search-filter_category { display: none !important }` — oculta filtro categorias inteiro |
+| CUS-CSS-008 | Média | Alta | Ocultar inputs `[value="frio"]` / `quente-frio` — frágil se valores WDNA mudarem |
+| CUS-CSS-009 | Média | Alta | 169× `!important`; competição com `ALL-CSS-001` desktop duplicado |
+| CUS-CSS-010 | Informativa | Alta | Mitiga hover `.product-main` de `theme-all` (`transform/transition: none`) |
+| CUS-CSS-011 | Média | Média | Múltiplos hovers/`will-change` sem `prefers-reduced-motion` |
+| CUS-CSS-012 | Baixa | Alta | Borda card `#163d5c` (~L1627) vs `#b8cfe8` (~L2013) — mesma superfície, cores diferentes |
+| CUS-CSS-013 | Baixa | Alta | `.search-filters` sticky declarado 2× em `@media (min-width: 992px)` |
+| CUS-CSS-014 | Média | Alta | `.cart_quantity`: colagem `#f97316` vs Git `#61bb47` — drift identidade/header v2 |
+| CUS-CSS-015 | Média | Alta | Sem referência a `header-v2`; estiliza `.header` legado (cinza `#f8f8f8`, ícones `#4b96d4`) |
+| CUS-CSS-016 | Baixa | Média | Colagem final pix verde (`#15803d`) ausente no Git — sincronizar export |
+
+**Verificar depois:** body classes `page-product` / `product-page`; markup footer novo; coexistência header v2; filtros busca após ocultar categorias; ALL-CSS-003 + CUS-CSS-010 na PDP real.
+
+**Registro G (compacto):** `theme-custom.css` | Atenção | CUS-CSS-001..016 | hover conflicts; !important; filters hidden; dual header; paste≠Git
 
 ---
 
