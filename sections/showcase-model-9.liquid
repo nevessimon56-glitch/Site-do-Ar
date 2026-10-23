@@ -39,7 +39,7 @@
                                             <ul class="showcase-timer-content_list">
                                                 <li class="showcase-timer-content_item">
                                                     <p class="showcase-timer-content_number">
-                                                        <span x-text="getCountdown('{{ product.id }}').days"></span>
+                                                        <span x-text="state.countdowns['{{ product.id }}'] ? state.countdowns['{{ product.id }}'].days : 0"></span>
                                                     </p>
                                                     <p class="showcase-timer-content_text">
                                                         Dias
@@ -47,7 +47,7 @@
                                                 </li>
                                                 <li class="showcase-timer-content_item">
                                                     <p class="showcase-timer-content_number">
-                                                        <span x-text="getCountdown('{{ product.id }}').hours"></span>
+                                                        <span x-text="state.countdowns['{{ product.id }}'] ? state.countdowns['{{ product.id }}'].hours : 0"></span>
                                                     </p>
                                                     <p class="showcase-timer-content_text">
                                                         Horas
@@ -55,7 +55,7 @@
                                                 </li>
                                                 <li class="showcase-timer-content_item">
                                                     <p class="showcase-timer-content_number">
-                                                        <span x-text="getCountdown('{{ product.id }}').minutes"></span>
+                                                        <span x-text="state.countdowns['{{ product.id }}'] ? state.countdowns['{{ product.id }}'].minutes : 0"></span>
                                                     </p>
                                                     <p class="showcase-timer-content_text">
                                                         Minutos
@@ -63,7 +63,7 @@
                                                 </li>
                                                 <li class="showcase-timer-content_item">
                                                     <p class="showcase-timer-content_number">
-                                                        <span x-text="getCountdown('{{ product.id }}').seconds"></span>
+                                                        <span x-text="state.countdowns['{{ product.id }}'] ? state.countdowns['{{ product.id }}'].seconds : 0"></span>
                                                     </p>
                                                     <p class="showcase-timer-content_text">
                                                         Segundos
@@ -125,17 +125,38 @@
         ];
         let promotionIntervalID{{ showcaseSection.id }} = null;
         const showcasePromotionSectionSelector{{ showcaseSection.id }} = '.showcase-{{ showcaseSection.id }}.showcase-model-{{ showcaseSection.typeId }}';
+        const showcasePromotionListSelector{{ showcaseSection.id }} = `${showcasePromotionSectionSelector{{ showcaseSection.id }}} .slider-products`;
+
+        function clearPromotionIntervalID{{ showcaseSection.id }}() {
+            if (promotionIntervalID{{ showcaseSection.id }} !== null) {
+                clearInterval(promotionIntervalID{{ showcaseSection.id }});
+                promotionIntervalID{{ showcaseSection.id }} = null;
+            }
+        }
+
+        function clampCountdownParts(parts) {
+            return {
+                days: Math.max(0, parts.days || 0),
+                hours: Math.max(0, parts.hours || 0),
+                minutes: Math.max(0, parts.minutes || 0),
+                seconds: Math.max(0, parts.seconds || 0),
+            };
+        }
 
         function setupShowcasePromotionID{{ showcaseSection.id }}() {
-            const emptyCountdown = { days: 0, hours: 0, minutes: 0, seconds: 0 };
             const state = {
                 isVisibleShowcase: true,
                 products: productsShowcaseID{{ showcaseSection.id }},
                 countdowns: {},
             }
 
-            function getCountdown(productId) {
-                return this.state.countdowns[productId] || emptyCountdown;
+            function rebuildPromotionSliderIfNeeded() {
+                const list = document.querySelector(showcasePromotionListSelector{{ showcaseSection.id }});
+                if (!list || list.querySelectorAll('.showcase-promotion-item').length === 0) {
+                    return;
+                }
+                sliderShowcaseModel{{ showcaseSection.typeId }}ID{{ showcaseSection.id }}.destroy();
+                sliderShowcaseModel{{ showcaseSection.typeId }}ID{{ showcaseSection.id }}.rebuild(settingsSliderShowcaseModel9ID{{ showcaseSection.id }});
             }
 
             function tickPromotion() {
@@ -150,7 +171,7 @@
                         const distance = countDownDate - Date.now();
 
                         if (Number.isFinite(countDownDate)) {
-                            nextCountdowns[productItem.id] = countdownTimer(countDownDate);
+                            nextCountdowns[productItem.id] = clampCountdownParts(countdownTimer(countDownDate));
                         }
 
                         if (Number.isFinite(distance) && distance <= 0) {
@@ -174,11 +195,14 @@
                             elementRemove[i].parentNode.removeChild(elementRemove[i]);
                         }
                     });
-                    sliderShowcaseModel{{ showcaseSection.typeId }}ID{{ showcaseSection.id }}.destroy();
-                    sliderShowcaseModel{{ showcaseSection.typeId }}ID{{ showcaseSection.id }}.rebuild(settingsSliderShowcaseModel9ID{{ showcaseSection.id }});
+                    rebuildPromotionSliderIfNeeded();
                 }
 
                 this.state.isVisibleShowcase = this.state.products.some((productItem) => productItem.display);
+
+                if (!this.state.isVisibleShowcase) {
+                    clearPromotionIntervalID{{ showcaseSection.id }}();
+                }
             }
 
             function getShowcasePromotion() {
@@ -189,9 +213,7 @@
                 if (!this.state.products || this.state.products.length === 0) {
                     return;
                 }
-                if (promotionIntervalID{{ showcaseSection.id }} !== null) {
-                    return;
-                }
+                clearPromotionIntervalID{{ showcaseSection.id }}();
                 tickPromotion.call(this);
                 promotionIntervalID{{ showcaseSection.id }} = setInterval(() => {
                     tickPromotion.call(this);
@@ -200,7 +222,6 @@
 
             return {
                 state,
-                getCountdown,
                 checkTimePromotion,
                 getShowcasePromotion,
             }
