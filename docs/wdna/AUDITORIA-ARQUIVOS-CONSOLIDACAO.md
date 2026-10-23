@@ -31,8 +31,9 @@
 | 10 | `assets/product-hover-image.js` | Atenção | Sim |
 | 11 | PDP estendido `#product-pdp-v2` (caminho não informado na colagem) | Atenção | Não |
 | 12 | PDP base `.product-v2` (caminho não informado na colagem) | Atenção | Não |
+| 13 | `assets/theme-all.css` | Crítico | Sim |
 
-**Progresso vs 107 itens WDNA:** 12 arquivos catalogados aqui (~11%).
+**Progresso vs 107 itens WDNA:** 13 arquivos catalogados aqui (~12%).
 
 ---
 
@@ -43,6 +44,7 @@
 | Comparador | `CMP-JS-001` ↔ `data-compare-id` no Liquid; `CMP-CSS-001` ↔ `.is-selected` / `aria-pressed` |
 | Hover imagem | `PHV-JS-005` ↔ `mega-menu.js` / `__SDA_HOVER_V2__`; `PHV-CSS-001` ↔ ordem CSS em `theme.liquid` |
 | Header laranja | `PHV-CSS-*` overrides vs `header-v2.css`, `theme-custom.css` |
+| Bundle base | `ALL-CSS-001` duplica ~15,3k linhas dentro de `@media (min-width: 992px)` — cascata desktop imprevisível vs `theme-custom.css` / folhas PDP |
 | PDP duplicidade | Folha **#product-pdp-v2** (PDP2) vs folha **.product-v2** (PV2) — confirmar qual(is) entram no manifest |
 | Sync WDNA ↔ Git | ~18+ itens possivelmente só no editor; export delta omite padrão/vazio |
 
@@ -261,6 +263,32 @@
 | PV2-CSS-005–012 | Baixa/Inf. | variada |
 
 **Verificar depois:** coexistência com folha 11; markup galeria mobile.
+
+---
+
+## 13. `assets/theme-all.css`
+
+**Função:** Folha CSS monolítica do tema WDNA (reset, tipografia Akhand, botões, formulários, vitrine/showcase, PDP legado `.product-main`, checkout, sidenavs, busca/filtros). Carregada globalmente via `layout/theme.liquid` após `theme-plugins.css` e antes de `theme-custom.css`.
+
+**Veredito:** Foram encontrados problemas **críticos** (duplicação massiva + cauda sintática quebrada); estabilização exige correção estrutural antes de confiar em refinamentos visuais em folhas satélite.
+
+**Achados:**
+
+| ID | Sev. | Conf. | Nota |
+|----|------|-------|------|
+| ALL-CSS-001 | **Crítica** | Alta | A partir de ~L15417, `@media (min-width: 992px)` não fecha após regras de `.form-group_potencia`; ~L15426–30759 repetem quase todo o bundle (incl. `@font-face`) **só em desktop** — ~632 KiB / ~30,9k linhas (~2× tamanho útil) |
+| ALL-CSS-002 | Alta | Alta | Cauda ~L30872–30881: blocos `.form-group_potencia .form-input` indentados sem `@media` pai — provável colagem/merge corrompido |
+| ALL-CSS-003 | Alta | Alta | `.product-main:hover { transform; box-shadow }` duplicado (~L30864–30890) — efeito de “card flutuante” no container PDP, não só em vitrine |
+| ALL-CSS-004 | Média | Alta | `*:focus { outline: none }` (~L49) — foco global suprimido; conflita com correções a11y em folhas PDP/header |
+| ALL-CSS-005 | Média | Alta | Tipografia 100% CDN `salescdn.net` (4× `@font-face`, duplicados no bloco desktop) — dependência rede + parse extra |
+| ALL-CSS-006 | Média | Média | Transforms/hover sem `@media (prefers-reduced-motion: reduce)` |
+| ALL-CSS-007 | Média | Média | 68× `!important`; parte efetiva em dobro no cascade ≥992px por ALL-CSS-001 |
+| ALL-CSS-008 | Baixa | Média | `unicode-range: U+000-5FF` (possível typo vs `U+0000-05FF`) em `@font-face` |
+| ALL-CSS-009 | Informativa | Alta | `.product-main` base (~L13357 e ~L28782 na cópia interna) coexistindo com customizações `#product-pdp-v2` / `.product-v2` auditadas à parte |
+
+**Verificar depois:** diff editor WDNA vs Git pós-export; impacto desktop em vitrine, busca/filtro potência e PDP; ordem final `theme-plugins.css` → `theme-all.css` → `theme-custom.css` → assets v2 (header, mega-menu, hover).
+
+**Registro G (compacto):** `theme-all.css` | Crítico | ALL-CSS-001..009 | desktop duplicate @992px; tail syntax; PDP hover; focus; fonts CDN
 
 ---
 
