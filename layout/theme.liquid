@@ -643,6 +643,7 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
 (function(){
   try {
     var KEY = 'diag360_shown_session';
+    var KEY_DISMISS = 'diag360_dismissed_v2';
     function isDiagPage() {
       var p = (window.location.pathname || '').toLowerCase();
       return p.indexOf('diagnostico') !== -1 || p.indexOf('diag360') !== -1;
@@ -651,10 +652,15 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
       return window.matchMedia('(max-width: 767px)').matches;
     }
     function jaViu() {
-      try { return sessionStorage.getItem(KEY) === '1'; } catch(e) { return false; }
+      try {
+        return sessionStorage.getItem(KEY) === '1' || localStorage.getItem(KEY_DISMISS) === '1';
+      } catch(e) { return false; }
     }
     function marcarVisto() {
-      try { sessionStorage.setItem(KEY, '1'); } catch(e) {}
+      try {
+        sessionStorage.setItem(KEY, '1');
+        localStorage.setItem(KEY_DISMISS, '1');
+      } catch(e) {}
     }
     if (jaViu()) return;
     if (isDiagPage()) return;
@@ -686,7 +692,22 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
     }
     document.addEventListener('mousedown', foraClick);
     document.addEventListener('touchstart', foraClick, { passive: true });
-    setTimeout(abrir, isMobile() ? 3000 : 5000);
+    function scheduleDiag360Open() {
+      if (isMobile()) {
+        var scrollOk = false;
+        var onScroll = function () {
+          if ((window.scrollY || 0) >= 420) scrollOk = true;
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        setTimeout(function () {
+          window.removeEventListener('scroll', onScroll);
+          if (scrollOk) abrir();
+        }, 22000);
+        return;
+      }
+      setTimeout(abrir, 15000);
+    }
+    scheduleDiag360Open();
   } catch(e) {
     console.error('Popup diag360:', e);
   }

@@ -1,25 +1,13 @@
-Pacote Site do Ar — última versão para colar no tema NOVO WDNA
-================================================================
+SDA ZERO v1 — reescrita do zero (melhor pilha possível)
+Branch: cursor/card-remodel-b192
+Gerado: 26 out 2026 (America/Sao_Paulo)
 
-SDA v3 — mega-menu SEM CSS de card; hover enxuto; card = showcase-product-card + sda-conversion
-Branch: cursor/card-remodel-b192 (ver SDA-TEMA-NOVO-V3.md)
-Gerado em: 26 out 2026 (America/Sao_Paulo)
+DONOS:
+  mega-menu.css     = nav (SEM CSS de card)
+  sda-conversion-redesign.css = busca, PDP, botões coluna
+  sda-card.css      = ÚNICO visual vitrine (.sda-card)
 
-ESTRUTURA (igual ao editor WDNA):
-  layout/theme.liquid
-  assets/*.css e assets/*.js (15 arquivos)
-  sections/*.liquid (15 arquivos)
+layout/theme.liquid deve linkar sda-card.css (não só showcase-product-card.css)
+HTML: buscar SDA-ZERO-v1 no código-fonte da loja
 
-Total: 31 arquivos de código (+ este LEIA-ME).
-
-NÃO inclui (ficam do tema base WDNA que você listou):
-  theme.js, theme-defer.js, theme-plugins.css, theme-solar-calculator.*,
-  templates/*, config.json, demais sections.
-
-NÃO use docs/wdna/RECUPERACAO-SITE/ — é kit antigo parcial (emergência).
-Esta pasta tema-sda-ultimo é a cópia espelho atualizada do repo.
-
-Atualizar esta pasta no repo:
-  ./docs/wdna/pacote-sda/copiar-para-tema.sh ./docs/wdna/pacote-sda/tema-sda-ultimo
-
-Links Raw (lista): docs/wdna/pacote-sda/LISTA-ARQUIVOS-ACESSIVEIS.md
+32 arquivos nesta pasta (+ LEIA-ME). Ver docs/wdna/SDA-ZERO-PUBLICAR.md

@@ -497,7 +497,26 @@ main.search-main .search-filters-content {
   }
 
   body.sda-pdp-sticky-on {
-    padding-bottom: 72px;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+
+  body.sda-pdp-sticky-on.has-mobile-catalog-dock,
+  body.sda-pdp-sticky-on.has-mobile-account-dock {
+    padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px));
+  }
+
+  body.sda-pdp-sticky-on.has-mobile-catalog-dock .sda-pdp-sticky-buy,
+  body.sda-pdp-sticky-on.has-mobile-account-dock .sda-pdp-sticky-buy {
+    bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+  }
+
+  body.sda-pdp-sticky-on.has-compare-bar .sda-pdp-sticky-buy {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+
+  body.sda-pdp-sticky-on.has-compare-bar.has-mobile-catalog-dock .sda-pdp-sticky-buy,
+  body.sda-pdp-sticky-on.has-compare-bar.has-mobile-account-dock .sda-pdp-sticky-buy {
+    bottom: calc(134px + env(safe-area-inset-bottom, 0px));
   }
 }
 
