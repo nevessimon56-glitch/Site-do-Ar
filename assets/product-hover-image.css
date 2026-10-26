@@ -1151,31 +1151,68 @@ main.home-main .showcase-product.card.sda-card--cycle-qf .showcase-card-actions 
   main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-spec-wrap {
     min-height: 0 !important;
     margin: 0 !important;
-    padding: 0 4px 6px !important;
-    overflow: hidden !important;
+    padding: 0 4px 4px !important;
+    overflow: visible !important;
     box-sizing: border-box !important;
   }
 
   main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-spec-bar,
   main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-spec-bar,
   main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-spec-bar {
-    flex-wrap: wrap !important;
-    justify-content: center !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
     gap: 3px !important;
-    row-gap: 3px !important;
-    max-height: 40px !important;
-    overflow: hidden !important;
+    max-height: none !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 1px !important;
+  }
+
+  main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-spec-bar::-webkit-scrollbar,
+  main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-spec-bar::-webkit-scrollbar,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-spec-bar::-webkit-scrollbar {
+    display: none !important;
   }
 
   main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-spec-bar__tag,
   main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-spec-bar__tag,
   main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-spec-bar__tag {
-    max-width: calc(50% - 2px) !important;
+    flex: 0 0 auto !important;
+    max-width: none !important;
     height: 18px !important;
     min-height: 18px !important;
+    padding: 0 6px !important;
     font-size: 8px !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .card-header,
+  main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .card-header,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .card-header {
+    padding: 0 6px 3px !important;
+    text-align: center !important;
+  }
+
+  main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-product_link_title,
+  main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-product_link_title,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-product_link_title {
+    text-align: center !important;
+  }
+
+  main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .card-footer,
+  main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .card-footer,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .card-footer {
+    padding: 0 5px 5px !important;
+  }
+
+  main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-prices--card,
+  main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-prices--card,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-prices--card {
+    gap: 2px !important;
+    padding: 2px 0 3px !important;
   }
 
   main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-list,
@@ -1225,5 +1262,166 @@ main.home-main .showcase-product.card .card-footer {
   main.search-main .showcase-search.showcase-search_grid:not(.showcase-search_grid--mobile-2col) .showcase-product.card .showcase-product_link__image {
     min-height: 0 !important;
     max-height: none !important;
+  }
+}
+
+/*
+ * CARD-DESKTOP-CENTER-v2 — centralização completa (≥992); overflow visível evita cortar preço/Pix.
+ */
+@media (min-width: 992px) {
+  .showcase-search .showcase-product.card,
+  main.home-main section.showcase .showcase-product.card,
+  main.search-main .showcase-product.card,
+  main.home-main .showcase-product.card {
+    overflow: visible !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-product.card .showcase-product_image.card-image,
+  main.search-main .showcase-product.card .showcase-product_image.card-image,
+  main.home-main .showcase-product.card .showcase-product_image.card-image {
+    overflow: hidden !important;
+  }
+
+  .showcase-search .showcase-product.card .card-header,
+  main.home-main section.showcase .showcase-product.card .card-header,
+  main.search-main .showcase-product.card .card-header,
+  main.home-main .showcase-product.card .card-header {
+    width: 100% !important;
+    text-align: center !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-product_link_title,
+  main.home-main section.showcase .showcase-product.card .showcase-product_link_title,
+  main.search-main .showcase-product.card .showcase-product_link_title,
+  main.home-main .showcase-product.card .showcase-product_link_title {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-spec-wrap,
+  main.home-main section.showcase .showcase-product.card .showcase-spec-wrap,
+  main.search-main .showcase-product.card .showcase-spec-wrap,
+  main.home-main .showcase-product.card .showcase-spec-wrap {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-spec-bar,
+  main.home-main section.showcase .showcase-product.card .showcase-spec-bar,
+  main.search-main .showcase-product.card .showcase-spec-bar,
+  main.home-main .showcase-product.card .showcase-spec-bar {
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+  }
+
+  .showcase-search .showcase-product.card .card-footer,
+  main.home-main section.showcase .showcase-product.card .card-footer,
+  main.search-main .showcase-product.card .card-footer,
+  main.home-main .showcase-product.card .card-footer {
+    align-items: center !important;
+    text-align: center !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-prices--card,
+  main.home-main section.showcase .showcase-product.card .showcase-prices--card,
+  main.search-main .showcase-product.card .showcase-prices--card,
+  main.home-main .showcase-product.card .showcase-prices--card {
+    align-items: center !important;
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-prices--card .showcase-prices_strike,
+  .showcase-search .showcase-product.card .showcase-prices--card del.showcase-prices_strike,
+  .showcase-search .showcase-product.card .showcase-prices--card .showcase-prices_price,
+  .showcase-search .showcase-product.card .showcase-prices--card .showcase-prices_price b,
+  .showcase-search .showcase-product.card .showcase-prices--card .showcase-prices_price--pix,
+  .showcase-search .showcase-product.card .showcase-prices--card .showcase-prices_price--pix b,
+  .showcase-search .showcase-product.card .showcase-prices--card .showcase-prices_pix,
+  .showcase-search .showcase-product.card .showcase-prices--card .showcase-prices_installment,
+  main.home-main section.showcase .showcase-product.card .showcase-prices--card .showcase-prices_strike,
+  main.home-main section.showcase .showcase-product.card .showcase-prices--card del.showcase-prices_strike,
+  main.home-main section.showcase .showcase-product.card .showcase-prices--card .showcase-prices_price,
+  main.home-main section.showcase .showcase-product.card .showcase-prices--card .showcase-prices_price b,
+  main.home-main section.showcase .showcase-product.card .showcase-prices--card .showcase-prices_price--pix b,
+  main.home-main section.showcase .showcase-product.card .showcase-prices--card .showcase-prices_pix,
+  main.home-main section.showcase .showcase-product.card .showcase-prices--card .showcase-prices_installment,
+  main.search-main .showcase-product.card .showcase-prices--card > *,
+  main.home-main .showcase-product.card .showcase-prices--card > * {
+    float: none !important;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-prices_installment-prefix,
+  .showcase-search .showcase-product.card .showcase-prices_installment-text,
+  main.home-main section.showcase .showcase-product.card .showcase-prices_installment-prefix,
+  main.home-main section.showcase .showcase-product.card .showcase-prices_installment-text,
+  main.search-main .showcase-product.card .showcase-prices_installment-prefix,
+  main.search-main .showcase-product.card .showcase-prices_installment-text {
+    display: inline !important;
+    text-align: center !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-prices--card .showcase-prices_installment,
+  main.home-main section.showcase .showcase-product.card .showcase-prices--card .showcase-prices_installment,
+  main.search-main .showcase-product.card .showcase-prices--card .showcase-prices_installment {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-card-actions,
+  main.home-main section.showcase .showcase-product.card .showcase-card-actions,
+  main.search-main .showcase-product.card .showcase-card-actions,
+  main.home-main .showcase-product.card .showcase-card-actions {
+    justify-content: center !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-card-actions .showcase-compare-btn,
+  main.home-main section.showcase .showcase-product.card .showcase-card-actions .showcase-compare-btn,
+  main.search-main .showcase-product.card .showcase-card-actions .showcase-compare-btn,
+  main.home-main .showcase-product.card .showcase-card-actions .showcase-compare-btn {
+    flex: 0 1 auto !important;
+  }
+
+  .showcase-search .showcase-product.card .showcase-card-actions .showcase-product_buy,
+  .showcase-search .showcase-product.card .showcase-card-actions .showcase-product_buy.btn,
+  main.home-main section.showcase .showcase-product.card .showcase-card-actions .showcase-product_buy,
+  main.home-main section.showcase .showcase-product.card .showcase-card-actions .showcase-product_buy.btn,
+  main.search-main .showcase-product.card .showcase-card-actions .showcase-product_buy,
+  main.home-main .showcase-product.card .showcase-card-actions .showcase-product_buy.btn {
+    flex: 1 1 0% !important;
+    max-width: min(200px, 62%) !important;
   }
 }
