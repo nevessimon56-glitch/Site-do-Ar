@@ -1,0 +1,11 @@
+<section class="showcase showcase-last-viewed">
+    {% assign sectionConfig = showcaseSection.config %}
+    <h2 class="showcase-title">
+        Último Visto
+    </h2>
+    <div class="showcase-products">
+        <ul class="showcase-list">
+            {%- render 'sections/showcase-model-product', products: lastProducts, sectionConfig: sectionConfig, themeConfig: themeConfig -%}
+        </ul>
+    </div>
+</section>

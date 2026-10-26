@@ -1,0 +1,800 @@
+{% layout 'layout/theme' %}
+{% block content %}
+{% render 'sections/header', store: store, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
+<main class="account-main new-account-main">
+    <div class="account-content content">
+        <div class="account-container container">
+            <div class="columns">
+                <div class="column col-12">
+                    <div class="card card-page card-page-form" x-data="setupRegister()">
+                        <div class="card-header">
+                            <h1 class="card-title">
+                                Dados cadastrais
+                            </h1>
+                            <p class="card-text">
+                                Por favor, preencha os campos abaixo corretamente.
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            <form id="form-register" x-on:submit.prevent>
+                                <div class="columns">
+                                    <div class="column col-4 col-md-12">
+                                        <div class="form-group form-group_custom">
+                                            <select x-model="state.customer.typePerson" id="selectTypeUser"
+                                                    class="form-select">
+                                                {% if store.acceptedDocuments contains 'cpf' %}
+                                                <option value="F">Pessoa física</option>
+                                                {% endif %}
+                                                {% if store.acceptedDocuments contains "cnpj" %}
+                                                <option value="J">Pessoa jurídica</option>
+                                                {% endif %}
+                                                {% if store.acceptedDocuments contains "others" %}
+                                                <option value="E">Outros(Estrangeiro)</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Start - Física -->
+                                    <div class="column col-8 col-md-12" x-show="state.customer.typePerson === 'F'">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.name === '' || typeof state.customer.name === 'undefined' }">
+                                            <label class="form-label" for="name">Nome completo *</label>
+                                            <input
+                                                    id="name"
+                                                    name="name"
+                                                    class="form-input"
+                                                    :class="{ 'is-error': !!state.errors.name }"
+                                                    autocomplete="name"
+                                                    autofocus="autofocus"
+                                                    type="text"
+                                                    x-model="state.customer.name"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.name"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-6" x-show="state.customer.typePerson === 'F'">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.document === '' || typeof state.customer.document === 'undefined' }">
+                                            <label class="form-label" for="cpf">CPF *</label>
+                                            <input
+                                                    id="cpf"
+                                                    name="cpf"
+                                                    class="form-input masked-input"
+                                                    :class="{ 'is-error': !!state.errors.document }"
+                                                    data-mask="###.###.###-##"
+                                                    type="tel"
+                                                    x-model="state.customer.document"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.document"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-6" x-show="state.customer.typePerson === 'F'">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.secondaryDocument === '' || typeof state.customer.secondaryDocument === 'undefined' }">
+                                            <label class="form-label" for="rg">RG</label>
+                                            <input
+                                                    id="rg"
+                                                    name="rg"
+                                                    class="form-input masked-input"
+                                                    type="text"
+                                                    x-model="state.customer.secondaryDocument"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="column col-6 col-md-12" x-show="state.customer.typePerson === 'F'">
+                                        <div class="form-group form-group_custom">
+                                            <label class="form-label" for="genre">Sexo</label>
+                                            <div class="form-group">
+                                                <select
+                                                        id="genre"
+                                                        name="genre"
+                                                        class="form-select"
+                                                        x-model="state.customer.genre"
+                                                >
+                                                    <option value="M">Masculino</option>
+                                                    <option value="F">Feminino</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column col-6 col-md-12" x-show="state.customer.typePerson === 'F'">
+                                        <div class="form-group form-group_custom__placeholder">
+                                            <label class="form-label" for="birth-date">Data do nascimento</label>
+                                            <input
+                                                    id="birth-date"
+                                                    name="birth-date"
+                                                    class="form-input masked-input"
+                                                    :class="{ 'is-error': !!state.errors.birthDate }"
+                                                    autocomplete="bday"
+                                                    data-mask='["##/##/##", "##/##/####"]'
+                                                    type="tel"
+                                                    x-model="state.customer.birthDate"
+                                                    placeholder="DD/MM/AAAA"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.birthDate"></p>
+                                        </div>
+                                    </div>
+                                    <!-- End - Física -->
+                                    <!-- Start - Jurídica -->
+                                    <div class="column col-8 col-md-12" x-show="state.customer.typePerson === 'J'">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.name === '' || typeof state.customer.name === 'undefined' }">
+                                            <label class="form-label" for="corporate-name">Razão social *</label>
+                                            <input
+                                                    id="corporate-name"
+                                                    name="corporate-name"
+                                                    class="form-input"
+                                                    :class="{ 'is-error': !!state.errors.name }"
+                                                    autocomplete="organization"
+                                                    autofocus="autofocus"
+                                                    type="text"
+                                                    x-model="state.customer.name"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.name"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-6 col-md-12" x-show="state.customer.typePerson === 'J'">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.document === '' || typeof state.customer.document === 'undefined' }">
+                                            <label class="form-label" for="cnpj">CNPJ *</label>
+                                            <input
+                                                    id="cnpj"
+                                                    name="cnpj"
+                                                    class="form-input masked-input"
+                                                    :class="{ 'is-error': !!state.errors.document }"
+                                                    data-mask="##.###.###/####-##"
+                                                    autocomplete="document"
+                                                    type="tel"
+                                                    x-model="state.customer.document"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.document"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-6 col-md-12" x-show="state.customer.typePerson === 'J'">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.secondaryDocument === '' || typeof state.customer.secondaryDocument === 'undefined' }">
+                                            <label class="form-label" for="state-registration">
+                                                Inscrição Estadual
+                                            </label>
+                                            <input
+                                                    id="state-registration"
+                                                    name="state-registration"
+                                                    class="form-input masked-input"
+                                                    type="text"
+                                                    x-model="state.customer.secondaryDocument"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="column col-6 col-md-12" x-show="state.customer.typePerson === 'J'">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.fantasyName === '' || typeof state.customer.fantasyName === 'undefined' }">
+                                            <label class="form-label" for="fantasy-name">Nome fantasia *</label>
+                                            <input
+                                                    id="fantasy-name"
+                                                    name="fantasy-name"
+                                                    class="form-input"
+                                                    type="text"
+                                                    x-model="state.customer.fantasyName"
+                                                    :class="{ 'is-error': !!state.errors.fantasyName }"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.fantasyName"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-6 col-md-12" x-show="state.customer.typePerson === 'J'">
+                                        <div class="form-group form-group_custom__placeholder">
+                                            <label class="form-label" for="date">Data de fundação</label>
+                                            <input
+                                                    id="date"
+                                                    name="date"
+                                                    class="form-input masked-input"
+                                                    :class="{ 'is-error': !!state.errors.birthDate }"
+                                                    autocomplete="bday"
+                                                    type="tel"
+                                                    data-mask='["##/##/##", "##/##/####"]'
+                                                    x-model="state.customer.birthDate"
+                                                    placeholder="DD/MM/AAAA"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.birthDate"></p>
+                                        </div>
+                                    </div>
+                                    <!-- End - Jurídica -->
+                                    <!-- Start - Estrangeira -->
+                                    <div class="column col-8 col-md-12" x-show="state.customer.typePerson === 'E'">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.name === '' || typeof state.customer.name === 'undefined' }">
+                                            <label class="form-label" for="name">Nome completo *</label>
+                                            <input
+                                                    id="name"
+                                                    name="name"
+                                                    class="form-input"
+                                                    :class="{ 'is-error': !!state.errors.name }"
+                                                    autocomplete="name"
+                                                    autofocus="autofocus"
+                                                    type="text"
+                                                    x-model="state.customer.name"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.name"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-12" x-show="state.customer.typePerson === 'E'">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.document === '' || typeof state.customer.document === 'undefined' }">
+                                            <label class="form-label" for="passport">Passaporte *</label>
+                                            <input
+                                                    id="passport"
+                                                    name="passport"
+                                                    class="form-input masked-input"
+                                                    :class="{ 'is-error': !!state.errors.document }"
+                                                    type="tel"
+                                                    x-model="state.customer.document"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.document"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-6 col-md-12" x-show="state.customer.typePerson === 'E'">
+                                        <div class="form-group form-group_custom">
+                                            <label class="form-label" for="genre">Sexo</label>
+                                            <div class="form-group">
+                                                <select
+                                                        id="genre"
+                                                        name="genre"
+                                                        class="form-select"
+                                                        x-model="state.customer.genre"
+                                                >
+                                                    <option value="M">Masculino</option>
+                                                    <option value="F">Feminino</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column col-6 col-md-12" x-show="state.customer.typePerson === 'E'">
+                                        <div class="form-group form-group_custom__placeholder">
+                                            <label class="form-label" for="birth-date">Data do nascimento</label>
+                                            <input
+                                                    id="birth-date"
+                                                    name="birth-date"
+                                                    class="form-input masked-input"
+                                                    :class="{ 'is-error': !!state.errors.birthDate }"
+                                                    autocomplete="bday"
+                                                    data-mask='["##/##/##", "##/##/####"]'
+                                                    type="tel"
+                                                    x-model="state.customer.birthDate"
+                                                    placeholder="DD/MM/AAAA"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.birthDate"></p>
+                                        </div>
+                                    </div>
+                                    <!-- End - Estrangeira -->
+                                </div>
+                                <div class="columns">
+                                    <div class="column col-6">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.cellphone === '' || typeof state.customer.cellphone === 'undefined' }">
+                                            <label class="form-label" for="cellphone">Celular *</label>
+                                            <input
+                                                    id="cellphone"
+                                                    name="cellphone"
+                                                    class="form-input masked-input"
+                                                    :class="{ 'is-error': !!state.errors.cellphone }"
+                                                    type="tel"
+                                                    data-mask='["(##) #####-####", "(##) ####-####"]'
+                                                    x-model="state.customer.cellphone"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.cellphone"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-6">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.phone === '' || typeof state.customer.phone === 'undefined' }">
+                                            <label class="form-label" for="tel">Telefone fixo</label>
+                                            <input
+                                                    id="tel"
+                                                    name="tel"
+                                                    class="form-input masked-input"
+                                                    type="tel"
+                                                    autocomplete="tel"
+                                                    data-mask='["(##) #####-####", "(##) ####-####"]'
+                                                    x-model="state.customer.phone"
+                                                    :class="{ 'is-error': !!state.errors.phone }"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.phone"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-8 col-md-12">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.email === '' || typeof state.customer.email === 'undefined' }">
+                                            <label class="form-label" for="email">Email *</label>
+                                            <input
+                                                    id="email"
+                                                    name="email"
+                                                    class="form-input"
+                                                    :class="{ 'is-error': !!state.errors.email }"
+                                                    type="email"
+                                                    autocomplete="email"
+                                                    x-model="state.customer.email"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.email"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-4 col-md-12">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.password === '' || typeof state.customer.password === 'undefined' }">
+                                            <label class="form-label" for="current-password">Senha de acesso *</label>
+                                            <input
+                                                    :class="{ 'is-error': !!state.errors.password }"
+                                                    class="form-input form-input-password"
+                                                    id="current-password"
+                                                    name="current-password"
+                                                    type="password"
+                                                    autocomplete="current-password"
+                                                    required="required"
+                                                    x-model="state.customer.password"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.password"></p>
+                                            {{ themeConfig.icons.passwordHide }}
+                                            {{ themeConfig.icons.passwordShow }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="columns">
+                                    <div class="column col-3 col-xl-12">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.address.zipcode === '' || typeof state.customer.address.zipcode === 'undefined' }">
+                                            <label class="form-label" for="zipcode">CEP *</label>
+                                            <input
+                                                    id="zipcode"
+                                                    name="zipcode"
+                                                    class="form-input masked-input"
+                                                    :class="{ 'is-error': !!state.errors.zipcode }"
+                                                    data-mask='#####-###'
+                                                    autocomplete="postal-code"
+                                                    type="tel"
+                                                    x-model="state.customer.address.zipcode"
+                                                    @focusout="handleZipcodeChange()"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.zipcode"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-7 col-xl-9">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.address.street === '' || typeof state.customer.address.street === 'undefined' }">
+                                            <label class="form-label" for="street">Endereço *</label>
+                                            <input
+                                                    id="street"
+                                                    name="street"
+                                                    class="form-input"
+                                                    :class="{ 'is-error': !!state.errors.street }"
+                                                    autocomplete="street-address"
+                                                    type="text"
+                                                    x-model="state.customer.address.street"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.street"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-2 col-xl-3">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.address.number === '' || typeof state.customer.address.number === 'undefined' }">
+                                            <label class="form-label" for="number">Número *</label>
+                                            <input
+                                                    id="number"
+                                                    name="number"
+                                                    class="form-input"
+                                                    :class="{ 'is-error': !!state.errors.number }"
+                                                    type="text"
+                                                    x-model="state.customer.address.number"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.number"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-6 col-md-12">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.address.complement === '' || typeof state.customer.address.complement === 'undefined' }">
+                                            <label class="form-label" for="complement">Complemento</label>
+                                            <input
+                                                    id="complement"
+                                                    name="complement"
+                                                    class="form-input"
+                                                    type="text"
+                                                    x-model="state.customer.address.complement"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="column col-6 col-md-12">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.address.district === '' || typeof state.customer.address.district === 'undefined' }">
+                                            <label class="form-label" for="district">Bairro *</label>
+                                            <input
+                                                    id="district"
+                                                    name="district"
+                                                    class="form-input"
+                                                    :class="{ 'is-error': !!state.errors.district }"
+                                                    type="text"
+                                                    x-model="state.customer.address.district"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.district"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-4 col-md-12">
+                                        <div class="form-group form-group_custom" :class="{ 'onFocus': state.customer.address.city === '' || typeof state.customer.address.city === 'undefined' }">
+                                            <label class="form-label" for="city">Cidade *</label>
+                                            <input
+                                                    id="city"
+                                                    name="city"
+                                                    class="form-input"
+                                                    :class="{ 'is-error': !!state.errors.city }"
+                                                    type="text"
+                                                    x-model="state.customer.address.city"
+                                            >
+                                            <p class="form-input-hint" x-text="state.errors.city"></p>
+                                        </div>
+                                    </div>
+                                    <div class="column col-4 col-md-12">
+                                        <div class="form-group form-group_custom">
+                                            <label class="form-label" for="state">Estado *</label>
+                                            <select
+                                                    id="state"
+                                                    name="state"
+                                                    class="form-select"
+                                                    x-model="state.customer.address.state"
+                                            >
+                                                <template x-for="(federation, index) in state.states" :key="index">
+                                                    <option x-text="federation.value" :value="federation.value"></option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="column col-4 col-md-12">
+                                        <div class="form-group form-group_custom">
+                                            <label class="form-label" for="country">País *</label>
+                                            <select
+                                                    id="country"
+                                                    name="country"
+                                                    class="form-select"
+                                                    autocomplete="country"
+                                                    x-model="state.customer.address.country"
+                                                    @change="fetchStates(state.customer.address.country)"
+                                            >
+                                                <template x-for="(country, index) in state.countries" :key="index">
+                                                    <option x-text="country.name" :value="country.value"></option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="columns">
+                                    <div class="column col-8 col-md-12">
+                                        <div class="form-group form-group_send-email">
+                                            <label class="form-checkbox">
+                                                <input type="checkbox" :value="!state.customer.sendMail" x-model="state.customer.sendMail">
+                                                <i class="form-icon"></i>
+                                                Desejo receber avisos de ofertas de produtos e serviços
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="column col-4 col-md-12">
+
+                                        <div class="form-group">
+                                            <button
+                                                    class="btn btn-login btn-block"
+                                                    type="button"
+                                                    aria-label="Salvar"
+                                                    @click="registerUser()"
+                                            >
+                                                Salvar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig %}
+<script>
+    function setupRegister() {
+        let state = {
+            countries: JSON.parse('{{ countries | json }}') || {},
+            states: JSON.parse('{{ states | json }}') || {},
+            customer: {
+                name: '',
+                fantasyName: '',
+                document: '',
+                secondaryDocument: '',
+                typePerson: JSON.parse('{{store.acceptedDocuments | json}}').includes('cpf') ? 'F' : 'J',
+                birthDate: '',
+                genre: 'M',
+                phone: '',
+                cellphone: '',
+                email: '',
+                password: '',
+                sendMail: true,
+                address: {
+                    street: '',
+                    number: '',
+                    complement: '',
+                    district: '',
+                    city: '',
+                    state: '',
+                    country: 'BR',
+                    zipcode: '',
+                    addressGroupId: 1,
+                }
+            },
+            loginUserData: {
+                login: '',
+                password: '',
+            },
+            errors: {
+                login: '',
+                password: '',
+                name: '',
+                document: '',
+                birthdate: '',
+                cellphone: '',
+                address: '',
+                zipcode: '',
+                street: '',
+                number: '',
+                district: '',
+                city: ''
+            }
+        }
+
+        function fetchStates(country) {
+            StoreSDK.request.get(`/user/${country}/states`)
+                .then((response) => {
+                    this.state.states = response.statesList;
+                })
+        }
+
+        function registerValidate() {
+            this.state.errors = {};
+            /*** Remover espaços brancos ***/
+            this.state.customer.name = StoreSDK.utils.removeBlankSpaces(this.state.customer.name);
+            this.state.customer.address.street = StoreSDK.utils.removeBlankSpaces(this.state.customer.address.street);
+            this.state.customer.address.number = StoreSDK.utils.removeBlankSpaces(this.state.customer.address.number);
+            this.state.customer.address.district = StoreSDK.utils.removeBlankSpaces(this.state.customer.address.district);
+            this.state.customer.address.city = StoreSDK.utils.removeBlankSpaces(this.state.customer.address.city);
+
+            if (this.state.customer.typePerson === 'F') {
+                if (!StoreSDK.utils.validateFullName(this.state.customer.name)) {
+                    this.state.errors.name = 'Informe o nome completo';
+                }
+            }
+
+            if (this.state.customer.typePerson === 'J') {
+                /*** Remover espaços brancos ***/
+                this.state.customer.fantasyName = StoreSDK.utils.removeBlankSpaces(this.state.customer.fantasyName);
+
+                if (!this.state.customer.name) {
+                    this.state.errors.name = 'Informe o Razão Social';
+                }
+                if (!this.state.customer.fantasyName) {
+                    this.state.errors.fantasyName = 'Informe o nome fantasia';
+                }
+            }
+
+            if (this.state.customer.typePerson === 'F' && (!this.state.customer.document || !StoreSDK.utils.validateCpf(this.state.customer.document))) {
+                this.state.errors.document = 'Informe o CPF corretamente';
+            }
+
+            if (this.state.customer.typePerson === 'J' && (!this.state.customer.document || !StoreSDK.utils.validateCnpj(this.state.customer.document))) {
+                this.state.errors.document = 'Informe o CNPJ corretamente';
+            }
+
+            if (this.state.customer.typePerson === 'E' && (this.state.customer.document.length <= 0)) {
+                this.state.errors.document = 'Informe o passaporte corretamente';
+            }
+
+            // Campo está preenchido e não é válido. Ex.: preencher a data "20/20/20"
+            const data = new Date();
+            if (this.state.customer.birthDate && Number(this.state.customer.birthDate.split('/')[2]) > data.getFullYear()) this.state.errors.birthDate = 'Ano deve ser menor ou igual a ano atual';
+            if ((this.state.customer.birthDate && this.state.customer.birthDate.length < 10) || (this.state.customer.birthDate && !StoreSDK.utils.validateDate(this.state.customer.birthDate))) {
+                this.state.errors.birthDate = 'Informe uma data válida';
+            }
+
+            if (!this.state.customer.cellphone && !this.state.customer.email) {
+                this.state.errors.cellphone = 'Informe o email ou número de celular';
+                this.state.errors.email = 'Informe o email ou número de celular';
+            }
+
+            if (this.state.customer.cellphone && ((this.state.customer.cellphone.length < 14) || (this.state.customer.cellphone.match(/(\d+)/)[0] < 1))) {
+                this.state.errors.cellphone = 'Informe o número de celular corretamente';
+            }
+
+            if (this.state.customer.phone && ((this.state.customer.phone.length < 14) || (this.state.customer.phone.match(/(\d+)/)[0] < 1))) {
+                this.state.errors.phone = 'Informe o número do telefone corretamente';
+            }
+
+            if (this.state.customer.email && !StoreSDK.utils.validateEmail(this.state.customer.email)) {
+                /*** Remover espaços brancos ***/
+                this.state.customer.email = StoreSDK.utils.removeBlankSpaces(this.state.customer.email);
+                this.state.errors.email = 'Informe um email válido';
+            }
+
+            if (!this.state.customer.password) {
+                this.state.errors.password = 'Informe a senha';
+            } else if (this.state.customer.password && (this.state.customer.password.length < 6)) {
+                this.state.errors.password = 'A senha deve conter no mínimo 6 dígitos.';
+            } else if (this.state.customer.password && (this.state.customer.password.length > 50)) {
+                this.state.errors.password = 'A senha deve conter no máximo 50 dígitos.';
+            }
+
+            if (!this.state.customer.address.zipcode) {
+                this.state.errors.zipcode = 'Informe o CEP';
+            } else if (this.state.customer.address.zipcode && ((this.state.customer.address.zipcode.length < 9) || (this.state.customer.address.zipcode.match(/(\d+)/)[0] < 1))) {
+                this.state.errors.zipcode = 'Informe o CEP corretamente';
+            }
+
+            if (!this.state.customer.address.street) {
+                this.state.errors.street = 'Informe a rua';
+            }
+
+            if (!this.state.customer.address.number) {
+                this.state.errors.number = 'Informe o número';
+            }
+
+            if (!this.state.customer.address.district) {
+                this.state.errors.district = 'Informe o bairro';
+            }
+
+            if (!this.state.customer.address.city) {
+                this.state.errors.city = 'Informe a cidade';
+            }
+
+            if (Object.keys(this.state.errors).length) {
+                return false;
+            }
+            return true;
+        }
+
+        function loginValidate() {
+            if (!this.state.loginUserData.login) {
+                this.state.errors.login = 'Informe o login.'
+                return false;
+            }
+
+            if (!this.state.loginUserData.password) {
+                this.state.errors.password = 'Informe a senha';
+                return false;
+            }
+
+
+            return true;
+        }
+
+        function registerUser() {
+            if (!this.registerValidate()) {
+                document.getElementById("form-register").scrollIntoView({behavior: 'smooth'});
+                return;
+            }
+
+            openLoadingMain();
+            const body = {
+                ...this.state.customer,
+                birthDate: this.state.customer.birthDate
+                    ? StoreSDK.utils.normalizeBRDate(this.state.customer.birthDate)
+                    : null
+            }
+
+            StoreSDK.request.post('/ajax/customer/register', body)
+                .then((res) => {
+                    if (res.code === 'inactive_user') {
+                        notyf.success(res.message);
+                        closeLoadingMain();
+                    } else {
+                        notyf.success('Cadastro realizado com sucesso!');
+                        closeLoadingMain();
+                        setTimeout(function () {
+                            window.location.href = '/'
+                        }, 800);
+                    }
+                })
+                .catch((error) => {
+                    closeLoadingMain();
+                    if (error.data && error.data.code && error.data.message) {
+                        notyf.open({
+                            type: 'warning',
+                            message: error.data.message,
+                        });
+                    }
+                });
+        }
+
+        function registerUser() {
+            if (!this.registerValidate()) {
+                document.getElementById("form-register").scrollIntoView({behavior: 'smooth'});
+                return;
+            }
+
+            openLoadingMain();
+            const body = {
+                ...this.state.customer,
+                birthDate: this.state.customer.birthDate
+                    ? StoreSDK.utils.normalizeBRDate(this.state.customer.birthDate)
+                    : null
+            }
+
+            StoreSDK.request.post('/ajax/customer/register', body)
+                .then((res) => {
+                    if (res.code === 'inactive_user') {
+                        notyf.success(res.message);
+                        closeLoadingMain();
+                    } else {
+                        notyf.success('Cadastro realizado com sucesso!');
+                        closeLoadingMain();
+                        if (typeof mb_track !== 'undefined') {
+                            window.mb_track('accountSync', {
+                                user: {
+                                    user_id: res?.id,
+                                    email: res.contacts?.find(contact => contact.contactGroupId === 1)?.value,
+                                    phone: res.contacts?.find(contact => contact.contactGroupId === 2)?.value,
+                                    name: res?.name || res?.fantasyName,
+                                }
+                            });
+                        }
+                        setTimeout(function () {
+                            window.location.href = '/'
+                        }, 800);
+                    }
+                })
+                .catch((error) => {
+                    closeLoadingMain();
+                    if (error.data && error.data.code && error.data.message) {
+                        notyf.open({
+                            type: 'warning',
+                            message: error.data.message,
+                        });
+                    }
+                });
+        }
+
+        function login() {
+            if (!this.loginValidate()) {
+                return;
+            }
+
+            const loginUserData = this.state.loginUserData;
+
+            StoreSDK.request.post('/ajax/login', loginUserData)
+                .then((response) => {
+                    if (typeof mb_track !== 'undefined') {
+                        window.mb_track('accountSync', {
+                            user: {
+                                user_id: response?.id,
+                                email: response.contacts?.find(contact => contact.contactGroupId === 1)?.value,
+                                phone: response.contacts?.find(contact => contact.contactGroupId === 2)?.value,
+                                name: response?.name || response?.fantasyName,
+                            }
+                        });
+                    }
+                    window.location.href = '/'
+                })
+                .catch((error) => {
+                    if (error.data && error.data.code && error.data.message) {
+                        notyf.open({
+                            type: 'warning',
+                            message: error.data.message,
+                        });
+                    } else {
+                        notyf.open({
+                            type: 'warning',
+                            message: 'Não foi possível realizar o login',
+                        });
+                    }
+                });
+        }
+
+        function handleZipcodeChange() {
+            if (!this.state.customer.address.zipcode) {
+                return;
+            }
+            StoreSDK.request.get(`/ajax/address/${this.state.customer.address.country}/${this.state.customer.address.zipcode}`)
+                .then((response) => {
+                    if (response.address) {
+                        this.state.customer.address.street = response.address.street;
+                        this.state.customer.address.district = response.address.district;
+                        this.state.customer.address.city = response.address.city;
+                        this.state.customer.address.state = response.address.state;
+                    }
+                });
+        }
+
+        return {
+            state,
+            fetchStates,
+            registerUser,
+            registerValidate,
+            loginValidate,
+            login,
+            handleZipcodeChange,
+        }
+    }
+</script>
+{% endblock %}
