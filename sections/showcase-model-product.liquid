@@ -1,9 +1,8 @@
 {% comment %}
-  ARQUIVO: showcase-model-product.liquid
-  VERSAO: 2026-10-26-card-remodel-v2
-  Ordem alvo: imagem → tags técnicas → título (+ BTU) → preços → Comprar agora → Comparar.
-  Classes: .sda-product-card.sda-product-card--v2 — visual em assets/showcase-product-card.css
-  VALIDAR: deve existir "productPricePrimary = product.price" e NAO deve existir "product.primaryPrice"
+  SDA CARD ZERO v5 — vitrine Site do Ar
+  Ordem: imagem → specs → título → preços → Comprar → Comparar
+  CSS: assets/sda-card.css (único dono visual)
+  JS/compare: product-compare-data.liquid + product-compare.js
 {% endcomment %}
 {% assign maximumProducts = 60 %}
 {% if showcaseSection and showcaseSection.products %}
@@ -60,8 +59,8 @@
     {% endif %}
     {% assign favPriceLabel = pixPriceCard | money %}
 
-    <li class="showcase-item" data-showcase-tpl="v4-card-remodel">
-        <div class="showcase-product card sda-product-card sda-product-card--v2">
+    <li class="showcase-item" data-showcase-tpl="v5-zero">
+        <div class="showcase-product card sda-product-card sda-card">
             {% if themeConfig.price.type != 'hide' %}
                 {% if product.promotion %}
                     <div class="showcase-tag">

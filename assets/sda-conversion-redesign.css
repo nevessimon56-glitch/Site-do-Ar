@@ -1,9 +1,7 @@
 /**
- * SDA v3 — tema novo
- * Comportamento + layout: .sda-product-card (coluna Comprar/Compare, busca, PDP helpers).
- * Visual/altura/grid/carrossel: showcase-product-card.css (ÚLTIMO no card).
- * Nav/mega menu: mega-menu.css (sem CSS de card legado).
- * Legado: :not(.sda-product-card) onde aplicável.
+ * SDA ZERO — comportamento (busca, filtros, sticky PDP, coluna Comprar/Compare).
+ * Visual do card: assets/sda-card.css ONLY.
+ * Nav: mega-menu.css (sda-nav). Legado: :not(.sda-product-card).
  */
 
 :root {
@@ -304,20 +302,7 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   font-weight: 800;
 }
 
-/* —— Card conversão — layout/ações (visual em showcase-product-card.css) —— */
-.showcase-product.card.sda-product-card {
-  border-radius: var(--sda-radius) !important;
-  border: 1px solid #e2e8f0 !important;
-  background: var(--sda-surface) !important;
-  box-shadow: var(--sda-shadow) !important;
-  transition: box-shadow 0.25s ease, transform 0.25s ease !important;
-}
-
-.showcase-product.card.sda-product-card:hover {
-  box-shadow: var(--sda-shadow-hover) !important;
-  transform: translateY(-2px) !important;
-}
-
+/* Card legado (sem .sda-card) */
 .showcase-product.card:not(.sda-product-card) .showcase-product_image.card-image,
 .showcase-product.card:not(.sda-product-card) .showcase-product_link__image {
   min-height: 168px !important;
@@ -328,90 +313,10 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   .showcase-product.card:not(.sda-product-card) .showcase-product_link__image {
     min-height: 200px !important;
   }
-
-  .showcase-product.card.sda-product-card .showcase-product_link__image img {
-    max-height: 200px;
-    width: auto;
-    margin: 0 auto;
-    object-fit: contain;
-  }
 }
 
-.showcase-product.card.sda-product-card .showcase-tag {
-  z-index: 3;
-  font-size: 10px;
-  font-weight: 800;
-  border-radius: 999px;
-  padding: 4px 10px;
-  background: var(--sda-orange) !important;
-  color: #fff !important;
-}
-
-.showcase-product.card.sda-product-card .showcase-offer {
-  z-index: 4;
-}
-
-.showcase-product.card.sda-product-card .showcase-offer_text {
-  background: var(--sda-orange) !important;
-  color: #fff !important;
-}
-
-.showcase-product.card.sda-product-card .card-header h3,
-.showcase-product.card.sda-product-card .showcase-product_link_title {
-  display: -webkit-box !important;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden !important;
-  max-height: calc(1.35em * 3);
-  line-height: 1.35 !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  color: var(--sda-text) !important;
-}
-
-.showcase-product.card.sda-product-card .showcase-spec-bar__tag {
-  font-size: 9px !important;
-  font-weight: 700 !important;
-  border-radius: 999px !important;
-  min-height: 20px !important;
-  padding: 0 8px !important;
-}
-
-.showcase-product.card.sda-product-card .showcase-prices--card {
-  gap: 4px !important;
-}
-
-.showcase-product.card.sda-product-card .showcase-prices_strike,
-.showcase-product.card del.showcase-prices_strike {
-  font-size: 12px !important;
-  color: var(--sda-text-muted) !important;
-  opacity: 1 !important;
-}
-
-.showcase-product.card.sda-product-card .showcase-prices_price b,
-.showcase-product.card.sda-product-card .showcase-prices_price--pix b {
-  font-size: 20px !important;
-  font-weight: 800 !important;
-  color: var(--sda-blue-deep) !important;
-}
-
-.showcase-product.card.sda-product-card .showcase-prices_pix {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  background: var(--sda-green-soft) !important;
-  border-color: #86efac !important;
-  color: #166534 !important;
-  margin: 2px 0 4px !important;
-}
-
-.showcase-product.card.sda-product-card .showcase-prices_installment,
-.showcase-product.card.sda-product-card .showcase-prices_installment-text {
-  font-size: 11px !important;
-  color: var(--sda-text-muted) !important;
-  line-height: 1.35 !important;
-}
-
-.showcase-product.card.sda-product-card .showcase-card-actions {
+/* .sda-card — só coluna Comprar/Compare (visual = sda-card.css) */
+.sda-card .showcase-card-actions {
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
@@ -419,40 +324,14 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   margin-top: 8px !important;
 }
 
-.showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
-.showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy.btn {
+.sda-card .showcase-card-actions .showcase-product_buy {
   order: 1 !important;
   width: 100% !important;
-  max-width: none !important;
-  min-height: 44px !important;
-  border-radius: var(--sda-radius-sm) !important;
-  background: linear-gradient(135deg, var(--sda-blue-deep) 0%, var(--sda-blue) 100%) !important;
-  border: none !important;
-  color: #fff !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.04em !important;
-  text-transform: uppercase !important;
-  box-shadow: 0 4px 12px rgba(26, 110, 181, 0.35) !important;
 }
 
-.showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn {
+.sda-card .showcase-card-actions .showcase-compare-btn {
   order: 2 !important;
   width: 100% !important;
-  max-width: none !important;
-  min-height: 36px !important;
-  background: transparent !important;
-  border: 1px solid #cbd5e1 !important;
-  color: var(--sda-text-muted) !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  box-shadow: none !important;
-}
-
-.showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn[aria-pressed='true'] {
-  border-color: var(--sda-blue) !important;
-  color: var(--sda-blue-deep) !important;
-  background: #eff6ff !important;
 }
 
 /* —— Listagem —— */

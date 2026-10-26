@@ -60,7 +60,7 @@
 {%endif%}
 
 <!DOCTYPE html>
-<!-- SDA-THEME-MARKER-v3: layout/theme.liquid com showcase-product-card.css + sda-product-card -->
+<!-- SDA-ZERO-v1: sda-card.css + mega-menu (nav) + sda-conversion (comportamento) -->
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -80,10 +80,10 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
     {%- comment -%}
-      SDA v3 — tema novo (sem CSS de card no mega-menu):
-      mega-menu.css = nav/mega menu/conta | header-v2 | favorites | product-compare (painel)
-      product-hover-image.css = legado + header | sda-conversion = ações .sda-product-card
-      product-page-v2 = PDP | showcase-product-card.css = visual/grid/carrossel (ÚLTIMO card)
+      SDA ZERO — pilha mínima:
+      mega-menu.css (nav) | header-v2 | favorites | product-compare | product-hover-image (shim)
+      sda-conversion-redesign.css (busca/PDP/comportamento) | product-page-v2.css (PDP)
+      sda-card.css = ÚNICO dono visual vitrine (.sda-card)
     {%- endcomment -%}
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/header-v2.css' | themeAssetUrl }}">
@@ -92,7 +92,7 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-conversion-redesign.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-page-v2.css' | themeAssetUrl }}">
-    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/showcase-product-card.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-card.css' | themeAssetUrl }}">
     {%- comment -%}
       HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
       Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
