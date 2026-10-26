@@ -478,6 +478,7 @@
     for (var i = 0; i < buttons.length; i++) {
       var btn = buttons[i];
       var id = btn.getAttribute('data-compare-id');
+      if (!id) continue;
       var selected = isSelected(id);
       btn.classList.toggle('is-selected', selected);
       btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
@@ -523,6 +524,16 @@
     if (openBtn) openBtn.disabled = count < 2;
   }
 
+  function refreshOpenComparePanel() {
+    var panel = document.getElementById('product-compare-panel');
+    if (!panel || panel.hidden) return;
+    if (state.items.length < 2) {
+      closePanel();
+      return;
+    }
+    openPanel();
+  }
+
   function selectProduct(product) {
     if (!product) return;
 
@@ -532,6 +543,7 @@
       saveState();
       syncButtons();
       updateBar();
+      refreshOpenComparePanel();
       return;
     }
 
@@ -548,6 +560,7 @@
     saveState();
     syncButtons();
     updateBar();
+    refreshOpenComparePanel();
   }
 
   var CORE_PATTERNS = [

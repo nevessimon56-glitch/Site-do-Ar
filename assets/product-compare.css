@@ -690,4 +690,34 @@ body.has-compare-bar.has-mobile-account-dock {
     content: none !important;
     display: none !important;
   }
+
+  /* Busca em lista (mobile): manter linha Comparar + Comprar — sem overlay do mega-menu */
+  .showcase-search.showcase-search_list .showcase-card-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+    margin-top: 8px !important;
+  }
+
+  .showcase-search.showcase-search_list .showcase-card-actions .showcase-compare-btn {
+    position: static !important;
+    font-size: 10px !important;
+    line-height: 1.1 !important;
+    color: #1a6eb5 !important;
+    overflow: visible !important;
+  }
+
+  .showcase-search.showcase-search_list .showcase-card-actions .showcase-compare-btn::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  .showcase-search.showcase-search_list .showcase-card-actions .showcase-product_buy.btn {
+    flex: 1 1 0% !important;
+    margin-top: 0 !important;
+    min-height: 38px !important;
+  }
 }

@@ -230,3 +230,57 @@ Comandos: `sha256sum` e `wc -c -l` no ambiente Cursor (workspace).
 - **Conteúdo consolidado:** Fase 2B-1 (tokens e `#4b96d4` → primário), 2B-2 (títulos gerais, traço roxo, secundários PDP, responsividade, riscos), 2B-3 (mega-menu + ordem de carga), 2C (auditoria estática sem edição de arquivos).
 - **Metadados:** recalculados na Fase 2D — ver §L.5 (comandos `sha256sum`, `wc -c`, `wc -l` no workspace Cursor).
 - **Estado:** implementação 2B **não publicada** na WDNA; **validação visual pendente** (§L.4); **nenhum** commit/push executado nesta fase de registro.
+
+---
+
+## M. Integração unificada e correções (26 out 2026)
+
+**Base:** commit `b40943e` (stack `theme-unified-ed4c` / `9324c88`). Backup permanente: `docs/wdna/backups/recovery-impl-20261026/` (+ `MANIFEST.sha256`).
+
+### M.1 Escopo integrado no workspace
+
+| Componente | Arquivos |
+|------------|----------|
+| Mega menu | `assets/mega-menu.css` (monólito), `assets/mega-menu.js`, `sections/mega-menu-ar.liquid` |
+| Comparador | `assets/product-compare.css/js`, `sections/product-compare-panel.liquid`, `product-compare-data.liquid` |
+| Vitrine | `sections/showcase-model-product.liquid`, `sections/product-spec-icons.liquid` |
+| Hover | `mega-menu.js` (`__SDA_HOVER_V2__`) + `product-hover-image.js` (guard v2) |
+| Layout | `layout/theme.liquid` — compare CSS/JS + render panel; SEO/canonical/`__storeCustomer`/D360/checkout preservados |
+
+**Preservados sem substituição:** `assets/theme-all.css`, `assets/theme-custom.css` (edições pontuais §M.2), registro, backups anteriores. **Logos mega menu:** texto/CSS em `mega-menu-ar.liquid` (sem SVG em `assets/`).
+
+### M.2 Correções aplicadas (pós-`b40943e`)
+
+1. **`product-compare.css`:** overrides mobile 2 col — `mega-menu.css` posicionava `.showcase-compare-btn` como ícone absoluto; restaurada **linha flex** Comparar + Comprar no footer (compatível com `showcase-model-product.liquid`).
+2. **`theme-custom.css`:** footer com comparador — `margin-top` do Comprar zerado dentro de `.showcase-card-actions`; classe `card-footer--actions` reduz `min-height` fixo do §K que quebrava card compacto.
+3. **`showcase-model-product.liquid`:** `card-footer--actions` no markup.
+4. **`product-hover-image.css`:** cascata **pós mega-menu** — borda §K `#b8cfe8`, hover lift/lista/related/PDP, PIX verde `#f0fdf4`; banners sem fade no hover; carrega por último no `theme.liquid`.
+5. **`product-compare.js`:** `syncButtons` / `updateBar` em `change-customer-login` e `check-login-logged`.
+
+### M.3 Testes executados (ambiente Cursor)
+
+| Teste | Resultado |
+|-------|-----------|
+| `node --check` em `mega-menu.js`, `product-compare.js`, `product-hover-image.js` | OK |
+| Balance `{`/`}` em CSS alterados | 0 |
+| Referências Liquid/JS (`#mega-menu-ar-template`, `#product-compare-bar`, `product-compare-data`, `__SDA_HOVER_V2__`) | OK |
+| Navegador / WDNA publicada | **Não executado** |
+
+### M.4 Impedimentos à publicação
+
+- Smoke visual obrigatório (mega menu desktop, compare 2–3 produtos, hover 2ª imagem, busca grade/lista, mobile dock).
+- Publicação manual WDNA + ordem de upload dos assets (fora deste ambiente).
+- `theme-all.css` / `theme-custom.css` locais ainda divergentes do CDN — publicar apenas após validação.
+
+### M.5 Confirmações
+
+- **Não** push, deploy ou publicação WDNA.
+- **Não** `reset` / `clean` / `restore`.
+- Commit `b40943e` e backup `recovery-impl-20261026` **preservados**.
+
+### M.6 Pré-publicação (pós-`5b8f2d3`)
+
+- **`theme-all.css` (working tree, não commitado):** candidata recuperada ~323 071 bytes, brace EOF **0**; snapshot em `docs/wdna/backups/pre-publish-theme-all-worktree.css`. **Coerente** com `theme-custom.css` (custom sobrescreve identidade/cards; monólito `mega-menu.css` carrega depois do custom).
+- **`theme.liquid` ordem:** `theme-plugins` → `theme-all` → `theme-custom` → `mega-menu` → `product-compare` → `product-hover-image`; JS defer: `mega-menu.js` → `product-compare.js` → `product-hover-image.js`.
+- **Correções:** painel compare atualiza/fecha ao remover produto; busca **lista** mobile — flex Comparar+Comprar; `syncButtons` ignora botões sem `data-compare-id`.
+- **Validação visual WDNA:** **pendente** (sem preview autenticado neste ambiente).
