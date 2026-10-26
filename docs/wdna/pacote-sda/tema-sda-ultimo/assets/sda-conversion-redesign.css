@@ -4,27 +4,7 @@
  * Nav: mega-menu.css (sda-nav). Legado: :not(.sda-product-card).
  */
 
-:root {
-  --sda-navy: #10294a;
-  --sda-blue: #1976d2;
-  --sda-blue-deep: #1565c0;
-  --sda-blue-light: #4b96d4;
-  --sda-orange: #f28c28;
-  --sda-orange-deep: #ea580c;
-  --sda-purple: #6d28d9;
-  --sda-purple-dark: #4c1d95;
-  --sda-purple-soft: #f4eeff;
-  --sda-green: #16a05d;
-  --sda-green-soft: #dcfce7;
-  --sda-bg: #f7f9fc;
-  --sda-surface: #ffffff;
-  --sda-text: #0f172a;
-  --sda-text-muted: #64748b;
-  --sda-radius: 14px;
-  --sda-radius-sm: 10px;
-  --sda-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
-  --sda-shadow-hover: 0 12px 32px rgba(25, 118, 210, 0.14);
-}
+/* Tokens: assets/sda-tokens.css (carregar antes deste arquivo) */
 
 /* —— Blocos transversais (home + catálogo) —— */
 .sda-trust-bar,
@@ -224,6 +204,25 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
 @media (max-width: 991px) {
   .header-v2 .header-utility {
     display: none;
+  }
+
+  /* PDP mobile: uma navegação secundária (dock inferior); evita faixas empilhadas */
+  body.sda-pdp-mobile .header-v2-mobile-strip,
+  body.sda-pdp-mobile .header:not(.header-checkout) > .nav-content:not(.sda-mobile-nav-revealed) {
+    display: none !important;
+  }
+
+  body.sda-pdp-mobile .header.header-v2:not(.header-checkout) .header-content {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  body.sda-pdp-mobile .header.header-v2:not(.header-checkout) .header-content .navbar {
+    min-height: 58px !important;
+  }
+
+  body.sda-pdp-mobile main.product-main {
+    scroll-padding-top: 72px;
   }
 
   .header-v2-mobile-catalog {

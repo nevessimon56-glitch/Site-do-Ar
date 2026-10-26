@@ -60,7 +60,7 @@
 {%endif%}
 
 <!DOCTYPE html>
-<!-- SDA-ZERO-v1: sda-card.css + mega-menu (nav) + sda-conversion (comportamento) -->
+<!-- SDA-ZERO-v2: sda-tokens + sda-card + mega-menu (nav) + sda-conversion (comportamento) -->
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -82,9 +82,10 @@
     {%- comment -%}
       SDA ZERO — pilha mínima:
       mega-menu.css (nav) | header-v2 | favorites | product-compare | product-hover-image (shim)
-      sda-conversion-redesign.css (busca/PDP/comportamento) | product-page-v2.css (PDP)
+      sda-tokens.css | sda-conversion-redesign.css | product-page-v2.css (PDP)
       sda-card.css = ÚNICO dono visual vitrine (.sda-card)
     {%- endcomment -%}
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-tokens.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/header-v2.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/favorites.css' | themeAssetUrl }}">

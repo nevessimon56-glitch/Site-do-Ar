@@ -61,6 +61,18 @@
 
     <li class="showcase-item" data-showcase-tpl="v5-zero">
         <div class="showcase-product card sda-product-card sda-card">
+            <button type="button"
+                class="showcase-favorite-btn sda-card__favorite"
+                data-favorite-toggle
+                data-product-id="{{ product.id }}"
+                data-product-url="{{ product.url }}"
+                data-product-title="{{ productTitle | replace: '"', '&quot;' }}"
+                data-product-image="{{ favImage }}"
+                data-product-price="{{ favPriceLabel }}"
+                aria-label="Favoritar produto"
+                title="Favoritar">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"/></svg>
+            </button>
             {% if themeConfig.price.type != 'hide' %}
                 {% if product.promotion %}
                     <div class="showcase-tag">
@@ -74,18 +86,6 @@
                 {% endif %}
             {% endif %}
             <div class="showcase-product_image card-image">
-                <button type="button"
-                    class="showcase-favorite-btn"
-                    data-favorite-toggle
-                    data-product-id="{{ product.id }}"
-                    data-product-url="{{ product.url }}"
-                    data-product-title="{{ productTitle | replace: '"', '&quot;' }}"
-                    data-product-image="{{ favImage }}"
-                    data-product-price="{{ favPriceLabel }}"
-                    aria-label="Favoritar produto"
-                    title="Favoritar">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"/></svg>
-                </button>
                 {% if themeConfig.price.type != 'hide' %}
                     {% if hasPixPromoCard == 1 %}
                         {% assign classBtnBuy = '' %}

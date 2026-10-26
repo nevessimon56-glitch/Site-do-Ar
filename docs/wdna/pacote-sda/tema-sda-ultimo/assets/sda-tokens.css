@@ -1,0 +1,104 @@
+/**
+ * SDA Design System — tokens partilhados (home, cards, PDP, comparador)
+ * Carregar antes de sda-conversion-redesign.css no theme.liquid
+ */
+
+:root {
+  /* Marca & superfície */
+  --sda-navy: #10294a;
+  --sda-bg: #f7f9fc;
+  --sda-surface: #ffffff;
+  --sda-surface-muted: #f8fafc;
+  --sda-border: #e2e8f0;
+  --sda-border-strong: #cbd5e1;
+
+  /* Texto */
+  --sda-text: #0f172a;
+  --sda-text-muted: #64748b;
+  --sda-text-soft: #94a3b8;
+
+  /* Ação primária única — Comprar (cards + PDP) */
+  --sda-primary: #1976d2;
+  --sda-primary-deep: #1565c0;
+  --sda-primary-gradient: linear-gradient(135deg, #1976d2, #1565c0);
+  --sda-primary-shadow: 0 4px 14px rgba(25, 118, 210, 0.32);
+
+  /* Secundária / comparar */
+  --sda-secondary-border: #cfe3f2;
+  --sda-secondary-bg: #f8fbfe;
+  --sda-secondary-text: #1a6eb5;
+
+  /* Significado comercial */
+  --sda-discount: #ea580c;
+  --sda-discount-gradient: linear-gradient(135deg, #f28c28, #ea580c);
+  --sda-pix-benefit: #16a05d;
+  --sda-success: #16a05d;
+  --sda-success-soft: #dcfce7;
+
+  /* Utilitários (diag, ambiente — não competir com CTA compra) */
+  --sda-purple: #6d28d9;
+  --sda-purple-dark: #4c1d95;
+  --sda-purple-soft: #f4eeff;
+  --sda-orange: #f28c28;
+  --sda-orange-deep: #ea580c;
+
+  /* Aliases legado (sda-conversion) */
+  --sda-blue: var(--sda-primary);
+  --sda-blue-deep: var(--sda-primary-deep);
+  --sda-blue-light: #4b96d4;
+  --sda-green: var(--sda-pix-benefit);
+  --sda-green-soft: var(--sda-success-soft);
+
+  /* Tipografia */
+  --sda-font: Arial, Helvetica, sans-serif;
+  --sda-fs-xs: 10px;
+  --sda-fs-sm: 12px;
+  --sda-fs-md: 14px;
+  --sda-fs-lg: 16px;
+  --sda-fs-price: 20px;
+  --sda-fw-bold: 800;
+  --sda-fw-semibold: 600;
+
+  /* Espaçamento & forma */
+  --sda-space-xs: 6px;
+  --sda-space-sm: 10px;
+  --sda-space-md: 14px;
+  --sda-space-lg: 18px;
+  --sda-radius: 14px;
+  --sda-radius-sm: 10px;
+  --sda-radius-card: 16px;
+  --sda-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+  --sda-shadow-hover: 0 12px 28px rgba(25, 118, 210, 0.12);
+
+  /* Breakpoints (referência; media queries permanecem em px) */
+  --sda-bp-tablet: 991px;
+  --sda-bp-mobile: 767px;
+
+  /* Camadas fixas mobile */
+  --sda-mobile-dock-h: 58px;
+  --sda-compare-bar-reserve-h: 76px;
+  --sda-pdp-sticky-h: 72px;
+  --sda-touch-min: 44px;
+
+  /* Cards — alturas uniformes */
+  --sda-card-img-h-desktop: 168px;
+  --sda-card-img-h-mobile: 120px;
+  --sda-card-specs-h-desktop: 42px;
+  --sda-card-title-min-desktop: 2.85em;
+  --sda-card-title-min-mobile: 2.7em;
+  --sda-card-footer-min-desktop: 132px;
+  --sda-card-footer-min-mobile: 112px;
+  --sda-card-total-min-mobile: 318px;
+}
+
+/* Foco visível — teclado */
+.sda-card .showcase-product_buy.btn:focus-visible,
+.sda-card .showcase-compare-btn:focus-visible,
+.product-v2 .product-btn_buy:focus-visible,
+.product-v2 .product-compare-btn:focus-visible,
+.product-compare-bar__btn:focus-visible,
+.product-compare-panel__close:focus-visible,
+.showcase-favorite-btn:focus-visible {
+  outline: 2px solid var(--sda-primary);
+  outline-offset: 2px;
+}

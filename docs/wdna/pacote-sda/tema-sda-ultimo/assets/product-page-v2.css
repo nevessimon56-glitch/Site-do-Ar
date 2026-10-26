@@ -8,9 +8,9 @@
 
 /* Paleta fixa (hex). WDNA: sem grid/1fr, var(--), :has(), 100cqi. Thumbs: JS inline width. */
 #product-pdp-v2.product-v2 {
-  color: #1c2b4a;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #eef3f9;
+  color: var(--sda-navy, #1c2b4a);
+  font-family: var(--sda-font, Arial, Helvetica, sans-serif);
+  background: var(--sda-bg, #f7f9fc);
   padding: 8px 0 36px;
 }
 
@@ -3765,4 +3765,32 @@
 
 #product-pdp-v2.product-v2--cycle-qf .product-tag {
   background: #ea580c !important;
+}
+
+/* SDA cohesion v2 — CTA primária alinhada aos cards; tabelas contidas no mobile */
+#product-pdp-v2 .product-header-box .product-buy .product-btn_buy,
+#product-pdp-v2 .product-header-box a.product-btn_buy.btn,
+#product-pdp-v2 .product-btn_buy {
+  background: var(--sda-primary-gradient, linear-gradient(135deg, #1976d2, #1565c0)) !important;
+  box-shadow: var(--sda-primary-shadow, 0 4px 14px rgba(25, 118, 210, 0.32)) !important;
+}
+
+@media (max-width: 991px) {
+  #product-pdp-v2.product-v2,
+  #product-pdp-v2.product-v2 .product-main {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  #product-pdp-v2 .product-specs_table-wrap,
+  #product-pdp-v2 .product-description_table-wrap,
+  #product-pdp-v2 .product-table-scroll {
+    overflow-x: auto;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body.sda-pdp-sticky-on.has-mobile-catalog-dock main.product-main {
+    padding-bottom: calc(var(--sda-pdp-sticky-h, 72px) + var(--sda-mobile-dock-h, 58px) + env(safe-area-inset-bottom, 0px));
+  }
 }

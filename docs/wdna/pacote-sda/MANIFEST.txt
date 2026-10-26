@@ -10,6 +10,7 @@ assets/header-v2.css
 assets/favorites.css
 assets/product-compare.css
 assets/product-hover-image.css
+assets/sda-tokens.css
 assets/sda-conversion-redesign.css
 assets/product-page-v2.css
 assets/sda-card.css

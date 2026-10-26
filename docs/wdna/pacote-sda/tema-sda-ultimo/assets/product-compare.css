@@ -135,12 +135,7 @@ div.product-compare-data {
   white-space: nowrap !important;
 }
 
-:root {
-  --sda-mobile-dock-h: 58px;
-  --sda-compare-bar-reserve-h: 76px;
-}
-
-/* Barra inferior de seleção */
+/* Barra inferior de seleção — tokens: sda-tokens.css (--sda-mobile-dock-h, --sda-compare-bar-reserve-h) */
 .product-compare-bar {
   position: fixed;
   left: 0;
