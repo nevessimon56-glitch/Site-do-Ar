@@ -551,3 +551,29 @@ main.search-main .showcase-search .showcase-item > .showcase-product,
     padding: 8px 10px 0 !important;
   }
 }
+
+/* ========== CARD-LOCK-v3 — só .sda-product-card; vence theme-custom + mega-menu residual ========== */
+.showcase-product.card.sda-product-card:not(.sda-product-card--bundle):not(.sda-product-card--promo) {
+  overflow: hidden !important;
+  text-align: left !important;
+}
+
+.showcase-product.card.sda-product-card .showcase-prices--card,
+.showcase-product.card.sda-product-card .showcase-prices,
+.showcase-product.card.sda-product-card .showcase-prices_price,
+.showcase-product.card.sda-product-card .showcase-prices_from {
+  text-align: left !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
+.showcase-product.card.sda-product-card .showcase-product_buy.btn {
+  background: linear-gradient(135deg, #1976d2, #1565c0) !important;
+  background-color: transparent !important;
+}
+
+.showcase-related .showcase-product.card.sda-product-card:hover,
+.showcase-products .showcase-product.card.sda-product-card:hover,
+.showcase-search .showcase-product.card.sda-product-card:hover {
+  transform: translateY(-2px) !important;
+}

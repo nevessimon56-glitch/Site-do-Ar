@@ -2471,8 +2471,8 @@
   }
 
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link_title,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link_title,
-  main.home-main section.showcase .showcase-products_carousel .showcase-product_link_title {
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product:not(.sda-product-card) .showcase-product_link_title,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .showcase-product_link_title {
     display: -webkit-box !important;
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
@@ -2484,8 +2484,8 @@
   }
 
   .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-wrap,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-wrap,
-  main.home-main section.showcase .showcase-products_carousel .showcase-spec-wrap {
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product:not(.sda-product-card) .showcase-spec-wrap,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .showcase-spec-wrap {
     min-height: 40px !important;
     padding: 0 6px 2px !important;
   }
@@ -5176,7 +5176,7 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product:not(.sda-product-card) .card-header h3,
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link_title,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product:not(.sda-product-card) .card-header h3,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link_title {
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product:not(.sda-product-card) .showcase-product_link_title {
     min-height: 2em !important;
     max-height: 2em !important;
     line-height: 1.2 !important;
@@ -5185,7 +5185,7 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
 
   .showcase-search .showcase-spec-wrap,
   .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-wrap,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-wrap {
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product:not(.sda-product-card) .showcase-spec-wrap {
     min-height: 0 !important;
     padding: 0 3px 0 !important;
   }
@@ -5372,9 +5372,9 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product:not(.sda-product-card) .card-header h3,
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product_link_title,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product:not(.sda-product-card) .card-header h3,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product_link_title,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product:not(.sda-product-card) .showcase-product_link_title,
   main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .card-header h3,
-  main.home-main section.showcase .showcase-products_carousel .showcase-product_link_title,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .showcase-product_link_title,
   .showcase-product.card.sda-card--cycle-frio .showcase-product_link_title,
   .showcase-product.card.sda-card--cycle-qf .showcase-product_link_title {
     display: -webkit-box !important;
@@ -5394,8 +5394,8 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   }
 
   .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-wrap,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-wrap,
-  main.home-main section.showcase .showcase-products_carousel .showcase-spec-wrap,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product:not(.sda-product-card) .showcase-spec-wrap,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .showcase-spec-wrap,
   .showcase-product.card.sda-card--cycle-frio .showcase-spec-wrap,
   .showcase-product.card.sda-card--cycle-qf .showcase-spec-wrap {
     min-height: 0 !important;
@@ -5624,8 +5624,8 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
 @media (max-width: 991px) {
 
   .showcase-search.showcase-search_grid--mobile-2col .showcase-spec-wrap,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-spec-wrap,
-  main.home-main section.showcase .showcase-products_carousel .showcase-spec-wrap {
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product:not(.sda-product-card) .showcase-spec-wrap,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .showcase-spec-wrap {
     width: 100% !important;
     max-width: 100% !important;
     overflow: hidden !important;
@@ -5707,7 +5707,7 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   }
 
   main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .card-header h3,
-  main.home-main section.showcase .showcase-products_carousel .showcase-product_link_title {
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .showcase-product_link_title {
     min-height: 2.5em !important;
     max-height: 2.5em !important;
   }
