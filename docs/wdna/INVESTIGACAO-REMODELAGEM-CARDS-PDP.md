@@ -92,7 +92,7 @@ Enviar se estiverem no editor (branch conversão; **podem faltar no Git**):
 |---------|-------------------|
 | `sections/product-content.liquid` (versão com `product-v2` / `#product-pdp-v2`) | **Sincronizado** com produção (recovery `cursor/site-recovery-b192`, 2026-10-26) |
 | `sections/product-descriptions-v2.liquid` | **Sim** — colagem produção 2026-10-26 **idêntica** ao repo (`cursor/site-recovery-b192`). |
-| `sections/product-pdp-cycle-class.liquid` | **Sim** |
+| `sections/product-pdp-cycle-class.liquid` | **Sim** — colagem produção 2026-10-26 **idêntica** ao repo. |
 | `sections/product-pdp-spec-bar.liquid` | **Sim** |
 | `sections/sda-pdp-trust.liquid` | **Sim** (auxiliar; trust inline no buy box) |
 | `sections/sda-pdp-recommendation.liquid` | **Sim** (repo; lista + JS sync área m²) |
