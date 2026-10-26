@@ -776,6 +776,7 @@
     for (var i = 0; i < cards.length; i++) {
       var card = cards[i];
       if (!card.classList || !card.classList.contains('card')) continue;
+      if (card.classList.contains('sda-product-card')) continue;
 
       card.classList.remove('sda-card--cycle-frio', 'sda-card--cycle-qf');
 

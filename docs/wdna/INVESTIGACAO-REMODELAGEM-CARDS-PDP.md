@@ -136,7 +136,7 @@ Ordem **atual** no recovery (quem ganha por último na vitrine/PDP):
 | `assets/mega-menu.js` | `__SDA_HOVER_V2__`, nav fixa, faixa mobile — interfere no hover de imagem. |
 | `assets/product-hover-image.js` | Segunda foto no hover, classes no card. |
 | `assets/product-compare.js` | Seleciona comparar, lê `.product-compare-json`. |
-| `assets/sda-conversion-redesign.js` | Conversão (sticky PDP, etc.) — **não linkado** no `theme.liquid` recovery. |
+| `assets/sda-conversion-redesign.js` | **v3** — catálogo (chips, filtros, diag CTA), PDP sticky/tech grid, attrs line nos cards; **linkado** em `theme.liquid` após `product-compare.js`. |
 | `assets/favorites.js` | Botão coração nos cards (branch conversão) — **não no repo recovery**. |
 
 ---
@@ -226,7 +226,18 @@ sections/showcase-model-product.liquid   (versão com coração / “Comprar ago
 
 ---
 
-## 11. Próximo passo sugerido (quando você mandar os arquivos)
+## 11. Correções aplicadas (branch `cursor/site-recovery-b192`)
+
+| Patch | Arquivo | Efeito |
+|-------|---------|--------|
+| Skip cycle theme | `mega-menu.js` → `applyCardCycleTheme` | Não aplica `sda-card--cycle-*` em `.sda-product-card` (evita row do hover-image). |
+| Label Comparar | `product-compare.js` → `syncButtons` | Atualiza `.showcase-compare-btn__label` em vez de `textContent` no botão. |
+| JS v3 | `sda-conversion-redesign.js` + `theme.liquid` | Catálogo/PDP/chips; classe `sda-conversion-v2` no `<html>`. |
+| CSS | `sda-conversion-redesign.css` | `min-height` genérico só fora de `.sda-product-card`; bloco **CARD-CATALOG-OVERRIDE-v6** no catálogo/home. |
+
+**Publicar no WDNA:** `layout/theme.liquid`, os quatro JS acima na ordem do layout, e `sda-conversion-redesign.css`.
+
+## 12. Próximo passo sugerido
 
 1. Diff **loja vs Git** em `showcase-model-product.liquid` e `product-content.liquid`.
 2. Congelar **um** HTML de card alvo (classes + ordem: imagem → specs → título → preço → ações).

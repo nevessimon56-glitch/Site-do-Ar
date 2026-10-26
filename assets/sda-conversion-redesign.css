@@ -316,14 +316,14 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   transform: translateY(-2px) !important;
 }
 
-.showcase-product.card .showcase-product_image.card-image,
-.showcase-product.card .showcase-product_link__image {
+.showcase-product.card:not(.sda-product-card) .showcase-product_image.card-image,
+.showcase-product.card:not(.sda-product-card) .showcase-product_link__image {
   min-height: 168px !important;
 }
 
 @media (min-width: 992px) {
-  .showcase-product.card .showcase-product_image.card-image,
-  .showcase-product.card .showcase-product_link__image {
+  .showcase-product.card:not(.sda-product-card) .showcase-product_image.card-image,
+  .showcase-product.card:not(.sda-product-card) .showcase-product_link__image {
     min-height: 200px !important;
   }
 
@@ -1199,8 +1199,15 @@ main.search-main .search-filters-content {
   }
 }
 
-.showcase-product.card .card-footer {
+.showcase-product.card:not(.sda-product-card) .card-footer {
   min-height: 168px;
+  display: flex;
+  flex-direction: column;
+}
+
+.showcase-product.card.sda-product-card .card-footer,
+.showcase-product.card.sda-product-card .sda-card-footer {
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
@@ -1769,4 +1776,26 @@ main.home-main .showcase-product.card.sda-product-card .showcase-card-actions .s
     border: none !important;
     min-height: 32px !important;
   }
+}
+
+/* CARD-CATALOG-OVERRIDE-v6 — vence product-hover-image row no catálogo/home */
+main.search-main .showcase-search .showcase-product.card.sda-product-card .showcase-card-actions,
+main.home-main section.showcase .showcase-product.card.sda-product-card .showcase-card-actions,
+.showcase-search .showcase-product.card.sda-product-card.sda-card--cycle-frio .showcase-card-actions,
+.showcase-search .showcase-product.card.sda-product-card.sda-card--cycle-qf .showcase-card-actions,
+main.home-main section.showcase .showcase-product.card.sda-product-card.sda-card--cycle-frio .showcase-card-actions,
+main.home-main section.showcase .showcase-product.card.sda-product-card.sda-card--cycle-qf .showcase-card-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+}
+
+main.search-main .showcase-search .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
+main.search-main .showcase-search .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn,
+main.home-main section.showcase .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
+main.home-main section.showcase .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn {
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
 }

@@ -482,7 +482,14 @@
       var selected = isSelected(id);
       btn.classList.toggle('is-selected', selected);
       btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
-      btn.textContent = selected ? 'Selecionado' : 'Comparar';
+      var compareLabel = selected ? 'Selecionado' : 'Comparar';
+      var labelEl = btn.querySelector('.showcase-compare-btn__label');
+      if (labelEl) {
+        labelEl.textContent = compareLabel;
+      } else {
+        btn.textContent = compareLabel;
+      }
+      btn.setAttribute('aria-label', compareLabel);
     }
   }
 
