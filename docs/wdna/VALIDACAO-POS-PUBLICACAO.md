@@ -1,7 +1,21 @@
 # Validação pós-publicação WDNA
 
 **Loja:** https://www.sitedoar.com.br/  
-**Última rodada de upload:** informada pelo time em 26/10/2026.
+**Última rodada de upload:** 26/10/2026 (confirmada).
+
+## Verificação automática (26/10/2026)
+
+Checagem em https://www.sitedoar.com.br/ (HTML ao vivo):
+
+| Item | Status |
+|------|--------|
+| `.sda-product-card` / `.sda-card-footer` | OK (~75 ocorrências na home) |
+| `sda-conversion-redesign.css` referenciado | OK |
+| Payload comparador em `<textarea class="product-compare-json" hidden>` | OK (não é mais `div`) |
+| Comprar agora + Comparar | OK no markup |
+| Linha attrs mobile (`Quente e Frio • …`) | OK |
+
+**Nota:** ferramentas de leitura de página (e “Ver código-fonte”) ainda listam o JSON dentro do `textarea`; isso é normal. No navegador, com `hidden` + CSS, **não deve aparecer** entre título e preço. Se ainda aparecer **visualmente**, avise — próximo passo é payload mínimo só no botão Comparar.
 
 ## Correção urgente (se ainda aparecer JSON no card)
 
