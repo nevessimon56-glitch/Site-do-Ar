@@ -1605,3 +1605,168 @@ main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase
 .product-main .product-btn_buy {
   background: linear-gradient(135deg, var(--sda-blue), var(--sda-blue-deep)) !important;
 }
+
+/* ========== MEGA-MENU-OVERRIDE-v5 — vence GLOBAL-BLACK + CARD-MOBILE-REDESIGN + cycle cards ========== */
+/* Cole por último no theme.liquid (este arquivo). Não editar mega-menu.css na loja. */
+
+body .header:not(.header-checkout) {
+  background: var(--sda-bg) !important;
+  background-color: var(--sda-bg) !important;
+  box-shadow: none !important;
+}
+
+body .header:not(.header-checkout) .header-content,
+body .header:not(.header-checkout) .header-content .navbar {
+  background: var(--sda-bg) !important;
+  background-color: var(--sda-bg) !important;
+}
+
+body .header:not(.header-checkout) .account_link,
+body .header:not(.header-checkout) .header-link_text,
+body .header:not(.header-checkout) .header-link_text a,
+body .header:not(.header-checkout) .header-account-kicker,
+body .header:not(.header-checkout) .header-account-label {
+  color: var(--sda-text) !important;
+}
+
+body .header:not(.header-checkout) .header-link svg,
+body .header:not(.header-checkout) .icon-ssl svg {
+  fill: var(--sda-blue-light) !important;
+}
+
+body .header:not(.header-checkout) .header-link_menu__mobile .icon-bar,
+body .header:not(.header-checkout) .search_link .icon-bar:first-child {
+  background-color: var(--sda-navy) !important;
+  border-color: var(--sda-navy) !important;
+}
+
+body .header:not(.header-checkout) .search-desktop .form-input {
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: var(--sda-text) !important;
+}
+
+body .header:not(.header-checkout) .search-desktop .form-input::placeholder {
+  color: var(--sda-text-muted) !important;
+}
+
+body .header:not(.header-checkout) .search-desktop .btn {
+  background: linear-gradient(135deg, var(--sda-blue), var(--sda-blue-deep)) !important;
+}
+
+body .header:not(.header-checkout) .search-desktop .btn svg {
+  fill: #fff !important;
+}
+
+@media (min-width: 992px) {
+  body .header:not(.header-checkout) .nav-content,
+  body .header:not(.header-checkout) .nav-content.content {
+    background: linear-gradient(135deg, #1a6eb5, #2c8fd6) !important;
+    background-color: #1a6eb5 !important;
+  }
+
+  body .header:not(.header-checkout) .nav-content .nav-main_link,
+  body .header:not(.header-checkout) .nav-content .nav-main_link .nav-main_text {
+    color: #fff !important;
+  }
+}
+
+@media (max-width: 991px) {
+  body .header:not(.header-checkout) > .nav-content.sda-mobile-nav-revealed,
+  body .header:not(.header-checkout) > .nav-content.content.sda-mobile-nav-revealed {
+    background: linear-gradient(135deg, #1a6eb5, #2c8fd6) !important;
+    background-color: #1a6eb5 !important;
+  }
+}
+
+/* Comparar: nunca checkbox 26px no canto — só botão texto abaixo de COMPRAR AGORA */
+.showcase-product.card.sda-product-card .showcase-compare-btn,
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn,
+.showcase-search .showcase-product.card.sda-product-card .showcase-compare-btn,
+main.home-main .showcase-product.card.sda-product-card .showcase-compare-btn,
+.product-showcase .showcase .showcase-product.card.sda-product-card .showcase-compare-btn,
+.showcase-product.card.sda-card--cycle-frio.sda-product-card .showcase-compare-btn,
+.showcase-product.card.sda-card--cycle-qf.sda-product-card .showcase-compare-btn {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 34px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  color: var(--sda-text-muted) !important;
+  background: transparent !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  flex: none !important;
+  cursor: pointer !important;
+}
+
+.showcase-product.card.sda-product-card .showcase-compare-btn::before,
+.showcase-product.card.sda-card--cycle-frio .showcase-compare-btn::before,
+.showcase-product.card.sda-card--cycle-qf .showcase-compare-btn::before {
+  content: none !important;
+  display: none !important;
+}
+
+.showcase-product.card.sda-product-card .showcase-card-actions,
+.showcase-search .showcase-product.card.sda-product-card .showcase-card-actions,
+main.home-main .showcase-product.card.sda-product-card .showcase-card-actions,
+.product-showcase .showcase .showcase-product.card.sda-product-card .showcase-card-actions,
+.showcase-product.card.sda-card--cycle-frio .showcase-card-actions,
+.showcase-product.card.sda-card--cycle-qf .showcase-card-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  gap: 8px !important;
+  width: 100% !important;
+  margin-top: 8px !important;
+  padding: 0 8px 10px !important;
+  box-sizing: border-box !important;
+}
+
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy.btn,
+.showcase-search .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
+main.home-main .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
+.showcase-product.card.sda-card--cycle-frio .showcase-card-actions .showcase-product_buy,
+.showcase-product.card.sda-card--cycle-qf .showcase-card-actions .showcase-product_buy {
+  order: 1 !important;
+  flex: none !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  height: auto !important;
+  padding: 10px 12px !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, var(--sda-blue), var(--sda-blue-deep)) !important;
+  box-shadow: 0 3px 12px rgba(25, 118, 210, 0.28) !important;
+}
+
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn {
+  order: 2 !important;
+}
+
+@media (min-width: 992px) {
+  .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy {
+    min-height: 46px !important;
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn.showcase-compare-btn--secondary {
+    border: none !important;
+    min-height: 32px !important;
+  }
+}
