@@ -1188,6 +1188,13 @@ main.home-main .showcase-product.card.sda-card--cycle-qf .showcase-card-actions 
  * CARD-LAYOUT-RESTORE-v1 — tamanho/distribuição do card ficam no mega-menu.css (grid, foto, compact).
  * Este arquivo só vence cor, botões e alinhamento de texto — não impõe min-height / height 100% / foto compacta global.
  */
+.showcase-search .showcase-product.card .card-footer,
+main.home-main section.showcase .showcase-product.card .card-footer,
+main.search-main .showcase-product.card .card-footer,
+main.home-main .showcase-product.card .card-footer {
+  margin-top: 0 !important;
+}
+
 @media (min-width: 992px) {
   .showcase-search .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
   .showcase-search .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image,
