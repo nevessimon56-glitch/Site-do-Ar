@@ -1,12 +1,19 @@
+{% comment %}
+  Compre junto — mini-card (PDP). Não usa .sda-product-card (vitrine).
+  Classe: .sda-product-card--bundle — CSS em sda-conversion-redesign.css
+  Sem Comparar/footer; preços ficam no bloco "=" (product-buy-to-gether.liquid).
+{% endcomment %}
 {% if product %}
-    <div class="showcase-product card">
+    <div class="showcase-product card sda-product-card--bundle" data-showcase-tpl="bundle-v1">
         <div class="card-header">
             <h3>
                 <a class="showcase-product_link showcase-product_link_title"
-                   href="{{ product.url }}">
+                   href="{{ product.url }}"
+                   title="{{ product.title }}">
                     {{ product.title }}
                 </a>
             </h3>
+            {% render 'sections/sda-card-btu-line', product: product %}
         </div>
         <div class="showcase-product_image card-image">
             <div class="showcase-tags">
@@ -34,7 +41,11 @@
             <a class="showcase-product_link showcase-product_link__image"
                href="{{ product.url }}">
                 {% if product.medias[0].path != blank %}
-                    <img class="lazy" data-src="{{ product.medias[0].path | imgUrl: 250 }}" alt="{{ product.title }}">
+                    <img
+                        class="lazy product-hover-swap"
+                        data-src="{{ product.medias[0].path | imgUrl: 250 }}"
+                        {% if product.medias[1].path != blank %}data-hover-src="{{ product.medias[1].path | imgUrl: 250 }}"{% endif %}
+                        alt="{{ product.title }}">
                     <meta content="{{ product.medias[0].path | imgUrl: 250 }}">
                 {% else %}
                     {{ themeConfig.icons.image }}

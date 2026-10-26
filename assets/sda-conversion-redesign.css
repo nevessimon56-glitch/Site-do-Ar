@@ -1858,3 +1858,78 @@ main.home-main section.showcase .showcase-product.card.sda-product-card .showcas
     max-width: 100% !important;
   }
 }
+
+/* ========== FASE 3 — Compre junto (.sda-product-card--bundle) ========== */
+/* Não herda layout de vitrine (.sda-product-card). theme-all controla grid +/-. */
+
+.showcase-buy-to-gether .sda-product-card--bundle.showcase-product.card {
+  display: block !important;
+  flex-direction: unset !important;
+  height: auto !important;
+  float: none !important;
+  box-shadow: var(--sda-shadow) !important;
+  border-radius: var(--sda-radius-sm) !important;
+  border: 1px solid #e2e8f0 !important;
+  background: var(--sda-surface) !important;
+  overflow: hidden !important;
+}
+
+.showcase-buy-to-gether .sda-product-card--bundle .showcase-product_link_title {
+  color: var(--sda-navy) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+}
+
+.showcase-buy-to-gether .sda-product-card--bundle .showcase-product_image.card-image {
+  background: #f8fafc !important;
+}
+
+.showcase-buy-to-gether .sda-product-card--bundle .showcase-product_link__image img {
+  object-fit: contain !important;
+  max-height: 200px !important;
+  width: auto !important;
+  margin: 0 auto !important;
+  display: block !important;
+}
+
+.showcase-buy-to-gether .sda-product-card--bundle .showcase-card-btu {
+  font-size: 11px !important;
+  margin-top: 4px !important;
+}
+
+@media (max-width: 991px) {
+  .showcase-buy-to-gether .sda-product-card--bundle.showcase-product.card {
+    display: table !important;
+    width: 100% !important;
+    padding-bottom: 25px !important;
+    padding-top: 25px !important;
+  }
+
+  .showcase-buy-to-gether .sda-product-card--bundle .showcase-product_image.card-image {
+    float: left !important;
+    width: 200px !important;
+    height: 200px !important;
+  }
+
+  .showcase-buy-to-gether .sda-product-card--bundle .card-header {
+    float: right !important;
+    width: calc(100% - 250px) !important;
+    padding-left: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    height: 200px !important;
+  }
+}
+
+/* Relacionados / últimos vistos — reforço do dono vitrine dentro da PDP */
+.product-showcase .showcase-last-viewed .sda-product-card,
+.product-showcase .showcase-related .sda-product-card,
+.showcase-last-viewed .sda-product-card,
+.showcase-related .sda-product-card {
+  height: 100% !important;
+}
+
+.product-showcase .showcase .sda-product-card .showcase-card-actions {
+  flex-direction: column !important;
+}

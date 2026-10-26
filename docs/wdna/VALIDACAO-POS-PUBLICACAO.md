@@ -51,6 +51,8 @@ Sintoma: bloco `{"id":…,"title":…}` visível entre título e preço.
 | 5 | PDP mobile | *(validado — sticky na barra `.sda-pdp-sticky-buy`, não no `#product-pdp-v2`)* |
 | 6 | Relacionados / últimos vistos | Markup igual vitrine (`.sda-product-card`) |
 | 7 | Model 9 promo | Timer + card horizontal; Comparar + Pix |
+| 8 | Compre junto (PDP) | Mini-cards `.sda-product-card--bundle`; totais no bloco `=` |
+| 9 | Relacionados / últimos vistos | `.sda-product-card` + Comparar em coluna |
 
 ## Arquivos desta fase (fase 2)
 

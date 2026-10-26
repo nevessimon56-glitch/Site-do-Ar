@@ -24,7 +24,7 @@ Depois do escopo v10 (2026-10-26), estes arquivos usam `:not(.sda-product-card)`
 ## Exceções
 
 - **`showcase-model-product-promotion.liquid`** — model 9: `.sda-product-card.sda-product-card--promo` (horizontal; CSS em `sda-conversion-redesign.css`).
-- **`showcase-model-product-buy-to-gether.liquid`** — mini-card compre junto; markup próprio (fase 3).
+- **`showcase-model-product-buy-to-gether.liquid`** — mini-card **`.sda-product-card--bundle`** (sem Comparar; ver `FASE-3.md`).
 
 ## Checklist pós-publicação WDNA
 
