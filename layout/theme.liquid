@@ -60,7 +60,7 @@
 {%endif%}
 
 <!DOCTYPE html>
-<!-- SDA-ZERO-v2: sda-tokens + sda-card + mega-menu (nav) + sda-conversion (comportamento) -->
+<!-- SDA-ZERO-v3-REWRITE: tokens | nav | header | compare | card | conversion | PDP -->
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -80,10 +80,9 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
     {%- comment -%}
-      SDA ZERO — pilha mínima:
-      mega-menu.css (nav+dock) | header-v2.css (barra) | favorites | product-compare
-      sda-tokens.css | sda-conversion-redesign.css | product-page-v2.css (PDP)
-      sda-card.css = ÚNICO dono visual vitrine (.sda-card)
+      SDA v3 REWRITE — um dono por domínio (sem overrides inline de header/card/nav):
+      sda-tokens → mega-menu (nav/dock) → header-v2 → favorites → product-compare
+      → product-hover-image (shim) → sda-conversion (comportamento) → product-page-v2 → sda-card
     {%- endcomment -%}
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-tokens.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
@@ -94,19 +93,6 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-conversion-redesign.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-page-v2.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-card.css' | themeAssetUrl }}">
-    {%- comment -%}
-      HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
-      Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
-    {%- endcomment -%}
-    {%- comment -%} Hotfix comparador JSON — backup se product-compare.css não carregar {%- endcomment -%}
-    <style id="sda-compare-json-hotfix">
-.product-compare-data,
-.product-compare-json,
-textarea.product-compare-json,
-template.product-compare-data,
-div.product-compare-data { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; position: absolute !important; left: -9999px !important; }
-.showcase-card-btu { display: none !important; }
-    </style>
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-semibold.woff2" type="font/woff2" crossorigin="anonymous">

@@ -6,7 +6,7 @@
  *   - Barra inferior, painel modal, tabela, insights
  *   - Botões Comparar / Comprar no card LEGADO (sem .sda-product-card)
  *
- * Cards de vitrine conversão (.sda-product-card): layout/ações em sda-conversion-redesign.css
+ * Cards .sda-card / .sda-product-card: assets/sda-card.css (este arquivo não estiliza vitrine v5)
  */
 
 .showcase-product:not(.sda-product-card) .card-footer .showcase-card-actions {
@@ -727,7 +727,7 @@ html:has(body.compare-panel-open) {
   mask: var(--sda-compare-icon) center / contain no-repeat;
 }
 
-/* Mobile — Comparar + Comprar na mesma linha (vence overlay PRODUCT-CARD-v2 do mega-menu) */
+/* Mobile — cards legados sem .sda-product-card */
 @media (max-width: 991px) {
   .showcase-product:not(.sda-product-card) .showcase-card-actions {
     display: flex !important;

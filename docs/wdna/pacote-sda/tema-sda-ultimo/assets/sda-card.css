@@ -1,7 +1,7 @@
 /**
- * SDA CARD ZERO v1 — único dono visual da vitrine (home, busca, carrossel, relacionados)
- * Markup: .showcase-product.card.sda-product-card.sda-card (showcase-model-product.liquid v5)
- * Ordem: após sda-conversion-redesign.css (só comportamento). Nav: mega-menu.css (sem card).
+ * SDA CARD v3 REWRITE — único dono visual da vitrine
+ * Markup: .sda-product-card.sda-card (showcase-model-product.liquid v5-zero)
+ * Nenhum outro CSS do tema deve estilizar .sda-card / .sda-product-card
  */
 
 .sda-card,

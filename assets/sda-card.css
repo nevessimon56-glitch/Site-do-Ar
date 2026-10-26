@@ -1,7 +1,7 @@
 /**
- * SDA CARD ZERO v1 — único dono visual da vitrine (home, busca, carrossel, relacionados)
- * Markup: .showcase-product.card.sda-product-card.sda-card (showcase-model-product.liquid v5)
- * Ordem: após sda-conversion-redesign.css (só comportamento). Nav: mega-menu.css (sem card).
+ * SDA CARD v3 REWRITE — único dono visual da vitrine
+ * Markup: .sda-product-card.sda-card (showcase-model-product.liquid v5-zero)
+ * Nenhum outro CSS do tema deve estilizar .sda-card / .sda-product-card
  */
 
 .sda-card,
@@ -674,7 +674,7 @@ main.search-main .showcase-search .showcase-item > .showcase-product,
   display: none !important;
 }
 
-/* ========== CARD-LOCK-v3 — só .sda-product-card; vence theme-custom + mega-menu residual ========== */
+/* Alinhamento preço/ações */
 .sda-card:not(.sda-product-card--bundle):not(.sda-product-card--promo) {
   overflow: hidden !important;
   text-align: left !important;
