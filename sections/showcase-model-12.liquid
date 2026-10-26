@@ -1,0 +1,110 @@
+<!-- Showcase Model 12 - Image  -->
+{% assign displayButtons = false %}
+{% for showcaseMedia in showcaseSection.config.medias %}
+    {% if showcaseMedia.metadata.displayButton and showcaseMedia.link %}
+        {% assign displayButtons = true %}
+    {% endif %}
+{% endfor%}
+
+{% assign imgPosition = 'top' %}
+{% if showcaseSection.config.imagePosition %}
+    {% assign imgPosition = showcaseSection.config.imagePosition %}
+{% endif %}
+
+<section class="showcase showcase-model-{{ showcaseSection.typeId }} showcase-{{ showcaseSection.id }}">
+    {% assign bannerGridConfig = showcaseSection.config %}
+    <div class="container">
+        <!-- Título da Vitrine -->
+        {% if showcaseSection.name %}
+            {% assign styleTitle = '' %}
+            {% case bannerGridConfig.namePosition %}
+                {% when 'center' %}
+                    {% assign styleTitle = 'text-align: center;' %}
+                {% when 'left' %}
+                    {% assign styleTitle = 'text-align: left;' %}
+                {% when 'right' %}
+                    {% assign styleTitle = 'text-align: right;' %}
+                {% when "hidden" %}
+                    {% assign styleTitle = "display: none;" %}
+            {% endcase %}
+            <h2 class="showcase-title" style="{{ styleTitle }}">
+                {{ showcaseSection.name }}
+            </h2>
+        {% endif %}
+        <div class="showcase-banners-description showcase-banners-description_carousel showcase-banners-description_carousel_{{ bannerGridConfig.columnQuantity }} showcase-banners-description_carousel-{{ bannerGridConfig.device }}_{{ bannerGridConfig.columnQuantity }}" data-img-position="{{ imgPosition }}">
+            <div class="showcase-list showcase-list-{{ bannerGridConfig.columnQuantity }}" data-img-position="{{ imgPosition }}" data-device="{{ showcaseSection.config.device }}">
+                <ul class="banners-slider-description banners-slider-description-{{ bannerGridConfig.columnQuantity }} banners-slider-description-{{ bannerGridConfig.device }}-{{ bannerGridConfig.columnQuantity }}">
+                    {% for showcaseMedia in showcaseSection.config.medias %}
+                        {% assign banneLink = 'javascript:void(0)' %}
+                        {% if showcaseMedia.link %}
+                            {% assign banneLink = showcaseMedia.link %}
+                        {% endif %}
+                        <li class="showcase-banners_item">
+                            <div class="showcase-card card">
+                                {% if imgPosition == 'top' or imgPosition == 'left' %}
+                                    <div class="card-image">
+                                        <a class="card-link" href="{{ banneLink }}" title="{{ showcaseMedia.title }}"{% if showcaseMedia.metadata.openLinkNewTab %} target="_blank"{% endif %}>
+                                            {% if showcaseMedia.path %}
+                                                <picture>
+                                                    <img class="card-img lazy-slider" data-src="{{ showcaseMedia.path | imgUrl  }}" alt="{{ showcaseMedia.title }}">
+                                                </picture>
+                                            {% else %}
+                                                {{ themeConfig.icons.image }}
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                <div class="card-body {% if displayButtons %}card-body_full{% else %}card-body_default{% endif %}">
+                                    {% if showcaseMedia.title and showcaseMedia.title != '' %}
+                                        <div class="card-title">
+                                            {{ showcaseMedia.title }}
+                                        </div>
+                                    {% endif %}
+                                    {% if showcaseMedia.metadata.description and showcaseMedia.metadata.description != '' %}
+                                        <div class="card-description">
+                                            {{ showcaseMedia.metadata.description }}
+                                        </div>
+                                    {% endif %}
+                                    {% if showcaseMedia.metadata.displayButton and showcaseMedia.link %}
+                                        {% assign btnTitle = 'Saiba mais' %}
+                                        {% if showcaseMedia.metadata.textButton and showcaseMedia.metadata.textButton != '' %}
+                                            {% assign btnTitle = showcaseMedia.metadata.textButton %}
+                                        {% endif %}
+                                        <a class="card-btn btn" href="{{ banneLink }}" title="{{ btnTitle }}"{% if showcaseMedia.metadata.openLinkNewTab %} target="_blank"{% endif %}>
+                                            {{ btnTitle }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                {% if imgPosition == 'bottom' or imgPosition == 'right' %}
+                                    <div class="card-image">
+                                        <a class="card-link" href="{{ banneLink }}" title="{{ showcaseMedia.title }}"{% if showcaseMedia.metadata.openLinkNewTab %} target="_blank"{% endif %}>
+                                            {% if showcaseMedia.path %}
+                                                <picture>
+                                                    <img class="card-img lazy-slider" data-src="{{ showcaseMedia.path | imgUrl  }}" alt="{{ showcaseMedia.title }}">
+                                                </picture>
+                                            {% else %}
+                                                {{ themeConfig.icons.image }}
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% assign classCenterSliderArrow = '' %}
+                {% if bannerGridConfig.namePosition == 'hidden' %}
+                    {% assign classCenterSliderArrow = ' slider__arrow--center' %}
+                {% endif %}
+                <div class="controls controls-arrow" aria-label="Carousel Navigation" tabindex="0">
+                    <button class="slider__arrow slider__arrow--prev{{ classCenterSliderArrow }}" aria-label="Anterior">
+                        {{ themeConfig.icons.arrow.prev }}
+                    </button>
+                    <button class="slider__arrow slider__arrow--next{{ classCenterSliderArrow }}" aria-label="Próximo">
+                        {{ themeConfig.icons.arrow.next }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

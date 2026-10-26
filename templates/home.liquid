@@ -1,0 +1,22 @@
+{% layout 'layout/theme' %}
+{% block content %}
+{% render 'sections/header', store: store, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
+<main class="home-main">
+    {% assign hasShowcaseModelVideo = false %}
+    {% for showcaseSection in showcase.sections %}
+        {% if showcaseSection.display != 'inactive' %}
+            {% assign showcaseModel = 'sections/showcase-model-' | append: showcaseSection.typeId %}
+            {%- render showcaseModel, showcaseSection: showcaseSection, products: showcaseSection.products, themeConfig: themeConfig -%}
+            {% if showcaseSection.typeId == 10 %}
+                {% assign hasShowcaseModelVideo = true %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    {% if hasShowcaseModelVideo %}
+        {% render 'sections/showcase-video-init', showcase: showcase %}
+    {% endif %}
+</main>
+{% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig %}
+{% endblock %}
+{% block script_footer %}
+{% endblock %}

@@ -1,0 +1,307 @@
+{% if kitOptions.size > 0 %}
+    <section id="product-kit" class="product-kit" x-data="setupProductKit()" x-init="getProductKit()" x-on:update-ajax-product-kit.window="updateAjaxProductKit($event.detail)">
+        <div class="product-showcase-content content">
+            <div class="product-showcase-container container">
+                <div class="columns">
+                    <div class="col-product-kit col-12 column">
+                        <template x-for="(kitOption, indexOption, collection) in state.kitOptions" :key="indexOption">
+                            <div class="showcase showcase-kit" :class="` showcase-kit_${indexOption}`" x-bind:id="`showcase-kit_${indexOption}`"
+                                 x-show="kitOption.products?.length"
+                                 x-bind:data-kit-option="kitOption.id">
+                                <details class="showcase-kit_accordion accordion" open="">
+                                    <summary class="showcase-kit_header accordion-header" :class="[!kitOption.visible ? ' disabled' : '']">
+                                        <div class="showcase-kit_header__left">
+                                            <div class="showcase-kit_title">
+                                                <span x-text="`${kitOption.name}`"></span>
+                                                <span class="showcase-kit_text" x-text="`${kitOption.minQuantity > 0 ? '': ' (Opcional)'}`"></span>
+                                                <span class="showcase-kit_text hide-xs" x-text="`${kitOption.maxSelect > 0 ? kitOption.maxSelect === 1? ' - Escolha 1 opção' : ' - Escolha até '+ kitOption.maxSelect+ ' opções' : ''} `"></span>
+                                            </div>
+                                            <template x-if="(state.kitOptionsSelected[indexOption].quantity >= kitOption.minQuantity) && (kitOption.visible)">
+                                                <div class="showcase-kit-icon">
+                                                    {{ themeConfig.icons.check }}
+                                                </div>
+                                            </template>
+                                            <div class="showcase-kit_title show-xs">
+                                                <span class="showcase-kit_text" x-text="`${kitOption.maxSelect > 0 ? kitOption.maxSelect === 1? 'Escolha 1 opção' : 'Escolha até '+ kitOption.maxSelect+ ' opções' : ''} `"></span>
+                                            </div>
+                                        </div>
+                                        <div class="showcase-kit_header__right">
+                                            <a class="showcase-kit_btn showcase-kit_btn__clean" href="javascript:void(0);" @click="cleanProductsSelecteds(kitOption.id)" :class="[state.kitOptionsSelected[indexOption].quantity > 0 ? '': 'disabled']">
+                                                {{ themeConfig.icons.close }}
+                                                <span>Limpar</span>
+                                            </a>
+                                            <div class="showcase-kit_ico">
+                                                <svg class="icon_arrow_down" x="0px" y="0px" width="40" height="40" viewBox="0 0 451.847 451.847">
+                                                    <path d="M225.923,354.706c-8.098,0-16.195-3.092-22.369-9.263L9.27,151.157c-12.359-12.359-12.359-32.397,0-44.751c12.354-12.354,32.388-12.354,44.748,0l171.905,171.915l171.906-171.909c12.359-12.354,32.391-12.354,44.744,0c12.365,12.354,12.365,32.392,0,44.751L248.292,345.449C242.115,351.621,234.018,354.706,225.923,354.706z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </summary>
+                                    <template x-if="!kitOption.visible && kitOption.products?.length">
+                                        <div class="showcase-kit_body">
+                                            <div class="accordion-body">
+                                                <div class="showcase-products">
+                                                    <div class="showcase-item showcase-item_kit">
+                                                        <div class="columns">
+                                                            <div class="col-7 col-xxl-6 col-lg-7 col-md-8 col-xs-12 column">
+                                                                <div class="product-content_box product-box_img">
+                                                                    <a class="showcase-image_link" :title="`${typeof kitOption.products[0].title !== 'undefined'? kitOption.products[0].title : ''}`">
+                                                                        <template x-if="kitOption.products[0].image">
+                                                                            <template x-if="kitOption.loadLazy">
+                                                                                <picture>
+                                                                                    <img class="lazy loaded" x-bind:src="kitOption.products[0].image" :alt="kitOption.products[0].title">
+                                                                                </picture>
+                                                                            </template>
+                                                                            <template x-if="!kitOption.loadLazy">
+                                                                                <picture>
+                                                                                    <img class="lazy" x-bind:data-src="kitOption.products[0].image" :alt="kitOption.products[0].title">
+                                                                                </picture>
+                                                                            </template>
+                                                                        </template>
+                                                                        <template x-if="!kitOption.products[0].image">
+                                                                            {{ themeConfig.icons.image }}
+                                                                        </template>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="product-content_box product-box_info">
+                                                                    <p class="showcase-product_title">
+                                                                        Escolha já!
+                                                                    </p>
+                                                                    <template x-if="((typeof kitOption.products[0].isLinkProduct !== 'undefined') && kitOption.products[0].isLinkProduct) || (typeof kitOption.products[0].isLinkProduct === 'undefined')">
+                                                                        <a class="showcase-product_link showcase-product_link_title" :href="kitOption.products[0].url">
+                                                                            <span x-text="kitOption.products[0].title"></span>
+                                                                        </a>
+                                                                    </template>
+                                                                    <template x-if="((typeof kitOption.products[0].isLinkProduct !== 'undefined') && kitOption.products[0].isLinkProduct === false)">
+                                                                        <p class="showcase-product_link showcase-product_link_title">
+                                                                            <span x-text="kitOption.products[0].title"></span>
+                                                                        </p>
+                                                                    </template>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-5 col-xxl-6 col-lg-5 col-md-4 col-xs-12 column">
+                                                                <div class="columns">
+                                                                    <div class="col-6 col-xxl-6 col-lg-12 col-xs-auto column col-ml-auto">
+                                                                        <div class="product-content_box product-box_actions">
+                                                                            <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" @click="openKitOption(indexOption)" title="Exibir Todos">
+                                                                                Exibir Todos
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template x-if="kitOption.visible">
+                                        <div class="showcase-kit_body">
+                                            <div class="accordion-body">
+                                                <div class="showcase-products">
+                                                    <template x-for="(productKit, index, collection) in kitOption.products" :key="index">
+                                                        <div class="showcase-item showcase-item_kit" :class="(productKit && productKit.price && productKit.price.status && productKit.price.status=== true) ? '': 'd-hide'">
+                                                            <div class="columns">
+                                                                <div class="col-7 col-xxl-6 col-lg-7 col-md-8 col-xs-12 column">
+                                                                    <div class="product-content_box product-box_img">
+                                                                        <a class="showcase-image_link" :title="`${typeof productKit.title !== 'undefined'? productKit.title : ''}`">
+                                                                            <template x-if="productKit.image">
+                                                                                <picture>
+                                                                                    <img class="lazy loaded" x-bind:src="productKit.image" :alt="productKit.title">
+                                                                                </picture>
+                                                                            </template>
+                                                                            <template x-if="!productKit.image">
+                                                                                {{ themeConfig.icons.image }}
+                                                                            </template>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="product-content_box product-box_info">
+                                                                        <template x-if="((typeof productKit.isLinkProduct !== 'undefined') && productKit.isLinkProduct) || (typeof productKit.isLinkProduct === 'undefined')">
+                                                                            <a class="showcase-product_link showcase-product_link_title" :href="productKit.url">
+                                                                                <span x-text="productKit.title"></span>
+                                                                            </a>
+                                                                        </template>
+                                                                        <template x-if="((typeof productKit.isLinkProduct !== 'undefined') && productKit.isLinkProduct === false)">
+                                                                            <p class="showcase-product_link showcase-product_link_title" >
+                                                                                <span x-text="productKit.title"></span>
+                                                                            </p>
+                                                                        </template>
+                                                                        <template x-if="(productKit.manageStock === false) || (productKit.stockTotal > 0) && productKit.mainPrice > 0">
+                                                                            <div class="showcase-prices">
+                                                                                <p class="showcase-prices_price">
+                                                                                    <span x-text="`${StoreSDK.utils.money(productKit.mainPrice)}`"></span>
+                                                                                </p>
+                                                                                <template x-if="productKit.priceSecond && productKit.priceSecond.installment.length > 0">
+                                                                                    <template x-if="productKit.priceSecond.installment > 1">
+                                                                                        <p class="showcase-prices_plots">
+                                                                                            <span x-text="`ou ${ productKit.priceSecond.installment }x de ${StoreSDK.utils.money(productKit.priceSecond.installmentValue)} no cartão`"></span>
+                                                                                        </p>
+                                                                                    </template>
+                                                                                    <template x-if="productKit.priceSecond.installment < 1">
+                                                                                        <p class="showcase-prices_plots">
+                                                                                            <span x-text="`ou ${StoreSDK.utils.money(productKit.priceSecond.price)} à vista`"></span>
+                                                                                        </p>
+                                                                                    </template>
+                                                                                </template>
+                                                                            </div>
+                                                                        </template>
+                                                                    </div>
+                                                                </div>
+                                                                <template x-if="!kitOption.typeSelectId || kitOption.typeSelectId === 1">
+                                                                    <div class="col-5 col-xxl-6 col-lg-5 col-md-4 col-xs-12 column">
+                                                                        <div class="columns">
+                                                                            <div class="col-6 col-lg-12 col-xs-auto column">
+                                                                                <div class="product-content_box product-box_qtd">
+                                                                                    <div class="product-qtd input-group_qtd input-group">
+                                                                                        <button class="product-qtd_minus btn input-group-btn"
+                                                                                                @click="handleDecreaseQuantity(kitOption.id,productKit.id)"
+                                                                                                :class="[(state.kitOptionsSelected[indexOption].isMaximum && !productKit.selected && kitOption.maxSelect > 0) || (kitOption && state.kitOptionsSelected[indexOption].count >= kitOption.maxSelect && !productKit.selected && kitOption.maxSelect > 0) || (kitOption && state.kitOptionsSelected[indexOption].count >= kitOption.maxSelect && !productKit.selected && kitOption.maxSelect > 0)  ? 'disabled': '']">
+                                                                                            -
+                                                                                        </button>
+                                                                                        <input
+                                                                                                class="product-qtd_value form-input"
+                                                                                                type="number"
+                                                                                                min="1"
+                                                                                                x-model="productKit.quantity"
+                                                                                                :disabled="(state.kitOptionsSelected[indexOption].isMaximum && !productKit.selected && kitOption.maxSelect > 0)  || (kitOption && state.kitOptionsSelected[indexOption].count >= kitOption.maxSelect && !productKit.selected && kitOption.maxSelect > 0)"
+                                                                                                @focusout="handleQuantity(kitOption.id,productKit.id)"
+                                                                                        >
+                                                                                        <button class="product-qtd_plus btn input-group-btn"
+                                                                                                :class="[(state.kitOptionsSelected[indexOption].isMaximum & kitOption.maxSelect > 0) || (kitOption && state.kitOptionsSelected[indexOption].count >= kitOption.maxSelect && !productKit.selected &&kitOption.maxSelect > 0) || (productKit.quantity >= productKit.maxQuantity && kitOption.maxSelect > 0) ? 'disabled': '']"
+                                                                                                @click="handleIncreaseQuantity(kitOption.id,productKit.id)">
+                                                                                            +
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-6 col-lg-12 col-xs-auto column">
+                                                                                <div class="product-content_box product-box_actions">
+                                                                                    <template
+                                                                                            x-if="productKit.selected">
+                                                                                        <a class="product-btn product-btn_buy btn col-12 active"
+                                                                                           href="javascript:void(0)"
+                                                                                           title="Selecionado">
+                                                                                            Selecionado
+                                                                                        </a>
+                                                                                    </template>
+                                                                                    <template
+                                                                                            x-if="!productKit.selected">
+                                                                                        <a class="product-btn product-btn_buy btn col-12"
+                                                                                           :class="[(state.kitOptionsSelected[indexOption].isMaximum && kitOption.maxSelect > 0) || ((kitOption && state.kitOptionsSelected[indexOption].count >= kitOption.maxSelect) && kitOption.maxSelect > 0) ? 'disabled': '']"
+                                                                                           @click="addQuantity(kitOption.id,productKit.id)"
+                                                                                           href="javascript:void(0)"
+                                                                                           title="Selecionar">
+                                                                                            Selecionar
+                                                                                        </a>
+                                                                                    </template>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </template>
+                                                                <template x-if="kitOption.typeSelectId && kitOption.typeSelectId === 2">
+                                                                    <div class="col-5 col-xxl-6 col-lg-5 col-md-4 col-xs-12 column">
+                                                                        <div class="columns">
+                                                                            <div class="col-6 col-lg-12 col-xs-auto column float-right">
+                                                                                <div class="product-content_box product-box_actions product-box_actions__checkbox">
+                                                                                    <div class="form-group product-form-group">
+                                                                                        <label class="form-checkbox">
+                                                                                            <input type="checkbox"
+                                                                                                   x-model="productKit.selected"
+                                                                                                   :disabled="((state.kitOptionsSelected[indexOption].isMaximum && kitOption.maxSelect > 0) || ((kitOption && state.kitOptionsSelected[indexOption].count >= kitOption.maxSelect) && kitOption.maxSelect > 0) && !productKit.selected ) ? true : false"
+                                                                                                   @click="handlerCheckbox(kitOption.id, productKit.id)">
+                                                                                            <i class="form-icon"></i>
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </details>
+                            </div>
+                        </template>
+                        <div class="showcase-kit_finish">
+                            <div class="columns">
+                                <div class="col-4 col-xxl-3 col-lg-7 col-md-8 column">
+                                    <div class="product-content_box product-box_qnt">
+                                        <p>
+                                            <span x-text="state.totalSelected.quantity"></span>
+                                            itens selecionados
+                                        </p>
+                                    </div>
+                                    <div class="product-content_box show-lg">
+                                        <template x-if="state.totalSelected.tax && (state.totalSelected.price > 0)">
+                                            <div class="product-box_subtotal">
+                                                <p>
+                                                    <span>Subtotal: </span>
+                                                    <span x-text="`${StoreSDK.utils.money(state.totalSelected.priceOriginal)}`"></span>
+                                                </p>
+                                            </div>
+                                            <div class="product-box_tax">
+                                                <p>
+                                                    <span x-text="`${state.totalSelected.tax > 0 ? 'Acréscimo da forma de pagamento: ' : 'Desconto da forma de pagamento: '}`"></span>
+                                                    <span x-text="`${StoreSDK.utils.money(state.totalSelected.tax)}`"></span>
+                                                </p>
+                                            </div>
+                                        </template>
+                                        <div class="product-box_total">
+                                            <p>
+                                                <span>Total: </span>
+                                                <span x-text="`${StoreSDK.utils.money(state.totalSelected.price)}`"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-8 col-xxl-9 col-lg-5 col-md-4 column">
+                                    <div class="columns">
+                                        <div class="col-8 col-lg-12 column hide-lg">
+                                            <template x-if="state.totalSelected.tax && (state.totalSelected.price > 0)">
+                                                <div class="product-content_box product-box_subtotal">
+                                                    <p>
+                                                        <span>Subtotal: </span>
+                                                        <span x-text="`${StoreSDK.utils.money(state.totalSelected.priceOriginal)}`"></span>
+                                                    </p>
+                                                </div>
+                                            </template>
+                                            <template x-if="state.totalSelected.tax && (state.totalSelected.price > 0)">
+                                                <div class="product-content_box product-box_tax">
+                                                    <p>
+                                                        <span x-text="`${state.totalSelected.tax > 0 ? 'Acréscimo da forma de pagamento: ' : 'Desconto da forma de pagamento: '}`"></span>
+                                                        <span x-text="`${StoreSDK.utils.money(state.totalSelected.tax)}`"></span>
+                                                    </p>
+                                                </div>
+                                            </template>
+                                            <div class="product-content_box product-box_total">
+                                                <p>
+                                                    <span>Total: </span>
+                                                    <span x-text="`${StoreSDK.utils.money(state.totalSelected.price)}`"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 col-lg-12 column">
+                                            <div class="product-content_box product-box_action">
+                                                <a class="product-btn product-btn_buy btn col-12" :class="[(state.totalSelected.quantity <= 0) && (state.price <= 0)? 'disabled': '']" href="javascript:void(0);" @click="addKitProductsToCart" title="Comprar">
+                                                    Comprar
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% render 'sections/product-kit-script', product: product, kitOptions: kitOptions %}
+    </section>
+{% endif %}
