@@ -82,6 +82,8 @@ Enviar se estiverem no editor (branch conversão; **podem faltar no Git**):
 
 **Produção (colagem 2026-10-26):** `sections/product-related.liquid` = **idêntico** ao repo (`.showcase-related` → `showcase-model-product` com cards `.sda-product-card`). Carousel: `theme.js` (`.showcase-list-related`).
 
+**Produção (colagem 2026-10-26):** `sections/product-last-viewed.liquid` = **idêntico** ao repo (`.showcase-last-viewed`, lista estática sem setas; `lastProducts` → `showcase-model-product`). Mesmo cuidado: sem `showcaseSection` — corrigido em `showcase-model-product.liquid` (commit `fix(showcase)`).
+
 **Produção (colagem 2026-10-26):** `templates/product.liquid` da loja = **idêntico** ao repo (`main` / `cursor/site-recovery-b192` / `cursor/conversion-redesign-b192`): só `main.product-main` + `sections/product-content` + sidenavs + footer; `script_footer` vazio. **Não é gargalo** da remodelagem — o HTML/CSS da conversão PDP mora em **`sections/product-content.liquid`** (e seções SDA opcionais), não neste template.
 
 ### 3.2 PDP conversão (enviar da loja se a PDP já estiver “v2”)
