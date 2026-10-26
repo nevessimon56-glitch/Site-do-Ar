@@ -1,4 +1,5 @@
-<header class="header">
+<header class="header sda-header-v2">
+    {% render 'sections/sda-header-utility', store: store %}
     <div class="top-content content" style="background-color: {{ themeConfig.store.bannerTop.backgroundColor }};">
         <a href="{{ themeConfig.store.bannerTop.link }}" title="{{ themeConfig.store.bannerTop.title }}">
             {% if themeConfig.store.bannerTop.image %}
@@ -82,7 +83,8 @@
                         </form>
                     </div>
                 </div>
-                <div class="navbar-section">
+                <div class="navbar-section sda-header-navbar-actions">
+                    {% render 'sections/sda-header-quick-icons' %}
                     <a class="header-link header-link_search search_link show-lg" href="javascript:void(0)" title="Busca" onclick="openSearch()">
                         <div class="icon-search">
                             <span class="icon-bar"></span>

@@ -201,7 +201,7 @@
                             </div>
                         </div>
                         <div class="product-header-right col-5 col-lg-12 column">
-                            <div class="product-header-box">
+                            <div class="product-header-box sda-pdp-buy-stack">
                                 <div class="product-header-box_top">
                                     {% if product.sku %}
                                         <div class="product-sku">
@@ -242,6 +242,9 @@
                                         </div>
                                     </div>
                                 </template>
+                                <div class="sda-pdp-spec-wrap sda-pdp-spec-wrap--buy">
+                                    {% render 'sections/product-spec-icons', product: product %}
+                                </div>
                                 {% if product.prices.length > 1 %}
                                     <div class="product-price-group">
                                         <div class="form-group">
@@ -378,21 +381,38 @@
                                 </div>
                                 {% endif %}
                                 {% if product.typeId != 2 or product.gridOptions.size > 0 %}
-                                    {% assign _mainPrice = productPricePrimary.price %}
-                                    {% if productPricePrimary.promotionPrice > 0 %}{% assign _mainPrice = productPricePrimary.promotionPrice %}{% endif %}
-                                    <div class="product-prices">
+                                    {% assign listPricePdp = productPricePrimary.price %}
+                                    {% assign pixPricePdp = listPricePdp %}
+                                    {% assign pixPercentPdp = 5 %}
+                                    {% assign hasPixPromoPdp = 0 %}
+                                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                                        {% assign hasPixPromoPdp = 1 %}
+                                        {% assign pixPricePdp = product.price.promotionPrice %}
+                                        {% assign pixPercentPdp = product.price.promotionMargin | round %}
+                                    {% else %}
+                                        {% assign hasPixPromoPdp = 1 %}
+                                        {% assign _pixDiscPdp = listPricePdp | times: pixPercentPdp | divided_by: 100 %}
+                                        {% assign pixPricePdp = listPricePdp | minus: _pixDiscPdp %}
+                                    {% endif %}
+                                    {% assign _mainPrice = pixPricePdp %}
+                                    <div class="product-prices sda-pdp-prices">
                                         <div class="product-content_box product-box_prices col-12">
-                                            {% if productPricePrimary.promotionPrice > 0 and productPricePrimary.price > productPricePrimary.promotionPrice %}
+                                            {% if hasPixPromoPdp == 1 and listPricePdp > pixPricePdp %}
+                                                <del class="product-prices_strike">{{ listPricePdp | money }}</del>
+                                            {% elsif productPricePrimary.promotionPrice > 0 and productPricePrimary.price > productPricePrimary.promotionPrice %}
                                                 <del class="product-prices_strike">{{ productPricePrimary.price | money }}</del>
                                             {% endif %}
-                                            <p class="product-prices_price">{{ _mainPrice | money }}</p>
+                                            <p class="product-prices_price"><span class="sda-pdp-price-pix">{{ pixPricePdp | money }}</span> <span class="sda-pdp-price-pix-label">no Pix</span></p>
+                                            {% if hasPixPromoPdp == 1 %}
+                                                <p class="sda-pdp-pix-badge">{{ pixPercentPdp }}% de desconto no Pix</p>
+                                            {% endif %}
                                             {% if productPriceSecond %}
                                                 {% assign _mainPriceSecond = productPriceSecond.price %}
                                                 {% if productPriceSecond.promotionPrice > 0 %}{% assign _mainPriceSecond = productPriceSecond.promotionPrice %}{% endif %}
                                                 {% if productPriceSecond.installment > 1 %}
-                                                    <p class="product-prices_plots">{{ productPriceSecond.installment }}x de {{ productPriceSecond.installmentValue | money }} no cartão</p>
+                                                    <p class="product-prices_plots sda-pdp-installment">ou {{ productPriceSecond.installment }}x de {{ productPriceSecond.installmentValue | money }} sem juros</p>
                                                 {% else %}
-                                                    <p class="product-prices_plots">ou {{ _mainPriceSecond | money }} à vista</p>
+                                                    <p class="product-prices_plots sda-pdp-installment">ou {{ _mainPriceSecond | money }} à vista</p>
                                                 {% endif %}
                                             {% endif %}
                                         </div>
@@ -407,11 +427,16 @@
                                     <div class="product-payments">
                                         <a class="product-btn_payment btn col-12" href="javascript:void(0)" title="Outras formas de pagamentos" @click="openPaymentCalculation()">Mais formas de pagamento</a>
                                     </div>
-                                    <div class="columns">
+                                    <div class="columns sda-pdp-actions">
                                         <div class="column col-12 col-sm-12">
                                             <div class="product-buy">
                                                 <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" title="{{ buyButtonText }}" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ product.price.price }}')">{{ buyButtonText }}</a>
                                             </div>
+                                            <div class="sda-pdp-compare">
+                                                <button type="button" class="showcase-compare-btn sda-pdp-compare-btn" data-compare-id="{{ product.id }}" aria-pressed="false">Comparar</button>
+                                            </div>
+                                            {% render 'sections/sda-pdp-trust' %}
+                                            {% render 'sections/product-compare-data', product: product, pixPrice: pixPricePdp, listPrice: listPricePdp %}
                                         </div>
                                         {% if product.physicalProduct == true %}
                                             <div class="column col-12 col-sm-12">

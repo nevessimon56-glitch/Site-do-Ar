@@ -4,15 +4,15 @@
         <a href="javascript:void(0)" class="btn dropdown-toggle" tabindex="0">
             {% case search.query.ordem %}
                 {% when "relevancia" %}
-                    Maior relevância
+                    Mais vendidos
                 {% when "maior-preco" %}
-                    Maior Preço
+                    Maior preço
                 {% when "menor-preco" %}
-                    Menor Preço
+                    Menor preço
                 {% when "nome" %}
-                    A-Z
+                    Nome (A–Z)
                 {% else %}
-                    Maior relevância
+                    Mais vendidos
             {% endcase %}
             <i>
                 {{ themeConfig.icons.arrow.down }}
@@ -21,22 +21,22 @@
         <ul class="menu">
             <li class="menu-item">
                 <a href="{{ currentPage.path | linkSearch : search.query , 'ordem', 'relevancia' }}">
-                    Maior relevância
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="{{ currentPage.path | linkSearch : search.query , 'ordem', 'maior-preco' }}">
-                    Maior Preço
+                    Mais vendidos
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{ currentPage.path | linkSearch : search.query , 'ordem', 'menor-preco' }}">
-                    Menor Preço
+                    Menor preço
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{{ currentPage.path | linkSearch : search.query , 'ordem', 'maior-preco' }}">
+                    Maior preço
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{ currentPage.path | linkSearch : search.query , 'ordem', 'nome' }}">
-                    A-Z
+                    Nome (A–Z)
                 </a>
             </li>
         </ul>

@@ -132,6 +132,51 @@
     document.body.classList.add('sda-pdp-sticky-on');
   }
 
+  var FILTER_LABELS = {
+    minPotencia: 'BTUs mín.',
+    maxPotencia: 'BTUs máx.',
+    marcas: 'Marca',
+    categorias: 'Categoria',
+    preco: 'Preço'
+  };
+
+  function buildFilterRemoveUrl(param, value) {
+    var url = new URL(window.location.href);
+    var vals = url.searchParams.getAll(param);
+    url.searchParams.delete(param);
+    for (var i = 0; i < vals.length; i++) {
+      if (vals[i] !== value) url.searchParams.append(param, vals[i]);
+    }
+    url.searchParams.delete('pag');
+    return url.pathname + url.search;
+  }
+
+  function renderActiveFilterChips() {
+    var host = document.getElementById('sda-active-filters');
+    if (!host) return;
+    host.innerHTML = '';
+    var params = new URLSearchParams(window.location.search);
+    params.forEach(function (value, key) {
+      if (key === 'pag' || key === 'ordem' || key === 'qtdPag') return;
+      var label = FILTER_LABELS[key] || key;
+      var chip = document.createElement('a');
+      chip.className = 'sda-active-filters__chip';
+      chip.href = buildFilterRemoveUrl(key, value);
+      chip.title = 'Remover filtro';
+      chip.innerHTML =
+        '<span>' + label + ': ' + decodeURIComponent(value).replace(/\+/g, ' ') + '</span>' +
+        '<span class="sda-active-filters__chip-x" aria-hidden="true">×</span>';
+      host.appendChild(chip);
+    });
+  }
+
+  function enhanceMobileFilterLabel() {
+    var title = document.querySelector('.search-options_mobile .search-options-header_item:first-child .search-option-title');
+    if (title && title.textContent.indexOf('Filtrar') === -1) {
+      title.textContent = 'Filtrar produtos';
+    }
+  }
+
   function limitHomeCarousels() {
     if (!document.querySelector('main.home-main')) return;
     document.querySelectorAll('.home-main .showcase-list.slick-initialized').forEach(function (list) {
@@ -155,6 +200,8 @@
     productAreaHint();
     pdpStickyBuy();
     limitHomeCarousels();
+    renderActiveFilterChips();
+    enhanceMobileFilterLabel();
   }
 
   if (document.readyState === 'loading') {
