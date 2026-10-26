@@ -86,11 +86,12 @@ Enviar se estiverem no editor (branch conversão; **podem faltar no Git**):
 
 | Arquivo | No repo recovery? |
 |---------|-------------------|
-| `sections/product-content.liquid` (versão com `product-v2` / `#product-pdp-v2`) | **Diferente** na branch `cursor/conversion-redesign-b192` |
-| `sections/product-descriptions-v2.liquid` | **Não** |
-| `sections/product-pdp-cycle-class.liquid` | **Não** |
-| `sections/product-pdp-spec-bar.liquid` | **Não** |
-| `sections/sda-pdp-trust.liquid` | **Não** |
+| `sections/product-content.liquid` (versão com `product-v2` / `#product-pdp-v2`) | **Sincronizado** com produção (recovery `cursor/site-recovery-b192`, 2026-10-26) |
+| `sections/product-descriptions-v2.liquid` | **Sim** (import conversion branch) |
+| `sections/product-pdp-cycle-class.liquid` | **Sim** |
+| `sections/product-pdp-spec-bar.liquid` | **Sim** |
+| `sections/sda-pdp-trust.liquid` | **Sim** (auxiliar; trust inline no buy box) |
+| `sections/sda-pdp-recommendation.liquid` | **Sim** (repo; lista + JS sync área m²) |
 | `assets/product-page-v2.css` | **Não** (ou vazio no git) |
 
 Sem esses arquivos, mudar só CSS em `sda-conversion-redesign.css` na PDP **não aplica** (faltam classes no HTML).
