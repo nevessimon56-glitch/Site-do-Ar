@@ -25,7 +25,15 @@
   function parseProductJson(el) {
     if (!el) return null;
     try {
-      return JSON.parse(el.textContent || el.innerText || '{}');
+      var raw = '';
+      if (el.value != null && String(el.value).trim() !== '') {
+        raw = el.value;
+      } else if (el.textContent) {
+        raw = el.textContent;
+      } else if (el.innerText) {
+        raw = el.innerText;
+      }
+      return JSON.parse(raw || '{}');
     } catch (e) {
       return null;
     }

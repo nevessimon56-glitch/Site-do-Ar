@@ -1817,3 +1817,44 @@ main.home-main section.showcase .showcase-product.card.sda-product-card .showcas
   content: '✓ ' !important;
   font-weight: 700 !important;
 }
+
+/* Model 9 promo — horizontal dentro do slot; ações/preço = mesmo dono .sda-product-card */
+.showcase-model-9 .sda-product-card--promo {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  height: 100% !important;
+}
+
+.showcase-model-9 .sda-product-card--promo .card-left {
+  flex: 0 0 42% !important;
+  max-width: 42% !important;
+}
+
+.showcase-model-9 .sda-product-card--promo .card-right {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+}
+
+.showcase-model-9 .sda-product-card--promo .showcase-card-body {
+  flex: 1 1 auto !important;
+  padding: 0 10px !important;
+}
+
+.showcase-model-9 .sda-product-card--promo .card-footer.sda-card-footer {
+  margin-top: auto !important;
+  padding: 0 10px 10px !important;
+}
+
+@media (max-width: 767px) {
+  .showcase-model-9 .sda-product-card--promo {
+    flex-direction: column !important;
+  }
+
+  .showcase-model-9 .sda-product-card--promo .card-left {
+    flex: none !important;
+    max-width: 100% !important;
+  }
+}

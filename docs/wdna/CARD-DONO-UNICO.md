@@ -21,10 +21,10 @@ Depois do escopo v10 (2026-10-26), estes arquivos usam `:not(.sda-product-card)`
 - `product-hover-image.css` — temas `sda-card--cycle-*` e grid compacto
 - Revisar `theme-custom.css` se novos overrides de `.showcase-card-actions` forem adicionados
 
-## Exceções (fase 2)
+## Exceções
 
-- **`showcase-model-product-promotion.liquid`** — model 9 promo: layout horizontal legado (timer + card-left/right). Não usa `.sda-product-card` até migração.
-- **`showcase-model-product-buy-to-gether.liquid`** — mini-card compre junto; markup próprio.
+- **`showcase-model-product-promotion.liquid`** — model 9: `.sda-product-card.sda-product-card--promo` (horizontal; CSS em `sda-conversion-redesign.css`).
+- **`showcase-model-product-buy-to-gether.liquid`** — mini-card compre junto; markup próprio (fase 3).
 
 ## Checklist pós-publicação WDNA
 
