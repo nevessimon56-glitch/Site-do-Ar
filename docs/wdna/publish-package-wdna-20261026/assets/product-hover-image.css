@@ -1,0 +1,184 @@
+/**
+ * ARQUIVO: assets/product-hover-image.css
+ * VERSAO: 2026-09-16-hover-shim-v1
+ *
+ * Hover de imagem nos cards é controlado por:
+ *   - JS: mega-menu.js (window.__SDA_HOVER_V2__ = true)
+ *   - CSS: mega-menu.css (HOVER-IMG-SIZE-v1, HOVER-IMG-FIX-v1, PRODUCT-CARD-COMPACT-v6)
+ *
+ * Este arquivo existe só por compatibilidade (theme.liquid ainda o carrega).
+ * Não define altura nem width de imagem — evita conflito com mega-menu.css.
+ */
+
+/* Ponte legado: classe --alt usada em markup antigo → mesma regra que --hover */
+.showcase-product.has-hover-image.is-img-hover .product-hover-img--alt,
+.showcase-product.has-hover-image:hover .product-hover-img--alt {
+  opacity: 1;
+}
+
+.showcase-product.has-hover-image.is-img-hover .product-hover-img--main,
+.showcase-product.has-hover-image:hover .product-hover-img--main {
+  opacity: 0;
+}
+
+/* ========== Header laranja — carrega POR ÚLTIMO (HEADER-ORANGE-v4) ========== */
+/*
+ * Verde vem de theme-custom.css (.cart_quantity #61bb47) e theme-all.css (.header a:hover).
+ * Este arquivo é o último CSS no theme.liquid — override definitivo.
+ */
+
+/* Carrinho — badge laranja (vence theme-custom.css) */
+body .header:not(.header-checkout) .header-link_cart .cart_quantity,
+body .header:not(.header-checkout) .cart_link .cart_quantity,
+body .header:not(.header-checkout) .cart_quantity,
+body .header:not(.header-checkout) [data-cart-quantity].cart_quantity,
+body .header:not(.header-checkout) .header-link_cart [data-cart-quantity] {
+  background-color: #f97316 !important;
+  background: #f97316 !important;
+  border-color: #ea580c !important;
+  color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .header-link_cart svg,
+body .header:not(.header-checkout) .header-link_cart .icon_cart,
+body .header:not(.header-checkout) .cart_link svg {
+  fill: #4b96d4 !important;
+}
+
+body .header:not(.header-checkout) .header a.header-link_cart:hover,
+body .header:not(.header-checkout) .header a.header-link_cart:focus,
+body .header:not(.header-checkout) .header a.cart_link:hover,
+body .header:not(.header-checkout) .header a.cart_link:focus,
+body .header:not(.header-checkout) .header-link_cart:hover,
+body .header:not(.header-checkout) .header-link_cart:focus,
+body .header:not(.header-checkout) .cart_link:hover,
+body .header:not(.header-checkout) .cart_link:focus {
+  color: #f97316 !important;
+  opacity: 1 !important;
+}
+
+body .header:not(.header-checkout) .header-link_cart:hover svg,
+body .header:not(.header-checkout) .header-link_cart:focus svg,
+body .header:not(.header-checkout) .header-link_cart:hover .icon_cart,
+body .header:not(.header-checkout) .header-link_cart:focus .icon_cart,
+body .header:not(.header-checkout) .cart_link:hover svg,
+body .header:not(.header-checkout) .cart_link:focus svg {
+  fill: #f97316 !important;
+}
+
+body .header:not(.header-checkout) .header-link_cart:hover .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:focus .cart_quantity,
+body .header:not(.header-checkout) .cart_link:hover .cart_quantity,
+body .header:not(.header-checkout) .cart_link:focus .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:hover [data-cart-quantity],
+body .header:not(.header-checkout) .header-link_cart:focus [data-cart-quantity] {
+  background-color: #ea580c !important;
+  background: #ea580c !important;
+  border-color: #c2410c !important;
+  color: #ffffff !important;
+}
+
+/* Conta + telefone — normal escuro, hover laranja nos acentos (vence .header a:hover verde) */
+body .header:not(.header-checkout) .header-box_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
+body .header:not(.header-checkout) .header-link_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
+  color: #101010 !important;
+}
+
+body .header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_icon svg {
+  fill: #4b96d4 !important;
+}
+
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:focus,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
+body .header:not(.header-checkout) .header a.account_link:hover,
+body .header:not(.header-checkout) .header a.account_link:focus {
+  color: #101010 !important;
+  opacity: 1 !important;
+}
+
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:hover,
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:focus,
+body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:hover,
+body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:focus,
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_text a.account_link:last-child,
+body .header:not(.header-checkout) .header-box-account-info:hover .header-link_text a.account_link:last-child {
+  color: #f97316 !important;
+}
+
+body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:hover,
+body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:focus,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:hover,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:focus,
+body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_text a.account_link:first-child,
+body .header:not(.header-checkout) .header-box-account_tel:hover .header-link_text a.account_link:first-child {
+  color: #f97316 !important;
+}
+
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg {
+  fill: #f97316 !important;
+}
+
+/* Banners — evita esbranquiçar no hover (theme-all opacity 0.7) */
+a.showcase-banners_link:hover,
+a.showcase-banners_link:focus,
+a.showcase-banners_link:active {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.showcase-banners_link:hover .banner-main_img,
+.showcase-banners_link:focus .banner-main_img,
+.showcase-banners_link:active .banner-main_img,
+.showcase-banners_link:hover img.lazy-slider,
+.showcase-banners_link:focus img.lazy-slider,
+.showcase-banners_link:active img.lazy-slider {
+  opacity: 1 !important;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  a.showcase-banners_link {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Integração pós mega-menu.css — §K identidade Site do Ar (este arquivo carrega por último) */
+.showcase-item .showcase-product.card,
+.showcase-search .showcase-product.card,
+main.home-main section.showcase .showcase-product.card {
+  border-color: #b8cfe8 !important;
+}
+
+.showcase-products .showcase-product.card:hover,
+.showcase-search.showcase-search_grid .showcase-product.card:hover {
+  box-shadow: 0 8px 24px rgba(44, 119, 187, 0.15) !important;
+  transform: translateY(-5px) !important;
+}
+
+.showcase-search.showcase-search_list .showcase-product.card:hover {
+  transform: none !important;
+}
+
+.showcase-related .showcase-product.card:hover,
+.showcase-related .showcase-products .showcase-product.card:hover {
+  transform: none !important;
+  box-shadow: 0 8px 24px rgba(44, 119, 187, 0.15) !important;
+}
+
+.product-main .showcase:not(.showcase-related):not(.showcase-last-viewed) .showcase-products .showcase-product.card:hover {
+  transform: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.showcase-product .card-footer .showcase-prices--card .showcase-prices_pix,
+.showcase-prices_pix {
+  color: #15803d !important;
+  background: #f0fdf4 !important;
+}

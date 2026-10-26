@@ -1,0 +1,50 @@
+{% comment %}
+  Box roxo de curadoria — só bullets derivados do título/especificações reais (sem inventar).
+{% endcomment %}
+{% assign recTitle = product.title | downcase %}
+{% assign recBlob = recTitle %}
+{% if product.specification and product.specification != '' %}
+  {% assign recBlob = recBlob | append: ' ' | append: product.specification | downcase %}
+{% endif %}
+
+{% assign hasInverter = false %}
+{% if recTitle contains 'inverter' %}
+  {% assign hasInverter = true %}
+{% endif %}
+
+{% assign hasWifi = false %}
+{% if recTitle contains 'wi-fi' or recTitle contains 'wifi' or recTitle contains 'smart' %}
+  {% assign hasWifi = true %}
+{% endif %}
+
+{% assign hasQF = false %}
+{% if recTitle contains 'quente' and recTitle contains 'frio' %}
+  {% assign hasQF = true %}
+{% endif %}
+
+{% assign showBox = false %}
+{% if hasInverter or hasWifi or hasQF %}
+  {% assign showBox = true %}
+{% endif %}
+
+{% if showBox %}
+<section class="sda-pdp-rec content" aria-labelledby="sda-pdp-rec-title">
+  <div class="container">
+    <div class="sda-pdp-rec__box">
+      <h2 class="sda-pdp-rec__title" id="sda-pdp-rec-title">Por que este modelo pode ser ideal para você?</h2>
+      <ul class="sda-pdp-rec__list">
+        {% if hasInverter %}
+          <li>Tecnologia Inverter para maior economia de energia</li>
+        {% endif %}
+        {% if hasWifi %}
+          <li>Recursos de conectividade Wi-Fi indicados no produto</li>
+        {% endif %}
+        {% if hasQF %}
+          <li>Operação quente e frio para mais conforto no ano todo</li>
+        {% endif %}
+        <li>Produto original com nota fiscal</li>
+      </ul>
+    </div>
+  </div>
+</section>
+{% endif %}

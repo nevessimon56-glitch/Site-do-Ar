@@ -1,0 +1,646 @@
+{% assign seoTitle = '' %}
+{% if product.seoTitle %}
+    {% assign seoTitle = product.seoTitle %}
+{% elsif search.results[0].categories[0].title %}
+    {% assign seoTitle = search.results[0].categories[0].title %}
+{% elsif seo.title %}
+    {% assign seoTitle = seo.title %}
+{% else %}
+    {% assign seoTitle = 'Site Do Ar | Ar-Condicionado com os Melhores Preços em SP' %}
+{% endif %}
+
+{% assign seoDescription = '' %}
+{% if product.seoDescription %}
+    {% assign seoDescription = product.seoDescription %}
+{% elsif search.results[0].categories[0].description %}
+    {% assign seoDescription = search.results[0].categories[0].description %}
+{% elsif seo.description %}
+    {% assign seoDescription = seo.description %}
+{% elsif store.description %}
+    {% assign seoDescription = store.description %}
+{% endif %}
+
+{% assign seoKeywords = '' %}
+{% if product.tags %}
+    {% assign seoKeywords = product.tags %}
+{% elsif search.results[0].categories[0].tags %}
+    {% assign seoKeywords = search.results[0].categories[0].tags %}
+{% elsif seo.keywords %}
+    {% assign seoKeywords = seo.keywords %}
+{% elsif store.keywords %}
+    {% assign seoKeywords = store.keywords %}
+{% endif %}
+
+{% assign seoImage = '' %}
+{% assign seoImageType = '' %}
+{% assign seoImageWidth = '' %}
+{% assign seoImageHeight = '' %}
+{% if product.medias[0].path %}
+    {% assign seoImage = product.medias[0].path | imgUrl: 200 %}
+    {% if product.medias[0].mimeType %}
+        {% assign seoImageType = product.medias[0].mimeType %}
+    {% endif %}
+    {% if product.medias[0].width %}
+        {% assign seoImageWidth = product.medias[0].width %}
+    {% endif %}
+    {% if product.medias[0].height %}
+        {% assign seoImageHeight = product.medias[0].height %}
+    {% endif %}
+{% elsif theme.logo.path %}
+    {% assign seoImage = theme.logo.path | imgUrl %}
+    {% if theme.logo.file.mimeType %}
+        {% assign seoImageType = theme.logo.file.mimeType %}
+    {% endif %}
+    {% if theme.logo.width %}
+        {% assign seoImageWidth = theme.logo.width %}
+    {% endif %}
+    {% if theme.logo.height %}
+        {% assign seoImageHeight = theme.logo.height %}
+    {% endif %}
+{%endif%}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <title>{{ seoTitle }}</title>
+    <meta http-equiv="Content-Language" content="pt-br">
+    <meta name="description" content="{{ seoDescription }}">
+    <meta name="keywords" content="{{ seoKeywords }}">
+    <meta name="theme-color" content="{{ themeConfig.color }}"/>
+    <link rel="icon" href="{{ theme.favicon.path | imgUrl: 48 }}" sizes="48x48" type="image/webp">
+    <link rel="shortcut icon" href="{{ theme.favicon.path | imgUrl: 48 }}" type="image/webp">
+    <link rel="apple-touch-icon" href="{{ theme.favicon.path | imgUrl: 180 }}" sizes="180x180">
+    <link rel="preconnect" href="https://salescdn.net" crossorigin>
+    <link rel="preload" href="{{ 'assets/theme.js' | themeAssetUrl }}" as="script">
+    <script src="{{ 'assets/theme.js' | themeAssetUrl }}"></script>
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-plugins.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
+    {%- comment -%}
+      Custom CSS (ordem importa):
+      1. mega-menu.css
+      2. header-v2.css
+      3. favorites.css
+      4. product-compare.css
+      5. product-hover-image.css
+      6. product-page-v2.css
+      7. header-orange-inline-v5 (<style> abaixo)
+      8. sda-conversion-redesign.css — conversão (por último)
+    {%- endcomment -%}
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/header-v2.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/favorites.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-page-v2.css' | themeAssetUrl }}">
+    {%- comment -%}
+      HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
+    {%- endcomment -%}
+    <style id="header-orange-inline-v5">
+body .header:not(.header-checkout) .header-link_cart .cart_quantity,
+body .header:not(.header-checkout) .cart_link .cart_quantity,
+body .header:not(.header-checkout) .cart_quantity,
+body .header:not(.header-checkout) [data-cart-quantity].cart_quantity,
+body .header:not(.header-checkout) .header-link_cart [data-cart-quantity],
+body .header:not(.header-checkout) .header-v2-action--cart .cart_quantity,
+body .header:not(.header-checkout) .header-v2-action--cart [data-cart-quantity] {
+  background-color: #f97316 !important;
+  background: #f97316 !important;
+  border-color: #ea580c !important;
+  color: #ffffff !important;
+}
+body .header:not(.header-checkout) .header-link_cart svg,
+body .header:not(.header-checkout) .header-link_cart .icon_cart,
+body .header:not(.header-checkout) .cart_link svg,
+body .header:not(.header-checkout) .header-v2-action--cart svg {
+  fill: #4b96d4 !important;
+}
+body .header:not(.header-checkout) .header a.header-link_cart:hover,
+body .header:not(.header-checkout) .header a.header-link_cart:focus,
+body .header:not(.header-checkout) .header a.cart_link:hover,
+body .header:not(.header-checkout) .header a.cart_link:focus,
+body .header:not(.header-checkout) .header-link_cart:hover,
+body .header:not(.header-checkout) .header-link_cart:focus,
+body .header:not(.header-checkout) .cart_link:hover,
+body .header:not(.header-checkout) .cart_link:focus,
+body .header:not(.header-checkout) .header-v2-action--cart:hover,
+body .header:not(.header-checkout) .header-v2-action--cart:focus {
+  color: #f97316 !important;
+  opacity: 1 !important;
+}
+body .header:not(.header-checkout) .header-link_cart:hover svg,
+body .header:not(.header-checkout) .header-link_cart:focus svg,
+body .header:not(.header-checkout) .header-link_cart:hover .icon_cart,
+body .header:not(.header-checkout) .header-link_cart:focus .icon_cart,
+body .header:not(.header-checkout) .cart_link:hover svg,
+body .header:not(.header-checkout) .cart_link:focus svg,
+body .header:not(.header-checkout) .header-v2-action--cart:hover svg,
+body .header:not(.header-checkout) .header-v2-action--cart:focus svg {
+  fill: #f97316 !important;
+}
+/* Header v2 — ícones outline e caixas de ação (vence theme-all) */
+body .header.header-v2 .header-v2-action__icon svg.sda-ico-stroke,
+body .header.header-v2 .header-v2-action__icon .sda-ico-stroke path,
+body .header.header-v2 .header-v2-action__icon .sda-ico-stroke circle {
+  fill: none !important;
+  stroke: #4b96d4 !important;
+}
+body .header.header-v2 a.header-v2-action,
+body .header.header-v2 a.header-v2-action:hover,
+body .header.header-v2 a.header-v2-action:focus {
+  color: #4b96d4 !important;
+}
+body .header.header-v2 .header-v2-action__label {
+  color: #4b96d4 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+body .header.header-v2 > .nav-content.content {
+  background: linear-gradient(180deg, #f6f9fc 0%, #eef3f8 100%) !important;
+}
+body .header.header-v2 .nav-content .nav-main_text {
+  color: #1a2d4a !important;
+}
+/* Faixa utilitária — Akhand + tamanho mock (vence theme-all) */
+body .header.header-v2 .header-utility,
+body .header.header-v2 .header-utility a,
+body .header.header-v2 .header-utility button,
+body .header.header-v2 .header-utility .header-utility__label {
+  font-family: Akhand, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+body .header.header-v2 .header-utility {
+  background: #0c1f3d !important;
+}
+body .header.header-v2 .header-utility .header-utility__inner {
+  min-height: 0 !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+@media (max-width: 991px) {
+  body .header.header-v2 .header-utility .header-utility__inner {
+    min-height: 32px !important;
+    max-height: 32px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  body .header.header-v2 .header-content .navbar,
+  body .header.header-v2 .header-content .navbar.header-v2-navbar {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+  body .header.header-v2 .nav-content .nav-main_link {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+  body .header.header-v2 .nav-content .nav-main_text {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+  }
+}
+body .header.header-v2 .header-v2-nav-row.nav-content,
+body .header.header-v2 > .nav-content.content.header-v2-nav-row {
+  min-height: 0 !important;
+}
+body .header.header-v2 .header-v2-nav-inner {
+  min-height: 0 !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+@media (max-width: 991px) {
+  body .header.header-v2 .header-content .navbar,
+  body .header.header-v2 .header-content .navbar.header-v2-navbar {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    background: transparent !important;
+  }
+  body .header.header-v2 .nav-content .nav-main_link {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    line-height: 1.2 !important;
+  }
+  body .header.header-v2 .nav-content .nav-main_text {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-transform: none !important;
+  }
+}
+body .header:not(.header-checkout) .header-link_cart:hover .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:focus .cart_quantity,
+body .header:not(.header-checkout) .cart_link:hover .cart_quantity,
+body .header:not(.header-checkout) .cart_link:focus .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:hover [data-cart-quantity],
+body .header:not(.header-checkout) .header-link_cart:focus [data-cart-quantity],
+body .header:not(.header-checkout) .header-v2-action--cart:hover [data-cart-quantity],
+body .header:not(.header-checkout) .header-v2-action--cart:focus [data-cart-quantity] {
+  background-color: #ea580c !important;
+  background: #ea580c !important;
+  border-color: #c2410c !important;
+  color: #ffffff !important;
+}
+/* Conta + telefone — normal escuro, hover laranja (vence .header a:hover verde) */
+body .header:not(.header-checkout) .header-box_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
+body .header:not(.header-checkout) .header-link_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
+  color: #101010 !important;
+}
+body .header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_icon svg {
+  fill: #4b96d4 !important;
+}
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:focus,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
+body .header:not(.header-checkout) .header a.account_link:hover,
+body .header:not(.header-checkout) .header a.account_link:focus {
+  color: #101010 !important;
+  opacity: 1 !important;
+}
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:hover,
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:focus,
+body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:hover,
+body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:focus,
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_text a.account_link:last-child,
+body .header:not(.header-checkout) .header-box-account-info:hover .header-link_text a.account_link:last-child {
+  color: #f97316 !important;
+}
+body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:hover,
+body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:focus,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:hover,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:focus,
+body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_text a.account_link:first-child,
+body .header:not(.header-checkout) .header-box-account_tel:hover .header-link_text a.account_link:first-child {
+  color: #f97316 !important;
+}
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg {
+  fill: #f97316 !important;
+}
+    </style>
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-conversion-redesign.css' | themeAssetUrl }}">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-semibold.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-black.woff2" type="font/woff2" crossorigin="anonymous">
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="{{ seoTitle }}"/>
+    <meta name="twitter:image" content="{{ seoImage }}"/>
+    <meta name="twitter:url" content="{{ store.url }}"/>
+    <meta name="twitter:description" content="{{ seoDescription }}">
+    <meta property="og:locale" content="pt-BR"/>
+    <meta property="og:title" content="{{ seoTitle }}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="{{ store.url }}"/>
+    <meta property="og:image" content="{{ seoImage }}"/>
+    <meta property="og:image:width" content="{{ seoImageWidth }}"/>
+    <meta property="og:image:height" content="{{ seoImageHeight }}"/>
+    {% if seoImageType != '' %}<meta property="og:image:type" content="{{ seoImageType }}"/>{% endif %}
+    <meta property="og:site_name" content="{{ seoTitle }}"/>
+    <meta property="og:description" content="{{ seoDescription }}"/>
+    <meta name="csrf-token" content="{{ csrfToken }}">
+    {%- for script in scripts.header -%}
+        {{ script.code }}
+    {%- endfor -%}
+    {% block head %}{% endblock %}
+</head>
+<script>window.__SITE_DOAR_CUSTOMER__ = {{ customer | json }};</script>
+<body x-data="setupStore()" x-init="init()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
+{%- for script in scripts.content -%}
+    {{ script.code }}
+{%- endfor -%}
+<span class="sidenav-overlay_background" onclick="changeSidenavOverlayBackground()"></span>
+<span class="loading-main loading"></span>
+{% render 'sections/check-cookie'%}
+{% render 'sections/sidenav-overlay-cart', cart: cart, store: store, themeConfig: themeConfig %}
+{% render 'sections/sidenav-overlay-favorites' %}
+{% render 'sections/mega-menu-ar' %}
+{% render 'sections/product-compare-panel' %}
+{% block content %}{% endblock %}
+{% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
+<script>
+    window.onunload = function(){};
+    window.onload = function() {
+        loadFilesJSDefer();
+        loadInputMask();
+    }
+    function loadFilesJSDefer() {
+        var all_defer_script = document.createElement('script');
+        all_defer_script.setAttribute('src', '{{ 'assets/theme-defer.js' | themeAssetUrl }}');
+        document.querySelector('body').appendChild(all_defer_script);
+    }
+    captureUrlParameter();
+    function captureUrlParameter() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let sellerInit = null;
+        let linkSellerInit = null;
+        let refInit = null;
+        urlParams.forEach((value, key) => {
+            if (key.toLowerCase() === 'seller') sellerInit = value;
+            if (key.toLowerCase() === 'linkseller') linkSellerInit = value;
+            if (key.toLowerCase() === 'ref') refInit = value;
+        });
+        try {
+            if (linkSellerInit) {
+                localStorage.setItem('linkSeller', linkSellerInit);
+                localStorage.removeItem('seller');
+                localStorage.removeItem('ref');
+            } else if (sellerInit) {
+                localStorage.setItem('seller', sellerInit);
+                localStorage.removeItem('linkSeller');
+                localStorage.removeItem('ref');
+            } else if (refInit) {
+                localStorage.setItem('ref', refInit);
+                localStorage.removeItem('seller');
+                localStorage.removeItem('linkSeller');
+            }
+        } catch (e) {}
+    }
+    window.currencyStore = {% if store.symbolPrice %}"{{ store.symbolPrice }}"{% else %}null{% endif %};
+</script>
+<script src="{{ scripts.main.src }}"></script>
+{%- comment -%} mega-menu.js define __SDA_HOVER_V2__; product-hover-image.js desliga se já ativo {%- endcomment -%}
+<script src="{{ 'assets/header-v2-mobile.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/favorites.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/sda-conversion-redesign.js' | themeAssetUrl }}" defer></script>
+<script>
+  window.addEventListener('load', function () {
+    if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
+      window.initMegaMenuAr();
+    }
+  });
+</script>
+<script>
+    function setupStore() {
+        return {
+            data: { isLogged: null, user: '' },
+            init: function initStore() {
+                var c = window.__SITE_DOAR_CUSTOMER__;
+                if (c) {
+                    this.changeCustomerLogin(c);
+                } else {
+                    this.data.isLogged = false;
+                    this.data.user = '';
+                }
+            },
+            headerLogout: function headerLogout() {
+                StoreSDK.request.post('/ajax/logout').then((res) => {
+                    window.location.href = window.location.href
+                });
+            },
+            changeCustomerLogin: function changeCustomerLogin(customer) {
+                this.data.isLogged = !!customer;
+                if (customer) {
+                    this.data.user = customer.name || customer.fantasyName || customer.email || '';
+                } else {
+                    this.data.user = '';
+                }
+                window.__SITE_DOAR_CUSTOMER__ = customer || null;
+                if (typeof window.sdaUpdateUtilityBarLabels === 'function') {
+                    window.sdaUpdateUtilityBarLabels(customer);
+                }
+                if (typeof window.sdaSyncMobileCatalogDock === 'function') {
+                    window.sdaSyncMobileCatalogDock();
+                }
+                if (window.SiteDoarFavorites && typeof window.SiteDoarFavorites.mergeGuestOnLogin === 'function') {
+                    window.SiteDoarFavorites.mergeGuestOnLogin();
+                }
+                if (this.data.isLogged) {
+                    var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
+                    for (var i = 0; i < elsShowcaseBtnLoginBuy.length; i++) {
+                        elsShowcaseBtnLoginBuy[i].classList.remove('d-hide');
+                    }
+                } else {
+                    var elsShowcasePriceLogin = document.querySelectorAll('.login-btn_not_logged');
+                    for (var i = 0; i < elsShowcasePriceLogin.length; i++) {
+                        elsShowcasePriceLogin[i].classList.remove('d-hide');
+                    }
+                }
+            },
+            openSideNavOverlayCartB2B: function openSideNavOverlayCartB2B() {
+                if(this.data.isLogged){
+                    openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true});
+                } else {
+                    openSideNavOverlay('.sidenav-overlay_account', true);
+                }
+            },
+            utilityGreeting: function utilityGreeting() {
+                if (!this.data.user) return 'Olá';
+                var parts = String(this.data.user).trim().split(' ');
+                var first = parts[0] || '';
+                return first ? ('Olá, ' + first) : 'Olá';
+            },
+            checkLoginLogged: function checkLoginLogged() {
+                if (this.data.isLogged) {
+                    var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
+                    for (var i = 0; i < elsShowcaseBtnLoginBuy.length; i++) {
+                        elsShowcaseBtnLoginBuy[i].classList.remove('d-hide');
+                    }
+                } else {
+                    var elsShowcasePriceLogin = document.querySelectorAll('.login-btn_not_logged');
+                    for (var i = 0; i < elsShowcasePriceLogin.length; i++) {
+                        elsShowcasePriceLogin[i].classList.remove('d-hide');
+                    }
+                }
+            },
+        }
+    }
+    window.__SITE_DOAR_CUSTOMER__ = {{ customer | json }} || null;
+    const customer = window.__SITE_DOAR_CUSTOMER__;
+    if (typeof mb_track !== 'undefined') {
+        mb_track('setRecoveryUrl', 'https://{{ store.url }}/checkout');
+    }
+    if (customer) {
+        if (typeof mb_track !== 'undefined') {
+            window.mb_track('accountSync', {
+                user: {
+                    user_id: customer.customerId,
+                    email: customer.email,
+                    phone: customer.cellphone,
+                    name: customer.name || customer.fantasyName,
+                }
+            });
+        }
+    }
+</script>
+<script>
+(function () {
+  function sdaHideStuckLoader() {
+    var el = document.querySelector('.loading-main.loading');
+    if (el) el.classList.remove('loading');
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(sdaHideStuckLoader, 50);
+    });
+  } else {
+    setTimeout(sdaHideStuckLoader, 50);
+  }
+  window.addEventListener('load', function () {
+    setTimeout(sdaHideStuckLoader, 150);
+  });
+  setTimeout(sdaHideStuckLoader, 12000);
+})();
+</script>
+{% block script_footer %}{% endblock %}
+{%- for script in scripts.footer -%}
+    {{ script.code }}
+{%- endfor -%}
+
+<!-- Popup Diagnóstico 360 — atrasado, 1× por sessão, compacto (round 2) -->
+<style>
+  #diag360backdrop { display: none !important; }
+  #diag360pop {
+    display: none;
+    position: fixed;
+    z-index: 2147483647;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    box-sizing: border-box;
+  }
+  #diag360pop.show {
+    display: block !important;
+    animation: d360in 0.35s ease forwards;
+  }
+  @keyframes d360in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  #d360close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.08);
+    color: #334155;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #d360close:hover, #d360close:focus { background: rgba(15, 23, 42, 0.14); color: #0f172a; }
+  .d360title { font-size: 16px; font-weight: 800; line-height: 1.35; margin: 0 32px 6px 0; color: #4c1d95; }
+  .d360text  { font-size: 13px; color: #64748b; line-height: 1.45; margin: 0 0 14px; }
+  .d360cta {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 44px; padding: 12px 16px; border-radius: 12px; border: 0;
+    background: linear-gradient(135deg, #6d28d9, #5b21b6);
+    color: #fff !important; font-weight: 700; font-size: 14px;
+    cursor: pointer; text-decoration: none !important;
+    box-shadow: 0 6px 18px rgba(109, 40, 217, 0.35);
+  }
+  .d360cta:hover { opacity: 0.92; }
+  .d360items, .d360badge, .d360skip { display: none !important; }
+  @media (min-width: 768px) {
+    #diag360pop {
+      bottom: 24px;
+      right: 24px;
+      width: 300px;
+      max-width: calc(100vw - 32px);
+      padding: 18px 18px 16px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid #e9d5ff;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+      color: #0f172a;
+    }
+  }
+  @media (max-width: 767px) {
+    #diag360pop {
+      left: 12px;
+      right: 12px;
+      bottom: calc(72px + env(safe-area-inset-bottom, 0));
+      max-height: 32vh;
+      padding: 16px 16px 14px;
+      border-radius: 16px 16px 12px 12px;
+      background: #fff;
+      border: 1px solid #e9d5ff;
+      box-shadow: 0 -4px 24px rgba(15, 23, 42, 0.14);
+    }
+    body.sda-pdp-sticky-on #diag360pop { bottom: calc(132px + env(safe-area-inset-bottom, 0)); }
+  }
+</style>
+
+<div id="diag360backdrop" aria-hidden="true"></div>
+<div id="diag360pop" role="dialog" aria-labelledby="d360title" aria-modal="false">
+  <button id="d360close" type="button" aria-label="Fechar">&#x2715;</button>
+  <p class="d360title" id="d360title">Não sabe qual BTU escolher?</p>
+  <p class="d360text">Descubra o modelo ideal para o seu ambiente.</p>
+  <a class="d360cta" href="/pagina/diagnostico-360">Fazer diagnóstico</a>
+</div>
+
+<script>
+(function(){
+  try {
+    var KEY = 'diag360_shown_session';
+    function isDiagPage() {
+      var p = (window.location.pathname || '').toLowerCase();
+      return p.indexOf('diagnostico') !== -1 || p.indexOf('diag360') !== -1;
+    }
+    function isMobile() {
+      return window.matchMedia('(max-width: 767px)').matches;
+    }
+    function jaViu() {
+      try { return sessionStorage.getItem(KEY) === '1'; } catch(e) { return false; }
+    }
+    function marcarVisto() {
+      try { sessionStorage.setItem(KEY, '1'); } catch(e) {}
+    }
+    if (jaViu() || isDiagPage()) return;
+    var el = document.getElementById('diag360pop');
+    if (!el) return;
+    var opened = false;
+    function fechar(e) {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
+      marcarVisto();
+      el.classList.remove('show');
+      el.style.display = 'none';
+    }
+    function abrir() {
+      if (opened || jaViu() || isDiagPage()) return;
+      opened = true;
+      marcarVisto();
+      el.classList.add('show');
+      el.style.display = 'block';
+    }
+    var btnClose = document.getElementById('d360close');
+    if (btnClose) btnClose.addEventListener('click', fechar);
+    function onScroll() {
+      if (window.scrollY > 100) abrir();
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.setTimeout(abrir, isMobile() ? 8000 : 10000);
+  } catch(e) {
+    console.error('Popup diag360:', e);
+  }
+})();
+</script>
+
+</body>
+</html>
+

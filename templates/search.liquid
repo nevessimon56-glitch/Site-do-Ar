@@ -1,0 +1,484 @@
+{% layout 'layout/theme' %}
+{% block content %}
+{% render 'sections/header', store: store, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
+<main class="search-main" x-data="setupSearch()" x-init="initSearch()">
+    <div class="search-content content">
+        <div class="search-container container">
+            <div class="columns">
+                <div class="column col-12">
+                    <section class="search-options search-options_mobile show-lg" x-data="{ isOpenOrder: false, isOpenFilter: false,  }">
+                        <div class="search-options-header">
+                            <div class="search-options-header_item" @click="isOpenFilter = !isOpenFilter, isOpenOrder = false">
+                                <div class="search-option-icon">
+                                    {{ themeConfig.icons.searchFilter }}
+                                </div>
+                                <div class="search-option-title">
+                                    Filtrado por
+                                </div>
+                            </div>
+                            <div class="search-options-header_item"  @click="isOpenFilter = false, isOpenOrder = false">
+                                <a class="search-view_link search-view_link__mobile" title="Visualização"
+                                   href="javascript:void(0)" data-type="grid">
+                                    <div class="search-option-icon search-option-icon__list">
+                                        {{ themeConfig.icons.viewList }}
+                                    </div>
+                                    <div class="search-option-icon search-option-icon__grid">
+                                        {{ themeConfig.icons.viewGrid }}
+                                    </div>
+                                </a>
+                                <div class="search-option-title">
+                                    Visualização
+                                </div>
+                            </div>
+                            <div class="search-options-header_item" @click="isOpenOrder = !isOpenOrder, isOpenFilter = false">
+                                <div class="search-option-icon">
+                                    {{ themeConfig.icons.searchOrder }}
+                                </div>
+                                <div class="search-option-title">
+                                    Ordenar
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search-option-body">
+                            <div class="search-options-body_item" :class="[isOpenFilter === true ? 'open' : '']">
+                                {% render 'sections/search-filter', search: search, currentPage: currentPage, themeConfig: themeConfig %}
+                            </div>
+                            <div class="search-options-body_item search-option_order" :class="[isOpenOrder === true ? 'open' : '']">
+                                {% render 'sections/search-order', search: search, currentPage: currentPage, themeConfig: themeConfig %}
+                            </div>
+                        </div>
+                    </section>
+                    <section class="search-header">
+                        {% assign typeSearchCategory = false %}
+                        {% if search.termCategory %}
+                            {% assign typeSearchCategory = true %}
+                        {% endif %}
+                        <div class="search-left float-left">
+                            {% case typeSearchCategory %}
+                                {% when true %}
+                                    <div>Você está em</div>
+                                    <ol>
+                                        {%- assign listCategories = search.termCategory.treeName | split: '##' -%}
+                                        {%- assign tempTreeSlug = search.termCategory.slug | replace: '/','##' -%}
+                                        {% for category in listCategories %}
+                                            <li>
+                                                <a title="{{ category }}" href="{{ tempTreeSlug | linkCategory: forloop.index }}">
+                                                    {% if forloop.last %}
+                                                        <h1>{{ category }}</h1>
+                                                    {% else %}
+                                                        <span>{{ category }}</span>
+                                                    {% endif %}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ol>
+                                {% else %}
+                                    <div>Você buscou por</div>
+                                    <h1>{{ search.term }}</h1>
+                            {% endcase %}
+                        </div>
+                        <div class="search-right float-right">
+                            <p><span class="sda-search-count">{{ search.pagination.total }}</span> produto{% if search.pagination.total != 1 %}s{% endif %} encontrado{% if search.pagination.total != 1 %}s{% endif %}</p>
+                        </div>
+                    </section>
+                    {% render 'sections/sda-diag-cta' %}
+                    <div class="sda-active-filters" id="sda-active-filters" aria-live="polite"></div>
+
+                  {% if search.termCategory %}
+    {% assign catDesc = '' %}
+    {% if search.termCategory.description and search.termCategory.description != '' %}
+        {% assign catDesc = search.termCategory.description %}
+    {% elsif search.termCategory.seoDescription and search.termCategory.seoDescription != '' %}
+        {% assign catDesc = search.termCategory.seoDescription %}
+    {% elsif search.termCategory.descriptionSeo and search.termCategory.descriptionSeo != '' %}
+        {% assign catDesc = search.termCategory.descriptionSeo %}
+    {% elsif search.termCategory.metaDescription and search.termCategory.metaDescription != '' %}
+        {% assign catDesc = search.termCategory.metaDescription %}
+    {% elsif search.termCategory.seo.description and search.termCategory.seo.description != '' %}
+        {% assign catDesc = search.termCategory.seo.description %}
+    {% endif %}
+    {% if catDesc != '' %}
+        <div class="category-description" style="padding: 16px 0 24px; color: #555; font-size: 15px; line-height: 1.7;">
+            {{ catDesc }}
+        </div>
+    {% endif %}
+{% endif %}
+
+                </div>
+                <div class="column col-3 hide-lg">
+                    {% render 'sections/search-filter', search: search, currentPage: currentPage, themeConfig: themeConfig %}
+                </div>
+                <div class="column col-9 col-lg-12">
+                    <section class="search-options search-options_top hide-lg">
+                        <div class="search-options-left float-left">
+                            {% render 'sections/search-order', search: search, currentPage: currentPage, themeConfig: themeConfig %}
+                            <div class="form-group float-left">
+                                <label class="form-label">Itens por página</label>
+                                <div class="dropdown">
+                                    <a href="javascript:void(0)" class="btn dropdown-toggle">
+                                        {% if search.query.qtdPag %}
+                                            {{ search.query.qtdPag }}
+                                        {% else %}
+                                            12
+                                        {% endif %}
+                                        {{ themeConfig.icons.arrow.down }}
+                                    </a>
+                                    <ul class="menu">
+                                        {%- assign optionsQtdPag = "12 24 36 48 60" | split: ' ' -%}
+                                        {%- for optionQtdPag in optionsQtdPag -%}
+                                            <li class="menu-item">
+                                                <a href="{{ currentPage.path | linkSearch: search.query, 'qtdPag', optionQtdPag }}">
+                                                    {{ optionQtdPag }}
+                                                </a>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search-options-right float-right">
+                            <div class="search-options-pagination float-left">
+                                <ul class="search-options-pagination_list pagination">
+                                    <li class="search-options-pagination_item search-options-pagination_item__prev page-item">
+                                        <a class="search-options-pagination_link search-options-pagination_link__arrow"
+                                           :class="state.searchPagination.btnPrev.visible ? '' : 'disable'"
+                                           :href="state.searchPagination.btnPrev.link" title="Anterior">
+                                            {{ themeConfig.icons.arrow.prev }}
+                                        </a>
+                                    </li>
+                                    <template x-if="state.searchPagination.btnFirst.visible">
+                                        <li class="search-options-pagination_item search-options-pagination_item__first page-item hide-lg">
+                                            <a class="search-options-pagination_link" :href="state.searchPagination.btnFirst.link" x-html="`${state.searchPagination.btnFirst.page} <span>...</span>`">
+                                            </a>
+                                        </li>
+                                    </template>
+                                    {% comment %}Pagination - First Page Temp{% endcomment %}
+                                    <li class="search-options-pagination_item page-item_temp search-options-pagination_item__first page-item hide-lg" :class="state.searchPagination.pages.length > 0 ? 'd-hide' : ''">
+                                        <a class="search-options-pagination_link" href="javascript:void(0)">
+                                            1 <span>...</span>
+                                        </a>
+                                    </li>
+                                    <template x-for="paginationPage in state.searchPagination.pages">
+                                        <li class="search-options-pagination_item page-item" :class="paginationPage.main ? 'active' : ''">
+                                            <a class="search-options-pagination_link" :href="paginationPage.link" x-text="paginationPage.page">
+                                            </a>
+                                        </li>
+                                    </template>
+                                    {% comment %}Pagination - Pages Temp{% endcomment %}
+                                    {% for i in (1..3) %}
+                                        <li class="search-options-pagination_item page-item page-item_temp" :class="state.searchPagination.pages.length > 0 ? 'd-hide' : ''">
+                                            <a class="search-options-pagination_link" href="javascript:void(0)">
+                                                {{ i }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                    {% comment %}Pagination - Last Page Temp{% endcomment %}
+                                    <li class="search-options-pagination_item page-item_temp search-options-pagination_item__last page-item hide-lg" :class="state.searchPagination.pages.length > 0 ? 'd-hide' : ''">
+                                        <a class="search-options-pagination_link" href="javascript:void(0)">
+                                            <span>...</span> 00
+                                        </a>
+                                    </li>
+                                    <template x-if="state.searchPagination.btnLast.visible">
+                                        <li class="search-options-pagination_item search-options-pagination_item__last page-item hide-lg">
+                                            <a class="search-options-pagination_link" :href="state.searchPagination.btnLast.link" x-html="`<span>...</span> ${state.searchPagination.btnLast.page}`">
+                                            </a>
+                                        </li>
+                                    </template>
+                                    <li class="search-options-pagination_item search-options-pagination_item__next page-item">
+                                        <a class="search-options-pagination_link search-options-pagination_link__arrow"
+                                           :class="state.searchPagination.btnNext.visible ? '' : 'disable'"
+                                           :href="state.searchPagination.btnNext.link"
+                                           title="Seguinte">
+                                            {{ themeConfig.icons.arrow.next }}
+                                        </a>
+                                    </li>
+                                </ul>
+                                <input type="hidden" name="pag" value="{{ search.pagination.current }}">
+                            </div>
+                            <div class="search-view float-right">
+                                <a class="search-view_link search-view_link__list" title="Visualizar modo lista"
+                                   href="javascript:void(0)" data-type="list">
+                                    {{ themeConfig.icons.viewList }}
+                                </a>
+                                <a class="search-view_link search-view_link__grid" title="Visualizar modo grade"
+                                   href="javascript:void(0)" data-type="grid">
+                                    {{ themeConfig.icons.viewGrid }}
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="showcase-search showcase showcase-search_list">
+                        <ul class="showcase-list">
+                            {%- render 'sections/showcase-model-product', products: search.results, themeConfig: themeConfig -%}
+                        </ul>
+                    </section>
+                    <section class="search-options search-options_bottom">
+                        <div class="search-options-pagination">
+                            <ul class="search-options-pagination_list pagination">
+                                <li class="search-options-pagination_item search-options-pagination_item__prev page-item">
+                                    <a class="search-options-pagination_link search-options-pagination_link__arrow"
+                                       :class="state.searchPagination.btnPrev.visible ? '' : 'disable'"
+                                       :href="state.searchPagination.btnPrev.link"
+                                       title="Anterior">
+                                        {{ themeConfig.icons.arrow.prev }}
+                                    </a>
+                                </li>
+                                <template x-if="state.searchPagination.btnFirst.visible">
+                                    <li class="search-options-pagination_item search-options-pagination_item__first page-item">
+                                        <a class="search-options-pagination_link" :href="state.searchPagination.btnFirst.link" x-html="`${state.searchPagination.btnFirst.page} <span>...</span>`">
+                                        </a>
+                                    </li>
+                                </template>
+                                <template x-for="paginationPage in state.searchPagination.pages">
+                                    <li class="search-options-pagination_item page-item" :class="paginationPage.main ? 'active' : ''">
+                                        <a class="search-options-pagination_link" :href="paginationPage.link" x-text="paginationPage.page">
+                                        </a>
+                                    </li>
+                                </template>
+                                <template x-if="state.searchPagination.btnLast.visible">
+                                    <li class="search-options-pagination_item search-options-pagination_item__last page-item">
+                                        <a class="search-options-pagination_link" :href="state.searchPagination.btnLast.link" x-html="`<span>...</span> ${state.searchPagination.btnLast.page}`">
+                                        </a>
+                                    </li>
+                                </template>
+                                <li class="search-options-pagination_item search-options-pagination_item__next page-item">
+                                    <a class="search-options-pagination_link search-options-pagination_link__arrow"
+                                       :class="state.searchPagination.btnNext.visible ? '' : 'disable'"
+                                       :href="state.searchPagination.btnNext.link"
+                                       title="Seguinte">
+                                        {{ themeConfig.icons.arrow.next }}
+                                    </a>
+                                </li>
+                            </ul>
+                            <input type="hidden" name="pag" value="{{ search.pagination.current }}">
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    function setupSearch() {
+        const state = {
+            searchPagination: {
+                maximumPagination: 3,
+                pages: [
+                    { link: 'javascript:void(0);', main: true, page: 1 },
+                    { link: 'javascript:void(0);', main: false, page: 2 },
+                    { link: 'javascript:void(0);', main: false, page: 3 },
+                ],
+                btnPrev: { link: 'javascript:void(0);', visible: false },
+                btnNext: { link: 'javascript:void(0);', visible: false },
+                btnFirst: { link: 'javascript:void(0);', page: 1, visible: false },
+                btnLast: { link: 'javascript:void(0);', page: 0, visible: false }
+            },
+            currentPagePath: '{{ currentPage.path }}',
+            search: {
+                {% if search.results %}
+                results: [
+                    {% for productSearch in search.results %}
+                    {
+                        categories: {% if productSearch.categories %}{{ productSearch.categories | json }}{% else %}{}{% endif %},
+                        grids: {% if productSearch.grids %}{{ productSearch.grids | json }}{% else %}{}{% endif %},
+                        price: {% if productSearch.price %}{{ productSearch.price | json }}{% else %}{}{% endif %},
+                        primaryPrice: {% if productSearch.primaryPrice %}{{ productSearch.primaryPrice | json }}{% else %}null{% endif %},
+                        sku: {% if productSearch.sku %}"{{ productSearch.sku }}"{% else %}null{% endif %},
+                        title: {% if productSearch.title %}"{{ productSearch.title }}"{% else %}null{% endif %},
+                        id: {% if productSearch.id %}{{ productSearch.id }}{% else %}null{% endif %}
+                    }{% if forloop.last %}{% else %},{% endif %}
+                    {% endfor %}
+                ]
+                {% endif %},
+                pagination: {% if search.pagination %}{{ search.pagination | json }}{% else %}{}{% endif %},
+                query: {% if search.query %}{{ search.query | json }}{% else %}{}{% endif %},
+                {% if search.term %}term: {{ search.term | json }},{% endif %}
+                {% if search.termCategory %}termCategory: {{ search.termCategory | json }},{% endif %}
+            },
+        }
+
+        function initSearch() {
+            this.state.searchPagination = StoreSDK.utils.initSearchPagination(this.state.search, this.state.currentPagePath);
+            searchFacebookPixel(this.state.search);
+            viewItemListGA(this.state.search);
+        }
+
+        function searchFacebookPixel(search) {
+            if (typeof fbq !== 'undefined') {
+                const tempSearchFacebookPixel = searchFacebookPixelTransform(search);
+                fbq('track', 'Search', tempSearchFacebookPixel);
+            }
+        }
+
+        function searchFacebookPixelTransform(search) {
+            let searchString = '';
+
+            if (search.termCategory && search.termCategory.treeName) {
+                searchString = search.termCategory.treeName.replaceAll('##', ' / ');
+            } else if (search.term && search.term.length > 0) {
+                searchString = search.term[0];
+            }
+
+            const result = {
+                content_ids: search.results.map((product) => (product.id)),
+                contents: search.results.map((product) => {
+                    const tempPrice = product.primaryPrice ? product.primaryPrice : product.price;
+                    const resultProduct = {
+                        id: product.id,
+                        title: product.title,
+                        price: tempPrice.promotionPrice > 0 ? tempPrice.promotionPrice :  tempPrice.price,
+                    };
+                    if (product.sku) {
+                        resultProduct.sku = product.sku;
+                    }
+                    return resultProduct;
+                }),
+                currency: 'BRL',
+                search_string: searchString,
+            };
+
+            if (search.termCategory && search.termCategory.treeName) {
+                result.content_category = search.termCategory.treeName.replaceAll('##', ' / ');
+            }
+
+            return result;
+        }
+
+        function viewItemListGA(search) {
+            if (typeof gtag !== 'undefined') {
+                const tempViewItemList = viewItemListGATransform(search);
+                gtag("event", "view_item_list", tempViewItemList);
+            }
+        }
+
+        function viewItemListGATransform(search) {
+            const itemsSearch = search.results.length > 0 ? search.results.map((product) => {
+                let mainPrice = product.price;
+
+                if (product.primaryPrice) {
+                    mainPrice = product.primaryPrice;
+                }
+
+                const returnProduct = {
+                    item_id: product.sku ? product.sku : product.id,
+                    item_name: product.title,
+                    currency: "BRL",
+                    price: (mainPrice.promotionPrice > 0 ? mainPrice.promotionPrice : mainPrice.price).toFixed(2),
+                    quantity: 1
+                }
+
+                if (product.categories && (product.categories.length > 0)) {
+                    const categorieMain = product.categories.reduce((categorie) => (categorie.main === true));
+                    const tempCategory = categorieMain.treeName ? categorieMain.treeName.split('##') : null;
+                    if (tempCategory) {
+                        tempCategory.forEach((category, index) => {
+                            if (index <= 0) {
+                                returnProduct['item_category'] = category;
+                            } else {
+                                returnProduct[`item_category${index + 1}`] = category;
+                            }
+                        });
+                    }
+                }
+                if (product.grids && (product.grids.length > 0)) {
+                    let tempItemVariant = '';
+                    product.grids.forEach((grid) => {
+                        if (grid.value) {
+                            tempItemVariant += `${grid.value} / `
+                        }
+                    });
+                    returnProduct['item_variant'] = tempItemVariant.replace(/ \/ $/, '')
+                }
+                return returnProduct;
+            }) : [];
+            let itemListName = 'Busca';
+            if (typeof search.termCategory !== 'undefined') {
+                itemListName = `Categoria: ${search.termCategory.treeName.replaceAll('##', ' / ')}`;
+            } else if ((typeof search.term != 'undefined') && search.term.length > 0) {
+                itemListName = `Busca por: ${search.term[0]}`;
+            }
+
+            const returnViewItemList = {
+                item_list_name: itemListName,
+                items: itemsSearch,
+            };
+            return returnViewItemList;
+        }
+
+        return {
+            state,
+            initSearch,
+        }
+    }
+</script>
+{% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig %}
+<script>
+    sliderPriceSearch();
+
+    function sliderPriceSearch() {
+        var rangeMin = Number('{{ search.facets.priceRange.min }}');
+        var rangeMax = Number('{{ search.facets.priceRange.max }}');
+        if (rangeMin < rangeMax) {
+            var sliders = document.getElementsByClassName('search-filter-price_slider');
+            [].slice.call(sliders).forEach(function (slider, index) {
+                var elPriceBySearchTemp = document.querySelectorAll('.priceBySearchTemp');
+
+                var precoTemp = elPriceBySearchTemp[index].getAttribute('data-pricesTemp').split(',') || [];
+                var min = (typeof precoTemp[0] !== 'undefined') && (precoTemp[0] > 0) ? precoTemp[0] : rangeMin;
+                var max = (typeof precoTemp[1] !== 'undefined') && (precoTemp[1] > 0) ? precoTemp[1] : rangeMax;
+
+                noUiSlider.create(slider, {
+                    start: [parseFloat(min), parseFloat(max)],
+                    connect: true,
+                    range: {
+                        'min': rangeMin,
+                        'max': rangeMax
+                    },
+                    behaviour: 'tap-drag',
+                });
+
+                var nodes = [
+                    document.querySelectorAll('.search-filter-price_lower')[index], //0
+                    document.querySelectorAll('.search-filter-price_upper')[index] //1,
+                ];
+
+                slider.noUiSlider.on('update', function (values, handle, unencoded, isTap, positions) {
+                    let priceBySearch = elPriceBySearchTemp[index].getAttribute('data-prices').split(',');
+                    priceBySearch[0] = parseFloat(priceBySearch[0]) > 0 ? parseFloat(priceBySearch[0]) : rangeMin;
+                    priceBySearch[1] = parseFloat(priceBySearch[1]) > 0 ? parseFloat(priceBySearch[1]) : rangeMax;
+                    priceBySearch[handle] = values[handle];
+                    priceBySearch = priceBySearch.map((priceTemp) => (parseFloat(priceTemp)));
+
+                    let priceBySearchTemp = elPriceBySearchTemp[index].getAttribute('data-pricesTemp').split(',');
+                    priceBySearchTemp[0] = parseFloat(priceBySearchTemp[0]) > 0 ? parseFloat(priceBySearchTemp[0]) : rangeMin;
+                    priceBySearchTemp[1] = parseFloat(priceBySearchTemp[1]) > 0 ? parseFloat(priceBySearchTemp[1]) : rangeMax;
+                    priceBySearchTemp = priceBySearchTemp.map((priceTemp) => (parseFloat(priceTemp)));
+
+                    elPriceBySearchTemp[index].setAttribute('data-prices', priceBySearch.join(','));
+                    nodes[handle].innerHTML = Number(values[handle]).toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    });
+
+                    if ((priceBySearch[0] !== priceBySearchTemp[0]) || (priceBySearch[1] !== priceBySearchTemp[1])) {
+                        if (document.querySelector('input.priceBySearch')) {
+                            var elPriceBySearch = document.querySelectorAll('input.priceBySearch');
+                            for (var i = 0; i < elPriceBySearch.length; i++) {
+                                elPriceBySearch[i].value = priceBySearch.join(',');
+                            }
+                        } else {
+                            var newItemInput = document.createElement('input');
+                            newItemInput.className = 'priceBySearch';
+                            newItemInput.name = 'preco';
+                            newItemInput.type = 'hidden';
+                            newItemInput.value = priceBySearch.join(',');
+                            let parentDiv = elPriceBySearchTemp[index].parentNode;
+                            parentDiv.insertBefore(newItemInput, elPriceBySearchTemp[index]);
+                        }
+                    }
+                });
+            });
+        }
+    }
+</script>
+{% endblock %}
