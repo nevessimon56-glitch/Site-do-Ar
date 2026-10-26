@@ -250,7 +250,8 @@
         if (t && labels.indexOf(t) === -1) labels.push(t);
       });
       if (labels.length) {
-        line.textContent = labels.slice(0, 4).join(' • ');
+        var maxLabels = window.matchMedia('(max-width: 767px)').matches ? 2 : 4;
+        line.textContent = labels.slice(0, maxLabels).join(' • ');
         line.removeAttribute('aria-hidden');
       }
     });
