@@ -96,7 +96,7 @@ Enviar se estiverem no editor (branch conversão; **podem faltar no Git**):
 | `sections/product-pdp-spec-bar.liquid` | **Sim** |
 | `sections/sda-pdp-trust.liquid` | **Sim** (auxiliar; trust inline no buy box) |
 | `sections/sda-pdp-recommendation.liquid` | **Sim** (repo; lista + JS sync área m²) |
-| `assets/product-page-v2.css` | **Não** (ou vazio no git) |
+| `assets/product-page-v2.css` | **Sim** (~3700 linhas) — escopo `#product-pdp-v2` / `.product-v2`; linkado **após** `sda-conversion-redesign.css`. |
 
 Sem esses arquivos, mudar só CSS em `sda-conversion-redesign.css` na PDP **não aplica** (faltam classes no HTML).
 
