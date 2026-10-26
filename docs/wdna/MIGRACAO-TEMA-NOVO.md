@@ -12,6 +12,9 @@
 2. **Não ative** o tema novo até passar o checklist §5.
 3. Trabalhe no editor de arquivos do tema **novo** (pasta isolada na plataforma).
 
+**Inventário completo do tema base (assets + layout + sections + templates):**  
+ver [`pacote-sda/TEMA-NOVO-INVENTARIO.md`](pacote-sda/TEMA-NOVO-INVENTARIO.md) — o que **manter**, **substituir** e **criar** em cima da lista que você colou do painel WDNA.
+
 ---
 
 ## 2. O que **NÃO** copiar do zip “novo” antigo
