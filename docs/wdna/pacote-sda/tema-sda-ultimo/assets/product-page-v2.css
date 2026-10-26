@@ -3793,4 +3793,22 @@
   body.sda-pdp-sticky-on.has-mobile-catalog-dock main.product-main {
     padding-bottom: calc(var(--sda-pdp-sticky-h, 72px) + var(--sda-mobile-dock-h, 58px) + env(safe-area-inset-bottom, 0px));
   }
+
+  body.sda-pdp-mobile .header-v2-mobile-strip,
+  body.sda-pdp-mobile .header:not(.header-checkout) > .nav-content:not(.sda-mobile-nav-revealed) {
+    display: none !important;
+  }
+
+  body.sda-pdp-mobile .header.header-v2:not(.header-checkout) .header-content {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  body.sda-pdp-mobile .header.header-v2:not(.header-checkout) .header-content .navbar {
+    min-height: 58px !important;
+  }
+
+  body.sda-pdp-mobile main.product-main {
+    scroll-padding-top: 72px;
+  }
 }

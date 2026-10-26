@@ -81,7 +81,7 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
     {%- comment -%}
       SDA ZERO — pilha mínima:
-      mega-menu.css (nav) | header-v2 | favorites | product-compare | product-hover-image (shim)
+      mega-menu.css (nav+dock) | header-v2.css (barra) | favorites | product-compare
       sda-tokens.css | sda-conversion-redesign.css | product-page-v2.css (PDP)
       sda-card.css = ÚNICO dono visual vitrine (.sda-card)
     {%- endcomment -%}
@@ -98,139 +98,14 @@
       HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
       Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
     {%- endcomment -%}
-    <style id="header-orange-inline-v5">
-/* HOTFIX: WDNA pode exibir JSON do comparador — ocultar até product-compare-data.liquid corrigido */
+    {%- comment -%} Hotfix comparador JSON — backup se product-compare.css não carregar {%- endcomment -%}
+    <style id="sda-compare-json-hotfix">
 .product-compare-data,
 .product-compare-json,
 textarea.product-compare-json,
 template.product-compare-data,
-div.product-compare-data {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  width: 0 !important;
-  max-height: 0 !important;
-  overflow: hidden !important;
-  position: absolute !important;
-  left: -9999px !important;
-  clip: rect(0, 0, 0, 0) !important;
-  border: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  resize: none !important;
-  white-space: nowrap !important;
-}
+div.product-compare-data { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; position: absolute !important; left: -9999px !important; }
 .showcase-card-btu { display: none !important; }
-
-/* SITE-EMERGENCY-v6 — header-v2 sem header-v2.css publicado (ícone SVG gigante + faixa preta) */
-.header.header-v2 .header-v2-action__icon svg,
-.header.header-v2 .header-utility__svg,
-.header.header-v2 svg.sda-ico-stroke,
-.header.header-v2 .logo svg,
-.header.header-v2 .logo picture + svg {
-  width: 24px !important;
-  height: 24px !important;
-  max-width: 32px !important;
-  max-height: 32px !important;
-}
-body .header.header-v2:not(.header-checkout) {
-  background: #f7f9fc !important;
-  background-color: #f7f9fc !important;
-}
-body .header.header-v2:not(.header-checkout) .header-content,
-body .header.header-v2:not(.header-checkout) .header-content .navbar {
-  background: #fff !important;
-  background-color: #fff !important;
-}
-
-/* Badge carrinho laranja (vence theme-custom #61bb47) */
-body .header:not(.header-checkout) .header-link_cart .cart_quantity,
-body .header:not(.header-checkout) .cart_link .cart_quantity,
-body .header:not(.header-checkout) .cart_quantity,
-body .header:not(.header-checkout) [data-cart-quantity].cart_quantity,
-body .header:not(.header-checkout) .header-link_cart [data-cart-quantity] {
-  background-color: #f97316 !important;
-  background: #f97316 !important;
-  border-color: #ea580c !important;
-  color: #ffffff !important;
-}
-body .header:not(.header-checkout) .header-link_cart svg,
-body .header:not(.header-checkout) .header-link_cart .icon_cart,
-body .header:not(.header-checkout) .cart_link svg {
-  fill: #4b96d4 !important;
-}
-body .header:not(.header-checkout) .header a.header-link_cart:hover,
-body .header:not(.header-checkout) .header a.header-link_cart:focus,
-body .header:not(.header-checkout) .header a.cart_link:hover,
-body .header:not(.header-checkout) .header a.cart_link:focus,
-body .header:not(.header-checkout) .header-link_cart:hover,
-body .header:not(.header-checkout) .header-link_cart:focus,
-body .header:not(.header-checkout) .cart_link:hover,
-body .header:not(.header-checkout) .cart_link:focus {
-  color: #f97316 !important;
-  opacity: 1 !important;
-}
-body .header:not(.header-checkout) .header-link_cart:hover svg,
-body .header:not(.header-checkout) .header-link_cart:focus svg,
-body .header:not(.header-checkout) .header-link_cart:hover .icon_cart,
-body .header:not(.header-checkout) .header-link_cart:focus .icon_cart,
-body .header:not(.header-checkout) .cart_link:hover svg,
-body .header:not(.header-checkout) .cart_link:focus svg {
-  fill: #f97316 !important;
-}
-body .header:not(.header-checkout) .header-link_cart:hover .cart_quantity,
-body .header:not(.header-checkout) .header-link_cart:focus .cart_quantity,
-body .header:not(.header-checkout) .cart_link:hover .cart_quantity,
-body .header:not(.header-checkout) .cart_link:focus .cart_quantity,
-body .header:not(.header-checkout) .header-link_cart:hover [data-cart-quantity],
-body .header:not(.header-checkout) .header-link_cart:focus [data-cart-quantity] {
-  background-color: #ea580c !important;
-  background: #ea580c !important;
-  border-color: #c2410c !important;
-  color: #ffffff !important;
-}
-/* Conta + telefone — normal escuro, hover laranja (vence .header a:hover verde) */
-body .header:not(.header-checkout) .header-box_account .header-link_text .account_link,
-body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
-body .header:not(.header-checkout) .header-link_account .header-link_text .account_link,
-body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
-  color: #101010 !important;
-}
-body .header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
-body .header:not(.header-checkout) .header-link-account_tel .header-link_icon svg {
-  fill: #4b96d4 !important;
-}
-body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
-body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:focus,
-body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:hover,
-body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
-body .header:not(.header-checkout) .header a.account_link:hover,
-body .header:not(.header-checkout) .header a.account_link:focus {
-  color: #101010 !important;
-  opacity: 1 !important;
-}
-body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:hover,
-body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:focus,
-body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:hover,
-body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:focus,
-body .header:not(.header-checkout) .header-link-account_info:hover .header-link_text a.account_link:last-child,
-body .header:not(.header-checkout) .header-box-account-info:hover .header-link_text a.account_link:last-child {
-  color: #f97316 !important;
-}
-body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:hover,
-body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:focus,
-body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:hover,
-body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:focus,
-body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_text a.account_link:first-child,
-body .header:not(.header-checkout) .header-box-account_tel:hover .header-link_text a.account_link:first-child {
-  color: #f97316 !important;
-}
-body .header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg,
-body .header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg,
-body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg,
-body .header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg {
-  fill: #f97316 !important;
-}
     </style>
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">

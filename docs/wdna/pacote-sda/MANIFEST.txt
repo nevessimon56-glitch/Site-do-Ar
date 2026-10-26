@@ -3,6 +3,8 @@
 
 layout/theme.liquid
 
+sections/header.liquid
+
 assets/theme-all.css
 assets/theme-custom.css
 assets/mega-menu.css

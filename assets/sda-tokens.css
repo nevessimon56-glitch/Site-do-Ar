@@ -75,6 +75,9 @@
   --sda-bp-mobile: 767px;
 
   /* Camadas fixas mobile */
+  --sda-nav-gradient: linear-gradient(135deg, #1a6eb5 0%, #2c8fd6 100%);
+  --sda-nav-solid: #1a6eb5;
+
   --sda-mobile-dock-h: 58px;
   --sda-compare-bar-reserve-h: 76px;
   --sda-pdp-sticky-h: 72px;

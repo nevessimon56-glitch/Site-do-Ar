@@ -2338,6 +2338,15 @@
   .nav-content .nav-main_content li:focus a {
     color: #145a96 !important;
   }
+
+  .header:not(.header-checkout) .nav-content .nav-main_text {
+    font-weight: 600;
+  }
+
+  .header:not(.header-checkout) .nav-main_item:last-child .nav-main_text,
+  .header:not(.header-checkout) a[href*="diagnostico"] .nav-main_text {
+    font-weight: 800;
+  }
 }
 
 
@@ -2359,8 +2368,8 @@
 /* Nav, header, filtros, botões e UI em preto profundo. Footer e cards de produto intactos. */
 
 :root {
-  --sda-nav-gradient: linear-gradient(135deg, #222222 0%, #0f0f0f 100%);
-  --sda-nav-solid: #141414;
+  --sda-nav-gradient: linear-gradient(135deg, #1a6eb5 0%, #2c8fd6 100%);
+  --sda-nav-solid: #1a6eb5;
   --sda-ui-accent: #1a1a1a;
   --sda-ui-accent-2: #111111;
   --sda-ui-accent-deep: #0a0a0a;
@@ -2375,33 +2384,9 @@
   --sda-ui-chip-hover-border: #999999;
 }
 
-/* --- Barra de navegação — preto/carvão --- */
-@media (min-width: 992px) {
+/* Nav desktop/mobile azul: bloco MEGA-MENU-NAV-BLUE (~L2200). Não sobrescrever com preto aqui. */
 
-  .header .nav-content,
-  .nav-content.content {
-    background: var(--sda-nav-gradient) !important;
-    background-color: var(--sda-nav-solid) !important;
-    border-top-color: rgba(255, 255, 255, 0.1) !important;
-  }
-
-  .nav-content .nav-main_content a,
-  .nav-content .nav-main_children {
-    color: var(--sda-ui-accent) !important;
-  }
-
-  .nav-content .nav-main_content li:hover,
-  .nav-content .nav-main_content li:focus {
-    background-color: var(--sda-ui-accent-soft) !important;
-  }
-
-  .nav-content .nav-main_content li:hover a,
-  .nav-content .nav-main_content li:focus a {
-    color: var(--sda-ui-accent-2) !important;
-  }
-}
-
-/* --- Mega menu --- */
+/* --- Mega menu (painel; acentos escuros só dentro do dropdown) --- */
 @media (min-width: 992px) {
 
   .mega-menu-ar__promo-banner {

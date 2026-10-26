@@ -699,3 +699,73 @@ main.search-main .showcase-search .showcase-item > .showcase-product,
 .showcase-search .sda-card:hover {
   transform: translateY(-2px) !important;
 }
+
+/* Comparar no footer (nunca overlay na imagem) — ex sda-conversion-redesign */
+.showcase-product.card.sda-product-card .showcase-compare-btn,
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.showcase-product.card.sda-product-card .showcase-compare-btn::before,
+.showcase-product.card.sda-card--cycle-frio .showcase-compare-btn::before,
+.showcase-product.card.sda-card--cycle-qf .showcase-compare-btn::before {
+  content: none !important;
+  display: none !important;
+}
+
+.sda-product-card .showcase-compare-btn[aria-pressed='true'],
+.sda-product-card .showcase-compare-btn.is-selected {
+  border-color: var(--sda-primary, #1976d2) !important;
+  background: var(--sda-primary-gradient) !important;
+  color: #fff !important;
+  box-shadow: var(--sda-primary-shadow) !important;
+}
+
+.sda-product-card .showcase-compare-btn[aria-pressed='true'] .showcase-compare-btn__label::before,
+.sda-product-card .showcase-compare-btn.is-selected .showcase-compare-btn__label::before {
+  content: '✓ ' !important;
+  font-weight: 700 !important;
+}
+
+main.search-main .showcase-search .showcase-product.card.sda-product-card .showcase-card-actions,
+main.home-main section.showcase .showcase-product.card.sda-product-card .showcase-card-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+}
+
+.showcase-model-9 .sda-product-card--promo {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  height: 100% !important;
+}
+
+.showcase-model-9 .sda-product-card--promo .card-left {
+  flex: 0 0 42% !important;
+  max-width: 42% !important;
+}
+
+.showcase-model-9 .sda-product-card--promo .card-right {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+}
+
+@media (max-width: 767px) {
+  .showcase-model-9 .sda-product-card--promo {
+    flex-direction: column !important;
+  }
+
+  .showcase-model-9 .sda-product-card--promo .card-left {
+    flex: none !important;
+    max-width: 100% !important;
+  }
+}
