@@ -92,6 +92,20 @@
       Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
     {%- endcomment -%}
     <style id="header-orange-inline-v5">
+/* HOTFIX: WDNA exibe JSON dentro de <template> — ocultar dados do comparador */
+.product-compare-data,
+.product-compare-json,
+template.product-compare-data,
+div.product-compare-data {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+.showcase-card-btu { display: none !important; }
+
 /* Badge carrinho laranja (vence theme-custom #61bb47) */
 body .header:not(.header-checkout) .header-link_cart .cart_quantity,
 body .header:not(.header-checkout) .cart_link .cart_quantity,

@@ -1,48 +1,47 @@
 # Recuperação urgente — site quebrado (WDNA)
 
-## Causa mais provável
+## Causa confirmada (loja ao vivo)
 
-Foi publicado o **`theme.liquid` longo (~646 linhas)** da fase de conversão, que pede arquivos que **não existem** na loja:
+Os cards estão mostrando **JSON gigante** (`{"id":193,"title":...`) porque a WDNA **não oculta** o conteúdo dentro de `<template class="product-compare-data">`. Isso “quebra” visualmente home, catálogo e vitrines.
 
-- `assets/header-v2.css`
-- `assets/favorites.css`
-- `assets/product-page-v2.css`
+Não é cache do navegador sozinho — é markup + plataforma.
 
-Ou foi ligado o **`sda-conversion-redesign.css`** (muitos `!important`) **sem** o restante do pacote (header v2, vitrine nova).
+## Passo 1 — Corrigir o comparador (OBRIGATÓRIO)
 
-Isso não apaga produtos — quebra **layout**, **header** e **cards**.
+Substitua **TODO** o conteúdo destes arquivos no editor WDNA:
 
-## Passo 1 — Voltar o layout (prioridade)
+| Arquivo na loja | Copiar do workspace |
+|-----------------|---------------------|
+| `sections/product-compare-data.liquid` | `docs/wdna/RECUPERACAO-SITE/product-compare-data.liquid` |
+| `assets/product-compare.css` | `docs/wdna/RECUPERACAO-SITE/product-compare.css` |
+| `assets/product-compare.js` | `docs/wdna/RECUPERACAO-SITE/product-compare.js` (recomendado) |
 
-No editor WDNA, substitua **TODO** o conteúdo de `layout/theme.liquid` pelo arquivo desta pasta:
+Salve, publique o tema e teste em aba anônima.
 
-**`docs/wdna/RECUPERACAO-SITE/layout-theme.liquid`**
+## Passo 2 — Layout (se header ainda estranho)
 
-(É a referência estável: mega-menu + compare + hover + CSS inline do header laranja/claro. **Não** chama `header-v2.css` nem `sda-conversion-redesign.css`.)
+Substitua **TODO** `layout/theme.liquid` por:
 
-Salve e abra a home em aba anônima (Ctrl+Shift+N).
+`docs/wdna/RECUPERACAO-SITE/layout-theme.liquid`
 
-## Passo 2 — Se a vitrine ainda der erro
+(inclui CSS inline que esconde JSON mesmo antes do `product-compare.css` carregar)
 
-Substitua **TODO** `sections/showcase-model-product.liquid` por:
+## Passo 3 — Remover o que ainda quebra
 
-**`docs/wdna/RECUPERACAO-SITE/showcase-model-product.liquid`**
+No `theme.liquid` da loja, **apague** links para arquivos que **não existem** no tema:
 
-## Passo 3 — Não apague na loja
+- `header-v2.css`, `favorites.css`, `product-page-v2.css`
+- `sda-conversion-redesign.css` / `.js`
 
-- `assets/theme-all.css` — se estiver muito pequeno (< 100 KB), restaure do GitHub (`main` ou backup `docs/wdna/backups/`).
-- `assets/mega-menu.css` — pode manter o seu arquivo grande de produção.
+A vitrine de conversão (`sda-card-footer`, `showcase-card-btu`) pode ficar; o CSS acima esconde o “BTUs” solto.
 
-## Passo 4 — Remover o que quebra (se ainda estiver no tema)
+## Passo 4 — theme-all.css
 
-No `theme.liquid` da loja, **apague** qualquer linha que aponte para:
+Se `theme-all.css` na loja tiver poucas linhas (~centenas), **restaure** do GitHub — arquivo truncado derruba layout global.
 
-- `sda-conversion-redesign.css`
-- `sda-conversion-redesign.js`
-- `header-v2.css` / `favorites.css` / `product-page-v2.css`
+## Ordem recomendada
 
-(só volte a usar conversão quando subirmos **todos** os arquivos juntos.)
-
-## Depois que o site voltar
-
-Avise no chat — montamos um pacote **único** (theme + CSS + sections) testado, sem referência a arquivo faltando.
+1. `product-compare-data.liquid`  
+2. `product-compare.css`  
+3. `layout/theme.liquid` (passo 2)  
+4. Hard refresh (Ctrl+Shift+R)

@@ -34,12 +34,12 @@
   function getProductDataFromCard(card) {
     if (!card) return null;
     var root = card.closest('.showcase-product, .showcase-item, .product-main, .product-content') || card;
+    var legacy = root.querySelector('.product-compare-json, .product-compare-data:not(template)');
+    if (legacy) return parseProductJson(legacy);
     var tpl = root.querySelector('template.product-compare-data');
     if (tpl && tpl.innerHTML) {
       return parseProductJson({ textContent: tpl.innerHTML });
     }
-    var legacy = root.querySelector('.product-compare-json');
-    if (legacy) return parseProductJson(legacy);
     var btn = root.querySelector('[data-compare-product]');
     if (btn) {
       try {

@@ -106,9 +106,25 @@
   box-shadow: 0 3px 10px rgba(26, 110, 181, 0.28);
 }
 
-.product-compare-data,
-.product-compare-json {
+/* WDNA não oculta conteúdo dentro de <template> — usar div.product-compare-json no Liquid */
+.showcase-card-btu {
   display: none !important;
+}
+
+.product-compare-data,
+.product-compare-json,
+template.product-compare-data,
+div.product-compare-data {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
 }
 
 /* Barra inferior de seleção */
