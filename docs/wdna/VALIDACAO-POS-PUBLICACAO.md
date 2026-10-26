@@ -30,17 +30,27 @@ Sintoma: bloco `{"id":…,"title":…}` visível entre título e preço.
 3. `layout/theme.liquid` — hotfix inline inclui `textarea.product-compare-json`
 4. `assets/product-compare.css` — ocultação reforçada
 
-## Checklist visual (marque na loja)
+## Resultado dos testes (26/10/2026 — validação manual)
+
+| # | Item | Resultado |
+|---|------|-----------|
+| A | JSON no card (renderizado) | **Aprovado** — só no HTML (`textarea.product-compare-json` + CSS); não visível na tela após reload |
+| B | Comparador (3 produtos) | **Aprovado** — barra inferior, painel “Comparar ar-condicionado”, tabela de specs; limpeza da seleção OK |
+| C | PDP mobile 375×812 | **Aprovado** — `#product-pdp-v2` rola com a página (`position: static`, esperado). Sticky de compra = **`.sda-pdp-sticky-buy`** (preço + COMPRAR AGORA ~69px, fixo no rodapé do viewport em 0 / 500 / 1100px scroll) |
+
+**Nota de produto:** não confundir `#product-pdp-v2` (wrapper do conteúdo PDP) com a barra sticky injetada por `sda-conversion-redesign.js` (classe `.sda-pdp-sticky-buy`).
+
+## Checklist visual (itens ainda não marcados na loja)
 
 | # | Onde | O que ver |
 |---|------|-----------|
 | 1 | Home vitrines | Comprar agora **acima**, Comparar **abaixo**, coluna |
 | 2 | Busca / categoria | Mesmo card; mobile 2 colunas sem checkbox Comparar no canto |
 | 3 | Card | **Sem** JSON visível; specs/chips legíveis |
-| 4 | Comparador | Até 3–4 produtos; barra inferior; painel abre |
-| 5 | PDP `#product-pdp-v2` | Preço Pix, comprar, specs; sticky mobile |
+| 4 | Comparador | *(validado — ver tabela acima)* |
+| 5 | PDP mobile | *(validado — sticky na barra `.sda-pdp-sticky-buy`, não no `#product-pdp-v2`)* |
 | 6 | Relacionados / últimos vistos | Markup igual vitrine (`.sda-product-card`) |
-| 7 | Model 9 promo | Timer + card horizontal; Comparar + Pix após republicar promo liquid |
+| 7 | Model 9 promo | Timer + card horizontal; Comparar + Pix |
 
 ## Arquivos desta fase (fase 2)
 

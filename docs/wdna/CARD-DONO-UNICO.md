@@ -10,7 +10,7 @@
 | **CSS layout/ações** | `assets/sda-conversion-redesign.css` | Tudo sob `.sda-product-card` |
 | **Compare (painel)** | `assets/product-compare.css` + `product-compare.js` | Barra/modal global; botões em **row** só em cards **sem** `.sda-product-card` |
 | **Hover imagem** | `assets/mega-menu.js` (`__SDA_HOVER_V2__`) | `data-hover-src` no Liquid; backup `product-hover-image.js` desligado se v2 ativo |
-| **PDP** | `#product-pdp-v2` + `product-page-v2.css` | Não reutilizar regras de grid de vitrine |
+| **PDP** | `#product-pdp-v2` + `product-page-v2.css`; sticky mobile = `.sda-pdp-sticky-buy` (JS) | Wrapper PDP rola; barra de compra fixa no rodapé |
 
 ## Arquivos que **não** estilizam card conversão
 
