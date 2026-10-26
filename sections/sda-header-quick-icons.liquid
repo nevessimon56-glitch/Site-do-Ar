@@ -1,0 +1,15 @@
+{% comment %} Atalhos compactos — pedidos e conta (sem favoritos: não há markup nativo no tema) {% endcomment %}
+<div class="sda-header-quick hide-lg" aria-label="Atalhos da conta">
+  <a class="sda-header-quick__item" href="/pedidos" title="Meus pedidos">
+    <span class="sda-header-quick__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M7 4h10l1 2h4v2H3V6h4l1-2zm-1 6h12v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V10zm3 2v8h2v-8H9zm4 0v8h2v-8h-2z" fill="currentColor"/></svg>
+    </span>
+    <span class="sda-header-quick__label">Pedidos</span>
+  </a>
+  <a class="sda-header-quick__item" href="javascript:void(0)" title="Minha conta" onclick="openSideNavOverlay('.sidenav-overlay_account', true)">
+    <span class="sda-header-quick__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-3.3 0-8 1.7-8 5v1h16v-1c0-3.3-4.7-5-8-5z" fill="currentColor"/></svg>
+    </span>
+    <span class="sda-header-quick__label">Conta</span>
+  </a>
+</div>

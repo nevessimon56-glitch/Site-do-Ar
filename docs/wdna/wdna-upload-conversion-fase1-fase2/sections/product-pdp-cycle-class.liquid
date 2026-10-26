@@ -1,0 +1,20 @@
+{% comment %}
+  Classe auxiliar para #product-pdp-v2 (CSS product-page-v2.css).
+  Não altera preço nem compra — só hint visual por categoria.
+{% endcomment %}
+{% assign sdaPdpCycle = 'pdp-cycle--default' %}
+{% if product.categories %}
+  {% for cat in product.categories %}
+    {% assign sdaCatName = cat.name | default: cat.treeName | downcase %}
+    {% if sdaCatName contains 'janela' %}
+      {% assign sdaPdpCycle = 'pdp-cycle--janela' %}
+      {% break %}
+    {% elsif sdaCatName contains 'piso' %}
+      {% assign sdaPdpCycle = 'pdp-cycle--piso-teto' %}
+      {% break %}
+    {% elsif sdaCatName contains 'split' or sdaCatName contains 'inverter' %}
+      {% assign sdaPdpCycle = 'pdp-cycle--split' %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{{ sdaPdpCycle }}

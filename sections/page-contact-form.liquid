@@ -1,0 +1,138 @@
+<!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+<form x-data="setupContact()" x-init="getContact()">
+    <div class="form-group form-group_custom"
+         :class="{ 'has-error': errors.name, 'onFocus': state.name === '' || typeof state.name === 'undefined' }">
+        <label class="form-label" for="name">Nome*</label>
+        <input id="name" class="form-input" name="name" autocomplete="name" autofocus="autofocus" type="text" x-model="state.name">
+        <p class="form-input-hint" x-text="errors.name"></p>
+    </div>
+    <div class="form-group form-group_custom"
+         :class="{ 'has-error': errors.email, 'onFocus': state.email === '' || typeof state.email === 'undefined' }">
+        <label class="form-label" for="email">Email*</label>
+        <input id="email" class="form-input" type="email" name="email" autocomplete="email" x-model="state.email">
+        <p class="form-input-hint" x-text="errors.email"></p>
+    </div>
+    <div class="form-group form-group_custom"
+         :class="{ 'has-error': errors.phone, 'onFocus': state.phone === '' || typeof state.phone === 'undefined' }">
+        <label class="form-label" for="tel">Telefone*</label>
+        <input id="tel" class="form-input masked-input" name="tel" type="tel" autocomplete="tel" data-mask='["(##) #####-####", "(##) ####-####"]' x-model="state.phone">
+        <p class="form-input-hint" x-text="errors.phone"></p>
+    </div>
+    <div class="form-group form-group_custom"
+         :class="{ 'has-error': errors.subject, 'onFocus': state.subject === '' || typeof state.subject === 'undefined' }">
+        <label class="form-label" for="subject">Assunto*</label>
+        <input id="subject" class="form-input" name="subject" type="text" x-model="state.subject">
+        <p class="form-input-hint" x-text="errors.subject"></p>
+    </div>
+    <div class="form-group form-group_custom"
+         :class="{ 'has-error': errors.content, 'onFocus': state.content === '' || typeof state.content === 'undefined' }">
+        <label class="form-label" for="message">Mensagem*</label>
+        <textarea id="message" class="form-input" name="message" rows="4" x-model="state.content">
+        </textarea>
+        <p class="form-input-hint" x-text="errors.content"></p>
+    </div>
+    <div class="columns" style="justify-content: flex-end">
+        <!-- <div class="column col-8 col-md-12">
+            <div class="form-group">
+                <div
+                    class="g-recaptcha"
+                    data-sitekey=""
+                >
+                </div>
+            </div>
+        </div> -->
+        <div class="column col-4 col-md-12">
+            <div class="form-group">
+                <button class="btn btn-login btn-block" type="button" @click="sendMessage()" aria-label="Salvar"
+                        style="justify-content: flex-end;">
+                    Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    function setupContact() {
+        let state = {
+            name: '',
+            email: '',
+            phone: '',
+            subject: '',
+            content: '',
+            // captchaToken: '',
+            query: {
+                subject: new URLSearchParams(location.search).get('subject'),
+                message: new URLSearchParams(location.search).get('message'),
+            }
+        }
+        function getContact() {
+            if(new URLSearchParams(location.search).get('subject')){
+                this.state.subject = new URLSearchParams(location.search).get('subject');
+            }
+            if(new URLSearchParams(location.search).get('message')){
+                this.state.content = new URLSearchParams(location.search).get('message');
+            }
+        }
+        function messageValidate() {
+            const errors = {};
+
+            if (!this.state.name) {
+                errors.name = 'Informe o nome corretamente';
+            }
+
+            if (!this.state.email || !StoreSDK.utils.validateEmail(this.state.email)) {
+                errors.email = 'Informe o email corretamente';
+            }
+
+            if (!this.state.phone) {
+                errors.phone = 'Informe o número corretamente';
+            }
+
+            if (!this.state.subject) {
+                errors.subject = 'Informe o assunto';
+            }
+
+            if (!this.state.content) {
+                errors.content = 'Informe a mensagem';
+            }
+
+            this.errors = errors;
+            return Object.keys(errors).length === 0;
+        }
+        function sendMessage() {
+            if (!this.messageValidate()) {
+                return;
+            }
+            openLoadingMain();
+            // this.state.captchaToken = grecaptcha.getResponse();
+            StoreSDK.request.post('/ajax/contact', this.state)
+                .then((response) => {
+                    this.state = {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        subject: '',
+                        content: '',
+                        // captchaToken: '',
+                    }
+                    closeLoadingMain();
+                    notyf.success('Mensagem enviada com sucesso!');
+                })
+                .catch((error) => {
+                    closeLoadingMain();
+                    notyf.open({
+                        type: 'warning',
+                        message: 'Desculpe, não foi possível enviar a mensagem!',
+                    });
+                });
+        }
+
+        return {
+            state,
+            errors: {},
+            getContact,
+            messageValidate,
+            sendMessage,
+        }
+    }
+</script>

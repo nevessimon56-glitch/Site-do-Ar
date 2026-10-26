@@ -1,0 +1,460 @@
+{% assign seoTitle = '' %}
+{% if product.seoTitle %}
+    {% assign seoTitle = product.seoTitle %}
+{% elsif search.results[0].categories[0].title %}
+    {% assign seoTitle = search.results[0].categories[0].title %}
+{% elsif seo.title %}
+    {% assign seoTitle = seo.title %}
+{% else %}
+    {% assign seoTitle = 'Site Do Ar | Ar-Condicionado com os Melhores Preços em SP' %}
+{% endif %}
+
+{% assign seoDescription = '' %}
+{% if product.seoDescription %}
+    {% assign seoDescription = product.seoDescription %}
+{% elsif search.results[0].categories[0].description %}
+    {% assign seoDescription = search.results[0].categories[0].description %}
+{% elsif seo.description %}
+    {% assign seoDescription = seo.description %}
+{% elsif store.description %}
+    {% assign seoDescription = store.description %}
+{% endif %}
+
+{% assign seoKeywords = '' %}
+{% if product.tags %}
+    {% assign seoKeywords = product.tags %}
+{% elsif search.results[0].categories[0].tags %}
+    {% assign seoKeywords = search.results[0].categories[0].tags %}
+{% elsif seo.keywords %}
+    {% assign seoKeywords = seo.keywords %}
+{% elsif store.keywords %}
+    {% assign seoKeywords = store.keywords %}
+{% endif %}
+
+{% assign seoImage = '' %}
+{% assign seoImageType = '' %}
+{% assign seoImageWidth = '' %}
+{% assign seoImageHeight = '' %}
+{% assign seoOgType = 'website' %}
+{% if product.id %}
+    {% assign seoOgType = 'product' %}
+{% endif %}
+{% assign seoSiteName = store.name %}
+{% assign seoPageUrl = store.url %}
+{% if product.id and product.slug %}
+    {% assign seoPageUrl = product.slug | linkProduct: product.id %}
+{% elsif currentPage.path and currentPage.path != '' %}
+    {% assign storeUrlBase = store.url %}
+    {% if storeUrlBase contains 'https://' or storeUrlBase contains 'http://' %}
+        {% assign seoPageUrl = storeUrlBase | append: currentPage.path %}
+    {% else %}
+        {% assign seoPageUrl = 'https://' | append: storeUrlBase | append: currentPage.path %}
+    {% endif %}
+{% endif %}
+
+{% if product.medias[0].path %}
+    {% assign seoImage = product.medias[0].path | imgUrl: 1200 %}
+    {% if product.medias[0].mimeType %}
+        {% assign seoImageType = product.medias[0].mimeType %}
+    {% endif %}
+    {% if product.medias[0].width %}
+        {% assign seoImageWidth = product.medias[0].width %}
+    {% endif %}
+    {% if product.medias[0].height %}
+        {% assign seoImageHeight = product.medias[0].height %}
+    {% endif %}
+{% elsif theme.logo.path %}
+    {% assign seoImage = theme.logo.path | imgUrl %}
+    {% if theme.logo.file.mimeType %}
+        {% assign seoImageType = theme.logo.file.mimeType %}
+    {% endif %}
+    {% if theme.logo.width %}
+        {% assign seoImageWidth = theme.logo.width %}
+    {% endif %}
+    {% if theme.logo.height %}
+        {% assign seoImageHeight = theme.logo.height %}
+    {% endif %}
+{%endif%}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <!-- Title -->
+    <title>{{ seoTitle | strip }}</title>
+    
+
+
+    <!-- Language -->
+    <meta http-equiv="Content-Language" content="pt-br">
+
+    <!-- SEO -->
+    <meta name="description" content="{{ seoDescription | strip }}">
+    <link rel="canonical" href="{{ seoPageUrl }}">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="{{ themeConfig.color }}"/>
+
+    <!-- Favicon -->
+   <link rel="icon" href="{{ theme.favicon.path | imgUrl: 48 }}" sizes="48x48" type="image/webp">
+<link rel="shortcut icon" href="{{ theme.favicon.path | imgUrl: 48 }}" type="image/webp">
+<link rel="apple-touch-icon" href="{{ theme.favicon.path | imgUrl: 180 }}" sizes="180x180">
+    <!-- Preconnect - Domain -->
+    <link rel="preconnect" href="https://salescdn.net" crossorigin>
+
+    <!-- Scripts -->
+    <link rel="preload" href="{{ 'assets/theme.js' | themeAssetUrl }}" as="script">
+    <script src="{{ 'assets/theme.js' | themeAssetUrl }}"></script>
+
+    <!-- Styles -->
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-plugins.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
+    {%- comment -%}
+      Custom CSS (ordem): mega-menu (cards, nav, hover v2) → product-compare → product-hover-image (shim legado + overrides finais).
+      Tokens de marca (--brand-*) vêm de theme-custom.css e devem carregar antes de mega-menu.css.
+    {%- endcomment -%}
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
+
+    <!-- Preconnect - Fonts -->
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="{{ seoTitle }}"/>
+    <meta name="twitter:image" content="{{ seoImage }}"/>
+    <meta name="twitter:url" content="{{ seoPageUrl }}"/>
+    <meta name="twitter:description" content="{{ seoDescription }}">
+
+    <!-- Open Graph -->
+    <meta property="og:locale" content="pt-BR"/>
+    <meta property="og:title" content="{{ seoTitle }}"/>
+    <meta property="og:type" content="{{ seoOgType }}"/>
+    <meta property="og:url" content="{{ seoPageUrl }}"/>
+    <meta property="og:image" content="{{ seoImage }}"/>
+    {% if seoImageWidth != '' %}<meta property="og:image:width" content="{{ seoImageWidth }}"/>{% endif %}
+    {% if seoImageHeight != '' %}<meta property="og:image:height" content="{{ seoImageHeight }}"/>{% endif %}
+    {% if seoImageType != '' %}<meta property="og:image:type" content="{{ seoImageType }}"/>{% endif %}
+    <meta property="og:site_name" content="{{ seoSiteName }}"/>
+    <meta property="og:description" content="{{ seoDescription }}"/>
+
+
+    <meta name="csrf-token" content="{{ csrfToken }}">
+    <script>window.WDNA_GOOGLE_MERCHANT_ID = 5783325896;</script>
+    {%- for script in scripts.header -%}
+        {{ script.code }}
+    {%- endfor -%}
+    {% block head %}{% endblock %}
+</head>
+<body x-data="setupStore()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
+{%- for script in scripts.content -%}
+    {{ script.code }}
+{%- endfor -%}
+<span class="sidenav-overlay_background" onclick="changeSidenavOverlayBackground()"></span>
+<span class="loading-main loading"></span>
+{% render 'sections/check-cookie'%}
+{% render 'sections/sidenav-overlay-cart', cart: cart, store: store, themeConfig: themeConfig %}
+{% render 'sections/mega-menu-ar' %}
+{% render 'sections/product-compare-panel' %}
+{% block content %}{% endblock %}
+{% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
+<script>
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            loadFilesJSDefer();
+            loadInputMask();
+        }
+    });
+
+    window.addEventListener('load', function () {
+        loadFilesJSDefer();
+        loadInputMask();
+    });
+    function loadFilesJSDefer() {
+        if (window.__wdnaThemeDeferLoading) {
+            return;
+        }
+        if (document.querySelector('script[data-wdna-theme-defer="1"]')) {
+            return;
+        }
+        window.__wdnaThemeDeferLoading = true;
+        var all_defer_script = document.createElement('script');
+        all_defer_script.setAttribute('data-wdna-theme-defer', '1');
+        all_defer_script.setAttribute('src', '{{ 'assets/theme-defer.js' | themeAssetUrl }}');
+        all_defer_script.onerror = function () {
+            window.__wdnaThemeDeferLoading = false;
+            if (all_defer_script.parentNode) {
+                all_defer_script.parentNode.removeChild(all_defer_script);
+            }
+        };
+        document.querySelector('body').appendChild(all_defer_script);
+    }
+
+    captureUrlParameter();
+
+    function captureUrlParameter() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            let sellerInit = null;
+            let linkSellerInit = null;
+            let refInit = null;
+
+            urlParams.forEach((value, key) => {
+                if (key.toLowerCase() === 'seller') {
+                    sellerInit = value;
+                }
+                if (key.toLowerCase() === 'linkseller') {
+                    linkSellerInit = value;
+                }
+                if (key.toLowerCase() === 'ref') {
+                    refInit = value;
+                }
+            });
+
+            if (linkSellerInit) {
+                localStorage.setItem('linkSeller', linkSellerInit);
+                localStorage.removeItem('seller');
+                localStorage.removeItem('ref');
+            } else if (sellerInit) {
+                localStorage.setItem('seller', sellerInit);
+                localStorage.removeItem('linkSeller');
+                localStorage.removeItem('ref');
+            } else if (refInit) {
+                localStorage.setItem('ref', refInit);
+                localStorage.removeItem('seller');
+                localStorage.removeItem('linkSeller');
+            }
+        } catch (e) {}
+    }
+
+    window.currencyStore = {% if store.symbolPrice %}"{{ store.symbolPrice }}"{% else %}null{% endif %};
+</script>
+{% if scripts.main.src %}<script src="{{ scripts.main.src }}"></script>{% endif %}
+{%- comment -%} mega-menu.js define __SDA_HOVER_V2__; product-hover-image.js é no-op se v2 ativo {%- endcomment -%}
+<script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
+<script>
+  window.addEventListener('load', function () {
+    if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
+      window.initMegaMenuAr();
+    }
+  });
+</script>
+<script>
+    function setupStore() {
+        return {
+            data: {
+                isLogged: null,
+                user: '',
+            },
+            headerLogout: function headerLogout() {
+                StoreSDK.request.post('/ajax/logout').then((res) => {
+                    window.location.href = window.location.href
+                });
+            },
+            changeCustomerLogin: function changeCustomerLogin(customer) {
+                this.data.isLogged = !!customer;
+                if(customer){
+                    this.data.user = customer.name || '';
+                }
+                if (this.data.isLogged) {
+                    var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
+                    for (var i = 0; i < elsShowcaseBtnLoginBuy.length; i++) {
+                        elsShowcaseBtnLoginBuy[i].classList.remove('d-hide');
+                    }
+                } else {
+                    var elsShowcasePriceLogin = document.querySelectorAll('.login-btn_not_logged');
+                    for (var i = 0; i < elsShowcasePriceLogin.length; i++) {
+                        elsShowcasePriceLogin[i].classList.remove('d-hide');
+                    }
+                }
+            },
+            openSideNavOverlayCartB2B: function openSideNavOverlayCartB2B() {
+                if(this.data.isLogged){
+                    openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true});
+                } else {
+                    openSideNavOverlay('.sidenav-overlay_account', true);
+                }
+            },
+            checkLoginLogged: function checkLoginLogged() {
+                if (this.data.isLogged) {
+                    var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
+                    for (var i = 0; i < elsShowcaseBtnLoginBuy.length; i++) {
+                        elsShowcaseBtnLoginBuy[i].classList.remove('d-hide');
+                    }
+                } else {
+                    var elsShowcasePriceLogin = document.querySelectorAll('.login-btn_not_logged');
+                    for (var i = 0; i < elsShowcasePriceLogin.length; i++) {
+                        elsShowcasePriceLogin[i].classList.remove('d-hide');
+                    }
+                }
+            },
+        }
+    }
+    window.__storeCustomer = {% if customer and customer.customerId %}{
+        customerId: {{ customer.customerId | json }},
+        email: {{ customer.email | json }},
+        cellphone: {{ customer.cellphone | json }},
+        name: {{ customer.name | json }},
+        fantasyName: {{ customer.fantasyName | json }}
+    }{% else %}null{% endif %};
+    const customer = window.__storeCustomer;
+
+    /*** Start - Mailbiz Account Sync Check ***/
+
+    if (typeof mb_track !== 'undefined') {
+        (function () {
+            var base = '{{ store.url }}';
+            var recovery = (base.indexOf('http://') === 0 || base.indexOf('https://') === 0)
+                ? base.replace(/\/$/, '') + '/checkout'
+                : 'https://' + base.replace(/\/$/, '') + '/checkout';
+            mb_track('setRecoveryUrl', recovery);
+        })();
+    }
+
+    if (customer) {
+        if (typeof mb_track !== 'undefined') {
+            window.mb_track('accountSync', {
+                user: {
+                    user_id: customer.customerId,
+                    email: customer.email,
+                    phone: customer.cellphone,
+                    name: customer.name || customer.fantasyName,
+                }
+            });
+        }
+    }
+
+    /*** End - Mailbiz Account Sync Check ***/
+</script>
+{% block script_footer %}{% endblock %}
+{%- for script in scripts.footer -%}
+    {{ script.code }}
+{%- endfor -%}
+
+{% comment %}
+  Popup Diagnóstico 360: CSS em assets/theme-custom.css.
+  HTML omitido só quando checkout (templates/checkout.liquid). Página de pedido (checkout-order) ainda recebe o markup; JS bloqueia via .checkout-main (allowPopupPage).
+  order.id no layout não está referenciado em outro arquivo — não usar até validar escopo global no staging WDNA.
+{% endcomment %}
+{% unless checkout %}
+<div id="diag360backdrop" aria-hidden="true"></div>
+<div id="diag360pop" role="dialog" aria-modal="true" aria-labelledby="d360title" hidden>
+  <button id="d360close" type="button" aria-label="Fechar">&#x2715;</button>
+  <div class="d360badge"><span class="d360dot"></span> Novo</div>
+  <p class="d360title" id="d360title">Qual ar-condicionado é ideal para você?</p>
+  <p class="d360text">Responda 10 perguntas e descubra a recomendação certa para o seu ambiente.</p>
+  <div class="d360items">
+    <span class="d360item">BTUs ideais para o seu espaço</span>
+    <span class="d360item">Perfil personalizado de climatização</span>
+    <span class="d360item">Link direto para os produtos certos</span>
+  </div>
+  <a class="d360cta" href="/pagina/diagnostico-360">&#127777; Fazer diagnóstico grátis</a>
+  <button class="d360skip" id="d360skip" type="button">Agora não</button>
+</div>
+
+<script>
+(function(){
+  try {
+    var KEY = 'diag360_shown_session';
+    var lastFocused = null;
+
+    function isDiagPage() {
+      var p = (window.location.pathname || '').toLowerCase();
+      return p.indexOf('diagnostico') !== -1 || p.indexOf('diag360') !== -1;
+    }
+
+    function allowPopupPage() {
+      var p = (window.location.pathname || '').toLowerCase();
+      if (isDiagPage()) return false;
+      if (/checkout|cadastro|register|\/conta|\/account|\/cliente|pedido/.test(p)) return false;
+      if (document.querySelector('.checkout-main, .account-main')) return false;
+      if (p === '/' || p === '') return true;
+      if (document.querySelector('.home-main, .product-main, .search-main')) return true;
+      return false;
+    }
+
+    function isMobile() {
+      return window.matchMedia('(max-width: 767px)').matches;
+    }
+
+    // Controle por SESSÃO: enquanto a aba/navegação continuar (mesma visita ao site),
+    // o popup já apareceu uma vez não aparece de novo, mesmo trocando de página
+    // (home, produto, categoria etc). Quando a pessoa fecha o site e entra de novo
+    // (nova sessão), o sessionStorage zera e o popup pode aparecer outra vez.
+    function jaViu() {
+      try { return sessionStorage.getItem(KEY) === '1'; } catch(e) { return false; }
+    }
+
+    function marcarVisto() {
+      try { sessionStorage.setItem(KEY, '1'); } catch(e) {}
+    }
+
+    if (jaViu()) return;
+    if (!allowPopupPage()) return;
+
+    var el = document.getElementById('diag360pop');
+    var backdrop = document.getElementById('diag360backdrop');
+    var btnClose = document.getElementById('d360close');
+    var btnSkip = document.getElementById('d360skip');
+    if (!el) return;
+
+    function fechar(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      el.classList.remove('show');
+      el.setAttribute('hidden', '');
+      if (backdrop) {
+        backdrop.classList.remove('show');
+        backdrop.setAttribute('aria-hidden', 'true');
+      }
+      if (lastFocused && typeof lastFocused.focus === 'function') {
+        lastFocused.focus();
+      }
+    }
+
+    function abrir() {
+      if (!allowPopupPage() || jaViu()) return;
+      marcarVisto();
+      lastFocused = document.activeElement;
+      el.removeAttribute('hidden');
+      el.classList.add('show');
+      if (backdrop && isMobile()) {
+        backdrop.classList.add('show');
+        backdrop.setAttribute('aria-hidden', 'false');
+      }
+      if (btnClose) btnClose.focus();
+    }
+
+    if (btnClose) btnClose.addEventListener('click', fechar);
+    if (btnSkip) btnSkip.addEventListener('click', fechar);
+    if (backdrop) backdrop.addEventListener('click', fechar);
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && el.classList.contains('show')) fechar(ev);
+    });
+
+    function foraClick(e) {
+      if (!el.classList.contains('show')) return;
+      if (el.contains(e.target)) return;
+      fechar(e);
+    }
+    document.addEventListener('mousedown', foraClick);
+    document.addEventListener('touchstart', foraClick, { passive: true });
+
+    setTimeout(abrir, isMobile() ? 3000 : 5000);
+  } catch(e) {
+    console.error('Popup diag360:', e);
+  }
+})();
+</script>
+{% endunless %}
+
+</body>
+</html>
