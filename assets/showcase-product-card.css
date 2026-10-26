@@ -282,16 +282,11 @@
   --sda-card-total-min-mobile: 328px;
 }
 
-/* Listas de vitrine: flex stretch (substitui float/table do theme-all) */
-main.home-main .showcase-products_grid ul.showcase-products,
-main.home-main .showcase-products ul.showcase-list,
+/* Grades (NÃO carrossel tns — .showcase-products_carousel usa div.showcase-list) */
+main.home-main .showcase-products_grid ul.showcase-list,
 main.search-main .showcase-search.showcase-search_grid ul.showcase-list,
-main.search-main .showcase-search ul.showcase-products,
-.product-showcase .showcase-products ul.showcase-list,
-.product-showcase .showcase-related ul.showcase-list,
-.product-showcase .showcase-last-viewed ul.showcase-list,
-.showcase-products_grid > ul,
-.showcase-products .showcase-list {
+.showcase-products_grid > ul.showcase-list,
+.showcase-search.showcase-search_grid ul.showcase-list {
   display: flex !important;
   flex-wrap: wrap !important;
   align-items: stretch !important;
@@ -299,19 +294,87 @@ main.search-main .showcase-search ul.showcase-products,
 }
 
 main.home-main .showcase-products_grid .showcase-item,
-main.home-main .showcase-products .showcase-item,
-main.search-main .showcase-search .showcase-item,
-.product-showcase .showcase .showcase-item,
+main.search-main .showcase-search.showcase-search_grid .showcase-item,
 .showcase-products_grid .showcase-item,
-.showcase-products .showcase-item,
-.showcase-list .showcase-item,
-.slider-products .showcase-item {
+.showcase-search.showcase-search_grid .showcase-item,
+.slider-products.showcase-promotions-list .showcase-item {
   float: none !important;
   display: flex !important;
   flex-direction: column !important;
   align-self: stretch !important;
   height: auto !important;
   margin-bottom: 16px !important;
+}
+
+/* Carrossel home / relacionados — Tiny Slider (tns); wrapper NÃO pode ser flex-wrap */
+.showcase-products_carousel > .showcase-list,
+.showcase-list-related {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  flex-wrap: unset !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.showcase-products_carousel > .showcase-list > .tns-outer,
+.showcase-list-related > .tns-outer {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 0 0 100% !important;
+  min-width: 0 !important;
+}
+
+.showcase-products_carousel .tns-outer,
+.showcase-products_carousel .tns-inner,
+.showcase-list-related .tns-outer,
+.showcase-list-related .tns-inner {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.showcase-products_carousel .tns-ovh,
+.showcase-list-related .tns-ovh {
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+.showcase-products_carousel .tns-slider,
+.showcase-list-related .tns-slider {
+  display: flex !important;
+  align-items: stretch !important;
+}
+
+.showcase-products_carousel .tns-item,
+.showcase-list-related .tns-item {
+  box-sizing: border-box !important;
+  height: auto !important;
+  align-self: stretch !important;
+}
+
+@media (max-width: 991px) {
+  main.home-main section.showcase .showcase-products_carousel .tns-item,
+  .showcase-list-related .tns-item {
+    align-self: stretch !important;
+    vertical-align: top !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-slider .showcase-item,
+  main.home-main section.showcase .showcase-products_carousel .tns-item .showcase-item {
+    align-self: stretch !important;
+    min-height: var(--sda-card-total-min-mobile) !important;
+  }
+}
+
+.showcase-products_carousel .showcase-item,
+.showcase-list-related .showcase-item {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-bottom: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
 }
 
 main.home-main .showcase-products_grid .showcase-item > .showcase-product,
@@ -322,7 +385,7 @@ main.search-main .showcase-search .showcase-item > .showcase-product,
   width: 100% !important;
 }
 
-/* Carrosséis (slick) — slides com mesma altura */
+/* Slick (se existir em alguma vitrine) */
 .showcase-list.slick-initialized .slick-track {
   display: flex !important;
   align-items: stretch !important;
@@ -444,19 +507,30 @@ main.search-main .showcase-search .showcase-item > .showcase-product,
     align-self: stretch !important;
   }
 
-  /* Carrosséis home + relacionados — slide estica igual grid */
-  main.home-main section.showcase .showcase-products_carousel .showcase-list.slick-initialized .slick-track,
-  .product-showcase .showcase-related .showcase-list.slick-initialized .slick-track,
-  .product-showcase .showcase-last-viewed .showcase-list.slick-initialized .slick-track {
-    display: flex !important;
-    align-items: stretch !important;
+  /* Carrossel tns — 2 cards visíveis, mesma altura que grade 2col */
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card.sda-product-card,
+  .showcase-list-related .showcase-product.card.sda-product-card {
+    min-height: var(--sda-card-total-min-mobile) !important;
+    height: 100% !important;
   }
 
-  main.home-main section.showcase .showcase-products_carousel .showcase-item,
-  .product-showcase .showcase-related .showcase-item,
-  .product-showcase .showcase-last-viewed .showcase-item {
-    min-height: var(--sda-card-total-min-mobile) !important;
-    align-self: stretch !important;
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_image.card-image,
+  .showcase-list-related .showcase-product.card.sda-product-card > .showcase-product_image.card-image {
+    height: var(--sda-card-img-h-mobile) !important;
+    min-height: var(--sda-card-img-h-mobile) !important;
+    max-height: var(--sda-card-img-h-mobile) !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image,
+  .showcase-list-related .showcase-product_link__image {
+    max-height: calc(var(--sda-card-img-h-mobile) - 12px) !important;
+    min-height: calc(var(--sda-card-img-h-mobile) - 12px) !important;
+    height: calc(var(--sda-card-img-h-mobile) - 12px) !important;
+  }
+
+  main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image img,
+  .showcase-list-related .showcase-product_link__image img {
+    max-height: calc(var(--sda-card-img-h-mobile) - 20px) !important;
   }
 
   .showcase-product.card.sda-product-card--v2,

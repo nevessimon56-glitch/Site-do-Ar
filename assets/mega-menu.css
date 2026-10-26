@@ -5284,16 +5284,14 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
 
   .showcase-search .showcase-list,
   .showcase-search.showcase-search_grid--mobile-2col .showcase-list,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-list,
-  main.home-main section.showcase .showcase-products_carousel .showcase-list {
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-list {
     align-items: flex-start !important;
     align-content: flex-start !important;
   }
 
   .showcase-search .showcase-item,
   .showcase-search.showcase-search_grid--mobile-2col .showcase-item,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-item,
-  main.home-main section.showcase .showcase-products_carousel .showcase-item {
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-item {
     height: auto !important;
     align-self: flex-start !important;
     flex-grow: 0 !important;
@@ -5305,7 +5303,7 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
   .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card:not(.sda-product-card),
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product,
   main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card:not(.sda-product-card),
-  main.home-main section.showcase .showcase-products_carousel .showcase-product,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card),
   main.home-main section.showcase .showcase-products_carousel .showcase-product.card:not(.sda-product-card),
   .showcase-item .showcase-product.card:not(.sda-product-card) {
     height: auto !important;
@@ -5532,21 +5530,14 @@ main.home-main section.showcase .product-hover-wrap img:not(.product-hover-img--
     padding: 4px 4px 0 !important;
   }
 
-  main.home-main section.showcase .showcase-products_carousel .showcase-slider .showcase-item,
-  main.home-main section.showcase .showcase-products_carousel .tns-item {
-    height: auto !important;
-    min-height: 0 !important;
-    align-self: flex-start !important;
-  }
-
-  main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image,
-  main.home-main section.showcase .showcase-products_carousel .product-hover-wrap {
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .showcase-product_link__image,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .product-hover-wrap {
     max-height: 80px !important;
     min-height: 0 !important;
   }
 
-  main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image img:not(.product-hover-img--hover),
-  main.home-main section.showcase .showcase-products_carousel .product-hover-wrap img:not(.product-hover-img--hover) {
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .showcase-product_link__image img:not(.product-hover-img--hover),
+  main.home-main section.showcase .showcase-products_carousel .showcase-product:not(.sda-product-card) .product-hover-wrap img:not(.product-hover-img--hover) {
     max-height: 74px !important;
   }
 }
