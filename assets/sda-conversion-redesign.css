@@ -146,17 +146,41 @@
   }
 }
 
-/* —— Cabeçalho: hierarquia mais limpa (home, catálogo e produto iguais) —— */
-body:has(main.product-main) .header:not(.header-checkout),
-body:has(main.search-main) .header:not(.header-checkout),
-body:has(main.home-main) .header:not(.header-checkout) {
-  background-color: #f8f8f8 !important;
+/* —— Cabeçalho: remove faixa preta (header-v2.css) — fundo claro contínuo —— */
+body .header.header-v2:not(.header-checkout) {
+  background: var(--sda-bg) !important;
+  background-color: var(--sda-bg) !important;
 }
 
-body:has(main.product-main) .header:not(.header-checkout) .header-content .navbar,
-body:has(main.search-main) .header:not(.header-checkout) .header-content .navbar,
-body:has(main.home-main) .header:not(.header-checkout) .header-content .navbar {
-  background-color: #f8f8f8 !important;
+body .header.header-v2:not(.header-checkout) .header-content {
+  background: var(--sda-bg) !important;
+  background-color: var(--sda-bg) !important;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+body .header.header-v2:not(.header-checkout) .header-content .navbar,
+body .header.header-v2:not(.header-checkout) .header-content .navbar.header-v2-navbar {
+  background: #fff !important;
+  background-color: #fff !important;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--sda-radius);
+  box-shadow: var(--sda-shadow);
+  min-height: 74px;
+}
+
+body .header.header-v2:not(.header-checkout) .header-v2-search .form-input,
+body .header.header-v2:not(.header-checkout) .header-v2-search-pill__input,
+body .header.header-v2:not(.header-checkout) .search-desktop .form-input {
+  background: #f1f5f9 !important;
+  color: var(--sda-text) !important;
+  border-color: #e2e8f0 !important;
+}
+
+body .header.header-v2:not(.header-checkout) .header-v2-search .form-input::placeholder,
+body .header.header-v2:not(.header-checkout) .header-v2-search-pill__input::placeholder,
+body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeholder {
+  color: var(--sda-text-muted) !important;
 }
 
 .header:not(.header-checkout) .header-content .navbar {
