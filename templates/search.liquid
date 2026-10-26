@@ -78,9 +78,10 @@
                             {% endcase %}
                         </div>
                         <div class="search-right float-right">
-                            <p>Itens encontrados {{ search.pagination.total }}</p>
+                            <p><span class="sda-search-count">{{ search.pagination.total }}</span> produto{% if search.pagination.total != 1 %}s{% endif %} encontrado{% if search.pagination.total != 1 %}s{% endif %}</p>
                         </div>
                     </section>
+                    {% render 'sections/sda-diag-cta' %}
 
                   {% if search.termCategory %}
     {% assign catDesc = '' %}

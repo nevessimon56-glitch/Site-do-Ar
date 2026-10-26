@@ -17,7 +17,7 @@
 {% endif %}
 {% for product in products limit: maximumProducts %}
 
-    {% assign buyButtonText = 'Comprar' %}
+    {% assign buyButtonText = 'Comprar agora' %}
     {% if product.customBuyButton and product.customBuyButton.type == 'product' %}
         {% assign buyButtonText = 'Ver mais' %}
         {% if product.customBuyButton.text and product.customBuyButton.text != '' %}
@@ -110,15 +110,15 @@
                     <div class="showcase-prices"></div>
                     {% assign msgChatContact = 'Olá, gostaria de saber preço do produto:%0A%0A'| append: product.title | append: '%0AID: ' | append: product.id %}
                     <div class="showcase-card-actions">
+                        <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
+                            {{ buyButtonText }}
+                        </a>
                         <button type="button"
                                 class="showcase-compare-btn"
                                 data-compare-id="{{ product.id }}"
                                 aria-pressed="false">
                             Comparar
                         </button>
-                        <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
-                            Comprar
-                        </a>
                     </div>
                 {% else %}
                     {% if themeConfig.price.type == 'show' or themeConfig.price.type == 'show-logged' %}
@@ -132,7 +132,7 @@
                                     <del class="showcase-prices_strike"><s>{{ listPriceCard | money }}</s></del>
                                 {% endif %}
                                 <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b></p>
-                                <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% off no Pix</p>
+                                <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% de desconto no Pix</p>
                             {% else %}
                                 <p class="showcase-prices_price"><b>{{ productPricePrimary.price | money }}</b></p>
                             {% endif %}
@@ -151,15 +151,15 @@
                         </div>
                     {% endif %}
                     <div class="showcase-card-actions">
+                        <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
+                            {{ buyButtonText }}
+                        </a>
                         <button type="button"
                                 class="showcase-compare-btn"
                                 data-compare-id="{{ product.id }}"
                                 aria-pressed="false">
                             Comparar
                         </button>
-                        <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
-                            Comprar
-                        </a>
                     </div>
                 {% endif %}
             </div>

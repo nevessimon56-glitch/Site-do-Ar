@@ -7,7 +7,7 @@
         x-on:change-product-group-purchase.window="handleProductGroupPurchase($event.detail)"
         x-data="setupProduct()" x-init="initProduct()">
 
-        {% assign buyButtonText = 'Comprar' %}
+        {% assign buyButtonText = 'Comprar agora' %}
 
         <!-- TODO: Não alterar mainPrice. Se caso alterar, vai afetar no calculo de pagamento-->
         {% assign mainPrice = product.price.price %}
@@ -410,7 +410,7 @@
                                     <div class="columns">
                                         <div class="column col-12 col-sm-12">
                                             <div class="product-buy">
-                                                <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" title="Comprar" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ product.price.price }}')">Comprar</a>
+                                                <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" title="{{ buyButtonText }}" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ product.price.price }}')">{{ buyButtonText }}</a>
                                             </div>
                                         </div>
                                         {% if product.physicalProduct == true %}

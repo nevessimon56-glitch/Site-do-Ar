@@ -2,11 +2,15 @@
 {% block content %}
 {% render 'sections/header', store: store, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
 <main class="home-main">
+    {% render 'sections/sda-trust-bar' %}
     {% assign hasShowcaseModelVideo = false %}
     {% for showcaseSection in showcase.sections %}
         {% if showcaseSection.display != 'inactive' %}
             {% assign showcaseModel = 'sections/showcase-model-' | append: showcaseSection.typeId %}
             {%- render showcaseModel, showcaseSection: showcaseSection, products: showcaseSection.products, themeConfig: themeConfig -%}
+            {% if forloop.index == 2 %}
+                {% render 'sections/sda-diag-cta' %}
+            {% endif %}
             {% if showcaseSection.typeId == 10 %}
                 {% assign hasShowcaseModelVideo = true %}
             {% endif %}
