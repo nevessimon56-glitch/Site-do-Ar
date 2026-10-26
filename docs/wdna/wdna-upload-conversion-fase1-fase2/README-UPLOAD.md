@@ -34,7 +34,9 @@ Ordem CSS recomendada: `theme-all` → `theme-custom` → `mega-menu` → `heade
 | `sections/search-order.liquid` | Publicar |
 | `sections/sda-*.liquid` | Publicar |
 | `templates/home.liquid`, `templates/search.liquid` | Publicar |
-| `sections/header.liquid` | **Não** — loja usa header-v2 |
+| `sections/header.liquid` | **Produção header v2** (fonte: WDNA loja — não usar versão legada do Git) |
 | `layout/theme.liquid` (deste pacote) | **Referência** — use o da loja + 2 linhas acima |
 
 Referência do inline laranja completo (header-v2): `assets/header-orange-inline-v5.css`.
+
+**Header:** `sections/header.liquid` deste pacote = cópia fiel do WDNA (header v2). Ignore `sda-header-utility.liquid` / `sda-header-quick-icons.liquid` — eram patch do header legado.
