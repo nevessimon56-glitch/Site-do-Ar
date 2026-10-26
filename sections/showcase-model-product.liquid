@@ -1,6 +1,7 @@
 {% comment %}
   ARQUIVO: showcase-model-product.liquid
-  VERSAO: 2026-07-15-v4  (nao usa primaryPrice / tabela Mercado Livre)
+  VERSAO: 2026-07-15-v4 + favoritos (coração canto superior direito)
+  Base: produção WDNA. Conversão: "Comprar agora", comprar antes de comparar.
   No editor WDNA: substitua TODO o conteudo deste arquivo.
   Preco Pix + parcelas estao INLINE neste arquivo (nao depende de outro).
   Ordem do card: imagem → tags técnicas → título → preços/ações.
@@ -45,6 +46,21 @@
         {% assign pixPriceCard = listPriceCard | minus: _pixDiscountAmt %}
     {% endif %}
 
+    {% assign productTitle = product.title %}
+    {% if product.multiple > 1 %}
+        {% assign productTitle = productTitle | append: ' - ' | append: product.multiple %}
+        {% if product.unitName %}
+            {% assign productUnitName = product.unitName | downcase %}
+            {% assign productTitle = productTitle | append: ' ' | append: productUnitName | append: 's' %}
+        {% endif %}
+    {% endif %}
+
+    {% assign favImage = '' %}
+    {% if product.medias[0].path != blank %}
+        {% assign favImage = product.medias[0].path | imgUrl: 250 %}
+    {% endif %}
+    {% assign favPriceLabel = pixPriceCard | money %}
+
     <li class="showcase-item" data-showcase-tpl="v3-site-price">
         <div class="showcase-product card">
             {% if themeConfig.price.type != 'hide' %}
@@ -60,6 +76,18 @@
                 {% endif %}
             {% endif %}
             <div class="showcase-product_image card-image">
+                <button type="button"
+                    class="showcase-favorite-btn"
+                    data-favorite-toggle
+                    data-product-id="{{ product.id }}"
+                    data-product-url="{{ product.url }}"
+                    data-product-title="{{ productTitle | replace: '"', '&quot;' }}"
+                    data-product-image="{{ favImage }}"
+                    data-product-price="{{ favPriceLabel }}"
+                    aria-label="Favoritar produto"
+                    title="Favoritar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"/></svg>
+                </button>
                 {% if themeConfig.price.type != 'hide' %}
                     {% if hasPixPromoCard == 1 %}
                         {% assign classBtnBuy = '' %}
@@ -91,20 +119,12 @@
             </div>
             <div class="card-header">
                 <h3>
-                    {% assign productTitle = product.title %}
-                    {% if product.multiple > 1 %}
-                        {% assign productTitle = productTitle | append: ' - ' | append: product.multiple %}
-                        {% if product.unitName %}
-                            {% assign productUnitName = product.unitName | downcase %}
-                            {% assign productTitle = productTitle | append: ' ' | append: productUnitName | append: 's' %}
-                        {% endif %}
-                    {% endif %}
                     <a class="showcase-product_link showcase-product_link_title" href="{{ product.url }}" title="{{ productTitle }}">
                         {{ productTitle }}
                     </a>
                 </h3>
             </div>
-            <div class="card-footer card-footer--actions">
+            <div class="card-footer">
                 {% render 'sections/product-compare-data', product: product, pixPrice: pixPriceCard, listPrice: listPriceCard %}
                 {% if product.price.showPrice == false and themeConfig.buyAction.type != 'hide' %}
                     <div class="showcase-prices"></div>
@@ -132,7 +152,7 @@
                                     <del class="showcase-prices_strike"><s>{{ listPriceCard | money }}</s></del>
                                 {% endif %}
                                 <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b></p>
-                                <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% de desconto no Pix</p>
+                                <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% off no Pix</p>
                             {% else %}
                                 <p class="showcase-prices_price"><b>{{ productPricePrimary.price | money }}</b></p>
                             {% endif %}
