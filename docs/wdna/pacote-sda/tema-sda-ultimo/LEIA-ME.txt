@@ -1,7 +1,8 @@
 Pacote Site do Ar — última versão para colar no tema NOVO WDNA
 ================================================================
 
-Commit Git: ab685fb (branch cursor/card-remodel-b192)
+SDA v3 — mega-menu SEM CSS de card; hover enxuto; card = showcase-product-card + sda-conversion
+Branch: cursor/card-remodel-b192 (ver SDA-TEMA-NOVO-V3.md)
 Gerado em: 26 out 2026 (America/Sao_Paulo)
 
 ESTRUTURA (igual ao editor WDNA):

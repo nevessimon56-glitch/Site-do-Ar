@@ -79,16 +79,10 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
     {%- comment -%}
-      Custom CSS (ordem importa):
-      1. mega-menu.css — cards, nav, hover, mega menu
-      2. header-v2.css — layout do cabeçalho v2 (OBRIGATÓRIO se sections/header.liquid usa header-v2)
-      3. favorites.css — coração nos cards (showcase-favorite-btn)
-      4. product-compare.css — comparador
-      5. product-hover-image.css — shim legado
-      6. sda-conversion-redesign.css — layout/comportamento .sda-product-card
-      7. product-page-v2.css — layout PDP #product-pdp-v2 (v2 + V3 WDNA-safe)
-      8. showcase-product-card.css — REMODELAGEM visual (ÚLTIMO no card; vence theme-custom/mega-menu)
-      mega-menu / product-compare / product-hover-image: cards legado (:not(.sda-product-card))
+      SDA v3 — tema novo (sem CSS de card no mega-menu):
+      mega-menu.css = nav/mega menu/conta | header-v2 | favorites | product-compare (painel)
+      product-hover-image.css = legado + header | sda-conversion = ações .sda-product-card
+      product-page-v2 = PDP | showcase-product-card.css = visual/grid/carrossel (ÚLTIMO card)
     {%- endcomment -%}
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/header-v2.css' | themeAssetUrl }}">

@@ -1,10 +1,9 @@
 /**
- * SDA-CONVERSION-REDESIGN-v1
- * DONO ÚNICO do card de vitrine: .showcase-product.card.sda-product-card
- * (markup: sections/showcase-model-product.liquid)
- *
- * mega-menu.css / product-hover-image.css / product-compare.css só afetam cards SEM .sda-product-card.
- * PDP: #product-pdp-v2 + product-page-v2.css (fora deste escopo de card).
+ * SDA v3 — tema novo
+ * Comportamento + layout: .sda-product-card (coluna Comprar/Compare, busca, PDP helpers).
+ * Visual/altura/grid/carrossel: showcase-product-card.css (ÚLTIMO no card).
+ * Nav/mega menu: mega-menu.css (sem CSS de card legado).
+ * Legado: :not(.sda-product-card) onde aplicável.
  */
 
 :root {
@@ -305,8 +304,8 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   font-weight: 800;
 }
 
-/* —— Cards de produto (vitrine + catálogo) —— */
-.showcase-product.card {
+/* —— Card conversão — layout/ações (visual em showcase-product-card.css) —— */
+.showcase-product.card.sda-product-card {
   border-radius: var(--sda-radius) !important;
   border: 1px solid #e2e8f0 !important;
   background: var(--sda-surface) !important;
@@ -314,7 +313,7 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   transition: box-shadow 0.25s ease, transform 0.25s ease !important;
 }
 
-.showcase-product.card:hover {
+.showcase-product.card.sda-product-card:hover {
   box-shadow: var(--sda-shadow-hover) !important;
   transform: translateY(-2px) !important;
 }
@@ -330,7 +329,7 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
     min-height: 200px !important;
   }
 
-  .showcase-product.card .showcase-product_link__image img {
+  .showcase-product.card.sda-product-card .showcase-product_link__image img {
     max-height: 200px;
     width: auto;
     margin: 0 auto;
@@ -338,7 +337,7 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   }
 }
 
-.showcase-product.card .showcase-tag {
+.showcase-product.card.sda-product-card .showcase-tag {
   z-index: 3;
   font-size: 10px;
   font-weight: 800;
@@ -348,17 +347,17 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   color: #fff !important;
 }
 
-.showcase-product.card .showcase-offer {
+.showcase-product.card.sda-product-card .showcase-offer {
   z-index: 4;
 }
 
-.showcase-product.card .showcase-offer_text {
+.showcase-product.card.sda-product-card .showcase-offer_text {
   background: var(--sda-orange) !important;
   color: #fff !important;
 }
 
-.showcase-product.card .card-header h3,
-.showcase-product.card .showcase-product_link_title {
+.showcase-product.card.sda-product-card .card-header h3,
+.showcase-product.card.sda-product-card .showcase-product_link_title {
   display: -webkit-box !important;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -370,7 +369,7 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   color: var(--sda-text) !important;
 }
 
-.showcase-product.card .showcase-spec-bar__tag {
+.showcase-product.card.sda-product-card .showcase-spec-bar__tag {
   font-size: 9px !important;
   font-weight: 700 !important;
   border-radius: 999px !important;
@@ -378,25 +377,25 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   padding: 0 8px !important;
 }
 
-.showcase-product.card .showcase-prices--card {
+.showcase-product.card.sda-product-card .showcase-prices--card {
   gap: 4px !important;
 }
 
-.showcase-product.card .showcase-prices_strike,
+.showcase-product.card.sda-product-card .showcase-prices_strike,
 .showcase-product.card del.showcase-prices_strike {
   font-size: 12px !important;
   color: var(--sda-text-muted) !important;
   opacity: 1 !important;
 }
 
-.showcase-product.card .showcase-prices_price b,
-.showcase-product.card .showcase-prices_price--pix b {
+.showcase-product.card.sda-product-card .showcase-prices_price b,
+.showcase-product.card.sda-product-card .showcase-prices_price--pix b {
   font-size: 20px !important;
   font-weight: 800 !important;
   color: var(--sda-blue-deep) !important;
 }
 
-.showcase-product.card .showcase-prices_pix {
+.showcase-product.card.sda-product-card .showcase-prices_pix {
   font-size: 11px !important;
   font-weight: 700 !important;
   background: var(--sda-green-soft) !important;
@@ -405,14 +404,14 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   margin: 2px 0 4px !important;
 }
 
-.showcase-product.card .showcase-prices_installment,
-.showcase-product.card .showcase-prices_installment-text {
+.showcase-product.card.sda-product-card .showcase-prices_installment,
+.showcase-product.card.sda-product-card .showcase-prices_installment-text {
   font-size: 11px !important;
   color: var(--sda-text-muted) !important;
   line-height: 1.35 !important;
 }
 
-.showcase-product.card .showcase-card-actions {
+.showcase-product.card.sda-product-card .showcase-card-actions {
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
@@ -420,8 +419,8 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   margin-top: 8px !important;
 }
 
-.showcase-product.card .showcase-card-actions .showcase-product_buy,
-.showcase-product.card .showcase-card-actions .showcase-product_buy.btn {
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy.btn {
   order: 1 !important;
   width: 100% !important;
   max-width: none !important;
@@ -437,7 +436,7 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   box-shadow: 0 4px 12px rgba(26, 110, 181, 0.35) !important;
 }
 
-.showcase-product.card .showcase-card-actions .showcase-compare-btn {
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn {
   order: 2 !important;
   width: 100% !important;
   max-width: none !important;
@@ -450,7 +449,7 @@ body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeh
   box-shadow: none !important;
 }
 
-.showcase-product.card .showcase-card-actions .showcase-compare-btn[aria-pressed='true'] {
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn[aria-pressed='true'] {
   border-color: var(--sda-blue) !important;
   color: var(--sda-blue-deep) !important;
   background: #eff6ff !important;
@@ -1112,7 +1111,7 @@ main.search-main .search-filters-content {
   font-size: 1.05rem !important;
 }
 
-.showcase-product.card .showcase-prices_pix-label {
+.showcase-product.card.sda-product-card .showcase-prices_pix-label {
   font-size: 12px;
   font-weight: 700;
   color: var(--sda-green);
@@ -1215,7 +1214,7 @@ main.search-main .search-filters-content {
   flex-direction: column;
 }
 
-.showcase-product.card .showcase-prices--card {
+.showcase-product.card.sda-product-card .showcase-prices--card {
   flex: 1;
 }
 
@@ -1288,7 +1287,7 @@ main.search-main .search-filters-content {
   }
 }
 
-.showcase-product.card .showcase-prices--card,
+.showcase-product.card.sda-product-card .showcase-prices--card,
 .sda-product-card .showcase-prices--card {
   display: flex !important;
   flex-direction: column !important;
@@ -1297,15 +1296,15 @@ main.search-main .search-filters-content {
   gap: 3px !important;
 }
 
-.showcase-product.card .showcase-prices_installment,
-.showcase-product.card .showcase-prices_installment-text {
+.showcase-product.card.sda-product-card .showcase-prices_installment,
+.showcase-product.card.sda-product-card .showcase-prices_installment-text {
   display: block !important;
   width: 100% !important;
   text-align: left !important;
 }
 
 /* Ações: coluna — Comparar só dentro de .showcase-card-actions (não flutua no card) */
-.showcase-product.card .showcase-card-actions .showcase-compare-btn,
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn,
 .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn {
   position: static !important;
   top: auto !important;
@@ -1321,18 +1320,18 @@ main.search-main .search-filters-content {
   white-space: nowrap !important;
 }
 
-.showcase-product.card .showcase-card-actions .showcase-compare-btn::before,
+.showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn::before,
 .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn::before {
   content: none !important;
   display: none !important;
 }
 
-main.search-main .showcase-product.card .showcase-card-actions,
-main.home-main .showcase-product.card .showcase-card-actions,
-.showcase-products .showcase-product.card .showcase-card-actions,
-.showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-card-actions,
-main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-card-actions,
-main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-card-actions {
+main.search-main .showcase-product.card.sda-product-card .showcase-card-actions,
+main.home-main .showcase-product.card.sda-product-card .showcase-card-actions,
+.showcase-products .showcase-product.card.sda-product-card .showcase-card-actions,
+.showcase-search.showcase-search_grid--mobile-2col .showcase-product.card.sda-product-card .showcase-card-actions,
+main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card.sda-product-card .showcase-card-actions,
+main.home-main section.showcase .showcase-products_carousel .showcase-product.card.sda-product-card .showcase-card-actions {
   display: flex !important;
   flex-direction: column !important;
   flex-wrap: nowrap !important;
@@ -1347,14 +1346,14 @@ main.home-main section.showcase .showcase-products_carousel .showcase-product.ca
   box-sizing: border-box !important;
 }
 
-main.search-main .showcase-product.card .showcase-card-actions .showcase-product_buy,
-main.search-main .showcase-product.card .showcase-card-actions .showcase-product_buy.btn,
-main.home-main .showcase-product.card .showcase-card-actions .showcase-product_buy,
-main.home-main .showcase-product.card .showcase-card-actions .showcase-product_buy.btn,
-.showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-card-actions .showcase-product_buy,
-.showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-card-actions .showcase-product_buy.btn,
-main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-card-actions .showcase-product_buy,
-main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-card-actions .showcase-product_buy.btn,
+main.search-main .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
+main.search-main .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy.btn,
+main.home-main .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
+main.home-main .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy.btn,
+.showcase-search.showcase-search_grid--mobile-2col .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
+.showcase-search.showcase-search_grid--mobile-2col .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy.btn,
+main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy,
+main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card.sda-product-card .showcase-card-actions .showcase-product_buy.btn,
 .showcase-product.card.sda-card--cycle-frio .showcase-card-actions .showcase-product_buy,
 .showcase-product.card.sda-card--cycle-qf .showcase-card-actions .showcase-product_buy {
   order: 1 !important;
@@ -1374,10 +1373,10 @@ main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase
   box-sizing: border-box !important;
 }
 
-main.search-main .showcase-product.card .showcase-card-actions .showcase-compare-btn,
-main.home-main .showcase-product.card .showcase-card-actions .showcase-compare-btn,
-.showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-card-actions .showcase-compare-btn,
-main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-card-actions .showcase-compare-btn {
+main.search-main .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn,
+main.home-main .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn,
+.showcase-search.showcase-search_grid--mobile-2col .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn,
+main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn {
   order: 2 !important;
   flex: none !important;
   width: 100% !important;
@@ -1391,8 +1390,8 @@ main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase
 }
 
 @media (max-width: 767px) {
-  main.search-main .showcase-product.card .showcase-card-actions .showcase-compare-btn,
-  main.home-main .showcase-product.card .showcase-card-actions .showcase-compare-btn {
+  main.search-main .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn,
+  main.home-main .showcase-product.card.sda-product-card .showcase-card-actions .showcase-compare-btn {
     border: none !important;
     min-height: 32px !important;
     font-size: 11px !important;

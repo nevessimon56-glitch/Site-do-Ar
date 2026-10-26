@@ -267,6 +267,11 @@
   }
 }
 
+/*
+ * SDA v3 — DONO ÚNICO visual + grid + carrossel tns (.sda-product-card / --v2)
+ * Carrega por último entre folhas de card. mega-menu.css não mexe em vitrine.
+ */
+
 /* ========== CARD-UNIFORM-GRID — mesma altura em home, busca, catálogo, relacionados ========== */
 
 :root {
