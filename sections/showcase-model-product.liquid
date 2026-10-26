@@ -9,7 +9,9 @@
   VALIDAR: deve existir "productPricePrimary = product.price" e NAO deve existir "product.primaryPrice"
 {% endcomment %}
 {% assign maximumProducts = 60 %}
-{% assign products = showcaseSection.products %}
+{% if showcaseSection and showcaseSection.products %}
+    {% assign products = showcaseSection.products %}
+{% endif %}
 {% if sectionConfig.rowQuantity and sectionConfig.columnQuantity %}
     {% assign maximumProducts = sectionConfig.rowQuantity | times: sectionConfig.columnQuantity %}
 {% endif %}
