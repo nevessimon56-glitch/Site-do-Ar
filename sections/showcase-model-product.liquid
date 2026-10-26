@@ -62,7 +62,7 @@
     {% assign favPriceLabel = pixPriceCard | money %}
 
     <li class="showcase-item" data-showcase-tpl="v3-site-price">
-        <div class="showcase-product card">
+        <div class="showcase-product card sda-product-card">
             {% if themeConfig.price.type != 'hide' %}
                 {% if product.promotion %}
                     <div class="showcase-tag">
@@ -114,17 +114,21 @@
                     {% endif %}
                 </a>
             </div>
-            <div class="showcase-spec-wrap">
-                {% render 'sections/product-spec-icons', product: product %}
-            </div>
+            <div class="showcase-card-body">
             <div class="card-header">
                 <h3>
                     <a class="showcase-product_link showcase-product_link_title" href="{{ product.url }}" title="{{ productTitle }}">
                         {{ productTitle }}
                     </a>
                 </h3>
+                {% render 'sections/sda-card-btu-line', product: product %}
             </div>
-            <div class="card-footer">
+            <div class="showcase-spec-wrap">
+                {% render 'sections/product-spec-icons', product: product %}
+            </div>
+            <p class="showcase-card-attrs-line" aria-hidden="true"></p>
+            </div>
+            <div class="card-footer sda-card-footer">
                 {% render 'sections/product-compare-data', product: product, pixPrice: pixPriceCard, listPrice: listPriceCard %}
                 {% if product.price.showPrice == false and themeConfig.buyAction.type != 'hide' %}
                     <div class="showcase-prices"></div>
@@ -134,10 +138,10 @@
                             {{ buyButtonText }}
                         </a>
                         <button type="button"
-                                class="showcase-compare-btn"
+                                class="showcase-compare-btn showcase-compare-btn--secondary"
                                 data-compare-id="{{ product.id }}"
                                 aria-pressed="false">
-                            Comparar
+                            <span class="showcase-compare-btn__label">Comparar</span>
                         </button>
                     </div>
                 {% else %}
@@ -149,10 +153,10 @@
                         <div class="showcase-prices showcase-prices--card{{ classShowcaseLoginPrice }}">
                             {% if hasPixPromoCard == 1 %}
                                 {% if listPriceCard > pixPriceCard %}
-                                    <del class="showcase-prices_strike"><s>{{ listPriceCard | money }}</s></del>
+                                    <p class="showcase-prices_from">De <del class="showcase-prices_strike"><s>{{ listPriceCard | money }}</s></del></p>
                                 {% endif %}
                                 <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b> <span class="showcase-prices_pix-label">no Pix</span></p>
-                                <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% de desconto no Pix</p>
+                                <p class="showcase-prices_pix showcase-prices_pix--detail"><span>{{ pixPercentCard }}</span>% de desconto no Pix</p>
                             {% else %}
                                 <p class="showcase-prices_price"><b>{{ productPricePrimary.price | money }}</b></p>
                             {% endif %}
@@ -162,9 +166,8 @@
                                 {% if product.secondaryPrice.price and product.secondaryPrice.price > plotBasePrice %}
                                     {% assign plotBasePrice = product.secondaryPrice.price %}
                                 {% endif %}
-                                <p class="showcase-prices_installment" data-plot-base="{{ plotBasePrice }}" data-plot-count="{{ product.secondaryPrice.installment }}">
-                                    <span class="showcase-prices_installment-prefix">ou</span>
-                                    <span class="showcase-prices_installment-text">em até <b>{{ product.secondaryPrice.installment }}x</b> de <b class="showcase-prices_installment-value">{{ plotBasePrice | divided_by: product.secondaryPrice.installment | money }}</b> sem juros</span>
+                                <p class="showcase-prices_installment showcase-prices_installment--desktop" data-plot-base="{{ plotBasePrice }}" data-plot-count="{{ product.secondaryPrice.installment }}">
+                                    <span class="showcase-prices_installment-text"><b>{{ product.secondaryPrice.installment }}x</b> de <b class="showcase-prices_installment-value">{{ plotBasePrice | divided_by: product.secondaryPrice.installment | money }}</b> sem juros</span>
                                 </p>
                                 {% endif %}
                             {% endif %}
@@ -175,10 +178,10 @@
                             {{ buyButtonText }}
                         </a>
                         <button type="button"
-                                class="showcase-compare-btn"
+                                class="showcase-compare-btn showcase-compare-btn--secondary"
                                 data-compare-id="{{ product.id }}"
                                 aria-pressed="false">
-                            Comparar
+                            <span class="showcase-compare-btn__label">Comparar</span>
                         </button>
                     </div>
                 {% endif %}

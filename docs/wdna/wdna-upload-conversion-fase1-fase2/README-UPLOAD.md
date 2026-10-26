@@ -1,4 +1,6 @@
-# Pacote WDNA — Produção + Conversão (Fases 1–3)
+# Pacote WDNA — Produção + Conversão (Fases 1–3 + round 2)
+
+**Round 2 (26 out 2026):** pop-up D360 atrasado, header mobile compacto, preço Pix explícito no PDP, cards/filtros, paleta roxo diagnóstico.
 
 Base: arquivos que você colou do painel WDNA (header v2, vitrine v4+favoritos, PDP v2, search-order, theme.liquid).  
 Camada extra: home/busca, sections `sda-*`, CSS/JS `sda-conversion-redesign`.

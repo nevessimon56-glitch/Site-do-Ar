@@ -1,5 +1,5 @@
 /**
- * SDA-CONVERSION-REDESIGN-v2 — conversão desktop/mobile (round 2)
+ * SDA-CONVERSION-REDESIGN-v3 — cards + PDP desktop/mobile
  */
 (function () {
   'use strict';
@@ -159,7 +159,7 @@
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'sda-pdp-sticky-buy__btn';
-      btn.textContent = 'COMPRAR';
+      btn.textContent = 'COMPRAR AGORA';
       btn.addEventListener('click', function () {
         buy.click();
       });
@@ -217,17 +217,83 @@
     if (title) title.textContent = 'Filtrar produtos';
   }
 
+  function mobileChipPolicy() {
+    if (!window.matchMedia('(max-width: 767px)').matches) return;
+    document.querySelectorAll(
+      '.showcase-spec-bar__tag--cobre, .showcase-spec-bar__tag--voltage, .showcase-spec-bar__tag--procel'
+    ).forEach(function (el) {
+      el.classList.add('sda-spec-chip--hidden');
+    });
+  }
+
   function limitCardSpecChips() {
-    document.querySelectorAll('.showcase-product.card .showcase-spec-bar__tag').forEach(function (tag, idx, list) {
-      var bar = tag.closest('.showcase-spec-bar');
-      if (!bar || bar.dataset.sdaChipCap) return;
-      var tags = bar.querySelectorAll('.showcase-spec-bar__tag');
-      var max = window.matchMedia('(max-width: 767px)').matches ? 2 : 3;
+    document.querySelectorAll('.showcase-product.card .showcase-spec-bar').forEach(function (bar) {
+      if (bar.dataset.sdaChipCap) return;
+      var tags = bar.querySelectorAll('.showcase-spec-bar__tag:not(.sda-spec-chip--hidden)');
+      var max = window.matchMedia('(max-width: 767px)').matches ? 2 : 4;
       tags.forEach(function (t, i) {
         if (i >= max) t.classList.add('sda-spec-chip--hidden');
       });
       bar.dataset.sdaChipCap = '1';
     });
+  }
+
+  function buildCardAttrLines() {
+    document.querySelectorAll('.sda-product-card').forEach(function (card) {
+      var line = card.querySelector('.showcase-card-attrs-line');
+      if (!line || line.textContent.trim()) return;
+      var labels = [];
+      card.querySelectorAll('.showcase-spec-bar__tag:not(.sda-spec-chip--hidden)').forEach(function (tag) {
+        var t = (tag.getAttribute('title') || tag.textContent || '').trim();
+        if (t === 'A') t = 'Classe A';
+        if (t === 'Q/F') t = 'Quente/Frio';
+        if (t && labels.indexOf(t) === -1) labels.push(t);
+      });
+      if (labels.length) {
+        line.textContent = labels.slice(0, 4).join(' • ');
+        line.removeAttribute('aria-hidden');
+      }
+    });
+  }
+
+  function syncRecommendationArea() {
+    var hint = document.querySelector('.product-main .sda-product-area-hint');
+    var list = document.querySelector('.sda-pdp-rec__list');
+    if (!hint || !list || list.dataset.areaSynced) return;
+    var li = document.createElement('li');
+    li.textContent = hint.textContent.trim();
+    list.insertBefore(li, list.firstChild);
+    list.dataset.areaSynced = '1';
+  }
+
+  function pdpTechGrid() {
+    if (!window.matchMedia('(max-width: 991px)').matches) return;
+    var host = document.getElementById('sda-pdp-tech-grid');
+    if (!host || host.dataset.filled) return;
+    var tags = document.querySelectorAll(
+      '.product-main .showcase-spec-bar__tag, .product-content .showcase-spec-bar__tag'
+    );
+    if (!tags.length) {
+      host.classList.add('sda-pdp-tech-grid-host--empty');
+      return;
+    }
+    host.dataset.filled = '1';
+    tags.forEach(function (tag) {
+      var label = (tag.getAttribute('title') || tag.textContent || '').trim();
+      if (!label) return;
+      if (label === 'A') label = 'Classe A';
+      var cell = document.createElement('div');
+      cell.className = 'sda-pdp-tech-grid__cell';
+      cell.textContent = label;
+      host.appendChild(cell);
+    });
+  }
+
+  function pdpMobileChrome() {
+    if (!document.querySelector('.product-main')) return;
+    if (window.matchMedia('(max-width: 991px)').matches) {
+      document.body.classList.add('sda-pdp-mobile');
+    }
   }
 
   function limitHomeCarousels() {
@@ -253,11 +319,16 @@
     setupDesktopFilterToggle();
     collapseSearchFilterSections();
     productAreaHint();
+    syncRecommendationArea();
+    pdpTechGrid();
+    pdpMobileChrome();
     pdpStickyBuy();
     limitHomeCarousels();
     renderActiveFilterChips();
     enhanceMobileFilterLabel();
+    mobileChipPolicy();
     limitCardSpecChips();
+    buildCardAttrLines();
   }
 
   if (document.readyState === 'loading') {

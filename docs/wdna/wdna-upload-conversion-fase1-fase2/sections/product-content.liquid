@@ -454,7 +454,7 @@
                                         <div class="product-buy">
                                             <a class="product-btn product-btn_buy btn col-12" href="javascript:void(0)" title="Comprar" @click="handleAddToCart('{{ product.id }}', state.quantity, state, '{{ product.sku | replace: "'", "\\'" | escape }}', '{{ product.title | replace: "'", "\\'" | escape }}', '{{ product.price.price }}')">
                                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 4h2l1.2 6h13.1l1.8-5H7.2L6.6 4H3zm3.2 14a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6zm8.6 0a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6z"/></svg>
-                                                COMPRAR
+                                                COMPRAR AGORA
                                             </a>
                                         </div>
                                         <div class="product-compare">
@@ -531,7 +531,9 @@
         {% endif %}
 
         {% render 'sections/product-descriptions-v2', product: product, themeConfig: themeConfig %}
-        <nav class="mobile-bottom-nav" aria-label="Navegação mobile">
+        <div class="sda-pdp-tech-grid-host" id="sda-pdp-tech-grid" aria-label="Destaques técnicos"></div>
+        {% render 'sections/sda-pdp-recommendation', product: product %}
+        <nav class="mobile-bottom-nav sda-mobile-bottom-nav" aria-label="Navegação mobile">
             <a href="/" title="Início">
                 <span class="mobile-bottom-nav_ico" aria-hidden="true">⌂</span>
                 <small>Início</small>
