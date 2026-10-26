@@ -873,3 +873,125 @@ main.search-main .search-filters-content {
     content: " produtos";
   }
 }
+
+/* —— Fase 3: hero home —— */
+.sda-home-hero {
+  background: linear-gradient(135deg, #0c1f3d 0%, #163d5c 45%, #2c77bb 100%);
+  color: #f8fafc;
+  padding: 28px 0 32px;
+  margin-bottom: 0;
+}
+
+.sda-home-hero__inner {
+  max-width: 720px;
+}
+
+.sda-home-hero__eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin: 0 0 10px;
+}
+
+.sda-home-hero__title {
+  font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: #fff;
+}
+
+.sda-home-hero__lead {
+  font-size: 15px;
+  line-height: 1.55;
+  color: #cbd5e1;
+  margin: 0 0 20px;
+}
+
+.sda-home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sda-home-hero__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: var(--sda-radius-sm);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none !important;
+}
+
+.sda-home-hero__btn--primary {
+  background: var(--sda-orange);
+  color: #fff !important;
+}
+
+.sda-home-hero__btn--secondary {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff !important;
+}
+
+/* —— Fase 3: abas PDP (product-descriptions-v2) —— */
+.product-descriptions-v2 {
+  padding: 32px 0 40px;
+  background: var(--sda-bg);
+}
+
+.product-descriptions-v2__inner {
+  background: var(--sda-surface);
+  border-radius: var(--sda-radius);
+  box-shadow: var(--sda-shadow);
+  padding: 20px 20px 24px;
+}
+
+.sda-pdp-tabs__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 12px;
+}
+
+.sda-pdp-tabs__tab {
+  appearance: none;
+  border: 0;
+  background: #f1f5f9;
+  color: var(--sda-text);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.sda-pdp-tabs__tab.is-active {
+  background: var(--sda-blue);
+  color: #fff;
+}
+
+.sda-pdp-tabs__panel {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--sda-text);
+}
+
+.sda-pdp-tabs__panel[hidden] {
+  display: none !important;
+}
+
+.sda-pdp-tabs__panel.is-active {
+  display: block;
+}
+
+.sda-pdp-tabs__panel img {
+  max-width: 100%;
+  height: auto;
+}

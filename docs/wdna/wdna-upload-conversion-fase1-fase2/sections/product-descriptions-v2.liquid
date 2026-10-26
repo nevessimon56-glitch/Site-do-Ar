@@ -1,0 +1,90 @@
+{% comment %}
+  PDP v2 — abas de conteúdo (descrições WDNA + ficha técnica resumida).
+  Usado por product-content.liquid de produção.
+{% endcomment %}
+{% assign sdaDescCount = 0 %}
+{% if product.descriptions and product.descriptions.size > 0 %}
+  {% assign sdaDescCount = product.descriptions.size %}
+{% endif %}
+{% assign sdaHasSpecBlock = false %}
+{% if product.specification and product.specification != '' %}
+  {% assign sdaHasSpecBlock = true %}
+{% endif %}
+{% if sdaDescCount == 0 and sdaHasSpecBlock == false %}
+  {% comment %} Sem conteúdo — não renderiza shell vazio {% endcomment %}
+{% else %}
+<section class="product-descriptions-v2 content" id="product-descriptions-v2" aria-label="Informações do produto">
+  <div class="container product-descriptions-v2__inner">
+    <div class="sda-pdp-tabs" data-sda-pdp-tabs>
+      <div class="sda-pdp-tabs__nav" role="tablist" aria-label="Seções do produto">
+        {% if sdaDescCount > 0 %}
+          {% for desc in product.descriptions %}
+            {% assign tabId = 'sda-pdp-tab-' | append: forloop.index %}
+            {% assign panelId = 'sda-pdp-panel-' | append: forloop.index %}
+            {% assign tabLabel = desc.title %}
+            {% if tabLabel == blank or tabLabel == '' %}
+              {% if forloop.first %}
+                {% assign tabLabel = 'Descrição' %}
+              {% else %}
+                {% assign tabLabel = 'Detalhes' %}
+              {% endif %}
+            {% endif %}
+            <button type="button"
+              class="sda-pdp-tabs__tab{% if forloop.first %} is-active{% endif %}"
+              id="{{ tabId }}"
+              role="tab"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-controls="{{ panelId }}"
+              tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+              data-sda-pdp-tab="{{ forloop.index0 }}">
+              {{ tabLabel }}
+            </button>
+          {% endfor %}
+        {% endif %}
+        {% if sdaHasSpecBlock %}
+          {% assign specTabId = 'sda-pdp-tab-spec' %}
+          {% assign specPanelId = 'sda-pdp-panel-spec' %}
+          <button type="button"
+            class="sda-pdp-tabs__tab{% if sdaDescCount == 0 %} is-active{% endif %}"
+            id="{{ specTabId }}"
+            role="tab"
+            aria-selected="{% if sdaDescCount == 0 %}true{% else %}false{% endif %}"
+            aria-controls="{{ specPanelId }}"
+            tabindex="{% if sdaDescCount == 0 %}0{% else %}-1{% endif %}"
+            data-sda-pdp-tab="spec">
+            Especificações
+          </button>
+        {% endif %}
+      </div>
+      <div class="sda-pdp-tabs__panels">
+        {% if sdaDescCount > 0 %}
+          {% for desc in product.descriptions %}
+            {% assign panelId = 'sda-pdp-panel-' | append: forloop.index %}
+            {% assign tabId = 'sda-pdp-tab-' | append: forloop.index %}
+            <div class="sda-pdp-tabs__panel product-content_description{% if forloop.first %} is-active{% endif %}"
+              id="{{ panelId }}"
+              role="tabpanel"
+              aria-labelledby="{{ tabId }}"
+              tabindex="0"
+              data-sda-pdp-panel="{{ forloop.index0 }}"
+              {% unless forloop.first %}hidden{% endunless %}>
+              {{ desc.text }}
+            </div>
+          {% endfor %}
+        {% endif %}
+        {% if sdaHasSpecBlock %}
+          <div class="sda-pdp-tabs__panel product-content_specification{% if sdaDescCount == 0 %} is-active{% endif %}"
+            id="sda-pdp-panel-spec"
+            role="tabpanel"
+            aria-labelledby="sda-pdp-tab-spec"
+            tabindex="0"
+            data-sda-pdp-panel="spec"
+            {% if sdaDescCount > 0 %}hidden{% endif %}>
+            {{ product.specification }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}

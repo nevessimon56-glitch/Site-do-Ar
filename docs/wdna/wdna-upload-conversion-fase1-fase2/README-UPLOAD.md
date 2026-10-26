@@ -1,4 +1,4 @@
-# Pacote WDNA — Produção Site do Ar + Conversão (refeito com originais)
+# Pacote WDNA — Produção + Conversão (Fases 1–3)
 
 Base: arquivos que você colou do painel WDNA (header v2, vitrine v4+favoritos, PDP v2, search-order, theme.liquid).  
 Camada extra: home/busca, sections `sda-*`, CSS/JS `sda-conversion-redesign`.

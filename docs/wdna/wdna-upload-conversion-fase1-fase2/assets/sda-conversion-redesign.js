@@ -108,7 +108,10 @@
     var buy = document.querySelector('.product-main .product-btn_buy');
     if (!buy) return;
 
-    var priceEl = document.querySelector('.product-main .sda-pdp-price-pix') || document.querySelector('.product-main .product-prices_price');
+    var priceEl =
+      document.querySelector('.product-main .product-prices_price-inner') ||
+      document.querySelector('.product-main .sda-pdp-price-pix') ||
+      document.querySelector('.product-main .product-prices_price');
     var bar = document.createElement('div');
     bar.className = 'sda-pdp-sticky-buy';
     bar.setAttribute('role', 'region');
@@ -121,7 +124,7 @@
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'sda-pdp-sticky-buy__btn';
-    btn.textContent = 'Comprar agora';
+    btn.textContent = (buy.textContent || '').replace(/\s+/g, ' ').trim() || 'Comprar';
     btn.addEventListener('click', function () {
       buy.click();
     });
@@ -193,12 +196,57 @@
     });
   }
 
+  function initPdpDescriptionTabs() {
+    var root = document.querySelector('[data-sda-pdp-tabs]');
+    if (!root || root.dataset.sdaTabsReady === '1') return;
+    root.dataset.sdaTabsReady = '1';
+    var tabs = root.querySelectorAll('.sda-pdp-tabs__tab');
+    var panels = root.querySelectorAll('.sda-pdp-tabs__panel');
+    if (!tabs.length || !panels.length) return;
+
+    function activate(key) {
+      tabs.forEach(function (tab) {
+        var on = tab.getAttribute('data-sda-pdp-tab') === String(key);
+        tab.classList.toggle('is-active', on);
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        tab.tabIndex = on ? 0 : -1;
+      });
+      panels.forEach(function (panel) {
+        var on = panel.getAttribute('data-sda-pdp-panel') === String(key);
+        panel.classList.toggle('is-active', on);
+        if (on) {
+          panel.removeAttribute('hidden');
+        } else {
+          panel.setAttribute('hidden', '');
+        }
+      });
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        activate(tab.getAttribute('data-sda-pdp-tab'));
+      });
+      tab.addEventListener('keydown', function (ev) {
+        if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+        ev.preventDefault();
+        var list = Array.prototype.slice.call(tabs);
+        var idx = list.indexOf(tab);
+        var next = ev.key === 'ArrowRight' ? idx + 1 : idx - 1;
+        if (next < 0) next = list.length - 1;
+        if (next >= list.length) next = 0;
+        list[next].focus();
+        activate(list[next].getAttribute('data-sda-pdp-tab'));
+      });
+    });
+  }
+
   function run() {
     enhanceSearchCount();
     injectCatalogDiagIfMissing();
     setupDesktopFilterToggle();
     productAreaHint();
     pdpStickyBuy();
+    initPdpDescriptionTabs();
     limitHomeCarousels();
     renderActiveFilterChips();
     enhanceMobileFilterLabel();
