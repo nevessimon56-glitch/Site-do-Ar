@@ -151,8 +151,8 @@
                                 {% if listPriceCard > pixPriceCard %}
                                     <del class="showcase-prices_strike"><s>{{ listPriceCard | money }}</s></del>
                                 {% endif %}
-                                <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b></p>
-                                <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% off no Pix</p>
+                                <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b> <span class="showcase-prices_pix-label">no Pix</span></p>
+                                <p class="showcase-prices_pix"><span>{{ pixPercentCard }}</span>% de desconto no Pix</p>
                             {% else %}
                                 <p class="showcase-prices_price"><b>{{ productPricePrimary.price | money }}</b></p>
                             {% endif %}

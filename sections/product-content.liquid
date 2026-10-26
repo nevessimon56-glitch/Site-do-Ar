@@ -50,7 +50,22 @@
         <section class="product-breadcrumb">
             <div class="product-breadcrumb-content content">
                 <div class="product-breadcrumb-container container">
-                    <ol class="product-breadcrumb-list breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+                    {% assign sdaPdpBackHref = '/split-inverter' %}
+                    {% assign sdaPdpBackLabel = 'ar-condicionado' %}
+                    {% for categories in product.categories %}
+                        {% if categories.main == true %}
+                            {% assign sdaPdpBackHref = categories.treeSlug | linkCategory: 1 %}
+                            {% assign sdaPdpBackTree = categories.treeName | split: '##' %}
+                            {% for catName in sdaPdpBackTree %}
+                                {% assign catLower = catName | downcase %}
+                                {% if catLower contains 'condicionado' or catLower contains 'split' %}
+                                    {% assign sdaPdpBackLabel = catName | downcase %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                    <a class="sda-pdp-mobile-back show-lg" href="{{ sdaPdpBackHref }}">‹ Voltar para {{ sdaPdpBackLabel }}</a>
+                    <ol class="product-breadcrumb-list breadcrumb sda-pdp-breadcrumb-desktop" itemscope itemtype="http://schema.org/BreadcrumbList">
                         <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                             <a href="/" title="Página Inicial" itemprop="item">
                                 <span itemprop="name">
@@ -389,67 +404,36 @@
                                 </div>
                                 {% endif %}
                                 {% if product.typeId != 2 or product.gridOptions.size > 0 %}
-                                    {% assign _pixPrice = productPricePrimary.price %}
-                                    {% if productPricePrimary.promotionPrice > 0 %}
-                                        {% assign _pixPrice = productPricePrimary.promotionPrice %}
-                                    {% endif %}
+                                    {% comment %} Preço Pix alinhado aos cards (showcase-model-product) {% endcomment %}
                                     {% assign _listPrice = product.price.price %}
-                                    {% assign _displayPrice = _pixPrice %}
-                                    {% assign _hasPixDiscount = false %}
-                                    {% if product.primaryPrice and _listPrice > _pixPrice %}
-                                        {% assign _hasPixDiscount = true %}
-                                    {% elsif _listPrice > _pixPrice %}
-                                        {% assign _hasPixDiscount = true %}
-                                    {% endif %}
-                                    {% assign _pixBadgePct = 0 %}
-                                    {% if productPricePrimary.discountPercentage and productPricePrimary.discountPercentage > 0 %}
-                                        {% assign _pixBadgePct = productPricePrimary.discountPercentage | round %}
-                                    {% elsif product.primaryPrice %}
-                                        {% if product.primaryPrice.discountPercentage and product.primaryPrice.discountPercentage > 0 %}
-                                            {% assign _pixBadgePct = product.primaryPrice.discountPercentage | round %}
-                                        {% endif %}
-                                    {% endif %}
-                                    {% assign _hasTablePromo = false %}
-                                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null and product.price.promotionPrice > 0 and product.price.price > product.price.promotionPrice %}
-                                        {% assign _hasTablePromo = true %}
-                                        {% assign _displayPrice = product.price.promotionPrice %}
-                                        {% if _pixBadgePct == 0 %}
-                                            {% assign _pixBadgePct = product.price.promotionMargin | round %}
-                                        {% endif %}
-                                    {% endif %}
-                                    {% if _hasPixDiscount and _pixBadgePct == 0 and _listPrice > 0 %}
-                                        {% assign _pixDiff = _listPrice | minus: _pixPrice %}
-                                        {% assign _pixBadgePct = _pixDiff | times: 100 | divided_by: _listPrice | round %}
-                                    {% endif %}
-                                    {% if _pixBadgePct == 0 %}
-                                        {% if _hasPixDiscount or product.primaryPrice or product.secondaryPrice or productPriceSecond %}
-                                            {% assign _pixBadgePct = 5 %}
-                                        {% endif %}
-                                    {% endif %}
-                                    {% assign _showPixBadge = true %}
-                                    {% if _pixBadgePct == 0 %}
-                                        {% assign _pixBadgePct = 5 %}
+                                    {% assign _finalPix = _listPrice %}
+                                    {% assign _pixBadgePct = 5 %}
+                                    {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null and product.price.promotionPrice > 0 %}
+                                        {% assign _finalPix = product.price.promotionPrice %}
+                                        {% assign _pixBadgePct = product.price.promotionMargin | round %}
+                                    {% else %}
+                                        {% assign _pixDiscAmt = _listPrice | times: 5 | divided_by: 100 %}
+                                        {% assign _finalPix = _listPrice | minus: _pixDiscAmt %}
                                     {% endif %}
                                     {% assign _showStrike = false %}
-                                    {% if _listPrice > _displayPrice %}
-                                        {% assign _showStrike = true %}
-                                    {% elsif _hasPixDiscount %}
+                                    {% if _listPrice > _finalPix %}
                                         {% assign _showStrike = true %}
                                     {% endif %}
-                                    <div class="product-prices{% if _showStrike %} product-prices--strike{% endif %}">
+                                    <div class="product-prices product-prices--sda-pix{% if _showStrike %} product-prices--strike{% endif %}">
                                         <div class="product-content_box product-box_prices col-12">
                                             {% if _showStrike %}
-                                                <del class="product-prices_strike"><s>{{ _listPrice | money }}</s></del>
+                                                <p class="product-prices_from">De <del class="product-prices_strike"><s>{{ _listPrice | money }}</s></del></p>
                                             {% endif %}
-                                            <p class="product-prices_price"><span class="product-prices_price-inner">{{ _displayPrice | money }}</span></p>
-                                            {% if _showPixBadge %}
-                                                <p class="product-prices_pix product-prices_pix--pdp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3H5a2 2 0 0 0-2 2v4.59c0 .53.21 1.04.59 1.41l9.58 9.59a2 2 0 0 0 2.83 0l4.59-4.59a2 2 0 0 0 0-2.83z"/><circle cx="7.5" cy="7.5" r="1.3" fill="#fff"/></svg><span>{{ _pixBadgePct }}% DE DESCONTO NO PIX</span></p>
-                                            {% endif %}
+                                            <p class="product-prices_price product-prices_price--pix-final">
+                                                <span class="product-prices_price-inner">{{ _finalPix | money }}</span>
+                                                <span class="product-prices_pix-suffix">no Pix</span>
+                                            </p>
+                                            <p class="product-prices_pix product-prices_pix--pdp"><span>{{ _pixBadgePct }}% de desconto</span></p>
                                             {% if productPriceSecond %}
                                                 {% assign _mainPriceSecond = productPriceSecond.price %}
                                                 {% if productPriceSecond.promotionPrice > 0 %}{% assign _mainPriceSecond = productPriceSecond.promotionPrice %}{% endif %}
                                                 {% if productPriceSecond.installment > 1 %}
-                                                    <p class="product-prices_plots">{{ productPriceSecond.installment }}x de {{ productPriceSecond.installmentValue | money }} no cartão</p>
+                                                    <p class="product-prices_plots">ou {{ productPriceSecond.installment }}x de {{ productPriceSecond.installmentValue | money }} sem juros</p>
                                                 {% else %}
                                                     <p class="product-prices_plots">ou {{ _mainPriceSecond | money }} à vista</p>
                                                 {% endif %}
@@ -464,7 +448,7 @@
                                         </div>
                                     </div>
                                     {% assign compareListPrice = product.price.price %}
-                                    {% assign comparePixPrice = mainPrice %}
+                                    {% assign comparePixPrice = _finalPix %}
                                     {% render 'sections/product-compare-data', product: product, pixPrice: comparePixPrice, listPrice: compareListPrice %}
                                     <div class="product-header-box_ctas">
                                         <div class="product-buy">

@@ -183,11 +183,22 @@
                         <span class="header-v2-search-pill__icon" aria-hidden="true">
                             {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
                         </span>
-                        <input type="search" id="term2" class="form-input header-v2-search-pill__input" placeholder="Buscar produtos" autocomplete="off" aria-label="Buscar produtos" onkeydown="if (event.key === 'Enter') { event.preventDefault(); alterForm2(); }">
+                        <input type="search" id="term2" class="form-input header-v2-search-pill__input" placeholder="Busque por produto, marca ou modelo" autocomplete="off" aria-label="Busque por produto, marca ou modelo" onkeydown="if (event.key === 'Enter') { event.preventDefault(); alterForm2(); }">
                     </label>
                     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
                 </form>
             </div>
+
+            <nav class="header-v2-mobile-strip show-lg content" aria-label="Categorias rápidas">
+                <div class="container header-v2-mobile-strip__scroll">
+                    <a class="header-v2-mobile-strip__link" href="/Todos-os-Produtos">Todos</a>
+                    <a class="header-v2-mobile-strip__link" href="{{ sdaMLinkSplit }}">Split Inverter</a>
+                    <a class="header-v2-mobile-strip__link" href="{{ sdaMLinkPiso }}">Piso Teto</a>
+                    <a class="header-v2-mobile-strip__link" href="{{ sdaMLinkJanela }}">Janela</a>
+                    <a class="header-v2-mobile-strip__link header-v2-mobile-strip__link--ambiente" href="/pagina/calculadora-btus">Compre por ambiente</a>
+                    <a class="header-v2-mobile-strip__link header-v2-mobile-strip__link--diag" href="{{ sdaDiag360Url }}">Diagnóstico</a>
+                </div>
+            </nav>
 
             <div class="search close">
                 <form id="myForm" method="POST" action="">

@@ -1,8 +1,10 @@
 /**
- * SDA-CONVERSION-REDESIGN-v1 — UX leve sem quebrar integrações WDNA.
+ * SDA-CONVERSION-REDESIGN-v2 — conversão desktop/mobile (round 2)
  */
 (function () {
   'use strict';
+
+  document.documentElement.classList.add('sda-conversion-v2');
 
   function enhanceSearchCount() {
     var right = document.querySelector('main.search-main .search-right p');
@@ -22,6 +24,11 @@
 
   function injectCatalogDiagIfMissing() {
     if (!document.querySelector('main.search-main')) return;
+    var box = document.querySelector('.sda-diag-cta__text');
+    if (box) {
+      box.textContent =
+        'Descubra quantos BTUs você precisa e veja os modelos ideais para o seu ambiente.';
+    }
     if (document.querySelector('.sda-diag-cta')) return;
     var header = document.querySelector('main.search-main .search-header');
     if (!header) return;
@@ -30,8 +37,8 @@
     wrap.innerHTML =
       '<div class="sda-diag-cta__inner">' +
       '<div class="sda-diag-cta__box">' +
-      '<div><p class="sda-diag-cta__title">Não sabe qual escolher?</p>' +
-      '<p class="sda-diag-cta__text">Faça o Diagnóstico 360 e veja modelos indicados para o seu ambiente — sem comprometer preços nem estoque.</p></div>' +
+      '<div><p class="sda-diag-cta__title">Não sabe qual modelo escolher?</p>' +
+      '<p class="sda-diag-cta__text">Descubra quantos BTUs você precisa e veja os modelos ideais para o seu ambiente.</p></div>' +
       '<a class="sda-diag-cta__btn" href="/pagina/diagnostico-360">Fazer diagnóstico</a>' +
       '</div></div>';
     header.parentNode.insertBefore(wrap, header.nextSibling);
@@ -64,12 +71,35 @@
     }
   }
 
+  function collapseSearchFilterSections() {
+    document.querySelectorAll('.search-filters details.search-filter').forEach(function (det) {
+      var hasActive =
+        det.querySelector('.active, .form-radio input:checked, .btu-filter-btn.active') !== null;
+      var titleEl = det.querySelector('.search-filter-title');
+      if (titleEl && !titleEl.querySelector('.sda-filter-count')) {
+        var count = det.querySelectorAll('.btu-filter-btn, .search-filter-link_category, .form-checkbox, .form-radio').length;
+        if (count > 0) {
+          var badge = document.createElement('span');
+          badge.className = 'sda-filter-count';
+          badge.textContent = '(' + count + ')';
+          titleEl.appendChild(badge);
+        }
+      }
+      if (!hasActive && window.matchMedia('(min-width: 992px)').matches) {
+        var isBtu = det.classList.contains('search-filter_btu');
+        if (isBtu || det.classList.contains('search-filter_ciclo') || det.classList.contains('search-filter_brand')) {
+          det.removeAttribute('open');
+        }
+      }
+    });
+  }
+
   function extractAreaHint(text) {
     if (!text) return '';
     var m = text.match(/(\d+)\s*m²?\s*(?:a|até|-)\s*(\d+)\s*m²?/i);
     if (m) return 'Ideal para ambientes de ' + m[1] + ' m² a ' + m[2] + ' m²';
     m = text.match(/(\d+)\s*m²/i);
-    if (m) return 'Área recomendada: ' + m[1] + ' m²';
+    if (m) return 'Ideal para ambientes de até ' + m[1] + ' m²';
     return '';
   }
 
@@ -91,48 +121,57 @@
     el.className = 'sda-product-area-hint';
     el.textContent = hint;
 
-    var prices = box.querySelector('.product-prices');
-    if (prices) {
-      prices.parentNode.insertBefore(el, prices.nextSibling);
-    } else {
-      var title = box.querySelector('.product-title_desktop, .product-title');
-      if (title) title.parentNode.insertBefore(el, title.nextSibling);
+    var prices = box.querySelector('.product-box_prices');
+    var ctas = box.querySelector('.product-header-box_ctas');
+    if (prices && ctas) {
+      prices.parentNode.insertBefore(el, ctas);
+    } else if (prices) {
+      prices.parentNode.appendChild(el);
     }
+  }
+
+  function formatStickyPrice() {
+    var inner = document.querySelector('.product-main .product-prices_price-inner');
+    var suffix = document.querySelector('.product-main .product-prices_pix-suffix');
+    if (!inner) return '';
+    var t = inner.textContent.trim();
+    if (suffix) t += ' ' + suffix.textContent.trim();
+    return t;
   }
 
   function pdpStickyBuy() {
     if (!document.querySelector('.product-main')) return;
     if (!window.matchMedia('(max-width: 991px)').matches) return;
-    if (document.querySelector('.sda-pdp-sticky-buy')) return;
 
     var buy = document.querySelector('.product-main .product-btn_buy');
     if (!buy) return;
 
-    var priceEl =
-      document.querySelector('.product-main .product-prices_price-inner') ||
-      document.querySelector('.product-main .sda-pdp-price-pix') ||
-      document.querySelector('.product-main .product-prices_price');
-    var bar = document.createElement('div');
-    bar.className = 'sda-pdp-sticky-buy';
-    bar.setAttribute('role', 'region');
-    bar.setAttribute('aria-label', 'Compra rápida');
+    var bar = document.querySelector('.sda-pdp-sticky-buy');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.className = 'sda-pdp-sticky-buy';
+      bar.setAttribute('role', 'region');
+      bar.setAttribute('aria-label', 'Compra rápida');
 
-    var price = document.createElement('div');
-    price.className = 'sda-pdp-sticky-buy__price';
-    price.textContent = priceEl ? priceEl.textContent.trim() : '';
+      var price = document.createElement('div');
+      price.className = 'sda-pdp-sticky-buy__price';
 
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'sda-pdp-sticky-buy__btn';
-    btn.textContent = (buy.textContent || '').replace(/\s+/g, ' ').trim() || 'Comprar';
-    btn.addEventListener('click', function () {
-      buy.click();
-    });
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sda-pdp-sticky-buy__btn';
+      btn.textContent = 'COMPRAR';
+      btn.addEventListener('click', function () {
+        buy.click();
+      });
 
-    bar.appendChild(price);
-    bar.appendChild(btn);
-    document.body.appendChild(bar);
-    document.body.classList.add('sda-pdp-sticky-on');
+      bar.appendChild(price);
+      bar.appendChild(btn);
+      document.body.appendChild(bar);
+      document.body.classList.add('sda-pdp-sticky-on');
+    }
+
+    var priceEl = bar.querySelector('.sda-pdp-sticky-buy__price');
+    if (priceEl) priceEl.textContent = formatStickyPrice();
   }
 
   var FILTER_LABELS = {
@@ -175,9 +214,20 @@
 
   function enhanceMobileFilterLabel() {
     var title = document.querySelector('.search-options_mobile .search-options-header_item:first-child .search-option-title');
-    if (title && title.textContent.indexOf('Filtrar') === -1) {
-      title.textContent = 'Filtrar produtos';
-    }
+    if (title) title.textContent = 'Filtrar produtos';
+  }
+
+  function limitCardSpecChips() {
+    document.querySelectorAll('.showcase-product.card .showcase-spec-bar__tag').forEach(function (tag, idx, list) {
+      var bar = tag.closest('.showcase-spec-bar');
+      if (!bar || bar.dataset.sdaChipCap) return;
+      var tags = bar.querySelectorAll('.showcase-spec-bar__tag');
+      var max = window.matchMedia('(max-width: 767px)').matches ? 2 : 3;
+      tags.forEach(function (t, i) {
+        if (i >= max) t.classList.add('sda-spec-chip--hidden');
+      });
+      bar.dataset.sdaChipCap = '1';
+    });
   }
 
   function limitHomeCarousels() {
@@ -188,11 +238,12 @@
       if (typeof jQuery === 'undefined' || !jQuery.fn || !jQuery.fn.slick) return;
       var $l = jQuery(list);
       try {
-        var count = $l.find('.slick-slide:not(.slick-cloned)').length;
-        if (count > 4) {
-          $l.slick('slickSetOption', 'autoplay', false, true);
-        }
+        $l.slick('slickSetOption', 'autoplay', false, true);
+        $l.slick('slickSetOption', 'dots', true, true);
       } catch (e) {}
+    });
+    document.querySelectorAll('.home-main .showcase-banners .slick-slide').forEach(function (slide, i) {
+      if (i >= 4) slide.setAttribute('aria-hidden', 'true');
     });
   }
 
@@ -200,11 +251,13 @@
     enhanceSearchCount();
     injectCatalogDiagIfMissing();
     setupDesktopFilterToggle();
+    collapseSearchFilterSections();
     productAreaHint();
     pdpStickyBuy();
     limitHomeCarousels();
     renderActiveFilterChips();
     enhanceMobileFilterLabel();
+    limitCardSpecChips();
   }
 
   if (document.readyState === 'loading') {
