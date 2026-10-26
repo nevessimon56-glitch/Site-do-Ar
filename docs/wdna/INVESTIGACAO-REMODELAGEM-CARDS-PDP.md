@@ -99,6 +99,7 @@ Enviar se estiverem no editor (branch conversão; **podem faltar no Git**):
 | `sections/sda-pdp-recommendation.liquid` | **Sim** (repo; lista + JS sync área m²) |
 | `assets/product-page-v2.css` | **Sim** (~3700 linhas) — escopo `#product-pdp-v2` / `.product-v2`; linkado **após** `sda-conversion-redesign.css`. |
 | `assets/theme-all.css` (colagem produção WDNA) | **Sim** — ~15,4k linhas, termina em `.form-group_potencia` `@media (min-width: 992px)`; repo tinha concat duplicada/truncada (~31k linhas) — corrigido 2026-10-26. Overrides locais (ex. `.product-main:hover`) ficam em `theme-custom.css`. |
+| `assets/theme-plugins.css` (colagem produção WDNA) | **Sim** — bundle minificado (~80 KB, md5 `3ee6617153eaaef2aeed843e2a732b11`); Spectre + tiny-slider + metismenu + notyf + PhotoSwipe (salescdn 4.1.3) + nouislider 14.7.0. Colagem formatada 2026-10-26 **equivalente** (só difere pretty-print vs minify). |
 
 Sem esses arquivos, mudar só CSS em `sda-conversion-redesign.css` na PDP **não aplica** (faltam classes no HTML).
 
