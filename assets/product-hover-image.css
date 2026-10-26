@@ -42,7 +42,7 @@ body .header:not(.header-checkout) .header-link_cart [data-cart-quantity] {
 body .header:not(.header-checkout) .header-link_cart svg,
 body .header:not(.header-checkout) .header-link_cart .icon_cart,
 body .header:not(.header-checkout) .cart_link svg {
-  fill: #7C3AED !important;
+  fill: #4b96d4 !important;
 }
 
 body .header:not(.header-checkout) .header a.header-link_cart:hover,
@@ -83,12 +83,12 @@ body .header:not(.header-checkout) .header-box_account .header-link_text .accoun
 body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
 body .header:not(.header-checkout) .header-link_account .header-link_text .account_link,
 body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
-  color: #5B21B6 !important;
+  color: #101010 !important;
 }
 
 body .header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
 body .header:not(.header-checkout) .header-link-account_tel .header-link_icon svg {
-  fill: #7C3AED !important;
+  fill: #4b96d4 !important;
 }
 
 body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
@@ -97,7 +97,7 @@ body .header:not(.header-checkout) .header-link_account .header-link_text a.acco
 body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
 body .header:not(.header-checkout) .header a.account_link:hover,
 body .header:not(.header-checkout) .header a.account_link:focus {
-  color: #6D28D9 !important;
+  color: #101010 !important;
   opacity: 1 !important;
 }
 
@@ -1427,49 +1427,47 @@ main.home-main .showcase-product.card .card-footer {
 }
 
 /*
- * GLOBAL-LILAC-SITE-THEME-v1 — troca GLOBAL-BLACK (mega-menu.css) por lilás em todo o site.
- * Carrega por último (product-hover-image.css). Footer e cards de produto intactos.
+ * GLOBAL-BLUE-SITE-THEME-v1 — vence GLOBAL-BLACK (mega-menu.css); azul Site do Ar (sem lilás).
+ * Header superior: theme-custom.css (#f8f8f8). Nav inferior: azul + texto branco.
  */
 :root {
-  --sda-nav-gradient: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 45%, #6D28D9 100%);
-  --sda-nav-solid: #6D28D9;
-  --sda-ui-accent: #6D28D9;
-  --sda-ui-accent-2: #5B21B6;
-  --sda-ui-accent-deep: #4C1D95;
-  --sda-ui-accent-soft: #EDE9FE;
-  --sda-ui-accent-muted: #7C3AED;
-  --sda-ui-accent-hover: #8B5CF6;
-  --sda-ui-btn: #7C3AED;
-  --sda-ui-btn-hover: #6D28D9;
-  --sda-ui-btn-border: #5B21B6;
-  --sda-ui-chip-border: #C4B5FD;
-  --sda-ui-chip-hover-bg: #EDE9FE;
-  --sda-ui-chip-hover-border: #A78BFA;
+  --sda-nav-gradient: linear-gradient(135deg, #2c8fd6 0%, #1a6eb5 45%, #2c77bb 100%);
+  --sda-nav-solid: #1a6eb5;
+  --sda-ui-accent: #1a6eb5;
+  --sda-ui-accent-2: #163d5c;
+  --sda-ui-accent-deep: #1a5a94;
+  --sda-ui-accent-soft: #f3f9fe;
+  --sda-ui-accent-muted: #2c77bb;
+  --sda-ui-accent-hover: #4b96d4;
+  --sda-ui-btn: #2c77bb;
+  --sda-ui-btn-hover: #1a6eb5;
+  --sda-ui-btn-border: #1a5a94;
+  --sda-ui-chip-border: #b9d6ee;
+  --sda-ui-chip-hover-bg: #f3f9fe;
+  --sda-ui-chip-hover-border: #4b96d4;
 }
-
-/* Header top bar: ver HEADER-WHITE-LILAC-v1 (final do arquivo) */
 
 @media (min-width: 992px) {
   .header .nav-content,
   .nav-content.content {
-    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 50%, #6D28D9 100%) !important;
-    background-color: #7C3AED !important;
+    background: linear-gradient(135deg, #1a6eb5, #2c8fd6) !important;
+    background-color: #1a6eb5 !important;
     border-top-color: rgba(255, 255, 255, 0.12) !important;
   }
 
   .nav-content .nav-main_content a,
   .nav-content .nav-main_children {
-    color: #6D28D9 !important;
+    color: #ffffff !important;
   }
 
   .nav-content .nav-main_content li:hover,
   .nav-content .nav-main_content li:focus {
-    background-color: #EDE9FE !important;
+    background-color: rgba(255, 255, 255, 0.14) !important;
   }
 
   .nav-content .nav-main_content li:hover a,
   .nav-content .nav-main_content li:focus a {
-    color: #5B21B6 !important;
+    color: #ffffff !important;
   }
 
   .mega-menu-ar__section-title--hot,
@@ -1480,15 +1478,15 @@ main.home-main .showcase-product.card .card-footer {
   .mega-menu-ar__ver-tudo:hover,
   .mega-menu-ar__banner-kicker,
   .mega-menu-ar__links a:hover {
-    color: #7C3AED !important;
+    color: #1a6eb5 !important;
   }
 
   .mega-menu-ar__banner-price {
-    color: #5B21B6 !important;
+    color: #163d5c !important;
   }
 
   .mega-menu-ar__promo-banner a {
-    background: linear-gradient(90deg, #7C3AED 0%, #6D28D9 50%, #7C3AED 100%) !important;
+    background: linear-gradient(90deg, #1a6eb5 0%, #2c8fd6 50%, #1a6eb5 100%) !important;
   }
 
   .mega-menu-ar__offers-label span::before,
@@ -1496,8 +1494,8 @@ main.home-main .showcase-product.card .card-footer {
   .mega-menu-ar__arrow:hover,
   .mega-menu-ar__dot.is-active,
   .mega-menu-ar__banner-cta {
-    background: #7C3AED !important;
-    box-shadow: 0 2px 10px rgba(124, 58, 237, 0.35) !important;
+    background: #2c77bb !important;
+    box-shadow: 0 2px 10px rgba(44, 119, 187, 0.35) !important;
   }
 
   .mega-menu-ar__arrow:hover {
@@ -1505,231 +1503,123 @@ main.home-main .showcase-product.card .card-footer {
   }
 
   .mega-menu-ar__banner-cta {
-    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%) !important;
+    background: linear-gradient(135deg, #2c77bb 0%, #1a6eb5 100%) !important;
   }
 
   .mega-menu-ar__banner-link:hover .mega-menu-ar__banner-cta {
-    background: linear-gradient(135deg, #6D28D9 0%, #4C1D95 100%) !important;
+    background: linear-gradient(135deg, #1a6eb5 0%, #1a5a94 100%) !important;
   }
 }
 
-/* Header labels: ver HEADER-WHITE-LILAC-v1 */
-
 @media (max-width: 991px) {
   .mobile-discover-bar__chip {
-    color: #6D28D9 !important;
+    color: #1a6eb5 !important;
   }
 
   .mobile-discover-bar__chip.is-active {
-    border-color: #7C3AED !important;
-    background: #EDE9FE !important;
-    color: #5B21B6 !important;
+    border-color: #2c77bb !important;
+    background: #f3f9fe !important;
+    color: #163d5c !important;
   }
 
   .mobile-catalog-link {
-    color: #6D28D9 !important;
+    color: #1a6eb5 !important;
   }
 
   .mobile-catalog-dock__btn.is-active {
-    box-shadow: 0 3px 12px rgba(109, 40, 217, 0.4) !important;
+    box-shadow: 0 3px 12px rgba(26, 110, 181, 0.4) !important;
   }
 
   .mobile-catalog-dock__btn:not(.is-active):active {
-    background: #EDE9FE !important;
-    color: #6D28D9 !important;
+    background: #f3f9fe !important;
+    color: #1a6eb5 !important;
   }
 
   .mobile-catalog-dock__sheet-title {
-    color: #5B21B6 !important;
+    color: #163d5c !important;
   }
 
   .mobile-catalog-dock__sheet-link {
-    color: #6D28D9 !important;
+    color: #1a6eb5 !important;
   }
 
   .mobile-catalog-dock__sheet-link.is-active {
-    background: #EDE9FE !important;
-    color: #5B21B6 !important;
+    background: #f3f9fe !important;
+    color: #163d5c !important;
   }
 
   .header:not(.header-checkout) > .nav-content.sda-mobile-nav-revealed,
   .header:not(.header-checkout) > .nav-content.sda-mobile-nav-strip--3 {
-    background-color: #6D28D9 !important;
+    background-color: #1a6eb5 !important;
   }
 }
 
 .customer-account-nav--page .customer-account-nav__item.is-active {
-  background: #EDE9FE !important;
-  color: #5B21B6 !important;
+  background: #f3f9fe !important;
+  color: #163d5c !important;
 }
 
 .customer-account-nav--page .customer-account-nav__item.is-active .customer-account-nav__icon {
-  background: rgba(124, 58, 237, 0.18) !important;
+  background: rgba(44, 119, 187, 0.18) !important;
 }
 
 .customer-account-nav__item:hover {
-  color: #6D28D9 !important;
+  color: #1a6eb5 !important;
 }
 
 .customer-account-nav__item.is-active {
-  background: linear-gradient(135deg, #7C3AED, #5B21B6) !important;
-  box-shadow: 0 3px 12px rgba(109, 40, 217, 0.35) !important;
+  background: linear-gradient(135deg, #2c77bb, #1a6eb5) !important;
+  box-shadow: 0 3px 12px rgba(26, 110, 181, 0.35) !important;
 }
 
 .customer-account-nav__icon {
-  background: rgba(124, 58, 237, 0.14) !important;
+  background: rgba(44, 119, 187, 0.14) !important;
 }
 
 .sidenav-overlay_account .pages-nav .btn-access:hover {
-  border-color: #C4B5FD !important;
-  background: #EDE9FE !important;
-  color: #5B21B6 !important;
+  border-color: #b9d6ee !important;
+  background: #f3f9fe !important;
+  color: #163d5c !important;
 }
 
 .sidenav-overlay.sidenav-order_cancel .order-cancel-avatar:not(.order-cancel-avatar--store):not(.order-cancel-avatar--success):not(.order-cancel-avatar--warning):not(.avatar_success):not(.avatar_warning) {
-  background: #7C3AED !important;
+  background: #2c77bb !important;
 }
 
 .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__input:focus,
 .sidenav-overlay.sidenav-order_cancel .order-cancel-form__textarea:focus {
-  border-color: #7C3AED !important;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.22) !important;
+  border-color: #2c77bb !important;
+  box-shadow: 0 0 0 3px rgba(44, 119, 187, 0.22) !important;
 }
 
 .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn,
 .sidenav-overlay.sidenav-order_cancel .order-cancel-form__submit {
-  background: #7C3AED !important;
+  background: #2c77bb !important;
 }
 
 .sidenav-overlay.sidenav-order_cancel .order-cancel-compose__btn:hover,
 .sidenav-overlay.sidenav-order_cancel .order-cancel-form__submit:hover {
-  background: #6D28D9 !important;
+  background: #1a6eb5 !important;
 }
 
 .product-compare-bar__badge {
-  background: #7C3AED !important;
+  background: #2c77bb !important;
 }
 
 .product-compare-bar__btn--ghost,
 .product-compare-panel__close,
 .product-compare-panel__vs {
-  background: #EDE9FE !important;
-  color: #5B21B6 !important;
+  background: #f3f9fe !important;
+  color: #163d5c !important;
 }
 
 .product-compare-bar__btn--primary {
-  background: linear-gradient(135deg, #7C3AED, #5B21B6) !important;
+  background: linear-gradient(135deg, #2c77bb, #1a6eb5) !important;
 }
 
 a.btn.btn-lg.col-12:hover,
 input.btn.search-filters-btn.search-filters-btn_finish:hover {
-  box-shadow: 0 6px 16px rgba(109, 40, 217, 0.35) !important;
-}
-
-/*
- * HEADER-WHITE-LILAC-v1 — faixa do header (logo, busca, atalhos): fundo branco; ex-azuis → lilás.
- * Nav inferior (.nav-content) mantém lilás do GLOBAL-LILAC. Carrinho: badge laranja intacto.
- */
-.header:not(.header-checkout),
-.header:not(.header-checkout) .header-content,
-.header:not(.header-checkout) .header-content .navbar {
-  background-color: #ffffff !important;
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08) !important;
-}
-
-.header:not(.header-checkout) .account_link,
-.header:not(.header-checkout) a.account_link,
-.header:not(.header-checkout) .header-link_text,
-.header:not(.header-checkout) .header-link_text .account_link,
-.header:not(.header-checkout) .header-link_text a,
-.header:not(.header-checkout) .header-box_account .header-link_text .account_link,
-.header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
-.header:not(.header-checkout) .header-link_account .header-link_text .account_link,
-.header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
-  color: #6D28D9 !important;
-}
-
-.header:not(.header-checkout) .header-account-kicker,
-.header:not(.header-checkout) .header-account-label,
-.header-account-kicker,
-.header-account-label {
-  color: #7C3AED !important;
-}
-
-.header:not(.header-checkout) .header-link svg,
-.header:not(.header-checkout) .header .icon-ssl svg,
-.header:not(.header-checkout) .header-link_whatsapp .header-link_icon svg,
-.header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
-.header:not(.header-checkout) .header-link-account_tel .header-link_icon svg,
-.header:not(.header-checkout) .header-link_cart svg,
-.header:not(.header-checkout) .header-link_cart .icon_cart,
-.header:not(.header-checkout) .cart_link svg {
-  fill: #7C3AED !important;
-}
-
-.header:not(.header-checkout) .header-link_menu__mobile .icon-bar,
-.header:not(.header-checkout) .header-link_menu__mobile.active .icon-bar {
-  background-color: #7C3AED !important;
-}
-
-.header:not(.header-checkout) .search_link .icon-bar:first-child {
-  border-color: #7C3AED !important;
-}
-
-.header:not(.header-checkout) .search_link .icon-bar:last-child,
-.header:not(.header-checkout) .search_link.active .icon-bar:first-child {
-  background-color: #7C3AED !important;
-}
-
-.header:not(.header-checkout) .search-desktop .form-input {
-  background-color: #ffffff !important;
-  border: 1px solid #C4B5FD !important;
-  color: #5B21B6 !important;
-}
-
-.header:not(.header-checkout) .search-desktop .form-input::placeholder {
-  color: #A78BFA !important;
-  opacity: 1 !important;
-}
-
-.header:not(.header-checkout) .search-desktop .form-input:focus {
-  border-color: #7C3AED !important;
-  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15) !important;
-}
-
-.header:not(.header-checkout) .search-desktop .btn {
-  background-color: #ffffff !important;
-  border-left: 1px solid #E9D5FF !important;
-}
-
-.header:not(.header-checkout) .search-desktop .btn svg {
-  fill: #7C3AED !important;
-}
-
-.header:not(.header-checkout) .search-desktop .btn:focus,
-.header:not(.header-checkout) .search-desktop .btn:hover {
-  background-color: #F3E8FF !important;
-}
-
-.header:not(.header-checkout) .header a:not(.cart_link):not(.header-link_cart):hover,
-.header:not(.header-checkout) .header-link:not(.header-link_cart):not(.cart_link):hover {
-  color: #5B21B6 !important;
-}
-
-.header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
-.header:not(.header-checkout) .header-box_account .header-link_text a.account_link:focus,
-.header:not(.header-checkout) .header-link_account .header-link_text a.account_link:hover,
-.header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
-.header:not(.header-checkout) .header a.account_link:hover,
-.header:not(.header-checkout) .header a.account_link:focus {
-  color: #5B21B6 !important;
-}
-
-.header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg,
-.header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg,
-.header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg,
-.header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg {
-  fill: #6D28D9 !important;
+  box-shadow: 0 6px 16px rgba(26, 110, 181, 0.35) !important;
 }
 
 /*

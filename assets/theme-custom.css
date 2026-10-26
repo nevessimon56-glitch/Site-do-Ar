@@ -8,11 +8,6 @@
   --brand-purple: #6D28D9;
   --brand-orange: #F97316;
   --brand-lavender: #F3E8FF;
-  /* Lilás — substitui detalhes pretos/carvão na UI (GLOBAL-LILAC em product-hover-image.css) */
-  --sda-lilac: #7C3AED;
-  --sda-lilac-deep: #5B21B6;
-  --sda-lilac-muted: #6D28D9;
-  --sda-lilac-soft: #EDE9FE;
 }
 
 /** Vitrines — títulos (Fase 2B-2; overrides theme-all.css após custom na cascata) **/
@@ -104,7 +99,7 @@
 }
 
 .account_link {
-  color: var(--sda-lilac-deep);
+  color: #101010;
   font-size: 15px;
   font-weight: 500;
   line-height: 16px;
@@ -199,7 +194,7 @@
 }
 
 .header-link svg {
-  fill: var(--sda-lilac, #7C3AED);
+  fill: var(--brand-primary);
 }
 
 .header-link {
@@ -321,7 +316,7 @@
   border-radius: 5px 0 0 5px !important;
   border: 1px solid #ebebeb;
   box-shadow: none;
-  color: var(--sda-lilac-deep);
+  color: #101010;
   font-size: 13px;
   font-weight: 500;
   height: 48px;
@@ -335,7 +330,7 @@
 }
 
 .search-desktop .form-input::placeholder {
-  color: var(--sda-lilac-muted);
+  color: #101010;
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0;
@@ -365,18 +360,18 @@
 }
 
 .sidebar-nav .metismenu .has-arrow:after {
-  color: var(--sda-lilac-deep);
+  color: #313131;
 }
 
 .sidebar-nav .nav-mobile .nav-mobile_link a {
-  color: var(--sda-lilac-deep);
+  color: #313131;
   font-weight: 500;
 }
 
 .sidebar-nav .nav-mobile .nav-mobile_link a:active,
 .sidebar-nav .nav-mobile .nav-mobile_link a:focus,
 .sidebar-nav .nav-mobile .nav-mobile_link a:hover {
-  color: var(--sda-lilac);
+  color: #1a1a1a;
 }
 
 .sidebar-nav .nav-mobile>li>.nav-mobile_link {
@@ -414,7 +409,7 @@
 }
 
 a.account_link {
-  color: var(--sda-lilac-deep);
+  color: #101010;
 }
 
 .sidebar-nav .sidebar-nav-icon {
@@ -2177,7 +2172,7 @@ a.btn.btn-new_user.btn-block:hover {
   width: 320px;
   max-width: calc(100vw - 32px);
   border-radius: 20px;
-  background: linear-gradient(145deg, #7C3AED, #5B21B6);
+  background: linear-gradient(145deg, #111827, #0f172a);
   border: 1px solid rgba(14, 165, 233, 0.4);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
   padding: 24px;
