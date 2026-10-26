@@ -1,42 +1,49 @@
-# Pacote WDNA — Conversão Fase 1 + 2 (com header-v2 de produção)
+# Pacote WDNA — Produção Site do Ar + Conversão (refeito com originais)
 
-## Seu `layout/theme.liquid` atual (produção)
+Base: arquivos que você colou do painel WDNA (header v2, vitrine v4+favoritos, PDP v2, search-order, theme.liquid).  
+Camada extra: home/busca, sections `sda-*`, CSS/JS `sda-conversion-redesign`.
 
-Você **já tem** o layout certo: header-v2, favoritos, PDP v2, inline laranja, `setupStore` com `init()`, popup Diagnóstico 360.
+## Estrutura (16 arquivos para publicar)
 
-**Não substitua** o arquivo inteiro pelo `layout/theme.liquid` do repositório (branch sem header-v2).
-
-### Alteração mínima no theme.liquid da loja
-
-1. **CSS** — depois de `product-page-v2.css` e **depois** do `<style id="header-orange-inline-v5">` (inline continua vencendo o carrinho; conversão vem por último):
-
-```liquid
-<link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-conversion-redesign.css' | themeAssetUrl }}">
+```
+layout/theme.liquid
+assets/sda-conversion-redesign.css
+assets/sda-conversion-redesign.js
+assets/product-hover-image.css          ← opcional se já igual na loja
+sections/header.liquid
+sections/showcase-model-product.liquid
+sections/product-content.liquid
+sections/search-order.liquid
+sections/sda-trust-bar.liquid
+sections/sda-home-ambiente.liquid
+sections/sda-home-necessidade.liquid
+sections/sda-diag-cta.liquid
+templates/home.liquid
+templates/search.liquid
 ```
 
-2. **JS** — depois de `product-hover-image.js`:
+Referência (não substituir CSS separado se já inline no theme): `assets/header-orange-inline-v5.css`
 
-```liquid
-<script src="{{ 'assets/sda-conversion-redesign.js' | themeAssetUrl }}" defer></script>
-```
+## Ordem sugerida no WDNA
 
-Ordem CSS recomendada: `theme-all` → `theme-custom` → `mega-menu` → `header-v2` → `favorites` → `product-compare` → `product-hover-image` → `product-page-v2` → **inline laranja** → **`sda-conversion-redesign.css`**.
+1. **Assets** — `sda-conversion-redesign.css`, `.js`, (opcional) `product-hover-image.css`
+2. **Layout** — `theme.liquid` (ou só as 2 linhas sda se o seu layout já for idêntico)
+3. **Sections** — header → showcase → product-content → search-order → `sda-*`
+4. **Templates** — `home.liquid`, `search.liquid`
 
-## O que subir desta pasta
+## O que NÃO vai neste pacote
 
-| Caminho | Ação |
-|---------|------|
-| `assets/sda-conversion-redesign.css` | Publicar |
-| `assets/sda-conversion-redesign.js` | Publicar |
-| `assets/product-hover-image.css` | Só se quiser grid vitrine + azul do PR |
-| `sections/showcase-model-product.liquid` | Publicar |
-| `sections/product-content.liquid` | Publicar |
-| `sections/search-order.liquid` | Publicar |
-| `sections/sda-*.liquid` | Publicar |
-| `templates/home.liquid`, `templates/search.liquid` | Publicar |
-| `sections/header.liquid` | **Produção header v2** (fonte: WDNA loja — não usar versão legada do Git) |
-| `layout/theme.liquid` (deste pacote) | **Referência** — use o da loja + 2 linhas acima |
+- `sda-header-utility` / `sda-header-quick-icons` — header **v2** já inclui faixa utilitária e ícones
+- `sda-pdp-trust` — PDP v2 de produção já tem trust inline no `product-content.liquid`
 
-Referência do inline laranja completo (header-v2): `assets/header-orange-inline-v5.css`.
+## Dependências já na loja (não estão nesta pasta)
 
-**Header:** `sections/header.liquid` deste pacote = cópia fiel do WDNA (header v2). Ignore `sda-header-utility.liquid` / `sda-header-quick-icons.liquid` — eram patch do header legado.
+`header-v2.css`, `favorites.css`, `product-page-v2.css`, `mega-menu.css`, `header-v2-mobile.js`, `favorites.js`, etc.
+
+## Vitrine — diferença mínima vs colagem WDNA
+
+`showcase-model-product.liquid`: mantém favoritos e Pix inline; botão **Comprar agora** e ordem **Comprar → Comparar** (conversão). Para voltar ao texto `Comprar` e Comparar primeiro, edite só `buyButtonText` e a ordem em `showcase-card-actions`.
+
+## Zip
+
+Arquivo gerado ao lado: `../Site-do-Ar-WDNA-pacote-final.zip` (mesmo conteúdo desta pasta).
