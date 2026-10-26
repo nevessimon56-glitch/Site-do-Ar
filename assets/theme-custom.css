@@ -199,7 +199,7 @@
 }
 
 .header-link svg {
-  fill: var(--brand-primary);
+  fill: var(--sda-lilac, #7C3AED);
 }
 
 .header-link {

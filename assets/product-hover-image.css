@@ -42,7 +42,7 @@ body .header:not(.header-checkout) .header-link_cart [data-cart-quantity] {
 body .header:not(.header-checkout) .header-link_cart svg,
 body .header:not(.header-checkout) .header-link_cart .icon_cart,
 body .header:not(.header-checkout) .cart_link svg {
-  fill: #4b96d4 !important;
+  fill: #7C3AED !important;
 }
 
 body .header:not(.header-checkout) .header a.header-link_cart:hover,
@@ -83,12 +83,12 @@ body .header:not(.header-checkout) .header-box_account .header-link_text .accoun
 body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
 body .header:not(.header-checkout) .header-link_account .header-link_text .account_link,
 body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
-  color: #ffffff !important;
+  color: #5B21B6 !important;
 }
 
 body .header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
 body .header:not(.header-checkout) .header-link-account_tel .header-link_icon svg {
-  fill: #4b96d4 !important;
+  fill: #7C3AED !important;
 }
 
 body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
@@ -97,7 +97,7 @@ body .header:not(.header-checkout) .header-link_account .header-link_text a.acco
 body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
 body .header:not(.header-checkout) .header a.account_link:hover,
 body .header:not(.header-checkout) .header a.account_link:focus {
-  color: #101010 !important;
+  color: #6D28D9 !important;
   opacity: 1 !important;
 }
 
@@ -1447,25 +1447,7 @@ main.home-main .showcase-product.card .card-footer {
   --sda-ui-chip-hover-border: #A78BFA;
 }
 
-.header:not(.header-checkout),
-.header:not(.header-checkout) .header-content,
-.header:not(.header-checkout) .header-content .navbar {
-  background-color: #5B21B6 !important;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-.header:not(.header-checkout) .search-desktop .form-input {
-  background-color: #6D28D9 !important;
-  border-color: #8B5CF6 !important;
-}
-
-.header:not(.header-checkout) .search-desktop .form-input:focus {
-  border-color: #C4B5FD !important;
-}
-
-.header:not(.header-checkout) .search-desktop .btn svg {
-  fill: #5B21B6 !important;
-}
+/* Header top bar: ver HEADER-WHITE-LILAC-v1 (final do arquivo) */
 
 @media (min-width: 992px) {
   .header .nav-content,
@@ -1531,10 +1513,7 @@ main.home-main .showcase-product.card .card-footer {
   }
 }
 
-.header-account-kicker,
-.header-account-label {
-  color: #EDE9FE !important;
-}
+/* Header labels: ver HEADER-WHITE-LILAC-v1 */
 
 @media (max-width: 991px) {
   .mobile-discover-bar__chip {
@@ -1645,4 +1624,110 @@ main.home-main .showcase-product.card .card-footer {
 a.btn.btn-lg.col-12:hover,
 input.btn.search-filters-btn.search-filters-btn_finish:hover {
   box-shadow: 0 6px 16px rgba(109, 40, 217, 0.35) !important;
+}
+
+/*
+ * HEADER-WHITE-LILAC-v1 — faixa do header (logo, busca, atalhos): fundo branco; ex-azuis → lilás.
+ * Nav inferior (.nav-content) mantém lilás do GLOBAL-LILAC. Carrinho: badge laranja intacto.
+ */
+.header:not(.header-checkout),
+.header:not(.header-checkout) .header-content,
+.header:not(.header-checkout) .header-content .navbar {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08) !important;
+}
+
+.header:not(.header-checkout) .account_link,
+.header:not(.header-checkout) a.account_link,
+.header:not(.header-checkout) .header-link_text,
+.header:not(.header-checkout) .header-link_text .account_link,
+.header:not(.header-checkout) .header-link_text a,
+.header:not(.header-checkout) .header-box_account .header-link_text .account_link,
+.header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
+.header:not(.header-checkout) .header-link_account .header-link_text .account_link,
+.header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
+  color: #6D28D9 !important;
+}
+
+.header:not(.header-checkout) .header-account-kicker,
+.header:not(.header-checkout) .header-account-label,
+.header-account-kicker,
+.header-account-label {
+  color: #7C3AED !important;
+}
+
+.header:not(.header-checkout) .header-link svg,
+.header:not(.header-checkout) .header .icon-ssl svg,
+.header:not(.header-checkout) .header-link_whatsapp .header-link_icon svg,
+.header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
+.header:not(.header-checkout) .header-link-account_tel .header-link_icon svg,
+.header:not(.header-checkout) .header-link_cart svg,
+.header:not(.header-checkout) .header-link_cart .icon_cart,
+.header:not(.header-checkout) .cart_link svg {
+  fill: #7C3AED !important;
+}
+
+.header:not(.header-checkout) .header-link_menu__mobile .icon-bar,
+.header:not(.header-checkout) .header-link_menu__mobile.active .icon-bar {
+  background-color: #7C3AED !important;
+}
+
+.header:not(.header-checkout) .search_link .icon-bar:first-child {
+  border-color: #7C3AED !important;
+}
+
+.header:not(.header-checkout) .search_link .icon-bar:last-child,
+.header:not(.header-checkout) .search_link.active .icon-bar:first-child {
+  background-color: #7C3AED !important;
+}
+
+.header:not(.header-checkout) .search-desktop .form-input {
+  background-color: #ffffff !important;
+  border: 1px solid #C4B5FD !important;
+  color: #5B21B6 !important;
+}
+
+.header:not(.header-checkout) .search-desktop .form-input::placeholder {
+  color: #A78BFA !important;
+  opacity: 1 !important;
+}
+
+.header:not(.header-checkout) .search-desktop .form-input:focus {
+  border-color: #7C3AED !important;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15) !important;
+}
+
+.header:not(.header-checkout) .search-desktop .btn {
+  background-color: #ffffff !important;
+  border-left: 1px solid #E9D5FF !important;
+}
+
+.header:not(.header-checkout) .search-desktop .btn svg {
+  fill: #7C3AED !important;
+}
+
+.header:not(.header-checkout) .search-desktop .btn:focus,
+.header:not(.header-checkout) .search-desktop .btn:hover {
+  background-color: #F3E8FF !important;
+}
+
+.header:not(.header-checkout) .header a:not(.cart_link):not(.header-link_cart):hover,
+.header:not(.header-checkout) .header-link:not(.header-link_cart):not(.cart_link):hover {
+  color: #5B21B6 !important;
+}
+
+.header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
+.header:not(.header-checkout) .header-box_account .header-link_text a.account_link:focus,
+.header:not(.header-checkout) .header-link_account .header-link_text a.account_link:hover,
+.header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
+.header:not(.header-checkout) .header a.account_link:hover,
+.header:not(.header-checkout) .header a.account_link:focus {
+  color: #5B21B6 !important;
+}
+
+.header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg,
+.header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg,
+.header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg,
+.header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg {
+  fill: #6D28D9 !important;
 }
