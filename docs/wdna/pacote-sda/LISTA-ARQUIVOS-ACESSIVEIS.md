@@ -118,4 +118,11 @@ sections/sda-card-btu-line.liquid
 | **Compare** | Um dono: `product-compare.js` + `product-compare-data.liquid` (textarea hidden). |
 | **Não colar** CSS extra de card no painel WDNA em `theme-custom` sem escopo. |
 
-**Pasta no repo (clone):** `docs/wdna/pacote-sda/MANIFEST.txt` + script `copiar-para-tema.sh`
+**Pasta com todos os códigos (última versão, espelho WDNA):**  
+`docs/wdna/pacote-sda/tema-sda-ultimo/` → `layout/`, `assets/`, `sections/` (31 arquivos + `LEIA-ME.txt`)
+
+**GitHub (pasta):** https://github.com/nevessimon56-glitch/Site-do-Ar/tree/cursor/card-remodel-b192/docs/wdna/pacote-sda/tema-sda-ultimo
+
+**Não use** `docs/wdna/RECUPERACAO-SITE/` — kit antigo parcial.
+
+**Atualizar espelho:** `./docs/wdna/pacote-sda/copiar-para-tema.sh ./docs/wdna/pacote-sda/tema-sda-ultimo`
