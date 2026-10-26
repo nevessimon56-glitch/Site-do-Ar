@@ -81,17 +81,56 @@
     {%- comment -%}
       Custom CSS (ordem importa):
       1. mega-menu.css — cards, nav, hover, mega menu
-      2. product-compare.css — só comparador (sem foto/nav/tema)
-      3. product-hover-image.css — shim legado (sem dimensões de imagem)
+      2. header-v2.css — layout do cabeçalho v2 (OBRIGATÓRIO se sections/header.liquid usa header-v2)
+      3. product-compare.css — comparador
+      4. product-hover-image.css — shim legado
+      5. sda-conversion-redesign.css — vence GLOBAL-BLACK do mega-menu (por último)
     {%- endcomment -%}
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/header-v2.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-conversion-redesign.css' | themeAssetUrl }}">
     {%- comment -%}
       HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
       Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
     {%- endcomment -%}
     <style id="header-orange-inline-v5">
+/* HOTFIX: WDNA pode exibir JSON do comparador — ocultar até product-compare-data.liquid corrigido */
+.product-compare-data,
+.product-compare-json,
+template.product-compare-data,
+div.product-compare-data {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+.showcase-card-btu { display: none !important; }
+
+/* SITE-EMERGENCY-v6 — header-v2 sem header-v2.css publicado (ícone SVG gigante + faixa preta) */
+.header.header-v2 .header-v2-action__icon svg,
+.header.header-v2 .header-utility__svg,
+.header.header-v2 svg.sda-ico-stroke,
+.header.header-v2 .logo svg,
+.header.header-v2 .logo picture + svg {
+  width: 24px !important;
+  height: 24px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+}
+body .header.header-v2:not(.header-checkout) {
+  background: #f7f9fc !important;
+  background-color: #f7f9fc !important;
+}
+body .header.header-v2:not(.header-checkout) .header-content,
+body .header.header-v2:not(.header-checkout) .header-content .navbar {
+  background: #fff !important;
+  background-color: #fff !important;
+}
+
 /* Badge carrinho laranja (vence theme-custom #61bb47) */
 body .header:not(.header-checkout) .header-link_cart .cart_quantity,
 body .header:not(.header-checkout) .cart_link .cart_quantity,

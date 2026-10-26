@@ -81,12 +81,16 @@
     {%- comment -%}
       Custom CSS (ordem importa):
       1. mega-menu.css — cards, nav, hover, mega menu
-      2. product-compare.css — só comparador (sem foto/nav/tema)
-      3. product-hover-image.css — shim legado (sem dimensões de imagem)
+      2. header-v2.css — layout header v2 (obrigatório com header.liquid v2)
+      3. product-compare.css — comparador
+      4. product-hover-image.css — shim legado
+      5. sda-conversion-redesign.css — vence GLOBAL-BLACK (por último)
     {%- endcomment -%}
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/header-v2.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-conversion-redesign.css' | themeAssetUrl }}">
     {%- comment -%}
       HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
       Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
