@@ -98,6 +98,7 @@ Enviar se estiverem no editor (branch conversão; **podem faltar no Git**):
 | `sections/sda-pdp-trust.liquid` | **Sim** (auxiliar; trust inline no buy box) |
 | `sections/sda-pdp-recommendation.liquid` | **Sim** (repo; lista + JS sync área m²) |
 | `assets/product-page-v2.css` | **Sim** (~3700 linhas) — escopo `#product-pdp-v2` / `.product-v2`; linkado **após** `sda-conversion-redesign.css`. |
+| `assets/theme-all.css` (colagem produção WDNA) | **Sim** — ~15,4k linhas, termina em `.form-group_potencia` `@media (min-width: 992px)`; repo tinha concat duplicada/truncada (~31k linhas) — corrigido 2026-10-26. Overrides locais (ex. `.product-main:hover`) ficam em `theme-custom.css`. |
 
 Sem esses arquivos, mudar só CSS em `sda-conversion-redesign.css` na PDP **não aplica** (faltam classes no HTML).
 
