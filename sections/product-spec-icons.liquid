@@ -3,6 +3,7 @@
   VERSAO: 2026-07-15-spec-v4
   Lê a aba Especificações do produto (tabela HTML), atributos e título.
   Uso: {% render 'sections/product-spec-icons', product: product %}
+  PDP: {% render 'sections/product-spec-icons', product: product, pdpHighlights: true, specHtmlFromDescriptions: descHtml %}
 {% endcomment %}
 
 {% assign specTitle = product.title | downcase %}
@@ -31,7 +32,14 @@
   {% assign specBlob = specBlob | append: ' | ' | append: product.seoDescription | downcase %}
 {% endif %}
 
+{% if specHtmlFromDescriptions and specHtmlFromDescriptions != '' %}
+  {% assign specHtmlFromDescriptions = specHtmlFromDescriptions | strip %}
+{% else %}
+  {% assign specHtmlFromDescriptions = '' %}
+{% endif %}
+
 {% capture specHtmlRaw %}
+{% if specHtmlFromDescriptions != '' %}{{ specHtmlFromDescriptions }}{% endif %}
 {% if product.specification and product.specification != '' %}{{ product.specification }}{% endif %}
 {% if product.specifications and product.specifications != '' %}{{ product.specifications }}{% endif %}
 {% if product.specificationText and product.specificationText != '' %}{{ product.specificationText }}{% endif %}
@@ -197,7 +205,7 @@
 {% endif %}
 
 {% if hasSpecIcons %}
-<ul class="showcase-spec-bar" data-spec-icons="v4" aria-label="Características do produto">
+<ul class="showcase-spec-bar{% if pdpHighlights %} showcase-spec-bar--pdp-highlights{% endif %}" data-spec-icons="v4" aria-label="Características do produto">
   {% if iconProcelA %}
   <li class="showcase-spec-bar__tag showcase-spec-bar__tag--procel" title="Classificação A — Procel">A</li>
   {% endif %}
