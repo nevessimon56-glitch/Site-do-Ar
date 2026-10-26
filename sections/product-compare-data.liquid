@@ -2,6 +2,9 @@
   Dados compactos para comparador (sem script tag — não quebra layout do card)
   VERSAO: 2026-07-30-compare-v6-ml-attrs-safe
   Usa a mesma base de detecção de product-spec-icons (ficha, atributos, propriedades).
+
+  WDNA: NÃO usar <template class="product-compare-data"> — a plataforma exibe o JSON na página.
+  Use o <div class="product-compare-data product-compare-json" hidden ...> no final deste arquivo.
 {% endcomment %}
 
 {% assign specTitle = product.title | downcase %}
@@ -174,23 +177,49 @@
   {% endunless %}
 {% endif %}
 
+{% comment %} Wi-Fi: mesmas regras conservadoras que product-spec-icons (título + ficha + attrs) {% endcomment %}
 {% assign specWifiBlob = specTitle %}
 {% if specPlain != '' %}
   {% assign specWifiBlob = specWifiBlob | append: ' | ' | append: specPlain %}
 {% endif %}
+{% if product.attributes and product.attributes.size > 0 %}
+  {% for attr in product.attributes %}
+    {% assign attrName = attr.name | default: attr.nome | default: '' | downcase %}
+    {% assign attrVal = '' %}
+    {% if attr.values and attr.values.size > 0 %}
+      {% assign attrVal = attr.values[0].name | default: attr.values[0].value | default: '' | downcase %}
+    {% elsif attr.valores and attr.valores.size > 0 %}
+      {% assign attrVal = attr.valores[0].nome | default: '' | downcase %}
+    {% elsif attr.value %}
+      {% assign attrVal = attr.value | downcase %}
+    {% endif %}
+    {% assign specWifiBlob = specWifiBlob | append: ' | ' | append: attrName | append: ':' | append: attrVal %}
+  {% endfor %}
+{% endif %}
+{% if product.properties and product.properties.size > 0 %}
+  {% for prop in product.properties %}
+    {% assign propName = prop.name | default: prop.nome | default: '' | downcase %}
+    {% assign propVal = prop.value | default: prop.valor | default: '' | downcase %}
+    {% assign specWifiBlob = specWifiBlob | append: ' | ' | append: propName | append: ':' | append: propVal %}
+  {% endfor %}
+{% endif %}
 
 {% assign wifiBlocked = false %}
-{% if specTitle contains 'mecânico' or specTitle contains 'mecanico' or specWifiBlob contains 'controle mecânico' or specWifiBlob contains 'controle mecanico' %}
+{% if specTitle contains 'mecânico' or specTitle contains 'mecanico' or specWifiBlob contains 'operação / controle | mecânico' or specWifiBlob contains 'operacao / controle | mecanico' or specWifiBlob contains 'mecânico (manual' or specWifiBlob contains 'mecanico (manual' or specWifiBlob contains 'botões rotativos' or specWifiBlob contains 'botoes rotativos' or specWifiBlob contains 'controle mecânico' or specWifiBlob contains 'controle mecanico' %}
   {% assign wifiBlocked = true %}
+  {% assign cmpInverter = false %}
 {% endif %}
 {% if specTitle contains 'janela' %}
   {% unless specTitle contains 'wi-fi' or specTitle contains 'wifi' %}
     {% assign wifiBlocked = true %}
   {% endunless %}
 {% endif %}
+{% if specWifiBlob contains 'compatibilidade wi-fi: não' or specWifiBlob contains 'compatibilidade wi-fi: nao' or specWifiBlob contains 'compatibilidade wifi: não' or specWifiBlob contains 'compatibilidade wifi: nao' or specWifiBlob contains 'sem wi-fi' or specWifiBlob contains 'sem wifi' or specWifiBlob contains 'não possui wi-fi' or specWifiBlob contains 'nao possui wi-fi' or specWifiBlob contains 'não possui wifi' or specWifiBlob contains 'nao possui wifi' %}
+  {% assign wifiBlocked = true %}
+{% endif %}
 
 {% unless wifiBlocked %}
-  {% if specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' or specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' or specWifiBlob contains 'smart wi-fi' or specWifiBlob contains 'smart wifi' %}
+  {% if specWifiBlob contains 'compatibilidade wi-fi: sim' or specWifiBlob contains 'compatibilidade wifi: sim' or specWifiBlob contains 'wi-fi integrado' or specWifiBlob contains 'wifi integrado' or specWifiBlob contains 'wi-fi de fábrica' or specWifiBlob contains 'wi-fi de fabrica' or specWifiBlob contains 'smart wi-fi' or specWifiBlob contains 'smart wifi' %}
     {% assign cmpWifi = true %}
   {% elsif specTitle contains ' wi-fi' or specTitle contains '-wi-fi' or specTitle contains 'wifi' %}
     {% assign cmpWifi = true %}
