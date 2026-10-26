@@ -111,6 +111,13 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-plugins.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
+    {%- comment -%}
+      Custom CSS (ordem): mega-menu (cards, nav, hover v2) → product-compare → product-hover-image (shim legado + overrides finais).
+      Tokens de marca (--brand-*) vêm de theme-custom.css e devem carregar antes de mega-menu.css.
+    {%- endcomment -%}
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
 
     <!-- Preconnect - Fonts -->
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
@@ -151,6 +158,8 @@
 <span class="loading-main loading"></span>
 {% render 'sections/check-cookie'%}
 {% render 'sections/sidenav-overlay-cart', cart: cart, store: store, themeConfig: themeConfig %}
+{% render 'sections/mega-menu-ar' %}
+{% render 'sections/product-compare-panel' %}
 {% block content %}{% endblock %}
 {% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
 <script>
@@ -225,6 +234,17 @@
     window.currencyStore = {% if store.symbolPrice %}"{{ store.symbolPrice }}"{% else %}null{% endif %};
 </script>
 {% if scripts.main.src %}<script src="{{ scripts.main.src }}"></script>{% endif %}
+{%- comment -%} mega-menu.js define __SDA_HOVER_V2__; product-hover-image.js é no-op se v2 ativo {%- endcomment -%}
+<script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
+<script>
+  window.addEventListener('load', function () {
+    if (typeof window.initMegaMenuAr === 'function' && !document.querySelector('.mega-menu-ar')) {
+      window.initMegaMenuAr();
+    }
+  });
+</script>
 <script>
     function setupStore() {
         return {
