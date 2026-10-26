@@ -647,3 +647,47 @@ body.has-compare-bar.has-mobile-account-dock {
     flex: 1;
   }
 }
+
+/* Integração mega-menu.css (mobile 2 col): manter Comparar na linha do footer, não overlay absoluto */
+@media (max-width: 991px) {
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 5px !important;
+    width: 100% !important;
+    margin-top: 6px !important;
+    padding-top: 0 !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-compare-btn,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions .showcase-compare-btn,
+  main.home-main section.showcase .showcase-products_carousel .showcase-card-actions .showcase-compare-btn {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    z-index: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 30% !important;
+    height: 26px !important;
+    min-height: 26px !important;
+    padding: 3px 5px !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+    color: #1a6eb5 !important;
+    overflow: visible !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-compare-btn::before,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions .showcase-compare-btn::before,
+  main.home-main section.showcase .showcase-products_carousel .showcase-card-actions .showcase-compare-btn::before {
+    content: none !important;
+    display: none !important;
+  }
+}

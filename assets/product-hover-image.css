@@ -125,3 +125,60 @@ body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_i
 body .header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg {
   fill: #f97316 !important;
 }
+
+/* Banners — evita esbranquiçar no hover (theme-all opacity 0.7) */
+a.showcase-banners_link:hover,
+a.showcase-banners_link:focus,
+a.showcase-banners_link:active {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.showcase-banners_link:hover .banner-main_img,
+.showcase-banners_link:focus .banner-main_img,
+.showcase-banners_link:active .banner-main_img,
+.showcase-banners_link:hover img.lazy-slider,
+.showcase-banners_link:focus img.lazy-slider,
+.showcase-banners_link:active img.lazy-slider {
+  opacity: 1 !important;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  a.showcase-banners_link {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Integração pós mega-menu.css — §K identidade Site do Ar (este arquivo carrega por último) */
+.showcase-item .showcase-product.card,
+.showcase-search .showcase-product.card,
+main.home-main section.showcase .showcase-product.card {
+  border-color: #b8cfe8 !important;
+}
+
+.showcase-products .showcase-product.card:hover,
+.showcase-search.showcase-search_grid .showcase-product.card:hover {
+  box-shadow: 0 8px 24px rgba(44, 119, 187, 0.15) !important;
+  transform: translateY(-5px) !important;
+}
+
+.showcase-search.showcase-search_list .showcase-product.card:hover {
+  transform: none !important;
+}
+
+.showcase-related .showcase-product.card:hover,
+.showcase-related .showcase-products .showcase-product.card:hover {
+  transform: none !important;
+  box-shadow: 0 8px 24px rgba(44, 119, 187, 0.15) !important;
+}
+
+.product-main .showcase:not(.showcase-related):not(.showcase-last-viewed) .showcase-products .showcase-product.card:hover {
+  transform: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.showcase-product .card-footer .showcase-prices--card .showcase-prices_pix,
+.showcase-prices_pix {
+  color: #15803d !important;
+  background: #f0fdf4 !important;
+}

@@ -992,4 +992,13 @@
   } else {
     init();
   }
+
+  window.addEventListener('change-customer-login', function () {
+    syncButtons();
+    updateBar();
+  });
+  window.addEventListener('check-login-logged', function () {
+    syncButtons();
+    updateBar();
+  });
 })();

@@ -1,6 +1,89 @@
 /*** START - Custom Ly 2024-10-21 ***/
 /* Tema: Uniforme - v - https://sitedoar.com.br */
 
+/** Site do Ar — tokens de marca (Fase 2B-1) **/
+:root {
+  --brand-primary: #2C77BB;
+  --brand-navy: #163D5C;
+  --brand-purple: #6D28D9;
+  --brand-orange: #F97316;
+  --brand-lavender: #F3E8FF;
+}
+
+/** Vitrines — títulos (Fase 2B-2; overrides theme-all.css após custom na cascata) **/
+.showcase-title {
+  color: var(--brand-primary);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 26px;
+  text-transform: none;
+}
+
+.showcase-title::after {
+  background-color: var(--brand-purple);
+  border-radius: 2px;
+  content: "";
+  display: block;
+  height: 3px;
+  margin-top: 10px;
+  width: 56px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.showcase-title[style*="text-align: left"]::after,
+.showcase-title[style*="text-align:left"]::after {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.showcase-title[style*="text-align: right"]::after,
+.showcase-title[style*="text-align:right"]::after {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.showcase-title[style*="text-align: center"]::after,
+.showcase-title[style*="text-align:center"]::after {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.showcase-title[style*="display: none"]::after,
+.showcase-title[style*="display:none"]::after,
+.showcase-title[style*="opacity: 0"]::after {
+  content: none;
+  display: none;
+}
+
+/* PDP — secundários (sections/product-related.liquid, product-last-viewed.liquid) */
+.showcase-related .showcase-title,
+.showcase-last-viewed .showcase-title {
+  color: var(--brand-navy);
+  font-size: 23px;
+  line-height: 1.3;
+  margin-bottom: 22px;
+}
+
+.showcase-related .showcase-title::after,
+.showcase-last-viewed .showcase-title::after {
+  width: 48px;
+}
+
+@media (max-width: 991px) {
+  .showcase-title {
+    font-size: 24px;
+    line-height: 1.3;
+    margin-bottom: 24px;
+  }
+
+  .showcase-related .showcase-title,
+  .showcase-last-viewed .showcase-title {
+    font-size: 21px;
+    margin-bottom: 20px;
+  }
+}
 
 /** Start - Header  **/
 .logo-store-name {
@@ -37,7 +120,7 @@
 
 .cart_quantity {
   align-items: center;
-  background-color: #61bb47;
+  background-color: #f97316;
   color: #fff;
   display: flex;
   float: right;
@@ -55,11 +138,11 @@
 }
 
 .header .icon-ssl svg {
-  fill: #4b96d4;
+  fill: var(--brand-primary);
 }
 
 .header .icon-ssl:hover svg {
-  fill: #4b96d4;
+  fill: var(--brand-primary);
 }
 
 .header.header-checkout {
@@ -111,7 +194,7 @@
 }
 
 .header-link svg {
-  fill: #4b96d4;
+  fill: var(--brand-primary);
 }
 
 .header-link {
@@ -141,11 +224,11 @@
 }
 
 .header-link_menu__mobile .icon-bar {
-  background-color: #4b96d4;
+  background-color: var(--brand-primary);
 }
 
 .header-link_menu__mobile.active .icon-bar {
-  background-color: #4b96d4;
+  background-color: var(--brand-primary);
 }
 
 .header-link_whatsapp .header-link_icon svg {
@@ -265,15 +348,15 @@
 }
 
 .search_link .icon-bar:first-child {
-  border-color: #4b96d4;
+  border-color: var(--brand-primary);
 }
 
 .search_link .icon-bar:last-child {
-  background-color: #4b96d4;
+  background-color: var(--brand-primary);
 }
 
 .search_link.active .icon-bar:first-child {
-  background-color: #4b96d4;
+  background-color: var(--brand-primary);
 }
 
 .sidebar-nav .metismenu .has-arrow:after {
@@ -745,37 +828,21 @@ a.account_link {
   transition: none !important;
 }
 
-/* ── Produtos relacionados: pulo individual ── */
-.product-related .showcase-product.card {
-  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
-  will-change: transform;
+/* ── Produtos relacionados: overflow (markup: .showcase-related) ── */
+.showcase-related .showcase-product.card {
+  transition: box-shadow 0.25s ease !important;
   overflow: visible !important;
 }
 
-.product-related .showcase-product.card:hover {
-  transform: translateY(-8px) !important;
-  box-shadow: 0 12px 28px rgba(44, 119, 187, 0.2) !important;
-  animation: none !important;
-}
-
-/* Garante que o container não corte o efeito */
-.product-related,
-.product-related .showcase-products {
+.showcase-related,
+.showcase-related .showcase-products {
   overflow: visible !important;
   padding-bottom: 16px !important;
 }
 
-/* ── Vitrine da página principal: pulo individual ── */
+/* ── Vitrine: overflow visível para hover (lift unificado em «Card do produto») ── */
 .showcase-products .showcase-product.card {
-  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
-  will-change: transform;
   overflow: visible !important;
-}
-
-.showcase-products .showcase-product.card:hover {
-  transform: translateY(-8px) !important;
-  box-shadow: 0 12px 28px rgba(44, 119, 187, 0.2) !important;
-  animation: none !important;
 }
 
 .showcase-products {
@@ -783,15 +850,8 @@ a.account_link {
   padding-bottom: 16px !important;
 }
 
-/* ── Cancela o pulo na página do produto ── */
-.page-product .showcase-products .showcase-product.card,
-.product-page .showcase-products .showcase-product.card {
-  transition: none !important;
-  transform: none !important;
-}
-
-.page-product .showcase-products .showcase-product.card:hover,
-.product-page .showcase-products .showcase-product.card:hover {
+/* PDP: vitrines em main.product-main (product.liquid); exclui related/last-viewed no rodapé */
+.product-main .showcase:not(.showcase-related):not(.showcase-last-viewed) .showcase-products .showcase-product.card:hover {
   transform: none !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
 }
@@ -831,19 +891,16 @@ a.showcase-product_buy:hover {
 
 
 
-/* Remove pulo nos produtos relacionados dentro da página do produto */
-.product-related .showcase-product,
-.product-related .showcase-product:hover,
-.showcase-products .showcase-product:hover {
+/* Produtos relacionados: sem lift no card; sombra de hover preservada */
+.showcase-related .showcase-product,
+.showcase-related .showcase-product:hover,
+.showcase-related .showcase-products .showcase-product.card:hover {
   transform: none !important;
   animation: none !important;
 }
 
-.product-related .showcase-product {
-  transition: box-shadow 0.25s ease !important;
-}
-
-.product-related .showcase-product:hover {
+.showcase-related .showcase-product:hover,
+.showcase-related .showcase-products .showcase-product.card:hover {
   box-shadow: 0 8px 24px rgba(44, 119, 187, 0.15) !important;
 }
 
@@ -1004,14 +1061,14 @@ a.showcase-product_buy:hover {
 :root {
   --footer-bg: #0f1923;
   --footer-bg-light: #162333;
-  --footer-cta-bg: #2c77bb;
+  --footer-cta-bg: var(--brand-primary);
   --footer-cta-btn-whatsapp: #25d366;
   --footer-cta-btn-phone: rgba(255, 255, 255, 0.12);
   --footer-text: #b0bec5;
   --footer-text-light: #ffffff;
   --footer-title: #ffffff;
   --footer-border: rgba(255, 255, 255, 0.08);
-  --footer-accent: #4b96d4;
+  --footer-accent: var(--brand-primary);
   --footer-bottom-bg: #080f17;
 }
 
@@ -1609,18 +1666,19 @@ a.showcase-product_buy:hover {
 .showcase-product.card,
 .showcase-product {
   border-radius: 12px !important;
-  border: 1px solid #163d5c !important;
+  border: 1px solid #b8cfe8 !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
   transition: box-shadow 0.25s ease, transform 0.25s ease !important;
-  will-change: transform;
   overflow: visible !important;
   /* era hidden — isso causava o pulo */
 }
 
-.showcase-product:hover {
+/* Hover: lift só home/outras vitrines (.showcase-products) e busca em grade */
+.showcase-products .showcase-product.card:hover,
+.showcase-search.showcase-search_grid .showcase-product.card:hover {
   animation: none !important;
   box-shadow: 0 8px 24px rgba(44, 119, 187, 0.15) !important;
-  transform: translateY(-4px) !important;
+  transform: translateY(-5px) !important;
 }
 
 /* Garante que o grid/linha não se mova junto */
@@ -1641,6 +1699,25 @@ a.showcase-product_buy:hover {
 
 .showcase-product:hover .showcase-product_link__image img {
   transform: scale(1.04) !important;
+}
+
+/* Comparador (product-compare): linha Comprar + Comparar no footer do card */
+.showcase-card-actions {
+  margin-top: 10px !important;
+}
+
+.showcase-card-actions .showcase-product_buy,
+.showcase-card-actions a.showcase-product_buy {
+  margin-top: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: none !important;
+  float: none !important;
+}
+
+.showcase-product .card-footer.card-footer--actions {
+  min-height: 0 !important;
+  padding-top: 14px !important;
 }
 
 /** End - Card do produto **/
@@ -1995,13 +2072,14 @@ a.btn.btn-new_user.btn-block:hover {
 
 }
 
-.showcase-product.card,
-.showcase-products .showcase-product,
-.showcase-products .card {
-  border-top: 1px solid #b8cfe8 !important;
-  border-bottom: 1px solid #b8cfe8 !important;
-  border-left: 1px solid #b8cfe8 !important;
-  border-right: 1px solid #b8cfe8 !important;
+.showcase-prices_pix,
+.product-prices_pix {
+  color: #15803d;
+  background: #f0fdf4;
+  border-radius: 4px;
+  display: inline-block;
+  padding: 2px 8px;
+  font-weight: 700;
 }
 
 /*** Popup Diagnóstico Clima 360 ***/
