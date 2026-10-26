@@ -14,7 +14,8 @@
 | **`mega-menu.css` (~5,8k linhas)** | Dono de **CARD-MOBILE-REDESIGN**, cards “cycle frio/QF”, hover, **posição absoluta do Comparar** em alguns breakpoints. |
 | **`product-compare.css` + `product-hover-image.css`** | Repetem layout de `.showcase-card-actions`, botões, alturas de card, temas por ciclo. |
 | **`sda-conversion-redesign.css`** | Redesign de conversão (coluna Comparar/Comprar, `.sda-product-card`) — **só funciona se o Liquid tiver as classes certas**. |
-| **Liquid desalinhado** | No Git atual, `showcase-model-product.liquid` **não** usa `sda-product-card` / `sda-card-footer`; a loja ao vivo pode ter versão de conversão diferente do repo. |
+| **Liquid (recovery branch)** | `showcase-model-product.liquid` **já** usa `sda-product-card` / `sda-card-footer` + Comparar secundário. Promo model 9 ainda é layout legado. |
+| **Dono único (2026-10-26)** | Ver `docs/wdna/CARD-DONO-UNICO.md` — CSS de card conversão centralizado em `sda-conversion-redesign.css`; demais folhas com `:not(.sda-product-card)`. |
 | **PDP “v2” incompleta no repo** | Branch conversão usa `product-v2`, `#product-pdp-v2`, seções extras — **não estão todas** em `cursor/site-recovery-b192`. |
 | **`product-page-v2.css`** | Referenciado na conversão; histórico git com arquivo **0 bytes**. |
 | **WDNA + `<template>` no comparador** | JSON visível no card se `product-compare-data.liquid` antigo ainda estiver na loja. |

@@ -1,7 +1,10 @@
 /**
  * SDA-CONVERSION-REDESIGN-v1
- * Sistema visual: azul (ação/confiança), laranja (oferta), roxo (diagnóstico/filtros), verde (disponível).
- * Carrega por último (theme.liquid). Não remove funcionalidades — só hierarquia e polish.
+ * DONO ÚNICO do card de vitrine: .showcase-product.card.sda-product-card
+ * (markup: sections/showcase-model-product.liquid)
+ *
+ * mega-menu.css / product-hover-image.css / product-compare.css só afetam cards SEM .sda-product-card.
+ * PDP: #product-pdp-v2 + product-page-v2.css (fora deste escopo de card).
  */
 
 :root {
@@ -1798,4 +1801,19 @@ main.home-main section.showcase .showcase-product.card.sda-product-card .showcas
   width: 100% !important;
   max-width: none !important;
   height: auto !important;
+}
+
+/* CARD-OWNER-v7 — estado selecionado do comparador (product-compare.js) */
+.sda-product-card .showcase-compare-btn[aria-pressed='true'],
+.sda-product-card .showcase-compare-btn.is-selected {
+  border-color: var(--sda-blue) !important;
+  background: linear-gradient(135deg, var(--sda-blue), var(--sda-blue-deep)) !important;
+  color: #fff !important;
+  box-shadow: 0 3px 10px rgba(25, 118, 210, 0.28) !important;
+}
+
+.sda-product-card .showcase-compare-btn[aria-pressed='true'] .showcase-compare-btn__label::before,
+.sda-product-card .showcase-compare-btn.is-selected .showcase-compare-btn__label::before {
+  content: '✓ ' !important;
+  font-weight: 700 !important;
 }

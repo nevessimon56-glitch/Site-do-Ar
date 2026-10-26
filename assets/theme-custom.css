@@ -1701,13 +1701,13 @@ a.showcase-product_buy:hover {
   transform: scale(1.03) !important;
 }
 
-/* Comparador (product-compare): linha Comprar + Comparar no footer do card */
-.showcase-card-actions {
+/* Comparador (product-compare): linha Comprar + Comparar — só cards legado */
+.showcase-product:not(.sda-product-card) .showcase-card-actions {
   margin-top: 10px !important;
 }
 
-.showcase-card-actions .showcase-product_buy,
-.showcase-card-actions a.showcase-product_buy {
+.showcase-product:not(.sda-product-card) .showcase-card-actions .showcase-product_buy,
+.showcase-product:not(.sda-product-card) .showcase-card-actions a.showcase-product_buy {
   margin-top: 0 !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
