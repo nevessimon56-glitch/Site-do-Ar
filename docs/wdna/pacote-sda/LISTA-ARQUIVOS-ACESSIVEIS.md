@@ -106,4 +106,16 @@ sections/sda-card-btu-line.liquid
 
 **Total: 31 arquivos.** O resto do inventário do tema novo **permanece** como veio da WDNA (`theme.js`, vitrines, checkout, templates, etc.).
 
+## Evitar “sobrescrever funções” / conflito
+
+| Regra | Detalhe |
+|-------|---------|
+| **Não substituir** | `theme.js`, `theme-defer.js`, `theme-plugins.css` do **tema novo** — o repo pode estar desatualizado; carrossel tns é do core WDNA. |
+| **Subir os 31 juntos** | Especialmente `theme.liquid` + todos os CSS/JS SDA; senão funções/globals não carregam ou ordem CSS quebra. |
+| **Card conversão** | Só `.sda-product-card` — `theme-custom`, `mega-menu`, `product-compare`, `product-hover-image` usam `:not(.sda-product-card)`; visual final = `showcase-product-card.css` (último). |
+| **Hover duplo** | `mega-menu.js` define `__SDA_HOVER_V2__`; `product-hover-image.js` **sai** se já ativo. |
+| **Nav mobile** | `initSdaMobileNavStrip` no `theme.liquid` usa `\|\|` — não apaga a versão do `mega-menu.js`. |
+| **Compare** | Um dono: `product-compare.js` + `product-compare-data.liquid` (textarea hidden). |
+| **Não colar** CSS extra de card no painel WDNA em `theme-custom` sem escopo. |
+
 **Pasta no repo (clone):** `docs/wdna/pacote-sda/MANIFEST.txt` + script `copiar-para-tema.sh`

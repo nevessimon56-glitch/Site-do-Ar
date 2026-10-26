@@ -1183,7 +1183,7 @@
 }
 
 @media (max-width: 767px) {
-  .showcase-item .showcase-product.card {
+  .showcase-item .showcase-product.card:not(.sda-product-card) {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -1195,7 +1195,7 @@
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
-  .showcase-item .showcase-product.card:active {
+  .showcase-item .showcase-product.card:not(.sda-product-card):active {
     transform: scale(0.985);
     box-shadow: 0 2px 10px rgba(44, 119, 187, 0.1);
   }
