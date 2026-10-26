@@ -72,14 +72,6 @@
   font-size: 12px !important;
 }
 
-.showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-compare-btn {
-  max-width: 30% !important;
-  min-height: 26px !important;
-  height: 26px !important;
-  padding: 3px 5px !important;
-  font-size: 9px !important;
-}
-
 .showcase-compare-btn,
 .product-compare-btn {
   display: inline-flex;
@@ -648,76 +640,176 @@ body.has-compare-bar.has-mobile-account-dock {
   }
 }
 
-/* Integração mega-menu.css (mobile 2 col): manter Comparar na linha do footer, não overlay absoluto */
+/* Ícone setas opostas (arrow-left-right) — só CSS; não há SVG dedicado no tema */
+.showcase-card-actions .showcase-compare-btn::before {
+  content: '' !important;
+  display: inline-block !important;
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  background-color: currentColor !important;
+  -webkit-mask: var(--sda-compare-icon) center / contain no-repeat;
+  mask: var(--sda-compare-icon) center / contain no-repeat;
+}
+
+/* Mobile — Comparar + Comprar na mesma linha (vence overlay PRODUCT-CARD-v2 do mega-menu) */
 @media (max-width: 991px) {
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions {
+  .showcase-product .showcase-card-actions {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
-    align-items: center !important;
+    align-items: stretch !important;
     gap: 5px !important;
     width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     margin-top: 6px !important;
-    padding-top: 0 !important;
+    padding: 0 4px 4px !important;
+    box-sizing: border-box !important;
   }
 
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-compare-btn,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions .showcase-compare-btn,
-  main.home-main section.showcase .showcase-products_carousel .showcase-card-actions .showcase-compare-btn {
+  .showcase-product .showcase-card-actions .showcase-compare-btn {
     position: static !important;
     top: auto !important;
     right: auto !important;
     left: auto !important;
     z-index: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 32% !important;
     width: auto !important;
     min-width: 0 !important;
-    max-width: 30% !important;
-    height: 26px !important;
-    min-height: 26px !important;
-    padding: 3px 5px !important;
+    max-width: 35% !important;
+    min-height: 38px !important;
+    height: auto !important;
+    padding: 6px 4px !important;
     font-size: 9px !important;
-    line-height: 1.1 !important;
-    color: #1a6eb5 !important;
-    overflow: visible !important;
+    line-height: 1.15 !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+    color: #2c77bb !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
     background: #fff !important;
+    border: 1px solid #b8cfe8 !important;
+    border-radius: 8px !important;
     box-shadow: none !important;
+    gap: 3px;
+    box-sizing: border-box !important;
   }
 
-  .showcase-search.showcase-search_grid--mobile-2col .showcase-card-actions .showcase-compare-btn::before,
-  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-card-actions .showcase-compare-btn::before,
-  main.home-main section.showcase .showcase-products_carousel .showcase-card-actions .showcase-compare-btn::before {
-    content: none !important;
-    display: none !important;
+  .showcase-product .showcase-card-actions .showcase-compare-btn::before {
+    width: 11px !important;
+    height: 11px !important;
   }
 
-  /* Busca em lista (mobile): manter linha Comparar + Comprar — sem overlay do mega-menu */
+  .showcase-product .showcase-card-actions .showcase-product_buy,
+  .showcase-product .showcase-card-actions .showcase-product_buy.btn {
+    flex: 1 1 0% !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 38px !important;
+    height: auto !important;
+    align-self: stretch !important;
+    padding: 8px 6px !important;
+    font-size: 11px !important;
+    margin: 0 !important;
+    float: none !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-product.card.sda-card--cycle-frio .showcase-card-actions .showcase-compare-btn {
+    color: #2c77bb !important;
+    border-color: #b8cfe8 !important;
+    background: #eef5fb !important;
+  }
+
+  .showcase-product.card.sda-card--cycle-qf .showcase-card-actions .showcase-compare-btn {
+    color: #f97316 !important;
+    border-color: #fed7aa !important;
+    background: #fffaf5 !important;
+  }
+
+  .showcase-product .showcase-card-actions .showcase-compare-btn[aria-pressed='true'] {
+    color: #fff !important;
+    background: linear-gradient(135deg, #2c77bb, #163d5c) !important;
+    border-color: #163d5c !important;
+  }
+
+  .showcase-product.card.sda-card--cycle-qf .showcase-card-actions .showcase-compare-btn[aria-pressed='true'] {
+    background: linear-gradient(135deg, #f97316, #c2410c) !important;
+    border-color: #c2410c !important;
+  }
+
+  @media (max-width: 360px) {
+    .showcase-product .showcase-card-actions {
+      gap: 4px !important;
+    }
+
+    .showcase-product .showcase-card-actions .showcase-compare-btn {
+      flex: 0 0 30% !important;
+      max-width: 33% !important;
+      font-size: 8px !important;
+      padding: 5px 3px !important;
+    }
+
+    .showcase-product .showcase-card-actions .showcase-product_buy,
+    .showcase-product .showcase-card-actions .showcase-product_buy.btn {
+      flex: 1 1 70% !important;
+      font-size: 10px !important;
+      padding: 7px 4px !important;
+    }
+  }
+
   .showcase-search.showcase-search_list .showcase-card-actions {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    gap: 6px !important;
-    width: 100% !important;
     margin-top: 8px !important;
   }
 
-  .showcase-search.showcase-search_list .showcase-card-actions .showcase-compare-btn {
-    position: static !important;
-    font-size: 10px !important;
-    line-height: 1.1 !important;
-    color: #1a6eb5 !important;
-    overflow: visible !important;
-  }
-
-  .showcase-search.showcase-search_list .showcase-card-actions .showcase-compare-btn::before {
-    content: none !important;
-    display: none !important;
-  }
-
   .showcase-search.showcase-search_list .showcase-card-actions .showcase-product_buy.btn {
-    flex: 1 1 0% !important;
-    margin-top: 0 !important;
+    flex: 1 1 68% !important;
     min-height: 38px !important;
+  }
+
+  /* Cards ciclo: compare no footer (não ícone absoluto do mega-menu) */
+  .showcase-product.card.sda-card--cycle-frio .showcase-card-actions .showcase-compare-btn,
+  .showcase-product.card.sda-card--cycle-qf .showcase-card-actions .showcase-compare-btn {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    width: auto !important;
+    max-width: 38% !important;
+    flex: 0 0 38% !important;
+    min-height: 34px !important;
+    height: auto !important;
+    font-size: 9px !important;
+    color: inherit !important;
+    overflow: hidden !important;
+  }
+
+  .showcase-product.card.sda-card--cycle-frio .showcase-card-actions .showcase-compare-btn::before,
+  .showcase-product.card.sda-card--cycle-qf .showcase-card-actions .showcase-compare-btn::before {
+    content: '' !important;
+    display: inline-block !important;
+    border: none !important;
+    margin: 0 !important;
+    width: 10px !important;
+    height: 10px !important;
+    background-color: currentColor !important;
+    -webkit-mask: var(--sda-compare-icon) center / contain no-repeat;
+    mask: var(--sda-compare-icon) center / contain no-repeat;
+  }
+
+  .showcase-product.card.sda-card--cycle-frio .showcase-card-actions .showcase-product_buy,
+  .showcase-product.card.sda-card--cycle-qf .showcase-card-actions .showcase-product_buy,
+  .showcase-product.card.sda-card--cycle-frio .showcase-card-actions .showcase-product_buy.btn,
+  .showcase-product.card.sda-card--cycle-qf .showcase-card-actions .showcase-product_buy.btn {
+    width: auto !important;
+    flex: 1 1 0% !important;
+    max-width: none !important;
   }
 }
