@@ -3,7 +3,14 @@
 Base: arquivos que você colou do painel WDNA (header v2, vitrine v4+favoritos, PDP v2, search-order, theme.liquid).  
 Camada extra: home/busca, sections `sda-*`, CSS/JS `sda-conversion-redesign`.
 
-## Estrutura (16 arquivos para publicar)
+## Fase 3 (novo)
+
+- Hero home (`sda-home-hero`) + URLs ambiente/necessidade alinhadas ao header
+- `product-descriptions-v2.liquid` + `product-pdp-cycle-class.liquid` (PDP v2 que já referencia no `product-content`)
+- Abas PDP (JS/CSS em `sda-conversion-redesign.*`)
+- Sticky compra mobile compatível com preço `.product-prices_price-inner`
+
+## Estrutura (20 arquivos para publicar)
 
 ```
 layout/theme.liquid
@@ -13,7 +20,10 @@ assets/product-hover-image.css          ← opcional se já igual na loja
 sections/header.liquid
 sections/showcase-model-product.liquid
 sections/product-content.liquid
+sections/product-descriptions-v2.liquid
+sections/product-pdp-cycle-class.liquid
 sections/search-order.liquid
+sections/sda-home-hero.liquid
 sections/sda-trust-bar.liquid
 sections/sda-home-ambiente.liquid
 sections/sda-home-necessidade.liquid

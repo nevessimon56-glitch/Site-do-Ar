@@ -938,60 +938,8 @@ main.search-main .search-filters-content {
   color: #fff !important;
 }
 
-/* —— Fase 3: abas PDP (product-descriptions-v2) —— */
-.product-descriptions-v2 {
-  padding: 32px 0 40px;
-  background: var(--sda-bg);
-}
-
-.product-descriptions-v2__inner {
-  background: var(--sda-surface);
-  border-radius: var(--sda-radius);
-  box-shadow: var(--sda-shadow);
-  padding: 20px 20px 24px;
-}
-
-.sda-pdp-tabs__nav {
-  display: flex;
+/* PDP descriptions: estilos em product-page-v2.css (details .product-descriptions) */
+.showcase-spec-bar--pdp-highlights {
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 12px;
-}
-
-.sda-pdp-tabs__tab {
-  appearance: none;
-  border: 0;
-  background: #f1f5f9;
-  color: var(--sda-text);
-  font-weight: 700;
-  font-size: 13px;
-  padding: 10px 16px;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.sda-pdp-tabs__tab.is-active {
-  background: var(--sda-blue);
-  color: #fff;
-}
-
-.sda-pdp-tabs__panel {
-  font-size: 15px;
-  line-height: 1.65;
-  color: var(--sda-text);
-}
-
-.sda-pdp-tabs__panel[hidden] {
-  display: none !important;
-}
-
-.sda-pdp-tabs__panel.is-active {
-  display: block;
-}
-
-.sda-pdp-tabs__panel img {
-  max-width: 100%;
-  height: auto;
+  gap: 10px;
 }
