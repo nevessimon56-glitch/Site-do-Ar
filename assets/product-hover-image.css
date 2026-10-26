@@ -359,22 +359,7 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf {
 main.home-main section.showcase .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
 main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image {
   background: var(--sda-image-bg) !important;
-  min-height: 132px;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: stretch !important;
-  justify-content: center !important;
-}
-
-.showcase-search .showcase-product.card.sda-card--cycle-frio .showcase-product_link__image,
-.showcase-search .showcase-product.card.sda-card--cycle-qf .showcase-product_link__image,
-main.home-main section.showcase .showcase-product.card.sda-card--cycle-frio .showcase-product_link__image,
-main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf .showcase-product_link__image {
-  flex: 1 1 auto;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-height: 120px;
+  /* Altura/largura da foto: mega-menu.css (--sda-card-img-inner-max) — não fixar min-height aqui */
 }
 
 .showcase-search .showcase-product.card.sda-card--cycle-frio .showcase-offer,
@@ -485,8 +470,6 @@ main.home-main section.showcase .showcase-products .showcase-product.card.sda-ca
 .showcase-search .showcase-product.card.sda-card--cycle-qf .showcase-product_link_title,
 main.home-main section.showcase .showcase-product.card.sda-card--cycle-frio .showcase-product_link_title,
 main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf .showcase-product_link_title {
-  min-height: 2.6em !important;
-  max-height: 2.6em !important;
   line-height: 1.3 !important;
   text-align: center !important;
 }
@@ -537,20 +520,13 @@ main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf .showc
     border-radius: 15px !important;
   }
 
-  .showcase-search .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
-  .showcase-search .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image,
-  main.home-main section.showcase .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
-  main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image {
-    min-height: 108px;
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
+  .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image {
     padding: 4px 4px 0 !important;
-  }
-
-  .showcase-search .showcase-product.card.sda-card--cycle-frio .showcase-product_link__image,
-  .showcase-search .showcase-product.card.sda-card--cycle-qf .showcase-product_link__image,
-  main.home-main section.showcase .showcase-product.card.sda-card--cycle-frio .showcase-product_link__image,
-  main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf .showcase-product_link__image {
-    min-height: 96px;
-    max-height: 100px !important;
   }
 
   .showcase-search .showcase-product.card .card-footer,
@@ -999,23 +975,6 @@ main.home-main .showcase-product.card.sda-card--cycle-qf .showcase-card-actions 
     min-width: 0 !important;
   }
 
-  main.search-main .showcase-product.card .showcase-product_link__image,
-  main.home-main .showcase-product.card .showcase-product_link__image,
-  main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image {
-    max-height: 100px !important;
-    min-height: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  main.search-main .showcase-product.card .showcase-product_link__image img:not(.product-hover-img--hover),
-  main.home-main .showcase-product.card .showcase-product_link__image img:not(.product-hover-img--hover),
-  main.home-main section.showcase .showcase-products_carousel .showcase-product_link__image img:not(.product-hover-img--hover) {
-    max-height: 94px !important;
-    max-width: 96% !important;
-    object-fit: contain !important;
-  }
 }
 
 @media (min-width: 992px) {
@@ -1187,27 +1146,9 @@ main.home-main .showcase-product.card.sda-card--cycle-qf .showcase-card-actions 
     align-self: stretch !important;
   }
 
-  main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card,
-  main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card,
-  main.home-main section.showcase .showcase-products_carousel .showcase-product.card {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
-  }
-
-  main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-product_image.card-image,
-  main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-product_image.card-image,
-  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-product_image.card-image {
-    flex: 0 0 auto !important;
-    min-height: 104px !important;
-  }
-
   main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-spec-wrap,
   main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-spec-wrap,
-  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-spec-wrap,
-  main.search-main .showcase-search .showcase-product.card .showcase-spec-wrap,
-  main.home-main .showcase-product.card .showcase-spec-wrap {
-    flex: 0 0 auto !important;
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-spec-wrap {
     min-height: 0 !important;
     margin: 0 !important;
     padding: 0 4px 6px !important;
@@ -1217,65 +1158,65 @@ main.home-main .showcase-product.card.sda-card--cycle-qf .showcase-card-actions 
 
   main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-spec-bar,
   main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-spec-bar,
-  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-spec-bar,
-  main.search-main .showcase-product.card .showcase-spec-bar,
-  main.home-main .showcase-product.card .showcase-spec-bar {
-    display: flex !important;
-    flex-direction: row !important;
+  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-spec-bar {
     flex-wrap: wrap !important;
     justify-content: center !important;
-    align-content: flex-start !important;
     gap: 3px !important;
     row-gap: 3px !important;
-    min-height: 0 !important;
     max-height: 40px !important;
     overflow: hidden !important;
-    width: 100% !important;
-    margin: 0 !important;
   }
 
   main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-spec-bar__tag,
   main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-spec-bar__tag,
   main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-spec-bar__tag {
-    flex: 0 1 auto !important;
     max-width: calc(50% - 2px) !important;
     height: 18px !important;
     min-height: 18px !important;
-    padding: 0 5px !important;
     font-size: 8px !important;
-    line-height: 1 !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-  }
-
-  main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .card-header,
-  main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .card-header,
-  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .card-header,
-  main.search-main .showcase-product.card .card-header,
-  main.home-main .showcase-product.card .card-header {
-    flex: 0 0 auto !important;
-    clear: both !important;
-    margin: 0 !important;
-    padding: 0 4px 3px !important;
-    position: relative !important;
-    z-index: 0 !important;
-  }
-
-  main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-product.card .showcase-product_link_title,
-  main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-product.card .showcase-product_link_title,
-  main.home-main section.showcase .showcase-products_carousel .showcase-product.card .showcase-product_link_title,
-  main.search-main .showcase-product.card .showcase-product_link_title,
-  main.home-main .showcase-product.card .showcase-product_link_title {
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
   }
 
   main.search-main .showcase-search.showcase-search_grid--mobile-2col .showcase-list,
   main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-list {
     align-items: stretch !important;
+  }
+}
+
+/*
+ * CARD-LAYOUT-RESTORE-v1 — tamanho/distribuição do card ficam no mega-menu.css (grid, foto, compact).
+ * Este arquivo só vence cor, botões e alinhamento de texto — não impõe min-height / height 100% / foto compacta global.
+ */
+@media (min-width: 992px) {
+  .showcase-search .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
+  .showcase-search .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-product.card.sda-card--cycle-frio .showcase-product_image.card-image,
+  main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf .showcase-product_image.card-image,
+  main.search-main .showcase-product.card .showcase-product_image.card-image,
+  main.home-main .showcase-product.card .showcase-product_image.card-image {
+    min-height: 0 !important;
+    height: auto !important;
+    display: block !important;
+  }
+
+  .showcase-search .showcase-product.card.sda-card--cycle-frio .showcase-product_link__image,
+  .showcase-search .showcase-product.card.sda-card--cycle-qf .showcase-product_link__image,
+  main.home-main section.showcase .showcase-product.card.sda-card--cycle-frio .showcase-product_link__image,
+  main.home-main section.showcase .showcase-product.card.sda-card--cycle-qf .showcase-product_link__image,
+  main.search-main .showcase-product.card .showcase-product_link__image,
+  main.home-main .showcase-product.card .showcase-product_link__image {
+    min-height: 0 !important;
+    max-height: none !important;
+    flex: none !important;
+    display: block !important;
+  }
+}
+
+@media (max-width: 991px) {
+  main.search-main .showcase-search.showcase-search_list .showcase-product.card .showcase-product_link__image,
+  main.search-main .showcase-search.showcase-search_grid:not(.showcase-search_grid--mobile-2col) .showcase-product.card .showcase-product_link__image {
+    min-height: 0 !important;
+    max-height: none !important;
   }
 }
