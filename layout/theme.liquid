@@ -82,9 +82,10 @@
       Custom CSS (ordem importa):
       1. mega-menu.css — cards, nav, hover, mega menu
       2. header-v2.css — layout do cabeçalho v2 (OBRIGATÓRIO se sections/header.liquid usa header-v2)
-      3. product-compare.css — comparador
-      4. product-hover-image.css — shim legado
-      5. sda-conversion-redesign.css — vence GLOBAL-BLACK do mega-menu (por último)
+      3. favorites.css — coração nos cards (showcase-favorite-btn)
+      4. product-compare.css — comparador
+      5. product-hover-image.css — shim legado
+      6. sda-conversion-redesign.css — cards/PDP conversão (antes do inline header-orange)
     {%- endcomment -%}
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/header-v2.css' | themeAssetUrl }}">
@@ -254,6 +255,7 @@ body .header:not(.header-checkout) .header-link-account_tel:focus-within .header
 <span class="loading-main loading"></span>
 {% render 'sections/check-cookie'%}
 {% render 'sections/sidenav-overlay-cart', cart: cart, store: store, themeConfig: themeConfig %}
+{% render 'sections/sidenav-overlay-favorites' %}
 {% render 'sections/mega-menu-ar' %}
 {% render 'sections/product-compare-panel' %}
 {% block content %}{% endblock %}
