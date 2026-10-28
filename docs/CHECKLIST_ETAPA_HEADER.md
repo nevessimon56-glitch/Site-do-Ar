@@ -2,7 +2,9 @@
 
 **Preencher após implementação autorizada.** Status: `AP` | `RE` | `BL` | `NT` — **AP exige evidência** (arquivo `EV-…`).
 
-Metadados: URL preview ___ | Data (UTC-3) ___ | Opção A/B ___ | Testador ___
+Metadados: URL preview **PENDENTE** | Data (UTC-3) 28/out/2026 ~02:49 | Opção **A** | Testador: agente (sem painel WDNA)
+
+**Execução upload:** **BL** — aguardando URL preview (`docs/ETAPA_HEADER_RESULTADO.md`).
 
 | ID | Teste | Status | Evidência |
 |----|-------|--------|-----------|
