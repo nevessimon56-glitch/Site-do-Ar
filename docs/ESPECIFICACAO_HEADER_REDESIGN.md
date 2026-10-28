@@ -65,8 +65,9 @@ Faixas de teste obrigatórias: **360, 390, 768, 991, 1024, 1280, 1440** px (+ zo
 
 | Função | Mecanismo | IDs / classes |
 |--------|-----------|---------------|
-| Busca desktop | POST → action `/busca/{termo}` | `#myForm2`, `#term2`, `alterForm2()` |
-| Busca mobile overlay | `openSearch()`, form `#myForm`, `#term` | `.search.close` |
+| Busca desktop (barra) | POST → `/busca/{termo}` | **Produção:** `#myForm2Desktop`, `#term2Desktop`, `alterForm2Desktop()` + `form.submit()` |
+| Busca mobile (pill) | POST → `/busca/{termo}` | `#myForm2`, `#term2`, `alterForm2()` + Enter inline |
+| Busca mobile overlay | `openSearch()` / `headerV2FocusMobileSearch()`, `#myForm`, `#term` | `.search.close` (legado) |
 | CSRF | Hidden `_csrf` | Ambos forms |
 | Conta | Alpine `setupStore()`, sidenav | `.sidenav-overlay_account`, `headerLogout()` |
 | Carrinho | `openSideNavOverlay('.sidenav-overlay_cart'…)` ou B2B | `.cart_quantity`, `[data-cart-quantity]` |
