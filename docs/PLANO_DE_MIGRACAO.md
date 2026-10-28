@@ -12,6 +12,7 @@
 |-----------|----------|
 | [PREPARACAO_MIGRACAO_AMBIENTE.md](./PREPARACAO_MIGRACAO_AMBIENTE.md) | Repo, PRs #49/#50, tema ativo vs preview |
 | [PLANO_BUSCA_NAVEGACAO.md](./PLANO_BUSCA_NAVEGACAO.md) | Diagnóstico busca/nav, etapas E0–E7, arquivos |
+| [PLANO_ETAPA_HEADER.md](./PLANO_ETAPA_HEADER.md) | **Etapa 1 incremental — Header** (sem upload até preview OK) |
 | [CHECKLIST_VALIDACAO_PREVIEW.md](./CHECKLIST_VALIDACAO_PREVIEW.md) | Matriz AP/RE/BL/NT com evidências |
 | [AUDITORIA_AVALIACOES_PRODUTO.md](./AUDITORIA_AVALIACOES_PRODUTO.md) | Reviews WDNA nativos — auditoria |
 
