@@ -2333,3 +2333,19 @@ a.btn.btn-new_user.btn-block:hover {
     to { opacity: 1; transform: translateY(-50%); }
   }
 }
+
+/** Home enxuta — remove hero, faixas de conversão e CTA “Fazer diagnóstico” (tema 3) **/
+main.home-main .sda-home-hero,
+main.home-main .sda-trust-bar,
+main.home-main .sda-home-section,
+main.home-main .sda-diag-cta,
+main.search-main .sda-diag-cta {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
