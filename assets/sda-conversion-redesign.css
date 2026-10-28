@@ -698,6 +698,15 @@ main.search-main .search-filters-content {
   }
 }
 
+/* Home enxuta — blocos de conversão desligados (ver também theme-custom.css) */
+main.home-main .sda-home-hero,
+main.home-main .sda-trust-bar,
+main.home-main .sda-home-section,
+main.home-main .sda-diag-cta,
+main.search-main .sda-diag-cta {
+  display: none !important;
+}
+
 /* —— Fase 3: hero home —— */
 .sda-home-hero {
   background: linear-gradient(135deg, #0c1f3d 0%, #163d5c 45%, #2c77bb 100%);

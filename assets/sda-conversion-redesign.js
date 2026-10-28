@@ -22,27 +22,8 @@
       (Number(n) === 1 ? '' : 's');
   }
 
-  function injectCatalogDiagIfMissing() {
-    if (!document.querySelector('main.search-main')) return;
-    var box = document.querySelector('.sda-diag-cta__text');
-    if (box) {
-      box.textContent =
-        'Descubra quantos BTUs você precisa e veja os modelos ideais para o seu ambiente.';
-    }
-    if (document.querySelector('.sda-diag-cta')) return;
-    var header = document.querySelector('main.search-main .search-header');
-    if (!header) return;
-    var wrap = document.createElement('div');
-    wrap.className = 'sda-diag-cta content';
-    wrap.innerHTML =
-      '<div class="sda-diag-cta__inner">' +
-      '<div class="sda-diag-cta__box">' +
-      '<div><p class="sda-diag-cta__title">Não sabe qual modelo escolher?</p>' +
-      '<p class="sda-diag-cta__text">Descubra quantos BTUs você precisa e veja os modelos ideais para o seu ambiente.</p></div>' +
-      '<a class="sda-diag-cta__btn" href="/pagina/diagnostico-360">Fazer diagnóstico</a>' +
-      '</div></div>';
-    header.parentNode.insertBefore(wrap, header.nextSibling);
-  }
+  /* injectCatalogDiagIfMissing — desativado (loja sem bloco “Fazer diagnóstico” no catálogo) */
+  function injectCatalogDiagIfMissing() {}
 
   function setupDesktopFilterToggle() {
     var main = document.querySelector('main.search-main');
