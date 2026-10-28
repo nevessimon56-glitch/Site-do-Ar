@@ -5,6 +5,12 @@
  */
 
 @media (min-width: 992px) {
+  .header.header-v2 .header-utility__inner {
+    min-height: 32px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
   .header-v2 .header-v2-cta-ambiente {
     background: linear-gradient(135deg, var(--sda-orange, #f28c28), var(--sda-orange-deep, #ea580c)) !important;
     border: 0 !important;
@@ -57,13 +63,5 @@
     min-height: var(--sda-touch-min, 44px);
     width: var(--sda-touch-min, 44px);
     height: var(--sda-touch-min, 44px);
-  }
-}
-
-@media (max-width: 991px) {
-  .header-v2 .header-utility__inner {
-    min-height: 32px;
-    padding-top: 4px;
-    padding-bottom: 4px;
   }
 }
