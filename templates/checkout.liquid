@@ -1,0 +1,663 @@
+{% layout 'layout/theme' %}
+{% block head %}
+    <!-- Fingerprint ClearSale -->
+    <noscript id="fingerprint-clearsale" name="fingerprint-clearsale"></noscript>
+    <script>
+        const clearSaleFingerprint = {
+            getAppId: function() {
+                return (typeof clearSaleAppId !== 'undefined' && clearSaleAppId !== 'undefined') ? clearSaleAppId : "";
+            },
+            setNoscript: function(url) {
+                const elem = document.createElement("img");
+                elem.setAttribute("src", url);
+                document.getElementById("fingerprint-clearsale").appendChild(elem);
+            },
+            checkUrl: function(url, sid, appId) {
+                const request = new XMLHttpRequest();
+                request.open("GET", url, true);
+                request.send(null);
+                request.onerror = () => {
+                    request.open("GET", `https://web.fpcs-monitor.com.br/p/fp.png?sid=${sid}&app=${appId}&bl=1`, false);
+                    request.send(null);
+                };
+            },
+            init: function(cartId) {
+                const appId = this.getAppId();
+                if (appId) {
+                    this.checkUrl(`https://device.clearsale.com.br/p/fp.png?app=${appId}`, cartId, appId);
+                    this.setNoscript(`https://device.clearsale.com.br/p/fp.png?sid=${cartId}&app=${appId}&bl=1`);
+                }
+            }
+        };
+
+        clearSaleFingerprint.init("{{cart.id}}");
+    </script>
+{% endblock %}
+{% block content %}
+{% render 'sections/header-checkout', store: store, menu: menu, theme: theme, themeConfig: themeConfig %}
+{% if checkout %}
+<main class="checkout-main checkout-main-1" x-data="setupCheckout()" x-init="initCheckout()" x-id="checkout">
+    <div class="checkout-summary-content content">
+        <div class="container">
+            <div class="columns">
+                <div class="column col-12">
+                    <details class="checkout-accordion checkout-accordion_top accordion" id="checkout-top">
+                        <summary class="accordion-header">
+                            <div class="accordion-title">
+                                <span>
+                                    Ver detalhes do pedido
+                                </span>
+                            </div>
+                            <div class="accordion-price">
+                                <div x-text="StoreSDK.utils.toCurrency(getTotal())"></div>
+                                {{ themeConfig.icons.arrow.down }}
+                            </div>
+                        </summary>
+                        <div class="accordion-body">
+                            {%- render 'sections/checkout-summary', checkout: checkout, themeConfig: themeConfig -%}
+                        </div>
+                    </details>
+                </div>
+                <div class="column col-12 column-product-coupon">
+                    <section class="checkout-product-coupon" checkout-product-total x-show="state.shippingSelected.code && state.shippingAddress.zipcode">
+                        <div class="form-group" x-show="!state.coupon.show">
+                            <a class="btn btn-block btn-checkout-coupon" href="javascript:void(0)"
+                                title="Clique para informar o cupom" @click="handleShowCoupon()">
+                                Possui cupom de desconto?
+                            </a>
+                        </div>
+                        <div class="columns checkout-product-coupon_new" x-show="state.coupon.show && !state.coupon.applied">
+                            <div class="col-8">
+                                <div class="form-group form-group_custom">
+                                    <label class="form-label">Digite o código do cupom</label>
+                                    <input
+                                        :class="{ 'is-error': !!errors.coupon, 'onFocus': !state.coupon.code }"
+                                        class="form-input"
+                                        name="coupon-code"
+                                        type="text"
+                                        @keydown.enter="handleCouponApply()"
+                                        x-model="state.coupon.code"
+                                    >
+                                    <p
+                                        x-show="errors.coupon"
+                                        class="form-input-hint"
+                                        x-text="errors.coupon"
+                                    >
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <a class="btn btn-block" href="javascript:void(0)"
+                                        title="Clique para aplicar o cupom" :disabled="!state.coupon.code"
+                                        @click="handleCouponApply()">
+                                        Aplicar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" x-show="state.coupon.applied">
+                            <a class="btn btn-block btn-checkout-coupon" href="javascript:void(0)"
+                                title="Clique para alterar o cupom" @click="handleChangeCoupon()">
+                                Alterar cupom de desconto?
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="checkout-header-content content">
+        <div class="container">
+            <div class="columns">
+                <div class="column col-12">
+                    <ul class="tab tab-block tab-checkout-status">
+                        <li class="tab-item"
+                            :class="{ 'active': state.currentStep == 'shipping' || state.currentStep == 'payment' || state.currentStep == 'finish' }">
+                            <a href="javascript:void(0);" @click="state.currentStep = 'shipping'" title="Entrega">
+                                <figure class="avatar avatar-md" data-initial="1"></figure>
+                                <span>
+                                    Entrega
+                                </span>
+                            </a>
+                        </li>
+                        <li class="tab-item" :class="{ 'active': state.currentStep == 'payment'  }">
+                            <a
+                                href="javascript:void(0);"
+                                @click="state.shippingSelected.errors && (state.shippingSelected.errors.length >= 1) ? '' : handleContinueToPayment()"
+                                title="Pagamento"
+                            >
+                                <figure class="avatar avatar-md" data-initial="2"></figure>
+                                <span>
+                                    Pagamento
+                                </span>
+                            </a>
+                        </li>
+                        <li class="tab-item" :class="{ 'active': state.currentStep == 'finish'  }">
+                            <a href="javascript:void(0);" title="Finalizado">
+                                <figure class="avatar avatar-md" data-initial="3"></figure>
+                                <span>
+                                    Finalizado
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="checkout-body-content content">
+        <div class="container">
+            <div class="columns">
+                <div class="column col-12">
+                    <div class="columns">
+                        <div class="column col-7 col-lg-12">
+                            <div x-show="state.currentStep == 'shipping'">
+                                {%- render 'sections/checkout-shipping', customer: customer, themeConfig: themeConfig -%}
+                            </div>
+                            <div x-show="state.currentStep == 'payment'">
+                                {%- render 'sections/checkout-payment', themeConfig: themeConfig, checkout: checkout -%}
+                            </div>
+                        </div>
+                        <div class="column column-summary col-5 col-lg-12">
+                            {%- render 'sections/checkout-summary', checkout:checkout, themeConfig: themeConfig -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    openLoadingMain();
+    const cart = {{ cart | json }};
+    const store = {{ store | json }};
+
+    function setupCheckoutCoupon() {
+
+        function handleShowCoupon() {
+            this.state.coupon.show = true;
+        }
+
+        function handleCouponApply() {
+            if (!this.state.coupon.code) {
+                return;
+            }
+            const body = {
+                code: this.state.coupon.code,
+                shippingSelected: {
+                    code: this.state.shippingSelected.code,
+                },
+            };
+            StoreSDK.request.post('/ajax/checkout/coupon', body)
+                .then((response) => {
+                    if (!response.coupon || !response.coupon.value) {
+                        if (!this.state.coupon.applied) {
+                            this.errors.coupon = 'Cupom inválido';
+                        }
+                        this.handleChangeCoupon(false);
+                        return;
+                    }
+                    this.state.coupon.applied = true;
+                    this.state.coupon.value = response.coupon.value;
+                    this.state.coupon.observation = response.coupon.observation;
+                    this.state.coupon.code = this.state.coupon.code.toUpperCase();
+                    this.handlePaymentCalculate(false);
+
+                    if (typeof mb_track !== 'undefined') {
+                        window.mb_track('cartSetCoupon', {
+                            cart_id: cart.id,
+                            coupon: this.state.coupon?.code,
+                        });
+                    }
+
+                })
+                .catch((error) => {
+                    if (error.data && error.data.code && error.data.message) {
+                        this.errors.coupon = error.data.message
+                    } else {
+                        this.errors.coupon = 'Não foi possível aplicar o cupom'
+                    }
+                });
+        }
+
+        function handleChangeCoupon(isShow = true) {
+            if(isShow){
+                this.state.coupon.applied = false;
+            }
+            this.state.coupon.code = null;
+            StoreSDK.request.del('/ajax/checkout/coupon')
+                .then((response) => {
+                    if (this.state.paymentSelected.methodId) {
+                        this.handlePaymentCalculate();
+                    }
+                });
+        }
+
+        return {
+            handleShowCoupon,
+            handleCouponApply,
+            handleChangeCoupon,
+        };
+    }
+
+    function setupCheckout() {
+        let sellersList = [{ id: null, name: 'Nenhum', status: true }];
+        const checkoutOldState = JSON.parse(localStorage.getItem('checkoutOldState'));
+
+        const addressOld = checkoutOldState && checkoutOldState.shippingAddress ? checkoutOldState.shippingAddress : {};
+        const customerOld = checkoutOldState && checkoutOldState.customer ? checkoutOldState.customer : {};
+
+        const initialState = {{ checkout | json }} || {};
+        const customer =
+            {% if customer %}
+            {
+                name: {% if customer.name %}('{{ customer.name | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                document: {% if customer.document %}'{{ customer.document }}'{% else %}''{% endif %},
+                typePerson: {% if customer.typePerson %}'{{ customer.typePerson }}'{% else %}''{% endif %},
+
+                phone: {% if customer.phone %}'{{ customer.phone }}'{% else %}''{% endif %},
+                cellphone: {% if customer.cellphone %}'{{ customer.cellphone }}'{% else %}''{% endif %},
+                email: {% if customer.email %}'{{ customer.email }}'{% else %}''{% endif %},
+                secondaryPhone: {% if customer.secondaryPhone %}'{{ customer.secondaryPhone }}'{% else %}''{% endif %},
+                fantasyName: {% if customer.fantasyName %}('{{ customer.fantasyName | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                secondaryDocument: {% if customer.secondaryDocument %}('{{ customer.secondaryDocument | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+
+                {% if customer.address %}
+                address: [
+                    {% for customerAddress in customer.address %}
+                    {
+                        street: {% if customerAddress.street %}('{{ customerAddress.street | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        receiver: {% if customerAddress.receiver %}('{{ customerAddress.receiver | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        number: {% if customerAddress.number %}('{{ customerAddress.number | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        zipcode: {% if customerAddress.zipcode %}'{{ customerAddress.zipcode }}'{% else %}''{% endif %},
+                        complement: {% if customerAddress.complement %}('{{ customerAddress.complement | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        district: {% if customerAddress.district %}('{{ customerAddress.district | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        city: {% if customerAddress.city %}('{{ customerAddress.city | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        state: {% if customerAddress.state %}'{{ customerAddress.state }}'{% else %}''{% endif %},
+                        country: {% if customerAddress.country %}'{{ customerAddress.country }}'{% else %}''{% endif %},
+                        addressGroupId: {% if customerAddress.addressGroupId %}{{ customerAddress.addressGroupId }}{% else %}''{% endif %},
+                        main: {% if customerAddress.main %}{{ customerAddress.main }}{% else %}false{% endif %},
+                        userId: {% if customerAddress.userId %}{{ customerAddress.userId }}{% else %}''{% endif %},
+                        createdAt: {% if customerAddress.createdAt %}'{{ customerAddress.createdAt }}'{% else %}''{% endif %},
+                        id: {% if customerAddress.id %}{{ customerAddress.id }}{% else %}''{% endif %},
+                    },
+                    {% endfor %}
+                ],
+                {% endif %}
+            };
+            {% else %}
+            { address: [{}] };
+            {% endif %}
+        const customerAddress = customer.address && customer.address[0] ? customer.address[0] : {};
+        const state = {
+            mediasCheckout: [],
+            acceptedFormats: 'image/png, image/jpeg, image/jpg',
+            acceptedFormatsText: 'jpg, jpeg, png',
+            acceptedDocuments: {% if store.acceptedDocuments %}JSON.parse('{{ store.acceptedDocuments | json }}'){% endif %},
+            sellerViewTypeId: {% if store.sellerViewTypeId %}JSON.parse('{{ store.sellerViewTypeId | json }}'){% endif %},
+            showInputsJuridical: false,
+            customerAddress: customerAddress,
+            shippingAddress: {
+                country: localStorage.getItem('customer_country') || customerAddress.country || 'BR',
+                zipcode: localStorage.getItem('customer_zipcode') ||  customerAddress.zipcode || '',
+                receiver: customerAddress.receiver || customer.name || addressOld.receiver || '',
+                street: addressOld.street || customerAddress.street || '',
+                number: addressOld.number || customerAddress.number || '',
+                complement: addressOld.complement || customerAddress.complement || null,
+                district: addressOld.district || customerAddress.district || '',
+                city: addressOld.city || customerAddress.city || '',
+                state: addressOld.state || customerAddress.state || '',
+            },
+            isSameBillingAddress: checkoutOldState && checkoutOldState.isSameBillingAddress ? checkoutOldState.isSameBillingAddress : false,
+            shippingCalculated: {
+                showAll: true,
+                options: [],
+            },
+            shippingSelected: {
+                code: localStorage.getItem('checkoutOldShippingSelected') || null,
+            },
+            paymentCalculated: {
+                showAll: true,
+                options: [],
+            },
+            paymentSelected: {
+                methodId: null,
+                metadata: {},
+                ...initialState.paymentSelected,
+            },
+            observation: '',
+            customer: {
+                phone: customerOld.phone || customer.cellphone || '',
+                email: customerOld.email || customer.email || '',
+                document: customerOld.document || customer.document || '',
+                secondaryPhone: customerOld.secondaryPhone || customer.phone || '',
+                typePerson: customerOld.typePerson || customer.typePerson || '',
+                fantasyName: customerOld.fantasyName || customer.fantasyName || '',
+                secondaryDocument: customerOld.secondaryDocument || customer.secondaryDocument || '',
+                name: customerOld.name || customer.name || '',
+                address: {
+                    country: 'BR',
+                    zipcode: '',
+                    receiver: '',
+                    street: '',
+                    number: '',
+                    complement: null,
+                    district: '',
+                    city: '',
+                    state: '',
+                },
+            },
+            coupon: {
+                show: false,
+                applied: false,
+                code: null,
+                value: 0,
+            },
+            currentStep: 'shipping',
+            sellers: sellersList,
+            seller: {
+                id: null,
+                name: '',
+            },
+            cart: cart,
+        };
+
+        const errors = {
+            zipcode: '',
+            shipping: {},
+            customer: {},
+            payment: {},
+            coupon: '',
+        };
+
+
+        if (typeof mb_track !== 'undefined') {
+            const mailbizCart = {
+                cart: {
+                    cart_id: cart.id,
+                    subtotal: state?.subtotal || cart.total,
+                    freight: this.shippingSelected?.value || 0,
+                    tax: (state.paymentSelected?.gatewayTaxValue + state.paymentSelected?.storeTaxValue) || 0,
+                    discounts: 0,
+                    total: cart.total,
+                    delivery_address: {
+                        postal_code: state.customerAddress.zipcode,
+                        address_line1: state.customerAddress.street,
+                        address_number: state.customerAddress.number,
+                        address_line2: state.customerAddress.complement,
+                        city: state.customerAddress.city,
+                        state: state.customerAddress.state,
+                        country: state.customerAddress.country,
+                        neighborhood: state.customerAddress.district,
+                    },
+                    items: cart?.products?.map((product) => {
+                        const productUrl = `https://${store.url}${product.url}`;
+                        return {
+                            product_id: product.id,
+                            sku: product?.sku || product.id,
+                            name: product.title,
+                            price: product.unitPrice,
+                            quantity: product.quantity,
+                            url: productUrl,
+                            image_url: product.image?.url || '',
+                        };
+                    }),
+                }
+            }
+            window.mb_track('cartSync', mailbizCart);
+        }
+
+        function initCheckout() {
+            /*** Caso não tiver o pagamento selecionado, vai pegar o pagamento informado no preço primario do canal **/
+            const mainStorePriceMethodId = Number('{{ store.primaryPriceMethodId }}');
+            if (!localStorage.getItem('checkoutOldPaymentSelected') && (mainStorePriceMethodId > 0)) {
+                this.state.paymentSelected.methodId = mainStorePriceMethodId
+                localStorage.setItem('checkoutOldPaymentSelected', mainStorePriceMethodId);
+            }
+
+            /*** Texto para informar quais formatos são aceitos. ***/
+            if (this.state.uploadCheckout && this.state.uploadCheckout?.status && this.state.uploadCheckout?.formatsAccepted.length > 0) {
+                this.state.acceptedFormatsText = '';
+                let tempAcceptedFormatsText = '';
+                const finalPosition = this.state.uploadCheckout.formatsAccepted.filter((rank, i, row) => {
+                    if (i + 1 === row.length) {
+                        return rank;
+                    }
+                });
+                this.state.uploadCheckout.formatsAccepted.forEach((formatAccepted) => {
+                    if (finalPosition[0].name === formatAccepted.name) {
+                        tempAcceptedFormatsText += `${formatAccepted.name}`;
+                    } else {
+                        tempAcceptedFormatsText += `${formatAccepted.name}, `;
+                    }
+                });
+                this.state.acceptedFormatsText = tempAcceptedFormatsText;
+            }
+
+            if (this.state.acceptedDocuments) {
+                if (this.state.customer.document) {
+                    if ((this.state.acceptedDocuments.length === 1) && this.state.acceptedDocuments.some((document) => (document === 'cnpj'))) {
+                        this.state.showInputsJuridical = true;
+                        this.state.customer.typePerson = 'J';
+                    } else if ((this.state.acceptedDocuments.length === 1) && this.state.acceptedDocuments.some((document) => (document === 'cpf'))) {
+                        this.state.showInputsJuridical = false;
+                        this.state.customer.typePerson = 'F';
+                    } else {
+                        if (this.state.customer.document.length > 14) {
+                            this.state.showInputsJuridical = true;
+                            this.state.customer.typePerson = 'J';
+                        }
+                    }
+                } else {
+                    if ((this.state.acceptedDocuments.length === 1) && this.state.acceptedDocuments.some((document) => (document === 'cnpj'))) {
+                        this.state.showInputsJuridical = true;
+                        this.state.customer.typePerson = 'J';
+                    } else if ((this.state.acceptedDocuments.length === 1) && this.state.acceptedDocuments.some((document) => (document === 'cpf'))) {
+                        this.state.showInputsJuridical = false;
+                        this.state.customer.typePerson = 'F';
+                    }
+                }
+            }
+
+            StoreSDK.request.get('/ajax/checkout/sellers')
+            .then((response) => {
+                const formatted = response.map((user) => {
+                    return {
+                        id: user.id,
+                        name: user.name,
+                        status: user.status,
+                    };
+                });
+                this.state.sellers = [ {id: null, name: 'Nenhum', status: true }, ...formatted];
+            })
+            .finally(() => {
+                if (this.state.shippingAddress.zipcode) {
+                    if (typeof mb_track !== 'undefined') {
+                        window.mb_track('cartSetPostalCode', {
+                            cart_id: cart.id,
+                            postal_code: this.state.shippingAddress?.zipcode,
+                        });
+                    }
+                    this.handleShippingCalculate();
+                } else {
+                    closeLoadingMain();
+                }
+            });
+
+            initiateCheckoutFacebookPixel(this.state);
+        }
+
+        function handleReturnToShipping() {
+            this.state.currentStep = 'shipping';
+        }
+
+        function getShippingTotal() {
+            if (!this.state.shippingSelected || !this.state.shippingSelected.code) return 0;
+            let total = 0;
+            this.state.shippingCalculated.options.forEach((option) => {
+                if (option.code !== this.state.shippingSelected.code) return;
+                total = option.value;
+            });
+            return total;
+        }
+
+        function getPromotionTotal() {
+            let total = 0;
+            (this.state.promotions || []).forEach((promotion) => {
+                total += Number(promotion.value);
+            });
+            return total;
+        }
+
+        function getSelectedInstallment() {
+            let installmentSelected = null;
+            if (this.state.paymentSelected.installments) {
+                const defaultInstallmentSelected = (Number(this.state.paymentSelected.installment) || 1)
+                this.state.paymentSelected.installments.forEach((intallmentOption) => {
+                    if (Number(intallmentOption.installment) === defaultInstallmentSelected) {
+                        installmentSelected = intallmentOption;
+                    }
+                });
+            };
+            return installmentSelected;
+        }
+
+        function getTaxValue() {
+            const installmentSelected = this.getSelectedInstallment();
+            if (installmentSelected && installmentSelected.total) {
+                return installmentSelected.storeTaxValue + installmentSelected.gatewayTaxValue;
+            }
+            return (this.state.paymentSelected.storeTaxValue + this.state.paymentSelected.gatewayTaxValue) || 0;
+        }
+
+        function getTotal() {
+            if (this.state.paymentSelected.methodId && this.state.paymentSelected?.total) {
+                const installmentSelected = this.getSelectedInstallment();
+                return installmentSelected && installmentSelected.total
+                    ? installmentSelected.total : this.state.paymentSelected.total;
+            }
+            const couponValue = (this.state.coupon && this.state.coupon.value) || 0;
+            const shippingTotal = this.getShippingTotal();
+            const promotionTotal = this.getPromotionTotal();
+            const taxValue = this.getTaxValue();
+            return (this.state.subtotal + shippingTotal + taxValue) - couponValue - promotionTotal;
+        }
+
+        function handleTypePerson() {
+            return this.state.customer.typePerson = this.state.customer.document.length > 14 ? 'J' : 'F'
+        }
+
+        function removeProduct(uid) {
+            openLoadingMain();
+            this.state.currentStep = 'shipping';
+            StoreSDK.request.del('/ajax/cart/products/' + uid)
+                .then((cart) => {
+                    this.state.cart = cart;
+
+                    if (cart.products && cart.products.length > 0) {
+                        this.state.products = cart.products.map((cartProduct) => {
+                            let returnCartProduct = {
+                                ...cartProduct
+                            }
+                            if (cartProduct.groupPurchase) {
+                                const groupPurchaseItemFilter = cartProduct.groupPurchase.filter((groupPurchaseItem) => groupPurchaseItem.status);
+                                if (groupPurchaseItemFilter.length > 0) {
+                                    returnCartProduct = {
+                                        ...cartProduct,
+                                        groupPurchase: groupPurchaseItemFilter,
+                                    };
+                                } else {
+                                    delete returnCartProduct.groupPurchase;
+                                }
+                            }
+                            return returnCartProduct
+                        });
+                        this.handleCouponApply();
+                        this.handleShippingCalculate();
+                        this.state.subtotal= cart.totalWithoutTax;
+                        this.state.currentStep = 'shipping';
+                        closeLoadingMain();
+                    } else {
+                        var elCheckoutMain = document.querySelectorAll('.checkout-main');
+                        var elNotfoundMain = document.querySelectorAll('.notfound-body');
+                        for (var x = 0; x < elCheckoutMain.length; x++) {
+                            elCheckoutMain[x].classList.add('d-hide');
+                        }
+                        closeLoadingMain();
+                        for (var x = 0; x < elNotfoundMain.length; x++) {
+                            elNotfoundMain[x].classList.remove('d-hide');
+                        }
+                    }
+                }).catch(() => {
+                closeLoadingMain();
+            });
+        }
+        const checkoutRoot = {
+            state: Object.assign(initialState, state),
+            errors,
+            handleReturnToShipping,
+            getTotal,
+            getTaxValue,
+            getShippingTotal,
+            getPromotionTotal,
+            getSelectedInstallment,
+            initCheckout,
+            handleTypePerson,
+            removeProduct,
+        };
+
+        const checkoutPayment = setupCheckoutPayment();
+        const checkoutShipping = setupCheckoutShipping();
+        const checkoutCoupon = setupCheckoutCoupon();
+        return Object.assign(
+            checkoutRoot,
+            checkoutPayment,
+            checkoutShipping,
+            checkoutCoupon,
+        );
+    }
+
+    function initiateCheckoutFacebookPixel(checkout) {
+        if (typeof fbq !== 'undefined') {
+            const tempInitiateCheckoutFacebookPixel = initiateCheckoutFacebookPixelTransform(checkout);
+            fbq('track', 'InitiateCheckout', tempInitiateCheckoutFacebookPixel);
+        }
+    }
+
+    function initiateCheckoutFacebookPixelTransform(checkout) {
+        const result = {
+            content_ids: checkout.products.map((product) => (product.id)),
+            contents: checkout.products.map((product) => {
+                const resultProduct = {
+                    id: product.id,
+                    title: product.title,
+                    quantity: product.quantity,
+                    unitPrice: product.unitPrice,
+                    totalPrice: product.totalPrice,
+                };
+                if (product.sku) {
+                    resultProduct.sku = product.sku;
+                }
+                return resultProduct;
+            }),
+            currency: 'BRL',
+            num_items: checkout.products.length,
+            value: parseFloat(checkout.subtotal).toFixed(2),
+        };
+        return result;
+    }
+</script>
+{% endif %}
+
+{% assign classCustom = '' %}
+{% if checkout %}
+    {% assign classCustom = ' d-hide' %}
+{% endif %}
+<div class="notfound-body{{ classCustom }}">
+    {% render 'sections/404-content', msg: 'Seu carrinho de compras está vazio.', themeConfig: themeConfig, classCustom: classCustom %}
+</div>
+
+{% render 'sections/sidenav-overlay-account', customer: customer, themeConfig: themeConfig %}
+{% render 'sections/sidenav-forgot-password', themeConfig: themeConfig %}
+{% endblock %}

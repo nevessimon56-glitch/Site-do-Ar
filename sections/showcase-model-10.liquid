@@ -1,0 +1,107 @@
+<!-- Showcase Model 10 - Video -->
+<section class="showcase showcase-model-{{ showcaseSection.typeId }} showcase-{{ showcaseSection.id }}">
+    {% assign bannerGridConfig = showcaseSection.config %}
+    {% assign imgPosition = 'top' %}
+    {% if showcaseSection.config.imagePosition %}
+        {% assign imgPosition = showcaseSection.config.imagePosition %}
+    {% endif %}
+    <div class="container">
+        <!-- Título da Vitrine -->
+        {% if showcaseSection.name %}
+            {% assign styleTitle = '' %}
+            {% case bannerGridConfig.namePosition %}
+                {% when 'center' %}
+                    {% assign styleTitle = 'text-align: center;' %}
+                {% when 'left' %}
+                    {% assign styleTitle = 'text-align: left;' %}
+                {% when 'right' %}
+                    {% assign styleTitle = 'text-align: right;' %}
+                {% when "hidden" %}
+                    {% assign styleTitle = "display: none;" %}
+            {% endcase %}
+            <h2 class="showcase-title" style="{{ styleTitle }}">
+                {{ showcaseSection.name }}
+            </h2>
+        {% endif %}
+        <div class="showcase-banners showcase-banners_video showcase-banners_video_{{ imgPosition }} showcase-banners_video__{{ bannerGridConfig.columnQuantity }}{% if imgPosition == 'right' or imgPosition == 'left' %} showcase-banners_video_inline{% else %} showcase-banners_video_default{% endif %}">
+            <div class="showcase-list showcase-list-{{ bannerGridConfig.columnQuantity }}" data-autoplay="{{ showcaseSection.config.carouselAutoplay }}">
+                <ul class="banners-slider banners-slider-{{ bannerGridConfig.columnQuantity }}">
+                    {% for showcaseMedia in showcaseSection.config.medias %}
+                        {% if showcaseMedia.path %}
+                            <li class="showcase-banners_item showcase-banners_item__{{ forloop.index }}">
+                                <div class="showcase-card-video showcase-card-video_{{ imgPosition }}{% if imgPosition == 'right' or imgPosition == 'left' %} showcase-card-video_inline{% endif %}"
+                                     x-data="setupShowcaseVideo{{ forloop.index }}Id{{ showcaseSection.id }}()">
+                                    {% assign videoType = false %}
+                                    {% if showcaseMedia.metadata.videoType %}
+                                        {% assign videoType = showcaseMedia.metadata.videoType %}
+                                    {% endif %}
+                                    {% assign videoId = '' %}
+                                    {% if showcaseMedia.metadata.videoId %}
+                                        {% assign videoId = showcaseMedia.metadata.videoId %}
+                                    {% endif %}
+                                    {% assign urlVideo = '' %}
+                                    {% if showcaseMedia.video %}
+                                        {% assign urlVideo = showcaseMedia.video | fileUrl %}
+                                    {% endif %}
+
+                                    {% assign isVideo = '' %}
+                                    {% if videoType == 'vimeo' or videoType == 'youtube' and videoId != '' %}
+                                        {% assign isVideo = true %}
+                                    {% endif %}
+                                    {% if videoType == 'html5' and urlVideo != '' %}
+                                        {% assign isVideo = true %}
+                                    {% endif %}
+                                    {% if imgPosition == 'top' or imgPosition == 'left' %}
+                                        {% render 'sections/showcase-model-10-video', showcase: showcase, videoType: videoType, showcaseMedia: showcaseMedia, videoId: videoId, urlVideo: urlVideo, index: forloop.index, themeConfig: themeConfig, showcaseSection: showcaseSection %}
+                                    {% endif %}
+                                    <div class="showcase-banners_footer">
+                                        {% if showcaseMedia.link.size > 0 and showcaseMedia.metadata.displayButton %}
+                                            <a class="showcase-banners_footer__link" href="{{ showcaseMedia.link }}" title="{{ showcaseMedia.title }}" rel="noopener">
+                                                {{ themeConfig.icons.video.link }}
+                                                <span>
+                                                    {% if showcaseMedia.metadata.textButton and showcaseMedia.metadata.textButton !="" %}
+                                                        {{ showcaseMedia.metadata.textButton }}
+                                                    {% else %}
+                                                        Mais Detalhes
+                                                    {% endif %}
+                                                </span>
+                                            </a>
+                                        {% endif %}
+                                        <div class="showcase-banners_footer_info">
+                                            {% if showcaseMedia.title %}
+                                                <div class="showcase-banners_footer__title">
+                                                    {{ showcaseMedia.title }}
+                                                </div>
+                                            {% endif %}
+                                            {% if showcaseMedia.metadata.description %}
+                                                <div class="showcase-banners_footer__description">
+                                                    {{ showcaseMedia.metadata.description }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% if imgPosition == 'bottom' or imgPosition == 'right' %}
+                                        {% render 'sections/showcase-model-10-video', showcase: showcase, videoType: videoType, showcaseMedia: showcaseMedia, videoId: videoId, urlVideo: urlVideo, index: forloop.index, themeConfig: themeConfig, showcaseSection: showcaseSection %}
+                                    {% endif %}
+                                    {% render 'sections/showcase-model-10-script', showcase: showcase, videoType: videoType, showcaseMedia: showcaseMedia, videoId: videoId, urlVideo: urlVideo, index: forloop.index, themeConfig: themeConfig, showcaseSection: showcaseSection %}
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                {% assign classCenterSliderArrow = '' %}
+                {% if bannerGridConfig.namePosition == 'hidden' %}
+                    {% assign classCenterSliderArrow = ' slider__arrow--center' %}
+                {% endif %}
+                <div class="controls controls-arrow" aria-label="Carousel Navigation" tabindex="0">
+                    <button class="slider__arrow slider__arrow--prev{{ classCenterSliderArrow }}" aria-label="Anterior">
+                        {{ themeConfig.icons.arrow.prev }}
+                    </button>
+                    <button class="slider__arrow slider__arrow--next{{ classCenterSliderArrow }}" aria-label="Próximo">
+                        {{ themeConfig.icons.arrow.next }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

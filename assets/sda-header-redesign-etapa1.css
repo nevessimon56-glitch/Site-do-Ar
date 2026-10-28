@@ -1,0 +1,67 @@
+/**
+ * Site do Ar — Header redesign etapa 1 (tema 11)
+ * Carregar após header-v2.css e sda-tokens.css.
+ * Preserva dock/footer (mobile-catalog-dock) no header-v2.css base.
+ */
+
+@media (min-width: 992px) {
+  .header.header-v2 .header-utility__inner {
+    min-height: 32px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .header-v2 .header-v2-cta-ambiente {
+    background: linear-gradient(135deg, var(--sda-orange, #f28c28), var(--sda-orange-deep, #ea580c)) !important;
+    border: 0 !important;
+    color: #fff !important;
+    min-height: var(--sda-touch-min, 44px);
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .header-v2 .header-v2-cta-ambiente:hover,
+  .header-v2 .header-v2-cta-ambiente:focus-visible {
+    filter: brightness(1.05);
+    color: #fff !important;
+  }
+
+  .header-v2 .header-v2-cta-diag360 {
+    display: inline-flex !important;
+    align-items: center;
+    background: linear-gradient(135deg, var(--sda-purple, #6d28d9), var(--sda-purple-dark, #4c1d95)) !important;
+    border: 0 !important;
+    box-shadow: 0 2px 8px rgba(76, 29, 149, 0.25);
+    color: #fff !important;
+    min-height: var(--sda-touch-min, 44px);
+  }
+
+  .header-v2 .header-v2-cta-diag360:hover,
+  .header-v2 .header-v2-cta-diag360:focus-visible {
+    filter: brightness(1.06);
+    color: #fff !important;
+  }
+
+  .header-v2 .header-v2-cta-diag360__ico {
+    color: #fff !important;
+  }
+
+  .header-v2 .header-v2-action__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 767px) {
+  .header-v2 .header-v2-search-pill {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .header-v2 .header-v2-mobile-icon-btn {
+    min-width: var(--sda-touch-min, 44px);
+    min-height: var(--sda-touch-min, 44px);
+    width: var(--sda-touch-min, 44px);
+    height: var(--sda-touch-min, 44px);
+  }
+}

@@ -1,0 +1,116 @@
+{% comment %}
+  Model 9 — card promo (timer fica em showcase-model-9.liquid).
+  Markup alinhado ao núcleo conversão: .sda-product-card--promo + Comparar/Pix.
+  Layout horizontal (card-left / card-right) preservado para theme-all.
+{% endcomment %}
+{% assign productPricePrimary = product.price %}
+{% assign buyButtonText = 'Comprar agora' %}
+{% if product.customBuyButton and product.customBuyButton.type == 'product' %}
+    {% assign buyButtonText = 'Ver mais' %}
+    {% if product.customBuyButton.text and product.customBuyButton.text != '' %}
+        {% assign buyButtonText = product.customBuyButton.text %}
+    {% endif %}
+{% endif %}
+
+{% assign listPriceCard = product.price.price %}
+{% assign pixPriceCard = product.price.price %}
+{% assign hasPixPromoCard = 0 %}
+{% assign pixPercentCard = 5 %}
+{% assign offerPercentCard = 5 %}
+{% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+    {% assign hasPixPromoCard = 1 %}
+    {% assign pixPriceCard = product.price.promotionPrice %}
+    {% assign pixPercentCard = product.price.promotionMargin | round %}
+    {% assign offerPercentCard = pixPercentCard %}
+{% else %}
+    {% assign hasPixPromoCard = 1 %}
+    {% assign _pixDiscountAmt = listPriceCard | times: pixPercentCard | divided_by: 100 %}
+    {% assign pixPriceCard = listPriceCard | minus: _pixDiscountAmt %}
+{% endif %}
+
+<div class="showcase-item" data-showcase-tpl="promo-v1">
+    <div class="showcase-product card sda-product-card sda-product-card--promo" itemscope itemtype="http://schema.org/Product">
+        <div class="card-left">
+            <div class="showcase-product_image card-image">
+                <a class="showcase-product_link showcase-product_link__image" href="{{ product.url }}">
+                    {% if product.medias[0].path != blank %}
+                        <img
+                            class="lazy product-hover-swap"
+                            data-src="{{ product.medias[0].path | imgUrl: 250 }}"
+                            {% if product.medias[1].path != blank %}data-hover-src="{{ product.medias[1].path | imgUrl: 250 }}"{% endif %}
+                            alt="{{ product.title }}">
+                        <meta itemprop="image" content="{{ product.medias[0].path | imgUrl: 250 }}">
+                    {% else %}
+                        {{ themeConfig.icons.image }}
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+        <div class="card-right">
+            <div class="showcase-card-body">
+                <div class="card-header">
+                    <h3>
+                        <a class="showcase-product_link showcase-product_link_title" href="{{ product.url }}">
+                            <span itemprop="name">{{ product.title }}</span>
+                        </a>
+                    </h3>
+                    {% render 'sections/sda-card-btu-line', product: product %}
+                </div>
+                <div class="showcase-spec-wrap">
+                    {% render 'sections/product-spec-icons', product: product %}
+                </div>
+            </div>
+            <div class="card-footer sda-card-footer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                {% render 'sections/product-compare-data', product: product, pixPrice: pixPriceCard, listPrice: listPriceCard %}
+                {% if product.manageStock == false or product.stockTotal > 0 %}
+                    {% if themeConfig.price.type == 'show' or themeConfig.price.type == 'show-logged' %}
+                        {% assign classShowcaseLoginPrice = '' %}
+                        {% if themeConfig.price.type == 'show-logged' %}
+                            {% assign classShowcaseLoginPrice = ' login-btn_logged d-hide' %}
+                        {% endif %}
+                        <div class="showcase-prices showcase-prices--card{{ classShowcaseLoginPrice }}">
+                            {% if hasPixPromoCard == 1 %}
+                                {% if listPriceCard > pixPriceCard %}
+                                    <p class="showcase-prices_from">De <del class="showcase-prices_strike"><s>{{ listPriceCard | money }}</s></del></p>
+                                {% endif %}
+                                <p class="showcase-prices_price showcase-prices_price--pix"><b>{{ pixPriceCard | money }}</b> <span class="showcase-prices_pix-label">no Pix</span></p>
+                                <p class="showcase-prices_pix showcase-prices_pix--detail"><span>{{ pixPercentCard }}</span>% de desconto no Pix</p>
+                            {% else %}
+                                <div class="showcase-prices_price">{{ productPricePrimary.price | money }}</div>
+                            {% endif %}
+                            {% if product.secondaryPrice and product.secondaryPrice.installment > 1 %}
+                                <p class="showcase-prices_installment showcase-prices_installment--desktop">
+                                    <span class="showcase-prices_installment-text"><b>{{ product.secondaryPrice.installment }}x</b> de <b class="showcase-prices_installment-value">{{ listPriceCard | divided_by: product.secondaryPrice.installment | money }}</b> sem juros</span>
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    <div class="showcase-card-actions">
+                        <a class="showcase-product_buy btn" href="javascript:void(0)" onclick="handleAddToCart('{{ product.id }}')">
+                            {{ buyButtonText }}
+                        </a>
+                        <button type="button"
+                                class="showcase-compare-btn showcase-compare-btn--secondary"
+                                data-compare-id="{{ product.id }}"
+                                aria-pressed="false">
+                            <span class="showcase-compare-btn__label">Comparar</span>
+                        </button>
+                    </div>
+                {% else %}
+                    <div class="showcase-prices showcase-prices_out-of-stock">
+                        <p class="showcase-prices_price">Desculpe, indisponível.</p>
+                    </div>
+                    {% assign subjectContact = 'subject=Avise-me quando o produto estiver disponível' %}
+                    {% assign messageContact = 'message=Nome: ' | append: product.title | append: '%0A' | append: 'Produto id: ' | append: product.id %}
+                    <div class="showcase-card-actions">
+                        <a class="showcase-product_buy showcase-product_buy_out-of-stock btn" href="/pagina/fale-conosco?{{ subjectContact }}&{{ messageContact }}">Avise-me</a>
+                    </div>
+                {% endif %}
+                <link itemprop="availability" href="http://schema.org/InStock"/>
+                <meta itemprop="price" content="{{ pixPriceCard }}"/>
+                <meta itemprop="priceCurrency" content="BRL"/>
+                {% if product.sku %}<meta itemprop="sku" content="{{ product.sku }}"/>{% endif %}
+            </div>
+        </div>
+    </div>
+</div>

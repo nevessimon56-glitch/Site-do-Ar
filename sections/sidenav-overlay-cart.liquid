@@ -1,0 +1,223 @@
+<div x-data="setupCart()"
+     x-init="getCart()"
+     class="sidenav-overlay sidenav-overlay_cart"
+     x-on:cart-add.window="addProduct($event.detail)"
+     x-on:update-cart-plugins.window="updateCartPlugins($event.detail)"
+     x-on:cart-open.window="cartOpen($event.detail)">
+    <div class="sidenav-container">
+        <div class="sidenav-header">
+            <a x-show="cart.totalQuantity > 0" class="btn-sidenav-close btn-sidenav-close_custom float-right"
+               href="javascript:void(0)" aria-label="Close" onclick="closeSideNavOverlay()">
+                Continuar comprando
+            </a>
+            <a x-show="cart.totalQuantity === 0" class="btn-sidenav-close float-right" href="javascript:void(0)"
+               aria-label="Close" onclick="closeSideNavOverlay()">
+                {{ themeConfig.icons.close }}
+            </a>
+            <div class="sidenav-title">Meu Carrinho</div>
+        </div>
+        <div class="sidenav-body">
+            <div class="loading-container loading" :class="{ open: loading }"></div>
+            <template x-if="cart.totalQuantity > 0">
+                <div id="cart-products">
+                    <template x-for="cartProduct in cart.products" :key="cartProduct.id">
+                        <section class="cart-section" x-bind:data-cart-product="cartProduct.id">
+                            <div class="cart-image float-left">
+                                <a class="cart-image_link" :title="cartProduct.title" :href="cartProduct.url">
+                                    <template x-if="cartProduct.image">
+                                        <span>
+                                            <picture>
+                                                <img class="lazy loaded"
+                                                     x-bind:data-src="cartProduct.image.thumbUrl"
+                                                     x-bind:src="cartProduct.image.thumbUrl"
+                                                     :alt="cartProduct.title">
+                                            </picture>
+                                            <picture>
+                                                <img class="lazy" data-src="{{ cartProduct.image.thumbUrl | imgUrl: 500}}" alt="">
+                                            </picture>
+                                        </span>
+                                    </template>
+                                    <template x-if="!cartProduct.image">
+                                        {{ themeConfig.icons.image }}
+                                    </template>
+                                </a>
+                                <div class="cart-product_quantity col-6 column">
+                                    <div class="input-group">
+                                        <button class="btn input-group-btn" @click="handleDecreaseQuantity(cartProduct.uid)">
+                                            -
+                                        </button>
+                                        <input class="form-input" type="number" x-model="cartProduct.quantity" @focusout="handleQuantity(cartProduct.uid)">
+                                        <button class="btn input-group-btn" @click="handleIncreaseQuantity(cartProduct.uid)">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cart-product float-right">
+                                <div class="columns">
+                                    <div class="cart-product_header col-12 column">
+                                        <a class="cart-product_title float-left"
+                                           :title="cartProduct.title"
+                                           :href="cartProduct.url"
+                                           x-text="cartProduct.title">
+                                        </a>
+                                        <a class="btn-cartItem_delete float-right"
+                                           @click="removeProduct(cartProduct.uid, cartProduct)"
+                                           href="javascript:void(0)"
+                                           aria-label="Close">
+                                            {{ themeConfig.icons.close }}
+                                        </a>
+                                    </div>
+                                    <div class="cart-product_info col-12 column">
+                                        <p style="margin-bottom: 2px;" :class="cartProduct.productsUnavailable ? 'd-hide' : ''">
+                                            Preço Unt:
+                                            <span x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format(cartProduct.originalUnitPrice)"></span>
+                                        </p>
+                                        <template x-if="cartProduct.sku">
+                                            <p>
+                                                <span x-text="`sku: ${cartProduct.sku}`"></span>
+                                            </p>
+                                        </template>
+                                        <template x-if="cartProduct.groupPurchase">
+                                            <div style="margin-top: 6px;">
+                                                <template x-for="(groupPurchaseItem, index, collection) in cartProduct.groupPurchase" :key="index">
+                                                    <p x-show="groupPurchaseItem.status === true">
+                                                        <span x-html="`<b>* ${groupPurchaseItem.title}</b>: ${(groupPurchaseItem.price.promotionPrice && groupPurchaseItem.price.promotionPrice > 0 ? StoreSDK.utils.money(groupPurchaseItem.price.promotionPrice) : StoreSDK.utils.money(groupPurchaseItem.price.price) ) }`"></span>
+                                                    </p>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <template x-if="cartProduct.grids">
+                                            <p>
+                                                <template x-for="(grid, index, collection) in cartProduct.grids" :key="index">
+                                                    <span x-text="`${[grid.name + ': ' + grid.value]}${(cartProduct.grids.length !== index+1) ? ' / ' : ''}`"></span>
+                                                </template>
+                                            </p>
+                                        </template>
+                                        <template x-if="cartProduct.products">
+                                            <p style="padding-top: 6px;">
+                                                <template x-for="(productKit, index, collection) in cartProduct.products" :key="index">
+                                                    <span x-text="`${[productKit.quantity + 'x '+productKit.title]}${(cartProduct.products.length !== index+1) ? ' / ' : ''}`"></span>
+                                                </template>
+                                            </p>
+                                        </template>
+                                    </div>
+                                    <div class="cart-product_prices col-12 column">
+                                        <template x-if="cartProduct.productsUnavailable">
+                                            <div class="cart-product_out_of_stock">
+                                                <template x-for="(productsUnavailable, index, collection) in cartProduct.productsUnavailable" :key="index">
+                                                    <p class="text" x-text="productsUnavailable.text"></p>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <template x-if="cartProduct.msgReachedQuantityLimit">
+                                            <div class="cart-product-reached_quantity_limit">
+                                                <p class="text" x-text="cartProduct.msgReachedQuantityLimit"></p>
+                                            </div>
+                                        </template>
+                                        <template x-if="cartProduct.outOfStock">
+                                            <div class="cart-product_out_of_stock">
+                                                <template x-for="(outOfStock, index, collection) in cartProduct.outOfStock" :key="index">
+                                                    <p class="text" x-text="outOfStock.text"></p>
+                                                </template>
+                                                <template x-if="cartProduct.editAssembleYourKit">
+                                                    <button class="btn btn_out_of_stock" @click="editProduct(cartProduct)">Editar produto</button>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <div class="cart-product_price" :class="cartProduct.productsUnavailable ? 'd-hide' : ''">
+                                            <p class="cart-price_total"
+                                               x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format(cartProduct.originalTotalPrice)">
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </template>
+                </div>
+            </template>
+            <template x-if="cart.totalQuantity === 0">
+                <div class="sidenav-body sidenav-body_empty" id="cart-products">
+                    <section class="cart-section cart-section_empty" >
+                        {{ themeConfig.icons.sad }}
+                        <p>
+                            Seu carrinho está vazio
+                        </p>
+                    </section>
+                </div>
+            </template>
+        </div>
+        <div class="sidenav-footer" x-show="cart.totalQuantity > 0">
+            <template x-if="cart.totalQuantity > 0">
+                <div id="cart-total">
+                    <template x-if="cart.tax">
+                        {% assign textTaxType = 'Desconto da forma de pagamento' %}
+                        {% if cart.tax > 0 %}
+                            {% assign textTaxType = 'Acréscimo da forma de pagamento' %}
+                        {% endif %}
+                        <section class="cart-subtotal columns">
+                            <div class="cart-subtotal_text float-left col-8 column">
+                                <p>Subtotal</p>
+                            </div>
+                            <div class="float-right col-4 column text-right">
+                                <p class="cart-subtotal_price" x-text="StoreSDK.utils.toCurrency(cart.totalWithoutTax)"></p>
+                            </div>
+                        </section>
+                        <section class="cart-subtotal columns">
+                            <div class="cart-subtotal_text float-left col-8 column">
+                                <p>{{ textTaxType }}</p>
+                            </div>
+                            <div class="float-right col-4 column text-right">
+                                <p class="cart-subtotal_price" x-text="StoreSDK.utils.toCurrency(cart.tax)"></p>
+                            </div>
+                        </section>
+                        <section class="cart-total cart-total-tax columns">
+                            <div class="cart-total_text float-left col-6 column">
+                                <p>Total</p>
+                            </div>
+                            <div class="cart-total_price float-right col-6 column text-right">
+                                <p id="totalPrice"
+                                    x-bind:data-cart-product-price="cart.total"
+                                    x-text="StoreSDK.utils.toCurrency(cart.totalWithoutTax + cart.tax)">
+                                </p>
+                            </div>
+                        </section>
+                    </template>
+                    <template x-if="!cart.tax">
+                        <section class="cart-total columns">
+                            <div class="cart-total_text float-left col-6 column">
+                                <p>Total</p>
+                            </div>
+                            <div class="cart-total_price float-right col-6 column text-right">
+                                <p id="totalPrice"
+                                   x-bind:data-cart-product-price="cart.total"
+                                   x-text="Intl.NumberFormat('pt-BR', { style: 'currency',currency: 'BRL', }).format(cart.total)">
+                                </p>
+                            </div>
+                        </section>
+                    </template>
+                    {% if themeConfig.checkout.type == 'chat-checkout' and themeConfig.checkout.plugin %}
+                        {% assign textBtnChatCheckout = 'Finalizar Pedido' %}
+                        {% if themeConfig.checkout.plugin == 'whatsapp' %}
+                            {% assign textBtnChatCheckout = 'Fechar Pedido pelo Whats' %}
+                        {% endif %}
+                        <a class="btn btn-lg col-12" title="{{ textBtnChatCheckout }}" href="javascript:void(0)" @click="chatCheckout()">
+                            {{ textBtnChatCheckout }}
+                        </a>
+                    {% else %}
+                        <template x-if="!state.checkoutIsAllowed">
+                            <p class="label-text-checkout label-text-checkout-error">
+                                <span x-text="state.msgWhenCheckoutIsBlocked"></span>
+                            </p>
+                        </template>
+                        <a class="btn btn-lg col-12" href="/checkout" title="Finalizar Pedido" :class="state.checkoutIsAllowed ? '' : 'disabled'">
+                            Finalizar Pedido
+                        </a>
+                    {% endif %}
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+{% render 'sections/sidenav-overlay-cart-script', cart: cart, themeConfig: themeConfig %}
