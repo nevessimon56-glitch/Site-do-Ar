@@ -129,9 +129,13 @@
   var details = root.querySelectorAll('.product-descriptions details.product-description');
 
   function syncPdpDescPanels() {
-    details.forEach(function (el) {
+    details.forEach(function (el, idx) {
       if (mobileMq.matches) {
-        el.removeAttribute('open');
+        if (idx === 0) {
+          el.setAttribute('open', '');
+        } else {
+          el.removeAttribute('open');
+        }
       } else {
         el.setAttribute('open', '');
       }

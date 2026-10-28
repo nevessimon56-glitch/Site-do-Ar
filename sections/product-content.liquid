@@ -7,7 +7,7 @@
         x-on:change-product-group-purchase.window="handleProductGroupPurchase($event.detail)"
         x-data="setupProduct()" x-init="initProduct()">
 
-        {% assign buyButtonText = 'Comprar' %}
+        {% assign buyButtonText = 'Comprar agora' %}
 
         <!-- TODO: Não alterar mainPrice. Se caso alterar, vai afetar no calculo de pagamento-->
         {% assign mainPrice = product.price.price %}
@@ -219,7 +219,7 @@
                             </div>
                         </div>
                         <div class="product-header-right col-5 col-lg-5 column">
-                            <div class="product-header-box">
+                            <div class="product-header-box sda-product-purchase-panel">
                                 <div class="product-header-box_top">
                                     {% if product.sku %}
                                         <div class="product-sku">
@@ -250,6 +250,7 @@
                                         {% endif %}
                                     {% endif %}
                                 </h1>
+                                {% render 'sections/sda-pdp-decision-summary', product: product %}
                                 <template x-if="state.review.total > 0">
                                     <div class="product-review">
                                         <div class="product-review-star" onclick="redirectReviewSection()" style="cursor: pointer;">

@@ -66,7 +66,7 @@
     {% endif %}
 {% endfor %}
 
-<header class="header header-v2">
+<header class="header header-v2" id="sda-site-header">
     <div class="header-utility content">
         <div class="container header-utility__inner">
             <ul class="header-utility__links">
@@ -106,7 +106,14 @@
     <div class="header-content content">
         <div class="container">
             <div class="navbar header-v2-navbar">
-                <div class="navbar-section">
+                <div class="navbar-section header-v2-mobile-menu show-lg">
+                    <a class="header-v2-mobile-icon-btn header-link header-link_menu__mobile menu-mobile_link" href="javascript:void(0)" title="Abrir menu" aria-label="Abrir menu" aria-haspopup="true" onclick="openNavMobile()">
+                        <span class="icon-bar" aria-hidden="true"></span>
+                        <span class="icon-bar" aria-hidden="true"></span>
+                        <span class="icon-bar" aria-hidden="true"></span>
+                    </a>
+                </div>
+                <div class="navbar-section header-v2-logo-wrap">
                     <a class="logo" href="/" title="{{ store.name }}">
                         <h1>{{ store.name }}</h1>
                         {% if theme.logo.path %}
@@ -122,7 +129,7 @@
                 <div class="header-v2-search search-desktop hide-lg">
                     <form id="myForm2Desktop" method="POST" action="">
                         <div class="input-group">
-                            <input type="search" id="term2Desktop" class="form-input" placeholder="Busque por produto, marca ou modelo" autocomplete="off" aria-label="Busque por produto, marca ou modelo">
+                            <input type="search" id="term2Desktop" class="form-input" placeholder="Busque por marca, modelo ou BTUs" autocomplete="off" aria-label="Busque por marca, modelo ou BTUs">
                             <button class="btn" type="button" title="Buscar" onclick="alterForm2Desktop()">
                                 {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
                             </button>
@@ -132,10 +139,6 @@
                 </div>
 
                 <div class="header-v2-actions hide-lg">
-                    <a class="header-v2-action" href="/pedidos" title="Meus pedidos">
-                        <span class="header-v2-action__icon">{{ iconBoxOutline }}</span>
-                        <span class="header-v2-action__label">Meus pedidos</span>
-                    </a>
                     <a class="header-v2-action" href="javascript:void(0)" title="Favoritos" onclick="openFavoritesPanel()">
                         <span class="header-v2-action__icon">{{ iconHeartOutline }}</span>
                         <span class="header-v2-action__label">Favoritos</span>
@@ -169,11 +172,6 @@
                             <span class="cart_quantity" data-cart-quantity aria-label="Itens no carrinho">{{ cartQtdMobile }}</span>
                         </a>
                     {% endif %}
-                    <a class="header-v2-mobile-icon-btn header-link header-link_menu__mobile menu-mobile_link" href="javascript:void(0)" title="Abrir menu" aria-label="Abrir menu" aria-haspopup="true" onclick="openNavMobile()">
-                        <span class="icon-bar" aria-hidden="true"></span>
-                        <span class="icon-bar" aria-hidden="true"></span>
-                        <span class="icon-bar" aria-hidden="true"></span>
-                    </a>
                 </div>
             </div>
 
@@ -183,7 +181,7 @@
                         <span class="header-v2-search-pill__icon" aria-hidden="true">
                             {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
                         </span>
-                        <input type="search" id="term2" class="form-input header-v2-search-pill__input" placeholder="Busque por produto, marca ou modelo" autocomplete="off" aria-label="Busque por produto, marca ou modelo" onkeydown="if (event.key === 'Enter') { event.preventDefault(); alterForm2(); }">
+                        <input type="search" id="term2" class="form-input header-v2-search-pill__input" placeholder="Busque por marca, modelo ou BTUs" autocomplete="off" aria-label="Busque por marca, modelo ou BTUs" onkeydown="if (event.key === 'Enter') { event.preventDefault(); alterForm2(); }">
                     </label>
                     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
                 </form>
@@ -195,15 +193,13 @@
                     <a class="header-v2-mobile-strip__link" href="{{ sdaMLinkSplit }}">Split Inverter</a>
                     <a class="header-v2-mobile-strip__link" href="{{ sdaMLinkPiso }}">Piso Teto</a>
                     <a class="header-v2-mobile-strip__link" href="{{ sdaMLinkJanela }}">Janela</a>
-                    <a class="header-v2-mobile-strip__link header-v2-mobile-strip__link--ambiente" href="/pagina/calculadora-btus">Compre por ambiente</a>
-                    <a class="header-v2-mobile-strip__link header-v2-mobile-strip__link--diag" href="{{ sdaDiag360Url }}">Diagnóstico</a>
                 </div>
             </nav>
 
             <div class="search close">
                 <form id="myForm" method="POST" action="">
                     <div class="input-group">
-                        <input type="search" id="term" class="form-input" placeholder="Busque por produto, marca ou modelo">
+                        <input type="search" id="term" class="form-input" placeholder="Busque por marca, modelo ou BTUs" aria-label="Busque por marca, modelo ou BTUs">
                         <button class="btn" type="button" title="Buscar" onclick="alterForm()">
                             {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
                         </button>
