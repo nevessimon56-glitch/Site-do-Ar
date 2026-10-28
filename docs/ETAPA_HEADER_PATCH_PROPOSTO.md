@@ -1,5 +1,8 @@
 # Etapa Header — patch mínimo proposto (revisão 2, sem upload)
 
+**Preparação 3 (P-01, A1, testes, patch cirúrgico):** [`ETAPA_HEADER_PREPARACAO_P01_TESTES.md`](ETAPA_HEADER_PREPARACAO_P01_TESTES.md)  
+**Especificação CSS cirúrgico:** [`PATCH-CIRURGICO-HEADER-V2-ESPEC.md`](wdna/etapa-header-opcao-a/PATCH-CIRURGICO-HEADER-V2-ESPEC.md)
+
 **Data:** 28 out 2026 (America/Sao_Paulo)  
 **Decisão operacional:** testes visuais no **site publicado** (`https://sitedoar.com.br`, **themeId 3**). URL isolada tema 11 **não** bloqueia preparação documental.  
 **Referência markup:** [`header-producao-theme3-20261028.liquid`](wdna/backups/header-producao-theme3-20261028.liquid) (SHA `6e16746d…`) — **não** assumir byte-idêntico ao editor.  
@@ -27,7 +30,7 @@
 
 | # | Caminho WDNA | Ação **anterior** | Ação **revisada** |
 |---|--------------|-------------------|-------------------|
-| A1 | `assets/sda-tokens.css` | Criar + link layout | **Mantido** (Fase 1 isolada, baixo risco visual se só link) |
+| A1 | `assets/sda-tokens.css` | Criar + link layout | **Isolado do redesign** — risco **médio–alto** fora do header ([prep §2](ETAPA_HEADER_PREPARACAO_P01_TESTES.md)) |
 | A2 | `assets/header-v2.css` | Substituir pelo Git | **Condicional** — só após diff §5 aceito; default **não substituir integral** |
 | A3 | `sections/header.liquid` | Remover `<style>` inline | **Suspenso** — inline é **camada visual adicional**, não duplicata (§6) |
 | A4 | `layout/theme.liquid` | +1 link tokens; Fase 2 inline layout | Fase 1 **bloqueada** sem P-01; Fase 2 inline layout **inalterada** |
@@ -40,7 +43,7 @@
 
 | ID | Requisito | Status | Evidência / ação manual |
 |----|-----------|--------|-------------------------|
-| P-01 | Backup painel `layout/theme.liquid` tema **3** → `docs/wdna/backups/layout-theme-producao-theme3-20261028.liquid` + SHA | **BLOQUEADO** | Só existe [`layout-theme-producao-theme3-20261028.meta.md`](wdna/backups/layout-theme-producao-theme3-20261028.meta.md). **Operador:** Personalizar → tema **3** → Editar código → `layout/theme.liquid` → copiar inteiro → colar no repo ou anexar ao agente. |
+| P-01 | Backup painel `layout/theme.liquid` tema **3** → `docs/wdna/backups/layout-theme-producao-theme3-20261028.liquid` + SHA | **BLOQUEADO** | Arquivo `.liquid` **ausente** (verificado 28/out). Procedimento: [`ETAPA_HEADER_PREPARACAO_P01_TESTES.md`](ETAPA_HEADER_PREPARACAO_P01_TESTES.md) §1.2. |
 | P-02 | Backup `sections/header.liquid` tema **3** | **Atendido (documental)** | [`header-producao-theme3-20261028.liquid`](wdna/backups/header-producao-theme3-20261028.liquid) SHA `6e16746d…`. Revalidar SHA no painel antes do upload. |
 | P-03 | Backup `assets/header-v2.css` tema **3** | **Atendido** | [`header-v2-producao-theme3-20261028.css`](wdna/backups/header-v2-producao-theme3-20261028.css) SHA `188a64cf…` via CDN (meta §5). |
 | P-04 | `sda-tokens.css` no painel | **PENDENTE** | Após P-01 desbloqueado |
@@ -104,7 +107,7 @@ Sem alteração proposta. Contratos: `alterForm2`, `alterForm2Desktop`, `openFav
 | `--sda-ink`, `--sda-blue` (#075da8), … | **Inline** `.header.header-v2` em `header.liquid` | **Escopo local** — sobrescreve percepção de cor **dentro do header** se inline mantido; `:root --sda-blue` (#1976d2 alias) **não substitui** inline enquanto bloco existir |
 | Foco cards (L97–107 tokens) | Global `.sda-card`, `.product-v2` | **Efeito fora header** se A1 linkado — apenas `:focus-visible`; risco baixo |
 
-**Conclusão:** A1 sozinha (link + upload) altera pouco o header **se** prod CDN + inline permanecem; conflito principal aparece se A2 Git substituir prod **e** A3 remover inline.
+**Conclusão (rev. prep 3):** A1 (link + upload) **pode alterar vitrines/PDP** porque `sda-conversion-redesign.css` e `product-page-v2.css` já estão na home produção e consomem `--sda-*`. Header prod (`--hdr-*` + inline) **pode** ficar estável, mas **não** classificar A1 como baixo risco global. Upload A1 **não recomendado** sem P-01 e matriz **TA-*** ([`ETAPA_HEADER_PREPARACAO_P01_TESTES.md`](ETAPA_HEADER_PREPARACAO_P01_TESTES.md) §2–3).
 
 ---
 
@@ -238,9 +241,9 @@ Permanece **opcional e posterior**; depende de `product-compare.css` + TH-17. N�
 
 1. Desbloquear **P-01** (layout backup).  
 2. Backups painel confirmados P-01–P-03.  
-3. **Somente A1 + A4 linha tokens** (sem A2, sem A3).  
-4. TH-01–TH-16 parcial (header deve parecer **igual** salvo tokens globais em `:focus` cards).  
-5. **Se** aprovação explícita para redesign: patch **cirúrgico** A2 (não monolito Git) + testes completos.  
+3. **Somente A1 + A4 linha tokens** (sem A2, sem A3) — executar **TA-01–TA-07** antes de TH header.  
+4. TH-01–TH-16 + **TH-21–TH-24** (footer/dock/PLP/PDP) — ver prep §3.  
+5. **Se** aprovação explícita para redesign: patch **cirúrgico** ([`PATCH-CIRURGICO-HEADER-V2-ESPEC.md`](wdna/etapa-header-opcao-a/PATCH-CIRURGICO-HEADER-V2-ESPEC.md)) — não monolito Git.  
 6. **Nunca** A3 inline na mesma janela que A2 monolito.  
 7. Fase 2 layout inline v5 — última.
 
@@ -258,7 +261,8 @@ Matriz em [`ETAPA_HEADER_ENTRADA_E_TESTES.md`](ETAPA_HEADER_ENTRADA_E_TESTES.md)
 
 | Bloqueio | Responsável |
 |----------|-------------|
-| P-01 — export `layout/theme.liquid` tema 3 | Operador |
+| P-01 — export `layout/theme.liquid` tema 3 (**`.liquid` ainda não no repo**) | Operador |
+| A1 — estratégia teste sem sandbox + TA-* | Operador + engenharia |
 | Escopo A2 — monolito Git inaceitável sem merge `mobile-catalog-dock` | Engenharia |
 | A3 — matriz equivalência inline | Engenharia |
 | P-05 aprovação escrita | Operador |
