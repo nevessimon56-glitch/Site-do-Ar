@@ -1,0 +1,13 @@
+SDA ZERO v1 — reescrita do zero (melhor pilha possível)
+Branch: cursor/card-remodel-b192
+Gerado: 26 out 2026 (America/Sao_Paulo)
+
+DONOS:
+  mega-menu.css     = nav (SEM CSS de card)
+  sda-conversion-redesign.css = busca, PDP, botões coluna
+  sda-card.css      = ÚNICO visual vitrine (.sda-card)
+
+layout/theme.liquid deve linkar sda-card.css (não só showcase-product-card.css)
+HTML: buscar SDA-ZERO-v1 no código-fonte da loja
+
+32 arquivos nesta pasta (+ LEIA-ME). Ver docs/wdna/SDA-ZERO-PUBLICAR.md

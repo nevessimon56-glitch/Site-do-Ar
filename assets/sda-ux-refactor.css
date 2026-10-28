@@ -1,0 +1,327 @@
+/**
+ * Site do Ar — UX refactor (auditoria 2026-10)
+ * Home, cards, PDP — carregar por último entre folhas SDA.
+ */
+
+/* —— Home: hero —— */
+.sda-home-hero {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  padding: 32px 0 36px;
+  background: linear-gradient(160deg, #0c1f3d 0%, #163d5c 50%, #1e5a8a 100%);
+}
+
+.sda-home-hero__copy {
+  max-width: 620px;
+}
+
+@media (min-width: 992px) {
+  .sda-home-hero {
+    min-height: 340px;
+    padding: 40px 0 44px;
+  }
+
+  .sda-home-hero__title {
+    font-size: clamp(2.25rem, 2.8vw, 3rem);
+    line-height: 1.1;
+    max-width: 620px;
+  }
+
+  .sda-home-hero__lead {
+    font-size: 17px;
+    max-width: 620px;
+  }
+
+  .sda-home-hero__btn {
+    min-height: 48px;
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 991px) {
+  .sda-home-hero {
+    padding: 28px 16px 32px;
+  }
+
+  .sda-home-hero__title {
+    font-size: clamp(1.875rem, 7vw, 2.125rem);
+    line-height: 1.12;
+  }
+
+  .sda-home-hero__lead {
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .sda-home-hero__actions {
+    flex-direction: column;
+  }
+
+  .sda-home-hero__btn {
+    width: 100%;
+    min-height: 48px;
+  }
+}
+
+/* Banner sazonal menos dominante */
+.sda-conversion-v2 .home-main .showcase-banners,
+.sda-conversion-v2 .home-main .banner-main,
+.sda-conversion-v2 .home-main section.showcase .showcase-banners_link img {
+  max-height: 400px;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (max-width: 991px) {
+  .sda-conversion-v2 .home-main .showcase-banners,
+  .sda-conversion-v2 .home-main .banner-main,
+  .sda-conversion-v2 .home-main section.showcase .showcase-banners_link img {
+    max-height: 280px;
+  }
+}
+
+/* Atalhos por ambiente (home cards) */
+@media (min-width: 992px) {
+  .sda-conversion-v2 .sda-home-cards__link {
+    min-height: 80px;
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 991px) {
+  .sda-conversion-v2 .sda-home-pills {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .sda-conversion-v2 .sda-home-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sda-conversion-v2 .sda-home-pills__link {
+    flex: 0 0 auto;
+    min-height: 36px;
+  }
+}
+
+/* —— Product grid (4 / 3 / 2 colunas) —— */
+@media (min-width: 992px) {
+  main.home-main .showcase-products_grid ul.showcase-list,
+  main.search-main .showcase-search.showcase-search_grid ul.showcase-list {
+    gap: 18px;
+  }
+
+  main.home-main .showcase-products_grid .showcase-item,
+  main.search-main .showcase-search.showcase-search_grid .showcase-item {
+    width: calc((100% - 54px) / 4) !important;
+    max-width: calc((100% - 54px) / 4) !important;
+    flex: 0 0 calc((100% - 54px) / 4) !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  main.home-main .showcase-products_grid .showcase-item,
+  main.search-main .showcase-search.showcase-search_grid .showcase-item {
+    width: calc((100% - 32px) / 3) !important;
+    max-width: calc((100% - 32px) / 3) !important;
+    flex: 0 0 calc((100% - 32px) / 3) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  main.home-main .showcase-products_grid.showcase-home_grid--mobile-2col .showcase-item,
+  main.search-main .showcase-search.showcase-search_grid .showcase-item {
+    width: calc((100% - 16px) / 2) !important;
+    max-width: calc((100% - 16px) / 2) !important;
+    flex: 0 0 calc((100% - 16px) / 2) !important;
+  }
+}
+
+/* Card: título 3 linhas, preço, CTA */
+.sda-product-card.sda-card .showcase-product_link_title {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+  min-height: calc(1.3em * 3);
+  font-size: 16px;
+}
+
+.sda-product-card.sda-card .showcase-prices_price b,
+.sda-product-card.sda-card .showcase-prices_price--pix b {
+  font-size: clamp(1.125rem, 2.2vw, 1.625rem);
+  font-weight: 800;
+}
+
+.sda-product-card.sda-card .showcase-product_buy {
+  min-height: 48px;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .sda-product-card.sda-card .showcase-product_link_title {
+    font-size: 14px;
+    min-height: calc(1.3em * 3);
+  }
+
+  .sda-product-card.sda-card .showcase-prices_price b,
+  .sda-product-card.sda-card .showcase-prices_price--pix b {
+    font-size: 1.25rem;
+  }
+
+  .sda-product-card.sda-card .showcase-product_buy {
+    min-height: 44px;
+  }
+
+  .sda-product-card.sda-card .showcase-compare-btn--secondary {
+    display: none;
+  }
+}
+
+.sda-card > .showcase-product_image.card-image {
+  min-height: 220px !important;
+}
+
+.sda-card .showcase-product_link__image {
+  min-height: 200px !important;
+}
+
+/* —— PDP: grid 58/42 + painel sticky —— */
+@media (min-width: 992px) {
+  #product-pdp-v2 .product-header .columns {
+    gap: 44px !important;
+  }
+
+  #product-pdp-v2 .product-header-left,
+  #product-pdp-v2 .product-header-left.col-7 {
+    flex: 1 1 58% !important;
+    max-width: 58% !important;
+    width: 58% !important;
+  }
+
+  #product-pdp-v2 .product-header-right,
+  #product-pdp-v2 .product-header-right.col-5 {
+    flex: 0 0 42% !important;
+    max-width: 42% !important;
+    width: 42% !important;
+    min-width: 400px !important;
+  }
+
+  #product-pdp-v2 .product-zoom img,
+  #product-pdp-v2 .product-zoom_link picture {
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #product-pdp-v2 .product-zoom_image {
+    max-height: 560px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  #product-pdp-v2 .sda-product-purchase-panel {
+    position: sticky;
+    top: 96px;
+    align-self: flex-start;
+  }
+
+  #product-pdp-v2 .product-title_desktop {
+    font-size: clamp(1.75rem, 2.2vw, 2.125rem);
+    line-height: 1.15;
+  }
+
+  #product-pdp-v2 .product-prices_price--pix-final .product-prices_price-inner {
+    font-size: clamp(2rem, 2.5vw, 2.5rem) !important;
+    font-weight: 800;
+  }
+
+  #product-pdp-v2 .product-header-box .product-buy .product-btn_buy {
+    min-height: 54px;
+    font-size: 1rem;
+  }
+}
+
+/* Resumo de decisão (3 bullets) */
+.sda-pdp-decision-summary {
+  margin: 12px 0 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f0f7ff;
+  border: 1px solid #dce8f8;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #1c2b4a;
+}
+
+.sda-pdp-decision-summary__title {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.sda-pdp-decision-summary ul {
+  margin: 0;
+  padding: 0 0 0 18px;
+}
+
+.sda-pdp-decision-summary li + li {
+  margin-top: 6px;
+}
+
+.sda-pdp-decision-summary li strong {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Specs table → lista no mobile */
+@media (max-width: 991px) {
+  #product-pdp-v2 .product-description_specs-table--full table {
+    display: block;
+    width: 100%;
+  }
+
+  #product-pdp-v2 .product-description_specs-table--full tr {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  #product-pdp-v2 .product-description_specs-table--full td,
+  #product-pdp-v2 .product-description_specs-table--full th {
+    display: block;
+    width: 100% !important;
+    padding: 2px 0;
+  }
+
+  #product-pdp-v2 .product-description_header {
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+  }
+
+  .sda-pdp-sticky-buy {
+    min-height: 60px;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .sda-pdp-sticky-buy__btn {
+    min-height: 48px;
+  }
+}

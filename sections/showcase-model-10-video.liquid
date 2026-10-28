@@ -1,0 +1,57 @@
+{% assign isVideo = '' %}
+{% if videoType == 'vimeo' or videoType == 'youtube' and videoId != '' %}
+    {% assign isVideo = true %}
+{% endif %}
+{% if videoType == 'html5' and urlVideo != '' %}
+    {% assign isVideo = true %}
+{% endif %}
+<div class="showcase-banners_img{% if showcaseSection.config.videoAutoplay %} active{% endif %}" href="javascript:void(0)" :class="state.isVisibleVideo ? 'active' : ''" title="{{ showcaseMedia.title | replaceTextOnly }}">
+    <div class="showcase-banners-box">
+        {% if isVideo == true %}
+            <div class="showcase-banner-box showcase-banner-box_front">
+                <a class="showcase-banners_link" href="javascript:void(0)" title="{{ showcaseMedia.title | replaceTextOnly }}" @click="openModalVideo('{{ videoType }}', '{{ videoId }}', '{{ urlVideo }}')">
+                    <picture>
+                        <img class="banner-grid banner-main_img lazy lazy-slider" data-src="{{ showcaseMedia.path | imgUrl }}" alt="{{ showcaseMedia.title | replaceTextOnly }}">
+                    </picture>
+                    {{ themeConfig.icons.play }}
+                </a>
+            </div>
+            <div class="showcase-banner-box showcase-banner-box_back">
+                <div class="showcase-banner-box_video">
+                    {% if showcaseSection.config.videoAutoplay %}
+                        {% case showcaseMedia.metadata.videoType %}
+                            {% when 'html5' %}
+                                <div class="showcase-video showcase-video_html5 showcase-banner-box_video showcase-video-autoplay-html5">
+                                    <video class="lazy" data-src="{{ urlVideo }}" max-width="100%" width="100%" autoplay loop muted data-autoplay="" controlslist="nodownload"></video>
+                                </div>
+                            {% when 'youtube' %}
+                                <div class="showcase-video showcase-video_yt showcase-banner-box_video showcase-video-autoplay-yt">
+                                    <iframe class="lazy" width="150%" height="100%" max-width="100%" max-height="100%" data-src="https://www.youtube.com/embed/{{ videoId | linkConvertVideoId }}?autoplay=1&showinfo=0&controls=0&disablekb=1&fs=0&loop=1&modestbranding=1&mute=1&playlist={{ videoId | linkConvertVideoId }}" allowfullscreen></iframe>
+                                </div>
+                            {% when 'vimeo' %}
+                                <div class="showcase-video showcase-video_vimeo showcase-banner-box_video showcase-video-autoplay-vimeo">
+                                    <iframe class="lazy" data-src="https://player.vimeo.com/video/{{ videoId | linkConvertVideoId }}?autoplay=1&loop=1&title=0&byline=0&portrait=0&muted=1&controls=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                        {% endcase %}
+                    {% else %}
+                        <template x-if="state.video.videoType === 'html5'">
+                            <div class="showcase-video showcase-video_html5">
+                                <video :src="state.video.urlVideo" max-width="state.video.width" :max-height="state.video.height" width="100%" height="100%" controls autoplay></video>
+                            </div>
+                        </template>
+                        <div class="showcase-video showcase-video_yt" :class="state.video.videoType === 'youtube' ? 'active' : 'disable'">
+                            <div id="playerYT{{ index }}Id{{ showcaseSection.id }}" class="playerYT"></div>
+                        </div>
+                        <div class="showcase-video showcase-video_vimeo" :class="state.video.videoType === 'vimeo' ? 'active' : 'disable'">
+                            <div id="playerVimeo{{ index }}Id{{ showcaseSection.id }}" class="playerVimeo"></div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <picture>
+                <img class="banner-grid banner-main_img lazy lazy-slider" data-src="{{ showcaseMedia.path | imgUrl }}" alt="{{ showcaseMedia.title | replaceTextOnly }}">
+            </picture>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,65 @@
+{% comment %}
+  Resumo escaneável para o painel de compra (PDP).
+  Usa apenas dados já presentes no cadastro — título, tags e specs.
+{% endcomment %}
+
+{% assign titleL = product.title | downcase %}
+{% assign blob = titleL %}
+{% if product.tags and product.tags != '' %}
+  {% assign blob = blob | append: ' | ' | append: product.tags | downcase %}
+{% endif %}
+{% if product.shortDescription and product.shortDescription != '' %}
+  {% assign blob = blob | append: ' | ' | append: product.shortDescription | strip_html | downcase %}
+{% endif %}
+
+{% assign lineIdeal = '' %}
+{% assign lineHighlights = '' %}
+{% assign lineAttention = '' %}
+
+{% if titleL contains '9000' or titleL contains '9.000' or titleL contains '9000 bt' %}
+  {% assign lineIdeal = 'Quartos e salas compactas — confira a área indicada na ficha técnica antes da compra.' %}
+{% elsif titleL contains '12000' or titleL contains '12.000' %}
+  {% assign lineIdeal = 'Ambientes médios — confira a área indicada na ficha técnica antes da compra.' %}
+{% elsif titleL contains '18000' or titleL contains '18.000' or titleL contains '24000' or titleL contains '24.000' %}
+  {% assign lineIdeal = 'Ambientes amplos — confira a área indicada na ficha técnica antes da compra.' %}
+{% else %}
+  {% assign lineIdeal = 'Confira na ficha técnica se a capacidade (BTUs) atende ao seu ambiente.' %}
+{% endif %}
+
+{% assign highlightParts = '' %}
+{% if blob contains 'inverter' %}
+  {% assign highlightParts = highlightParts | append: 'Inverter' %}
+{% endif %}
+{% if blob contains 'wi-fi' or blob contains 'wifi' %}
+  {% if highlightParts != '' %}{% assign highlightParts = highlightParts | append: ', ' %}{% endif %}
+  {% assign highlightParts = highlightParts | append: 'Wi-Fi' %}
+{% endif %}
+{% if blob contains 'quente' or blob contains 'frio' or blob contains 'qf' %}
+  {% if highlightParts != '' %}{% assign highlightParts = highlightParts | append: ', ' %}{% endif %}
+  {% assign highlightParts = highlightParts | append: 'Ciclo quente/frio' %}
+{% elsif blob contains 'frio' %}
+  {% if highlightParts != '' %}{% assign highlightParts = highlightParts | append: ', ' %}{% endif %}
+  {% assign highlightParts = highlightParts | append: 'Só frio' %}
+{% endif %}
+{% if highlightParts == '' %}
+  {% assign lineHighlights = 'Veja inverter, ciclo, classificação energética e gás na seção Especificações.' %}
+{% else %}
+  {% assign lineHighlights = highlightParts | append: ' — demais dados na ficha técnica.' %}
+{% endif %}
+
+{% if blob contains '127' %}
+  {% assign lineAttention = 'Modelo 127 V — confirme a voltagem e a instalação antes de comprar.' %}
+{% elsif blob contains '220' %}
+  {% assign lineAttention = 'Modelo 220 V — confirme a voltagem e a instalação antes de comprar.' %}
+{% else %}
+  {% assign lineAttention = 'Confirme voltagem, instalação e dimensionamento antes de comprar.' %}
+{% endif %}
+
+<div class="sda-pdp-decision-summary" aria-label="Resumo para decisão de compra">
+  <span class="sda-pdp-decision-summary__title">Resumo rápido</span>
+  <ul>
+    <li><strong>Ideal para:</strong> {{ lineIdeal }}</li>
+    <li><strong>Destaques:</strong> {{ lineHighlights }}</li>
+    <li><strong>Atenção:</strong> {{ lineAttention }}</li>
+  </ul>
+</div>

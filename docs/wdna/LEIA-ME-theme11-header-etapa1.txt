@@ -1,0 +1,12 @@
+Pacote upload — Tema 11 | Header etapa 1
+Branch: cursor/header-etapa1-b192 (PR #51)
+
+Como usar no WDNA:
+1. Extraia o ZIP mantendo pastas layout/, sections/, templates/, assets/
+2. Personalizar → tema 11 → Editar código
+3. Para cada arquivo, abra o mesmo caminho no painel e substitua o conteúdo (ou crie o asset se não existir)
+4. Salvar → Visualizar (não publicar tema 3)
+
+Arquivos: 21 (ver lista dentro do ZIP)
+
+Tokens: assets/sda-tokens.css (nome exato, com "sda")

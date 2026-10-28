@@ -1,0 +1,12 @@
+RECUPERACAO — Tema 11 | Pagina nao encontrada
+Branch: cursor/ux-refactor-audit-b192
+
+1. Extraia este ZIP mantendo pastas layout/, templates/, sections/, assets/
+2. Painel WDNA → Personalizar → tema 11 → Editar codigo
+3. Para CADA arquivo do ZIP: abra o mesmo caminho no painel e SUBSTITUA (ou CRIE se nao existir)
+4. Salvar → Visualizar tema 11 (nao publicar tema 3)
+
+Causa usual: theme.liquid chama sections que nao existiam no tema 11
+(check-cookie, sidenav-overlay-cart, footer, templates/home.liquid, etc.)
+
+Arquivos no ZIP: ~60 (minimo para home + produto + UX)

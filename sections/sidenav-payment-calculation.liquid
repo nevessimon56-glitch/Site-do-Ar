@@ -1,0 +1,143 @@
+<div class="sidenav-overlay sidenav-payment-calculation"
+     x-data="setupPaymentCalculation()"
+     x-on:change-payment-calculate.window="handlePaymentsCalculate($event.detail.price)"
+>
+    <div class="sidenav-container">
+        <div class="sidenav-header">
+            <a class="btn-sidenav-close float-right" href="javascript:void(0)" aria-label="Close" onclick="closeSideNavOverlay()">
+                {{ themeConfig.icons.close }}
+            </a>
+            <div class="sidenav-title">
+                Opções de pagamento
+            </div>
+        </div>
+        <div class="sidenav-body" x-show="!state.paymentCalculated.isEmpty"
+             :class="[state.openDropDown ? 'open' : '']">
+            <template x-for="(optionPayment, index) in state.paymentCalculated.options" :key="index">
+                <div class="accordion-payment-calculation"  :class="[state.openAccordion == index ? 'open' : '']">
+                    <div class="accordion-header" @click="openPayment(index, optionPayment)">
+                        <template x-if="optionPayment.textCart || optionPayment.lastInstallments">
+                            {{ themeConfig.icons.arrow.down }}
+                        </template>
+                        <div class="product-payment_title" x-show="optionPayment.name">
+                            <span x-text="optionPayment.name"></span>
+                        </div>
+                        <div class="product-payment_price">
+                            <template x-if="optionPayment.lastInstallments">
+                                <span x-text="`Total: ${StoreSDK.utils.money(optionPayment.lastInstallments.total)}`"></span>
+                            </template>
+                            <template x-if="!optionPayment.lastInstallments && (typeof optionPayment.total !== 'undefined')">
+                                <span x-text="`Total: ${StoreSDK.utils.money(optionPayment.total)}`"></span>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="accordion-body">
+                        <template x-if="optionPayment.installments && optionPayment.lastInstallments">
+                            <table rules=rows>
+                                <template x-for="(installment, index) in optionPayment.installments" :key="index">
+                                    <tr>
+                                        <td>
+                                            <b x-text="`${installment.installment}x`"></b>
+                                            <span>de</span>
+                                        </td>
+                                        <td>
+                                            <b x-text="`${StoreSDK.utils.money(installment.installmentValue)}`"></b>
+                                        </td>
+                                        <td>
+                                            <span x-text="`${installment.installmentTax > 0 ? 'C/' : 'S/'} juros`"></span>
+                                        </td>
+                                        <td>
+                                            <span>Total: </span>
+                                            <b x-text="`${StoreSDK.utils.money(installment.total)}`"></b>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </table>
+                        </template>
+                        <template x-if="optionPayment.textCart">
+                            <div class="text">
+                                <span x-text="optionPayment.textCart"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <div class="sidenav-body sidenav-body_empty" x-show="state.paymentCalculated.isEmpty">
+            <section class="cart-section cart-section_empty">
+                {{ themeConfig.icons.sad }}
+                <p>
+                    Desculpe, não encontramos uma forma de pagamento disponível
+                </p>
+            </section>
+        </div>
+        <div class="sidenav-footer"></div>
+    </div>
+</div>
+<script>
+    function setupPaymentCalculation() {
+        const state = {
+            openDropDown: false,
+            openAccordion: 0,
+            paymentCalculated: {
+                isEmpty: false,
+                options: [],
+            },
+        }
+
+        function openPayment(index, optionPayment) {
+            if (index == this.state.openAccordion) {
+                this.state.openAccordion = null;
+            } else {
+                if (optionPayment.textCart || optionPayment.lastInstallments) {
+                    this.state.openAccordion = index;
+                }
+            }
+        }
+
+        function handlePaymentsCalculate(price) {
+            openLoadingSideOverlay('.sidenav-payment-calculation');
+            const body = {
+                price: price,
+            };
+            StoreSDK.request.post('/ajax/payments/calculator', body)
+                .then((response) => {
+                    if (response.paymentCalculated.options.length === 0) {
+                        this.state.paymentCalculated.isEmpty = true;
+                        closeLoadingSideOverlay('.sidenav-payment-calculation');
+                    } else {
+                        this.state.paymentCalculated.options = response.paymentCalculated.options;
+                        for (var index in this.state.paymentCalculated.options) {
+                            if (this.state.paymentCalculated.options[index].installments && this.state.paymentCalculated.options[index].installments.length > 1) {
+                                this.state.paymentCalculated.options[index].lastInstallments = this.state.paymentCalculated.options[index].installments[this.state.paymentCalculated.options[index].installments.length - 1]
+                            }
+                        }
+                        this.state.paymentCalculated.isEmpty = false;
+                        closeLoadingSideOverlay('.sidenav-payment-calculation');
+                    }
+                }, (error) => {
+                    if (!error.response) {
+                        this.state.paymentCalculated.isEmpty = true;
+                        closeLoadingSideOverlay('.sidenav-payment-calculation');
+                        notyf.open({
+                            type: 'warning',
+                            message: 'Houve um erro ao exibir as formas de pagamento, tente novamente.',
+                        });
+                    }
+                }).catch(() => {
+                this.state.paymentCalculated.isEmpty = true;
+                closeLoadingSideOverlay('.sidenav-payment-calculation');
+                notyf.open({
+                    type: 'warning',
+                    message: 'Houve um erro ao exibir as formas de pagamento, tente novamente.',
+                });
+            });
+        }
+
+        return {
+            state,
+            handlePaymentsCalculate,
+            openPayment,
+        }
+    }
+</script>

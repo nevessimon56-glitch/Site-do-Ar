@@ -1,0 +1,243 @@
+/**
+ * Site do Ar — Header UX etapa 2 (auditoria 2026-10)
+ * Carregar após sda-header-redesign-etapa1.css
+ */
+
+.header-v2 .header-v2-mobile-menu {
+  display: none;
+}
+
+:root {
+  --sda-layout-max: 1200px;
+  --sda-layout-gutter: 24px;
+}
+
+/* Container 1200px — header + páginas principais */
+.header.header-v2 .container,
+main.home-main .container,
+main.product-main .container,
+main.search-main .container {
+  max-width: var(--sda-layout-max);
+  padding-left: var(--sda-layout-gutter);
+  padding-right: var(--sda-layout-gutter);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+@media (min-width: 992px) {
+  .header-v2 .header-utility__inner {
+    min-height: 32px;
+  }
+
+  .header-v2 .header-content > .container {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .header-v2 .header-v2-navbar {
+    grid-template-columns: minmax(150px, 180px) minmax(420px, 1fr) auto;
+    gap: 20px;
+    min-height: 76px;
+    align-items: center;
+  }
+
+  .header-v2 .logo {
+    max-width: 180px;
+  }
+
+  .header-v2 .logo img {
+    max-height: 56px;
+  }
+
+  .header-v2 .header-v2-search .input-group {
+    min-width: 420px;
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .header-v2 .header-v2-search {
+    justify-self: center;
+    width: 100%;
+    max-width: 560px;
+  }
+
+  /* Pedidos só na utility — menos ruído na linha principal */
+  .header-v2 .header-v2-action[href="/pedidos"] {
+    display: none !important;
+  }
+
+  .header-v2 .header-v2-action {
+    min-width: 72px;
+    min-height: 48px;
+    justify-content: center;
+  }
+
+  .header-v2 .header-v2-action__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .header-v2 .header-v2-nav-inner {
+    min-height: 50px;
+  }
+
+  /* Compre por ambiente = item de nav (reverte gradiente etapa 1) */
+  .header-v2 .header-v2-cta-ambiente--in-nav {
+    background: #fff4e8 !important;
+    border: 0 !important;
+    color: #9a4b05 !important;
+    filter: none !important;
+    min-height: 40px;
+    font-weight: 650;
+  }
+
+  .header-v2 .header-v2-cta-ambiente--in-nav:hover,
+  .header-v2 .header-v2-cta-ambiente--in-nav:focus-visible {
+    background: #ffe8cc !important;
+    color: #7a3d04 !important;
+    filter: none !important;
+  }
+
+  /* Diagnóstico 360 = único CTA especial (secundário, sem gradiente roxo) */
+  .header-v2 .header-v2-cta-diag360 {
+    background: #f5faff !important;
+    border: 1px solid #cfe3f2 !important;
+    box-shadow: none !important;
+    color: var(--sda-blue, #075da8) !important;
+    min-height: 40px;
+    font-weight: 700;
+  }
+
+  .header-v2 .header-v2-cta-diag360:hover,
+  .header-v2 .header-v2-cta-diag360:focus-visible {
+    background: #eaf5fc !important;
+    filter: none !important;
+    color: var(--sda-blue-deep, #064c89) !important;
+  }
+
+  .header-v2 .header-v2-cta-diag360__ico {
+    color: inherit !important;
+  }
+
+  /* Sticky compacto após scroll */
+  .header.header-v2.is-sticky-compact {
+    position: sticky;
+    top: 0;
+    z-index: 120;
+    box-shadow: 0 4px 16px rgba(16, 45, 70, 0.1);
+  }
+
+  .header.header-v2.is-sticky-compact .header-utility {
+    display: none;
+  }
+
+  .header.header-v2.is-sticky-compact .header-content > .container {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .header.header-v2.is-sticky-compact .header-v2-navbar {
+    min-height: 56px;
+    grid-template-columns: minmax(120px, 150px) minmax(320px, 1fr) auto;
+    gap: 12px;
+  }
+
+  .header.header-v2.is-sticky-compact .logo img {
+    max-height: 44px;
+  }
+
+  .header.header-v2.is-sticky-compact .header-v2-search .input-group {
+    height: 44px;
+    min-width: 320px;
+  }
+
+  .header.header-v2.is-sticky-compact .nav-main_cat-thumb {
+    display: none;
+  }
+
+  .header.header-v2.is-sticky-compact .header-v2-cta-ambiente__text {
+    max-width: 9em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 991px) {
+  .header.header-v2 {
+    position: sticky;
+    top: 0;
+    z-index: 120;
+  }
+
+  .header-v2 .header-v2-navbar {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto;
+    min-height: 60px;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .header-v2 .header-v2-mobile-menu {
+    display: flex !important;
+    align-items: center;
+  }
+
+  .header-v2 .header-v2-logo-wrap {
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .header-v2 .logo {
+    max-width: 132px;
+    margin: 0 auto;
+  }
+
+  .header-v2 .header-v2-mobile-tools {
+    display: flex !important;
+    align-items: center;
+    gap: 4px;
+    justify-content: flex-end;
+  }
+
+  .header-v2 .header-v2-mobile-fav-btn {
+    display: none;
+  }
+
+  .header-v2 .header-v2-search-pill {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .header-v2 .header-v2-search-pill__field {
+    min-height: 48px;
+  }
+
+  /* Strip enxuta — máx. 4 atalhos (sem ambiente/diag) */
+  .header-v2 .header-v2-mobile-strip__link--ambiente,
+  .header-v2 .header-v2-mobile-strip__link--diag {
+    display: none !important;
+  }
+
+  .header-v2 .header-v2-mobile-catalog__item--ambiente {
+    display: none !important;
+  }
+
+  .header-v2 .header-v2-mobile-catalog__scroll {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .header-v2 .header-content > .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
