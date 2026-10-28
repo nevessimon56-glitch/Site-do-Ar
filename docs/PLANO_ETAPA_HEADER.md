@@ -1,7 +1,8 @@
 # Plano exclusivo — Etapa 1: Header (busca + nav desktop/mobile)
 
 **Data:** 28 out 2026 (America/Sao_Paulo)  
-**Status:** Preparação — **sem upload, sem implementação, sem alteração do tema ativo/produção.**  
+**Status:** Opção A aprovada; upload **bloqueado** até URL preview + reconciliação Liquid.  
+**Especificação:** [ESPECIFICACAO_HEADER_REDESIGN.md](./ESPECIFICACAO_HEADER_REDESIGN.md).  
 **Aprovação anterior:** migração incremental, um componente por vez; **não** autorizado pacote v3 completo.
 
 **Bloqueio explícito até:** (1) URL/nome/ID do **tema preview duplicado** informado pelo responsável; (2) export WDNA de `product-reviews.liquid` arquivado (não usado nesta etapa); (3) aprovação **separada** deste plano para implementação.
