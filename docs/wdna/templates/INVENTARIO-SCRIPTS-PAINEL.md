@@ -39,7 +39,7 @@
 | S-H04 | `https://salescdn.net/prod/assets/js/main-*.js` | (ver HTML) | Identificado | Possível integração WDNA global | curl home |
 | S-H05 | Inline `#header-orange-inline-v5` | inline | Inspecionado (HTML) | CSS emergência header | Snapshot |
 | S-H06 | Inline NAV-MOBILE-STRIP / fallbacks | inline body | Parcial | `initSdaMobileNavStrip` | Git `theme.liquid` + prod HTML |
-| S-H07 | GTM / Meta / outros marketing | — | **Desconhecido** | Indireto (performance, CSP) | **Preencher no painel** |
+| S-H07 | Google Analytics 4 `G-24XPH3WR9S` | `scripts.header` (HTML prod 28/out) | **Identificado** | Eventos e-commerce | Evidência: view-source / HAR |
 
 ---
 
