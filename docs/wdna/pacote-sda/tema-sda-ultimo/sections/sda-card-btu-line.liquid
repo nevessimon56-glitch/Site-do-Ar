@@ -1,0 +1,13 @@
+{% comment %} Extrai linha de BTUs do título quando presente. {% endcomment %}
+{% assign sdaCardBtu = '' %}
+{% assign sdaCardTitle = product.title %}
+{% assign sdaParts = sdaCardTitle | split: ' ' %}
+{% for sdaPart in sdaParts %}
+  {% assign sdaPl = sdaPart | downcase %}
+  {% if sdaPl contains 'btu' %}
+    {% assign sdaCardBtu = sdaPart | replace: "BTU'S", "BTUs" | replace: "Btu's", "BTUs" | replace: "btu's", "BTUs" %}
+  {% endif %}
+{% endfor %}
+{% if sdaCardBtu != '' %}
+  <p class="showcase-card-btu">{{ sdaCardBtu }}</p>
+{% endif %}
