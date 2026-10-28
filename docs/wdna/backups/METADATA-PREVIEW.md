@@ -27,3 +27,5 @@
 Preview considerado **isolado** quando `themes/11/` aparecer na URL de teste **e** `sitedoar.com.br` anônimo permanecer em `themes/3/` **ou** quando a URL de preview for distinta do tráfego de clientes.
 
 **Status E-07 / E-08:** URL registrada parcialmente; **isolamento theme 11 na vitrine — NÃO comprovado** (28/out/2026).
+
+**Decisão operacional (28/out/2026):** etapa Header prossegue preparação e testes pós-upload no **themeId 3** publicado; tema 11 permanece registro editor, não alvo obrigatório do patch.
