@@ -1,0 +1,9 @@
+{% comment %}
+  Placeholder — avaliações nativas quando existirem no painel.
+  Evita quebra de render na PDP se a section não existir no tema.
+{% endcomment %}
+{% if product.reviews and product.reviews.size > 0 %}
+<section class="product-reviews" aria-label="Avaliações">
+  <div class="content"><div class="container"></div></div>
+</section>
+{% endif %}

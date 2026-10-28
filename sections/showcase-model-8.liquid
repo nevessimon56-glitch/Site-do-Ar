@@ -1,0 +1,93 @@
+<!-- Showcase Model 8 - Banner Grid -->
+{% if showcaseSection.config.medias.size > 0 %}
+    <section class="showcase showcase-{{ showcaseSection.id }} showcase-model-{{ showcaseSection.typeId }}">
+        {% assign bannerGridConfig = showcaseSection.config %}
+        <div class="container">
+            <!-- Título da Vitrine -->
+            {% if showcaseSection.name %}
+                {% assign styleTitle = '' %}
+                {% case bannerGridConfig.namePosition %}
+                    {% when 'center' %}
+                        {% assign styleTitle = 'text-align: center;' %}
+                    {% when 'left' %}
+                        {% assign styleTitle = 'text-align: left;' %}
+                    {% when 'right' %}
+                        {% assign styleTitle = 'text-align: right;' %}
+                    {% when "hidden" %}
+                        {% assign styleTitle = "display: none;" %}
+                {% endcase %}
+                <h2 class="showcase-title" style="{{ styleTitle }}">
+                    {{ showcaseSection.name }}
+                </h2>
+            {% endif %}
+            <div class="showcase-banners showcase-banners_grid showcase-banners_grid__custom showcase-banners_grid__custom9">
+                <div class="showcase-banners-box">
+                    <div class="columns">
+                        <div class="column col-4 col-lg-12">
+                            {% assign showcaseMediaMain = showcaseSection.config.medias[0] %}
+                            <a class="showcase-banner_link" href="{% if showcaseMediaMain.link %}{{ showcaseMediaMain.link }}{% else %}javascript:void(0){% endif %}" title="{{ showcaseMediaMain.title }}">
+                                {% if showcaseMediaMain.path %}
+                                    <picture>
+                                        <img class="showcase-banner_img banner-img_grid banner-img_grid__main img-lazy" data-src="{{ showcaseMediaMain.path | imgUrl  }}" alt="{{ showcaseMediaMain.title }}">
+                                    </picture>
+                                {% else %}
+                                    {{ themeConfig.icons.image }}
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="column col-8 col-lg-12">
+                            <div class="columns-box-custom columns hide-lg">
+                                {% for showcaseMedia in showcaseSection.config.medias limit:8 %}
+                                    {% if forloop.index > 1 %}
+                                        <div class="column col-6">
+                                            <a class="showcase-banner_link" href="{% if showcaseMedia.link %}{{ showcaseMedia.link }}{% else %}javascript:void(0){% endif %}" title="{{ showcaseMedia.title }}">
+                                                {% if showcaseMediaMain.path %}
+                                                    <picture>
+                                                        <img class="showcase-banner_img banner-img_grid banner-img_grid__{{ forloop.index }} img-lazy" data-src="{{ showcaseMedia.path | imgUrl  }}" alt="{{ showcaseMedia.title }}">
+                                                    </picture>
+                                                {% else %}
+                                                    {{ themeConfig.icons.image }}
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="showcase-banner_carousel show-lg">
+                                <ul class="showcase-banner_list showcase-banner_slider">
+                                    {% for showcaseMedia in showcaseSection.config.medias limit:8 %}
+                                        {% if forloop.index > 1 %}
+                                            <li class="showcase-banner_item">
+                                                <a class="showcase-banner_link" href="{% if showcaseMedia.link %}{{ showcaseMedia.link }}{% else %}javascript:void(0){% endif %}" title="{{ showcaseMedia.title }}">
+                                                    {% if showcaseMediaMain.path %}
+                                                        <picture>
+                                                            <img class="showcase-banner_img banner-img_grid banner-img_grid__{{ forloop.index }} img-lazy" data-src="{{ showcaseMedia.path | imgUrl  }}" alt="{{ showcaseMedia.title }}">
+                                                        </picture>
+                                                    {% else %}
+                                                        {{ themeConfig.icons.image }}
+                                                    {% endif %}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                {% assign classCenterSliderArrow = '' %}
+                                {% if bannerGridConfig.namePosition == 'hidden' %}
+                                    {% assign classCenterSliderArrow = ' slider__arrow--center' %}
+                                {% endif %}
+                                <div class="controls controls-arrow" aria-label="Carousel Navigation" tabindex="0">
+                                    <button class="slider__arrow slider__arrow--prev{{ classCenterSliderArrow }}" aria-label="Anterior">
+                                        {{ themeConfig.icons.arrow.prev }}
+                                    </button>
+                                    <button class="slider__arrow slider__arrow--next{{ classCenterSliderArrow }}" aria-label="Próximo">
+                                        {{ themeConfig.icons.arrow.next }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endif %}

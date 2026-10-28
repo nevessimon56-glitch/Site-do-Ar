@@ -1,0 +1,39 @@
+{% comment %}
+  Caixa de recomendações (PDP conversão). A dica de m² (.sda-product-area-hint) é
+  sincronizada no topo da lista via assets/sda-conversion-redesign.js (syncRecommendationArea).
+{% endcomment %}
+<section class="sda-pdp-rec">
+  <div class="content">
+    <div class="container">
+      <div class="sda-pdp-rec__box">
+        <h2 class="sda-pdp-rec__title">Por que este modelo?</h2>
+        <ul class="sda-pdp-rec__list">
+          {% assign _recBlob = product.title | downcase %}
+          {% for description in product.descriptions %}
+            {% if description.text != '' %}
+              {% assign _dname = description.name | downcase %}
+              {% if _dname contains 'especifica' or _dname contains 'ficha' %}
+                {% assign _recBlob = _recBlob | append: ' ' | append: description.text | strip_html | downcase %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          {% if _recBlob contains 'inverter' %}
+            <li>Tecnologia inverter para maior economia de energia no dia a dia.</li>
+          {% endif %}
+          {% if _recBlob contains 'procel' or _recBlob contains 'classe a' %}
+            <li>Eficiência energética reconhecida (Procel / Classe A).</li>
+          {% endif %}
+          {% if _recBlob contains 'wifi' or _recBlob contains 'wi-fi' %}
+            <li>Controle inteligente via aplicativo (Wi-Fi).</li>
+          {% endif %}
+          {% if _recBlob contains 'quente' and _recBlob contains 'frio' %}
+            <li>Ciclo quente e frio — conforto o ano inteiro.</li>
+          {% elsif _recBlob contains 'frio' %}
+            <li>Ciclo frio ideal para climas quentes e ambientes bem ventilados.</li>
+          {% endif %}
+          <li>Compra com nota fiscal, garantia de fábrica e suporte Site do Ar.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

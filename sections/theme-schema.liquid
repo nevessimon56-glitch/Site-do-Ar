@@ -1,0 +1,59 @@
+<!-- Schema -  Website -->
+<script type="application/ld+json">
+    {
+        "@context": "http://www.schema.org",
+        "@type": "WebSite",
+        "name": "{{ store.name }}",
+        "url": "{{ store.url }}",
+        "author": {
+            "@type": "Organization",
+            "name": "{{ store.name }}",
+            {% if theme.logo.path %}"logo": "{{ theme.logo.path | imgUrl }}",{% endif %}
+            "url": "{{ store.url }}"
+        }
+    }
+
+</script>
+
+<!-- Schema - Store -->
+<script type="application/ld+json">
+    {
+        "@context": "http://www.schema.org",
+        "@type": "Store",
+        "description": "{{ store.description }}",
+        "image": "{% if theme.logo.path %}{{ theme.logo.path | imgUrl }}{% endif %}",
+        "logo": "{% if theme.logo.path %}{{ theme.logo.path | imgUrl }}{% endif %}",
+        "name": "{{ store.name }}",
+        "telephone": "{% if store.phone != '' %}{{ store.phone | maskTel }}{% endif %}",
+        "url": "{{ store.url }}",
+        {% if store.officeHours.size > 0 %}
+        "openingHoursSpecification": [
+            {% for itemOfficeHours in store.officeHours %}
+                {
+                    "@type": "OpeningHoursSpecification",
+                    "opens": "{{ itemOfficeHours.open }}",
+                    "closes": "{{ itemOfficeHours.close }}",
+                    "dayOfWeek": "https://schema.org/{{ itemOfficeHours.dayOfWeek }}"
+                }{% if forloop.last == false %},{% endif %}
+            {% endfor %}
+        ],
+        {% endif %}
+        {% if store.phone != '' %}
+        "contactPoint": [
+            {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "telephone": "{{ store.phone | maskTel }}"
+            }
+        ],
+        {% endif %}
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "{{ store.address.country }}",
+            "addressLocality": "{{ store.address.city }}",
+            "addressRegion": "{{ store.address.state }}",
+            "postalCode": "{{ store.address.zipcode }}",
+            "streetAddress": "{{ store.address.street }}"
+        }
+    }
+</script>
