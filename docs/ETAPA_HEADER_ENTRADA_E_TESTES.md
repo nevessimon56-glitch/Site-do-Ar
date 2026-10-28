@@ -2,7 +2,7 @@
 
 **Data:** 28 out 2026 (America/Sao_Paulo)  
 **Referências:** [`RECONCILIACAO_HEADER_THEME3.md`](RECONCILIACAO_HEADER_THEME3.md), [`header-producao-theme3-20261028.liquid`](wdna/backups/header-producao-theme3-20261028.liquid)  
-**Escopo Opção A (não expandido):** `sda-tokens.css`, `header-v2.css`, `sections/header.liquid`, **mesclagem mínima** de `layout/theme.liquid` no **preview only**.  
+**Escopo Opção A (não expandido):** `sda-tokens.css`, `header-v2.css`, `sections/header.liquid`, **mesclagem mínima** de `layout/theme.liquid` no **tema 3 publicado** (pós-aprovação).  
 **Fora de escopo:** `mega-menu.css`, `mega-menu.js`, `theme.js`, checkout, busca server-side, frete, cards/PDP (salvo fumaça).  
 **Status:** preparação concluída; **nenhum teste executado**; **nenhum upload/publicação**.  
 **Decisão operacional (atualizada):** validação visual no **tema 3 publicado** (`sitedoar.com.br`); patch proposto em [`ETAPA_HEADER_PATCH_PROPOSTO.md`](ETAPA_HEADER_PATCH_PROPOSTO.md). URL isolada tema 11 **não** bloqueia preparação.
