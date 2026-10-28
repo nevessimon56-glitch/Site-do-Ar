@@ -125,6 +125,14 @@ Apesar do comentário “NÃO contém cards”, o arquivo no Git tem **~40 refer
 
 **Não enviar nesta etapa:** H3–H5 (mega-menu), favorites, compare, card, PDP, `product-content`, checkout.
 
+**Referência Opção B (futura, com aceite de impacto em cards):**
+
+| Path | SHA-256 Git |
+|------|-------------|
+| `assets/mega-menu.css` | `6c04b6b5ee6dcd8bf42834339a622f41b58add91876feef04d74ae4672e729e8` |
+| `assets/mega-menu.js` | `93b911871e10ce9836b12dbc9431078425ded50fecb7e602b53fd5ac31c10ea3` |
+| `sections/mega-menu-ar.liquid` | `6250a1611b444e9653a7de35c7fb4f2c4bce175ce67f5ab440ed6866786e8a14` |
+
 ### 4.1 Diff lógico `theme.liquid` (mesclagem mínima — não o arquivo v3 inteiro)
 
 **Adicionar** (se preview não tiver):

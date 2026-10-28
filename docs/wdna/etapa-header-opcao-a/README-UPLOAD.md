@@ -8,7 +8,9 @@
 |--------------|----------------|
 | `assets/sda-tokens.css` | `../../assets/sda-tokens.css` |
 | `assets/header-v2.css` | `../../assets/header-v2.css` |
-| `sections/header.liquid` | `../../sections/header.liquid` |
+| `sections/header.liquid` | Ver **alerta** abaixo — Git **≠** produção |
+
+**Alerta:** o `header.liquid` do Git **não** contém `.header-utility` (presente no ar). Antes do upload, exportar Liquid do tema ativo e reconciliar conforme [ESPECIFICACAO_HEADER_REDESIGN.md](../../ESPECIFICACAO_HEADER_REDESIGN.md) §A.2.
 
 SHA-256 (Git `cursor/auditoria-tecnica-b192`):
 
