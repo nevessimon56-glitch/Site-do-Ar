@@ -425,3 +425,29 @@ function getAllUrlParams(url) {
     }
     return obj;
 }
+
+/**
+ * Site do Ar — remove blocos de conversão colados em templates/home.liquid (tema 3).
+ * Não depende de assets sda-*; roda em toda página com .home-main.
+ */
+(function () {
+  'use strict';
+
+  var SELECTORS =
+    '.sda-home-hero, .sda-trust-bar, .sda-home-section, .sda-diag-cta';
+
+  function stripHomePromoBlocks() {
+    var main = document.querySelector('main.home-main');
+    if (!main) return;
+    main.querySelectorAll(SELECTORS).forEach(function (el) {
+      el.parentNode.removeChild(el);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', stripHomePromoBlocks);
+  } else {
+    stripHomePromoBlocks();
+  }
+  window.addEventListener('load', stripHomePromoBlocks);
+})();
