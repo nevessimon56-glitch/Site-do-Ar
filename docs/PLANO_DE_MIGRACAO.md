@@ -4,6 +4,17 @@
 **Status:** Proposta — **aguardando aprovação** antes de implementação (Fases 3+ da missão).  
 **Princípio:** incremental, verificável, reversível; **sem publish automático em produção**.
 
+**Decisões atualizadas (28/out):** plataforma WDNA; modernizar camada SDA; **prioridade inicial busca/categorias/navegação**; **frete confirmado** (regressão obrigatória); validação só em **tema preview**; identidade azul/laranja + lilás acento; **preservar** funcionalidades não confirmadas.
+
+**Documentos desta etapa (preparação, sem código funcional):**
+
+| Documento | Conteúdo |
+|-----------|----------|
+| [PREPARACAO_MIGRACAO_AMBIENTE.md](./PREPARACAO_MIGRACAO_AMBIENTE.md) | Repo, PRs #49/#50, tema ativo vs preview |
+| [PLANO_BUSCA_NAVEGACAO.md](./PLANO_BUSCA_NAVEGACAO.md) | Diagnóstico busca/nav, etapas E0–E7, arquivos |
+| [CHECKLIST_VALIDACAO_PREVIEW.md](./CHECKLIST_VALIDACAO_PREVIEW.md) | Matriz AP/RE/BL/NT com evidências |
+| [AUDITORIA_AVALIACOES_PRODUTO.md](./AUDITORIA_AVALIACOES_PRODUTO.md) | Reviews WDNA nativos — auditoria |
+
 ---
 
 ## 0. Linha de base (registrar antes de qualquer publish)
@@ -23,10 +34,12 @@
 
 ## 1. Objetivo técnico alinhado ao negócio
 
-1. Unificar produção com **SDA v3 REWRITE** (Git `cursor/card-remodel-b192` / PR #49).
-2. Eliminar CSS inline de header e dependência de `showcase-product-card.css` como dono.
-3. Manter **100%** fluxos WDNA (carrinho, checkout, preços).
-4. Documentar tokens de marca (`sda-tokens.css`) como fonte única de cores SDA.
+1. Unificar preview (depois produção) com **SDA v3 REWRITE** (Git `cursor/card-remodel-b192` / PR #49).
+2. **Primeiro módulo de validação:** busca, categorias, mega menu, header search, dock mobile (ver [PLANO_BUSCA_NAVEGACAO.md](./PLANO_BUSCA_NAVEGACAO.md)).
+3. Eliminar CSS inline de header e dependência de `showcase-product-card.css` como dono visual.
+4. Manter **100%** fluxos WDNA (carrinho, checkout, preços, **frete** `/ajax/shippings/calculator`).
+5. Tokens de marca (`sda-tokens.css`): azul/laranja predominantes, lilás acento.
+6. **Preservar** avaliações WDNA (`product-reviews` + API review) — ver auditoria dedicada.
 
 ---
 
@@ -58,11 +71,13 @@
 
 ### Fase 2 — Smoke funcional (preview)
 
-Executar checklist (marcar pass/fail):
+Usar **[CHECKLIST_VALIDACAO_PREVIEW.md](./CHECKLIST_VALIDACAO_PREVIEW.md)** — **prioridade seção 2–3 (nav/busca)** e **§6 frete**.
 
-1. Home: vitrines, carrossel, dock mobile, mega menu.
-2. Busca: filtros, contagem produtos, card v5-zero.
-3. PDP: preço, variação, frete sidenav, sticky mobile, compare.
+Executar checklist (marcar pass/fail com evidência):
+
+1. **Busca/categorias/nav** (obrigatório primeiro): filtros, mega menu, dock, header search.
+2. Home: vitrines, carrossel (secundário na mesma sessão).
+3. PDP: preço, variação, **frete sidenav (confirmado)**, sticky mobile, compare.
 4. Comparador: 3 produtos, limpar, z-index acima dock.
 5. Favoritos: add/remove, sidenav.
 6. Login/logout header.
