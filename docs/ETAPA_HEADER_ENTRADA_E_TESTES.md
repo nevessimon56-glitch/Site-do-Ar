@@ -29,7 +29,8 @@
 |-------|----------|---------|
 | **themeId** | **3** (CDN curl) | **11** (URL painel informada pelo operador) |
 | Painel | Tema ativo (inferido) | `https://sitedoar.com.br/admin/personalize/themes/edit/11` |
-| URL vitrine preview | `https://www.sitedoar.com.br/` (tema 3) | **PENDENTE** — link “Visualizar” / subdomínio WDNA não informado |
+| URL vitrine preview (operador) | `https://sitedoar.com.br` / `https://www.sitedoar.com.br` | **Registrado** — ver [`METADATA-PREVIEW.md`](wdna/backups/METADATA-PREVIEW.md) |
+| CDN na URL acima (visitante anônimo) | **themeId 3** (curl 28/out/2026) | **Comprovado** — **não** exibe `themes/11/` |
 | `layout/theme.liquid` backup | Colar operador (§3) — **arquivo repo pendente** | [`layout-theme-preview-theme11-20261028.liquid`](wdna/backups/layout-theme-preview-theme11-20261028.liquid) SHA `b8ab04ff…` |
 | `sections/header.liquid` backup | [`header-producao-theme3-20261028.liquid`](wdna/backups/header-producao-theme3-20261028.liquid) | **PENDENTE** export tema 11 |
 
@@ -122,8 +123,8 @@ Preenchimento parcial — HTML produção + Liquid. Template completo: [`INVENTA
 | E-04 | Backup `layout` preview theme 11 + SHA | **Atendido** | repo |
 | E-05 | Backup `layout` produção theme 3 + SHA | **PENDENTE** | commit arquivo (export colado) |
 | E-06 | Export `header.liquid` preview 11 | **PENDENTE** | painel |
-| E-07 | URL vitrine preview (visualizar tema 11) | **PENDENTE** | operador |
-| E-08 | CDN preview ≠ `/themes/3/` | **PENDENTE** | curl na URL preview |
+| E-07 | URL vitrine preview | **Parcial** | operador: `sitedoar.com.br`; falta URL “Visualizar” tema 11 se diferente |
+| E-08 | CDN preview = `themes/11/` na URL de teste | **NÃO comprovado** | curl anônimo em sitedoar → **themes/3/** |
 | E-09 | Inventário scripts painel | **Parcial** | §4 |
 | E-10 | Diff layout mesclagem Opção A **aprovado** | **PENDENTE** | revisão humana |
 | E-11 | Autorização explícita implementação | **PENDENTE** | — |
@@ -166,11 +167,12 @@ Viewports: **1280** (desktop), **390** (mobile), amostra **991** (breakpoint). E
 
 1. Export **`layout/theme.liquid` tema 3** para `docs/wdna/backups/` + SHA.  
 2. Export **`sections/header.liquid` tema 11** (baseline preview).  
-3. **URL de visualização** do tema 11 (não só editor admin).  
-4. **curl** assets na URL preview → confirmar `themes/11/`.  
-5. Preencher **scripts.footer/header** no painel (sem segredos).  
-6. **Aprovação escrita** da mesclagem Opção A + M-01…M-10.  
-7. Executar matriz §7 no preview **após** mesclagem (futuro).
+3. URL **Visualizar** do tema 11 no painel (se diferente de `sitedoar.com.br` anônimo).  
+4. **curl** na URL onde o tema 11 é realmente servido → confirmar `themes/11/` (**hoje** domínio principal = **3**).  
+5. **Não publicar** tema 11 no domínio principal até checklist + testes TH-* (risco trocar tráfego real).  
+6. Preencher **scripts.footer/header** no painel (sem segredos).  
+7. **Aprovação escrita** da mesclagem Opção A + M-01…M-10.  
+8. Executar matriz §7 no preview **após** mesclagem (futuro).
 
 ---
 
