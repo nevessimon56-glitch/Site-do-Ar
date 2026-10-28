@@ -1,0 +1,81 @@
+<div x-data="setupShowcaseVideo()" x-init="getInitShowcaseVideo()">
+    {% assign showcaseSections = '' %}
+    {% if showcase.sections %}
+        {% assign showcaseSections = showcase.sections %}
+    {% endif %}
+    <script>
+        function setupShowcaseVideo() {
+            const state = {
+                showcaseSections: {{ showcaseSections | json }},
+                isOpenModal: false,
+                video: {
+                    videoType: null,
+                    videoId: null,
+                    urlVideo: null,
+                    width: 720,
+                    height: 405,
+                },
+                youtube: {
+                    player: null,
+                },
+                vimeo: {
+                    options: {
+                        id: null,
+                        width: null,
+                        height: null,
+                        responsive: true,
+                    },
+                    player: null,
+                }
+            }
+
+            function getInitShowcaseVideo() {
+                let isToLoadYouTubeIframe = false;
+                let isToLoadVimeoIframe = false;
+                state.showcaseSections.forEach((showcaseSection) => {
+                    if (showcaseSection.display !== 'display' && (showcaseSection.typeId === 10) && (typeof showcaseSection.config !== 'undefined') && (typeof showcaseSection.config.medias !== 'undefined')) {
+                        const youtubeVideoArray = showcaseSection.config.medias.filter((media) => ((typeof media.metadata !== 'undefined') && ((media.metadata.videoType === 'youtube') && (media.metadata.videoId !== ''))));
+                        const vimeoVideoArray = showcaseSection.config.medias.filter((media) => ((typeof media.metadata !== 'undefined') && ((media.metadata.videoType === 'vimeo') && (media.metadata.videoId !== ''))));
+                        if (youtubeVideoArray.length > 0) {
+                            isToLoadYouTubeIframe = true;
+                        }
+                        if (vimeoVideoArray.length > 0) {
+                            isToLoadVimeoIframe = true;
+                        }
+                    }
+                });
+                if (isToLoadYouTubeIframe) {
+                    loadIframeYoutube();
+                }
+                if (isToLoadVimeoIframe) {
+                    loadIframeVimeo();
+                }
+            }
+
+            /*** Start - Vimeo ***/
+            function loadIframeVimeo() {
+                const tag = document.createElement('script');
+
+                tag.src = "https://player.vimeo.com/api/player.js";
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            }
+
+            // /*** Start - YouTube ***/
+            function loadIframeYoutube() {
+                // 2. This code loads the IFrame Player API code asynchronously.
+                const tag = document.createElement('script');
+
+                tag.src = "https://www.youtube.com/iframe_api";
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            }
+            /*** End - YouTube ***/
+            return {
+                state,
+                getInitShowcaseVideo,
+            };
+        }
+    </script>
+</div>
+

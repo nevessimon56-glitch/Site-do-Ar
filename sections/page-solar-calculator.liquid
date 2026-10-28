@@ -1,0 +1,231 @@
+<div class="page-form page-form-solar-calculator"{% if variableKwp.min %} data-minkwp="{{ variableKwp.min }}"{% endif %}{% if variableKwp.max %} data-maxkwp="{{ variableKwp.max }}"{% endif %}>
+    <form class="divSimuladorSolar">
+        <div class="columns">
+            <div class="column col-12">
+                <div class="divEntradaSimulacao">
+                    <div class="columns">
+                        <div class="column col-6 col-md-12">
+                            <div class="form-group form-group_custom form-group_solar-calculator">
+                                <label class="form-label">Estado</label>
+                                <select id="ctl00_ContentPlaceHolder1_dropEstadosSimulador"
+                                        class="form-select dropEstadosSimulador js-example-responsive"
+                                        style="display: none;"
+                                        tabindex="-1"
+                                        place
+                                        name="ctl00$ContentPlaceHolder1$dropEstadosSimulador">
+                                    <option value=""></option>
+                                    <option value="AC">Acre</option>
+                                    <option value="AL">Alagoas</option>
+                                    <option value="AP">Amapá</option>
+                                    <option value="AM">Amazonas</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="CE">Ceará</option>
+                                    <option value="DF">Distrito Federal</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="MA">Maranhão</option>
+                                    <option value="MT">Mato Grosso</option>
+                                    <option value="MS">Mato Grosso do Sul</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="PA">Pará</option>
+                                    <option value="PB">Paraíba</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="PI">Piauí</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="RN">Rio Grande do Norte</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="RO">Rondônia</option>
+                                    <option value="RR">Roraima</option>
+                                    <option value="SC">Santa Catarina</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="SE">Sergipe</option>
+                                    <option value="TO">Tocantins</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="column col-6 col-md-12">
+                            <div class="form-group form-group_custom form-group_solar-calculator">
+                                <label class="form-label"
+                                       for="ctl00$ContentPlaceHolder1$dropCidadesSimulador">Cidade</label>
+                                <select id="ctl00_ContentPlaceHolder1_dropCidadesSimulador"
+                                        class="form-select input-sm js-example-responsive dropCidadesSimulador"
+                                        style="width: 100%; display: none;"
+                                        tabindex="-1"
+                                        name="ctl00$ContentPlaceHolder1$dropCidadesSimulador">
+                                    <option value=""></option>
+                                </select>
+                                <input type="hidden"
+                                       name="ctl00$ContentPlaceHolder1$hfDropCidadesSimulador"
+                                       id="ctl00_ContentPlaceHolder1_hfDropCidadesSimulador">
+                                <input type="hidden"
+                                       name="ctl00$ContentPlaceHolder1$hfDescricaoCidadeSimulador"
+                                       id="ctl00_ContentPlaceHolder1_hfDescricaoCidadeSimulador">
+                                <input type="hidden"
+                                       name="ctl00$ContentPlaceHolder1$hfIncidenciaSolar"
+                                       id="ctl00_ContentPlaceHolder1_hfIncidenciaSolar">
+                            </div>
+                        </div>
+                        <div class="column col-6 col-md-12">
+                            <div class="form-group form-group_custom form-group_solar-calculator">
+                                <label class="form-label" for="ctl00$ContentPlaceHolder1$txtConsumoMedioMensal100">
+                                    Consumo médio mensal (kWh)
+                                </label>
+                                <input id="ctl00_ContentPlaceHolder1_txtConsumoMedioMensal100"
+                                       class="form-input inputBoxCamposSimuladorSolar txtConsumoMedioMensal100"
+                                       maxlength="6"
+                                       placeholder="Ex: 450"
+                                       type="text"
+                                       name="ctl00$ContentPlaceHolder1$txtConsumoMedioMensal100">
+                            </div>
+                        </div>
+                        <div class="column col-6 col-md-12">
+                            <div class="form-group form-group_custom form-group_solar-calculator">
+                                <label class="form-label" for="ctl00$ContentPlaceHolder1$txtValorKw">
+                                    Valor kWh de sua cidade (R$)
+                                </label>
+                                <input id="ctl00_ContentPlaceHolder1_txtValorKw"
+                                       class="page-section__input inputBoxCamposSimuladorSolar txtValorKw form-input"
+                                       data-affixes-stay="true"
+                                       data-decimal=","
+                                       data-prefix="R$ "
+                                       data-thousands="."
+                                       type="text"
+                                       placeholder="R$ 0,00"
+                                       name="ctl00$ContentPlaceHolder1$txtValorKw">
+                            </div>
+                        </div>
+                        <div class="column col-12">
+                            <div class="form-group form-group_custom form-group_solar-calculator form-group_custom-simulator">
+                                <label class="form-label" for="ctl00$ContentPlaceHolder1$txtConsumoMedioMensal">
+                                    Cobertura Desejada
+                                    <input id="txtConsumoMedioMensal"
+                                           class="txtConsumoMedioMensal"
+                                           readonly=""
+                                           type="text"
+                                           name="ctl00$ContentPlaceHolder1$txtConsumoMedioMensal100">
+                                </label>
+                                <div class="slider-box">
+                                    <div class="slider_slider">
+                                        <div id="slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
+                                            <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0" style="left: 100%;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="slider_value">
+                                        <input name="ctl00$ContentPlaceHolder1$amount" type="text" id="amount" value="100" readonly="">
+                                        <span>%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column col-12">
+                <div class="divResultadoSimulacao div-content" style="display: none;"></div>
+            </div>
+            <div class="column col-12">
+                <div class="divResultadoSimulacao" style="display: none;">
+                    <div id="ctl00_ContentPlaceHolder1_divResultadoSimulacaoDados"
+                         class="divResultadoSimulacaoDados  panel-body">
+                        <div class="columns">
+                            <div class="column col-6 col-md-12">
+                                <div class="form-group form-group_custom form-group_solar-calculator">
+                                    <label class="form-label" for="ctl00$ContentPlaceHolder1$txtIncidenciaSolar">
+                                        Incidência Solar
+                                    </label>
+                                    <input id="ctl00_ContentPlaceHolder1_txtIncidenciaSolar"
+                                           class="form-input inputBoxCamposSimuladorSolar txtIncidenciaSolar"
+                                           type="text"
+                                           readonly=""
+                                           name="ctl00$ContentPlaceHolder1$txtIncidenciaSolar">
+                                </div>
+                            </div>
+                            <div class="column col-6 col-md-12">
+                                <div class="form-group form-group_custom form-group_solar-calculator">
+                                    <label class="form-label" for="ctl00$ContentPlaceHolder1$txtTamanhoGerador">
+                                        Capacidade (Potência mínima necessária)
+                                    </label>
+                                    <input id="ctl00_ContentPlaceHolder1_txtTamanhoGerador"
+                                           class="form-input inputBoxCamposSimuladorSolar txtTamanhoGerador"
+                                           type="text"
+                                           readonly=""
+                                           name="ctl00$ContentPlaceHolder1$txtTamanhoGerador">
+                                </div>
+                            </div>
+                            <div class="column col-6 col-md-12">
+                                <div class="form-group form-group_custom form-group_solar-calculator">
+                                    <label class="form-label" for="ctl00$ContentPlaceHolder1$txtAreaTelhado">
+                                        Área ocupada pelo sistema no telhado
+                                    </label>
+                                    <input id="ctl00_ContentPlaceHolder1_txtAreaTelhado"
+                                           class="form-input inputBoxCamposSimuladorSolar txtAreaTelhado"
+                                           type="text"
+                                           readonly=""
+                                           name="ctl00$ContentPlaceHolder1$txtAreaTelhado">
+                                </div>
+                            </div>
+                            <div class="column col-6 col-md-12">
+                                <div class="form-group form-group_custom form-group_solar-calculator">
+                                    <label class="form-label" for="ctl00$ContentPlaceHolder1$txtPesoTelhado">
+                                        Peso sobre o telhado
+                                    </label>
+                                    <input id="ctl00_ContentPlaceHolder1_txtPesoTelhado"
+                                           class="form-input inputBoxCamposSimuladorSolar txtPesoTelhado"
+                                           type="text"
+                                           readonly=""
+                                           name="ctl00$ContentPlaceHolder1$txtPesoTelhado">
+                                </div>
+                            </div>
+                            <div class="column col-6 col-md-12">
+                                <div class="form-group form-group_custom form-group_solar-calculator">
+                                    <label class="form-label" for="ctl00$ContentPlaceHolder1$txtProducaoAnual">
+                                        Produção estimada de energia
+                                    </label>
+                                    <input id="ctl00_ContentPlaceHolder1_txtProducaoAnual"
+                                           class="form-input inputBoxCamposSimuladorSolar txtProducaoAnual"
+                                           type="text"
+                                           readonly=""
+                                           name="ctl00$ContentPlaceHolder1$txtProducaoAnual">
+                                </div>
+                            </div>
+                            <div class="column col-6 col-md-12">
+                                <div class="form-group form-group_custom form-group_solar-calculator">
+                                    <label class="form-label" for="ctl00$ContentPlaceHolder1$txtSustentabilidade">
+                                        Sustentabilidade
+                                    </label>
+                                    <input id="ctl00_ContentPlaceHolder1_txtSustentabilidade"
+                                           class="form-input inputBoxCamposSimuladorSolar txtSustentabilidade"
+                                           type="text"
+                                           readonly=""
+                                           name="ctl00$ContentPlaceHolder1$txtSustentabilidade">
+                                </div>
+                            </div>
+                            <div class="column col-6 col-md-12">
+                                <div class="form-group form-group_custom form-group_solar-calculator">
+                                    <label class="form-label" for="ctl00$ContentPlaceHolder1$txtEconomia">
+                                        Economia estimada
+                                    </label>
+                                    <input id="ctl00_ContentPlaceHolder1_txtEconomia"
+                                           class="form-input inputBoxCamposSimuladorSolar txtEconomia"
+                                           data-affixes-stay="true"
+                                           data-decimal=","
+                                           data-prefix="R$ "
+                                           data-thousands="."
+                                           readonly=""
+                                           type="text"
+                                           name="ctl00$ContentPlaceHolder1$txtEconomia">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="alert alert-danger">
+        Observação: Atenção os geradores tem sua capacidade de geração de acordo com incidência de irradiação solar e a correta instalação, os dados de geração estão baseados no mapa de radiação global horizontal media anual do Brasil (vide tabela acima).
+    </div>
+</div>
+<link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-solar-calculator.css' | themeAssetUrl }}">
+<script src="{{ 'assets/theme-solar-calculator.js' | themeAssetUrl }}"></script>

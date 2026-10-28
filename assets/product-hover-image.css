@@ -1,81 +1,84 @@
 /**
- * ARQUIVO: assets/product-hover-image.css
- * Cards da vitrine: uma foto visível, hover troca para a segunda.
+ * SDA v3 — tema novo
+ * Hover 2ª imagem: só cards LEGADO (sem .sda-product-card). Conversão = mega-menu.js (__SDA_HOVER_V2__).
+ * Header laranja: também em mega-menu.css + inline theme.liquid (header-v2).
  */
 
-.showcase-product_image.card-image {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-}
-
-.showcase-product_link__image {
-  display: block;
-  width: 100%;
-  text-align: center;
-}
-
-.showcase-product_link__image .product-hover-wrap {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-}
-
-.showcase-product_link__image .product-hover-img {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  max-height: 200px;
-  height: auto;
-  margin: 0 auto;
-  object-fit: contain;
-  transition: opacity 0.3s ease;
-}
-
-.showcase-product_link__image .product-hover-img--main {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  opacity: 1;
-  transform: translate(-50%, -50%);
-}
-
-.showcase-product_link__image .product-hover-img--alt {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-.showcase-product.has-hover-image:hover .product-hover-img--main,
-.showcase-product.has-hover-image.is-img-hover .product-hover-img--main {
-  opacity: 0;
-}
-
-.showcase-product.has-hover-image:hover .product-hover-img--alt,
-.showcase-product.has-hover-image.is-img-hover .product-hover-img--alt {
+.showcase-product:not(.sda-product-card).has-hover-image.is-img-hover .product-hover-img--alt,
+.showcase-product:not(.sda-product-card).has-hover-image:hover .product-hover-img--alt {
   opacity: 1;
 }
 
-.showcase-product_link__image > img.lazy:not(.product-hover-img) {
-  display: block;
-  max-width: 100%;
-  max-height: 200px;
-  margin: 0 auto;
-  object-fit: contain;
+.showcase-product:not(.sda-product-card).has-hover-image.is-img-hover .product-hover-img--main,
+.showcase-product:not(.sda-product-card).has-hover-image:hover .product-hover-img--main {
+  opacity: 0;
 }
 
-@media (hover: none) and (pointer: coarse) {
-  .showcase-product.has-hover-image .product-hover-img--alt {
-    pointer-events: none;
-  }
+/* Header — badge carrinho laranja */
+body .header:not(.header-checkout) .header-link_cart .cart_quantity,
+body .header:not(.header-checkout) .cart_link .cart_quantity,
+body .header:not(.header-checkout) .cart_quantity,
+body .header:not(.header-checkout) [data-cart-quantity].cart_quantity,
+body .header:not(.header-checkout) .header-link_cart [data-cart-quantity] {
+  background-color: #f97316 !important;
+  background: #f97316 !important;
+  border-color: #ea580c !important;
+  color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .header-link_cart svg,
+body .header:not(.header-checkout) .header-link_cart .icon_cart,
+body .header:not(.header-checkout) .cart_link svg {
+  fill: #4b96d4 !important;
+}
+
+body .header:not(.header-checkout) .header a.header-link_cart:hover,
+body .header:not(.header-checkout) .header a.header-link_cart:focus,
+body .header:not(.header-checkout) .header a.cart_link:hover,
+body .header:not(.header-checkout) .header a.cart_link:focus,
+body .header:not(.header-checkout) .header-link_cart:hover,
+body .header:not(.header-checkout) .header-link_cart:focus,
+body .header:not(.header-checkout) .cart_link:hover,
+body .header:not(.header-checkout) .cart_link:focus {
+  color: #f97316 !important;
+  opacity: 1 !important;
+}
+
+body .header:not(.header-checkout) .header-link_cart:hover svg,
+body .header:not(.header-checkout) .header-link_cart:focus svg,
+body .header:not(.header-checkout) .cart_link:hover svg,
+body .header:not(.header-checkout) .cart_link:focus svg {
+  fill: #f97316 !important;
+}
+
+body .header:not(.header-checkout) .header-link_cart:hover .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:focus .cart_quantity,
+body .header:not(.header-checkout) .cart_link:hover .cart_quantity,
+body .header:not(.header-checkout) .cart_link:focus .cart_quantity {
+  background-color: #ea580c !important;
+  background: #ea580c !important;
+  border-color: #c2410c !important;
+  color: #ffffff !important;
+}
+
+body .header:not(.header-checkout) .header-box_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link {
+  color: #101010 !important;
+}
+
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:focus {
+  color: #101010 !important;
+}
+
+/* Banners — sem fade no hover */
+a.showcase-banners_link:hover,
+a.showcase-banners_link:focus {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.showcase-banners_link:hover .banner-main_img,
+.showcase-banners_link:hover img.lazy-slider {
+  opacity: 1 !important;
 }

@@ -1,0 +1,270 @@
+    <div class="nav-content content header-v2-nav-row">
+        <div class="container header-v2-nav-inner header-v2-nav-inner--scroll" role="navigation" aria-label="Categorias — deslize horizontalmente para ver mais">
+            <a class="header-v2-cta-ambiente header-v2-cta-ambiente--in-nav" href="/pagina/calculadora-btus" title="Compre por ambiente">
+                {{ iconHome }}
+                <span class="header-v2-cta-ambiente__text">Compre por ambiente</span>
+                <span class="header-v2-cta-ambiente__chev" aria-hidden="true">▾</span>
+            </a>
+            <nav class="nav-main">
+                {% for menuItem in menu.items limit: 7 %}
+                    {% assign menuLabel = menuItem.name %}
+                    {% assign menuLabelLower = menuLabel | downcase %}
+                    {% if menuLabelLower contains 'peças' or menuLabelLower contains 'pecas' or menuLabelLower contains 'acessório' or menuLabelLower contains 'acessorio' %}
+                        {% assign menuLabel = 'Modelo' %}
+                    {% endif %}
+                    {% assign sdaNavCatIconUrl = '' %}
+                    {% if menuLabelLower contains 'split' and sdaMIconSplitUrl != '' %}
+                        {% assign sdaNavCatIconUrl = sdaMIconSplitUrl %}
+                    {% elsif menuLabelLower contains 'piso' and sdaMIconPisoUrl != '' %}
+                        {% assign sdaNavCatIconUrl = sdaMIconPisoUrl %}
+                    {% elsif menuLabelLower contains 'janela' and sdaMIconJanelaUrl != '' %}
+                        {% assign sdaNavCatIconUrl = sdaMIconJanelaUrl %}
+                    {% endif %}
+                    <div class="nav-main_item dropdown">
+                        <a href="{{ menuItem.link }}" class="nav-main_link dropdown-toggle" tabindex="0" title="{{ menuLabel }}"{% if menuItem.newTab == true %} target="_blank"{% endif %}>
+                            <div class="nav-main-box_link">
+                                {% if sdaNavCatIconUrl != '' %}
+                                    <span class="nav-main_cat-thumb" aria-hidden="true">
+                                        <img class="header-v2-mcat-img header-v2-mcat-img--nav" src="{{ sdaNavCatIconUrl }}" width="40" height="40" alt="" loading="eager" decoding="async" onerror="this.closest('.nav-main_cat-thumb').remove()">
+                                    </span>
+                                {% elsif menuItem.iconSvg %}
+                                    <div class="nav-main_icon nav-main-icon_svg">{{ menuItem.iconSvg }}</div>
+                                {% elsif menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
+                                    <div class="nav-main_icon nav-main-icon_img">
+                                        <picture>
+                                            <img class="lazy" data-src="{{ menuItem.icon.file.url }}" alt="{{ menuLabel }}">
+                                        </picture>
+                                    </div>
+                                {% endif %}
+                                <div class="nav-main_text">{{ menuLabel }}</div>
+                                {% if menuItem.items.size > 0 %}
+                                    <div class="nav-main_arrow">{{ themeConfig.icons.arrow.down }}</div>
+                                {% endif %}
+                            </div>
+                        </a>
+                        {% if menuItem.items.size > 0 %}
+                            <div class="nav-main_content dropdown-content">
+                                {% assign limitMenuChildren = 6 %}
+                                {% assign limitMenuAll = limitMenuChildren | times: 6 %}
+                                {% assign startMenuChildren = 1 %}
+                                {% assign endMenuChildren = startMenuChildren | times: limitMenuChildren %}
+                                {% for menuChildrenItem1 in menuItem.items limit:limitMenuAll %}
+                                    {% if forloop.index == startMenuChildren %}<ul>{% endif %}
+                                    <li class="nav-children dropdown">
+                                        <a class="nav-main_children" title="{{ menuChildrenItem1.name }}" href="{{ menuChildrenItem1.link }}"{% if menuChildrenItem1.newTab == true %} target="_blank"{% endif %}>{{ menuChildrenItem1.name }}</a>
+                                        {% if menuChildrenItem1.items.size > 0 %}
+                                            <div class="nav-main_content nav-main_content__children dropdown-content">
+                                                {% assign limitMenuChildren1 = 6 %}
+                                                {% assign startMenuChildren1 = 1 %}
+                                                {% assign endMenuChildren1 = startMenuChildren1 | times: limitMenuChildren1 %}
+                                                {% for menuChildrenItem2 in menuChildrenItem1.items %}
+                                                    {% if forloop.index == startMenuChildren1 %}<ul>{% endif %}
+                                                    <li class="nav-children dropdown">
+                                                        <a class="nav-main_children" href="{{ menuChildrenItem2.link }}" title="{{ menuChildrenItem2.name }}"{% if menuChildrenItem2.newTab == true %} target="_blank"{% endif %}>{{ menuChildrenItem2.name }}</a>
+                                                        {% if menuChildrenItem2.items.size > 0 %}
+                                                            <div class="nav-main_content nav-main_content__children dropdown-content">
+                                                                <ul>
+                                                                    {% for menuChildrenItem3 in menuChildrenItem2.items %}
+                                                                        <li class="nav-children dropdown">
+                                                                            <a class="nav-main_children" href="{{ menuChildrenItem3.link }}" title="{{ menuChildrenItem3.name }}"{% if menuChildrenItem3.newTab == true %} target="_blank"{% endif %}>{{ menuChildrenItem3.name }}</a>
+                                                                        </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </div>
+                                                        {% endif %}
+                                                    </li>
+                                                    {% if forloop.index == endMenuChildren1 or forloop.last %}
+                                                        </ul>
+                                                        {% assign startMenuChildren1 = endMenuChildren1 | plus: 1 %}
+                                                        {% assign endMenuChildren1 = endMenuChildren1 | plus: limitMenuChildren1 %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </li>
+                                    {% if forloop.index == endMenuChildren or forloop.last %}
+                                        </ul>
+                                        {% assign startMenuChildren = endMenuChildren | plus: 1 %}
+                                        {% assign endMenuChildren = endMenuChildren | plus: limitMenuChildren %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </nav>
+            <a class="header-v2-cta-diag360" href="{{ sdaDiag360Url }}" title="Diagnóstico 360 — descubra o ar ideal para você">
+                {{ iconDiag360 }}
+                <span class="header-v2-cta-diag360__text">Diagnóstico 360</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="header-v2-mobile-catalog show-lg content" aria-label="Categorias">
+        <div class="container header-v2-mobile-catalog__scroll">
+            <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkSplit }}" title="{{ sdaMLabelSplit }}">
+                <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
+                    {% if sdaMIconSplitUrl != '' %}
+                        <img class="header-v2-mcat-img" src="{{ sdaMIconSplitUrl }}" width="40" height="40" alt="" loading="lazy" decoding="async">
+                    {% elsif sdaMIconSplitSvg != '' %}
+                        <span class="header-v2-mcat-img header-v2-mcat-img--svg">{{ sdaMIconSplitSvg }}</span>
+                    {% else %}
+                        <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-split.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% endif %}
+                </span>
+                <span class="header-v2-mobile-catalog__label">{{ sdaMLabelSplit }}</span>
+            </a>
+            <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkPiso }}" title="{{ sdaMLabelPiso }}">
+                <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
+                    {% if sdaMIconPisoUrl != '' %}
+                        <img class="header-v2-mcat-img" src="{{ sdaMIconPisoUrl }}" width="40" height="40" alt="" loading="lazy" decoding="async">
+                    {% elsif sdaMIconPisoSvg != '' %}
+                        <span class="header-v2-mcat-img header-v2-mcat-img--svg">{{ sdaMIconPisoSvg }}</span>
+                    {% else %}
+                        <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-piso.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% endif %}
+                </span>
+                <span class="header-v2-mobile-catalog__label">{{ sdaMLabelPiso }}</span>
+            </a>
+            <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkJanela }}" title="{{ sdaMLabelJanela }}">
+                <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
+                    {% if sdaMIconJanelaUrl != '' %}
+                        <img class="header-v2-mcat-img" src="{{ sdaMIconJanelaUrl }}" width="40" height="40" alt="" loading="lazy" decoding="async">
+                    {% elsif sdaMIconJanelaSvg != '' %}
+                        <span class="header-v2-mcat-img header-v2-mcat-img--svg">{{ sdaMIconJanelaSvg }}</span>
+                    {% else %}
+                        <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-janela.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% endif %}
+                </span>
+                <span class="header-v2-mobile-catalog__label">{{ sdaMLabelJanela }}</span>
+            </a>
+            <a class="header-v2-mobile-catalog__item header-v2-mobile-catalog__item--ambiente" href="/pagina/calculadora-btus" title="Compre por ambiente">
+                <span class="header-v2-mobile-catalog__icon header-v2-mobile-catalog__icon--orange" aria-hidden="true">{{ iconHome }}</span>
+                <span class="header-v2-mobile-catalog__label header-v2-mobile-catalog__label--ambiente">
+                    <span class="header-v2-mobile-catalog__label-line">Compre por</span>
+                    <span class="header-v2-mobile-catalog__label-line header-v2-mobile-catalog__label-accent">ambiente</span>
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav show-lg">
+        {% if themeConfig.account.type != 'disabled' %}
+            <div class="sidebar-nav-header">
+                <div class="sidebar-nav-account">
+                    <span class="sidebar-nav-icon account_link">{{ themeConfig.icons.user }}</span>
+                    <template x-if="data.isLogged">
+                        <div class="sidebar-nav-text">
+                            <a class="sidebar-nav-link sidebar-nav-link_user account_link" href="javascript:void(0)" x-bind:title="`${data.user ? data.user : 'visitante'}`" x-text="`Olá ${data.user ? data.user : 'visitante'}`" onclick="openSideNavOverlay('.sidenav-overlay_account', true)"></a>
+                            <a class="sidebar-nav-link sidebar-nav-link_logout" href="javascript:void(0)" title="Logout" @click="headerLogout()">Logout</a>
+                        </div>
+                    </template>
+                    <template x-if="!data.isLogged">
+                        <div class="sidebar-nav-text">
+                            <a class="sidebar-nav-link account_link" href="javascript:void(0)" title="Login ou Cadastre-se" onclick="openSideNavOverlay('.sidenav-overlay_account', true)">Login ou Cadastre-se</a>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        {% endif %}
+        <div class="sidebar-nav-content content">
+            <div>
+                <ul class="nav-mobile metismenu" id="nav-mobile">
+                    <li class="nav-mobile_item">
+                        <div class="nav-mobile_link" aria-expanded="false">
+                            <p><a href="/pagina/calculadora-btus" title="Compre por ambiente"><div class="nav-mobile-box_link"><div class="nav-mobile_text">Compre por ambiente</div></div></a></p>
+                        </div>
+                    </li>
+                    <li class="nav-mobile_item">
+                        <div class="nav-mobile_link" aria-expanded="false">
+                            <p><a href="javascript:void(0)" title="Favoritos" onclick="openFavoritesPanel()"><div class="nav-mobile-box_link"><div class="nav-mobile_text">Favoritos</div></div></a></p>
+                        </div>
+                    </li>
+                    <li class="nav-mobile_item">
+                        <div class="nav-mobile_link" aria-expanded="false">
+                            <p><a href="/pedidos" title="Meus pedidos"><div class="nav-mobile-box_link"><div class="nav-mobile_text">Meus pedidos</div></div></a></p>
+                        </div>
+                    </li>
+                    {% for menuItem in menu.items %}
+                        {% assign menuLabel = menuItem.name %}
+                        {% assign menuLabelLower = menuLabel | downcase %}
+                        {% if menuLabelLower contains 'peças' or menuLabelLower contains 'pecas' or menuLabelLower contains 'acessório' or menuLabelLower contains 'acessorio' %}
+                            {% assign menuLabel = 'Modelo' %}
+                        {% endif %}
+                        {% assign sdaNavCatIconUrl = '' %}
+                        {% if menuLabelLower contains 'split' and sdaMIconSplitUrl != '' %}
+                            {% assign sdaNavCatIconUrl = sdaMIconSplitUrl %}
+                        {% elsif menuLabelLower contains 'piso' and sdaMIconPisoUrl != '' %}
+                            {% assign sdaNavCatIconUrl = sdaMIconPisoUrl %}
+                        {% elsif menuLabelLower contains 'janela' and sdaMIconJanelaUrl != '' %}
+                            {% assign sdaNavCatIconUrl = sdaMIconJanelaUrl %}
+                        {% endif %}
+                        <li class="nav-mobile_item">
+                            {% assign classArrowItem = '' %}
+                            {% if menuItem.items.size > 0 %}
+                                {% assign classArrowItem = ' has-arrow' %}
+                            {% endif %}
+                            <div class="nav-mobile_link{{ classArrowItem }}" aria-expanded="false">
+                                <p>
+                                    <a href="{{ menuItem.link }}" title="{{ menuLabel }}"{% if menuItem.newTab == true %} target="_blank"{% endif %}>
+                                        <div class="nav-mobile-box_link">
+                                            {% if sdaNavCatIconUrl != '' %}
+                                                <div class="nav-mobile_icon nav-mobile-icon_img nav-mobile-icon_sda" aria-hidden="true">
+                                                    <img class="header-v2-nav-cat-img" src="{{ sdaNavCatIconUrl }}" width="36" height="36" alt="" loading="eager" decoding="async" onerror="this.closest('.nav-mobile-icon_sda').remove()">
+                                                </div>
+                                            {% elsif menuItem.iconSvg %}
+                                                <div class="nav-mobile_icon nav-mobile-icon_svg">{{ menuItem.iconSvg }}</div>
+                                            {% elsif menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
+                                                <div class="nav-mobile_icon nav-mobile-icon_img">
+                                                    <picture><img class="lazy" data-src="{{ menuItem.icon.file.url }}" alt="{{ menuLabel }}"></picture>
+                                                </div>
+                                            {% endif %}
+                                            <div class="nav-mobile_text">{{ menuLabel }}</div>
+                                        </div>
+                                    </a>
+                                </p>
+                            </div>
+                            {% if menuItem.items.size > 0 %}
+                                <ul>
+                                    {% for menuChildrenItem1 in menuItem.items %}
+                                        <li>
+                                            {% assign classArrowChildren1 = '' %}
+                                            {% if menuChildrenItem1.items.size > 0 %}
+                                                {% assign classArrowChildren1 = ' has-arrow' %}
+                                            {% endif %}
+                                            <div class="nav-mobile_link{{ classArrowChildren1 }}" aria-expanded="false">
+                                                <p>
+                                                    <a href="{{ menuChildrenItem1.link }}" title="{{ menuChildrenItem1.name }}"{% if menuChildrenItem1.newTab == true %} target="_blank"{% endif %}>
+                                                        <div class="nav-mobile-box_link">
+                                                            <div class="nav-mobile_text">{{ menuChildrenItem1.name }}</div>
+                                                        </div>
+                                                    </a>
+                                                </p>
+                                            </div>
+                                            {% if menuChildrenItem1.items.size > 0 %}
+                                                <ul>
+                                                    {% for menuChildrenItem2 in menuChildrenItem1.items %}
+                                                        <li>
+                                                            <div class="nav-mobile_link" aria-expanded="false">
+                                                                <p>
+                                                                    <a href="{{ menuChildrenItem2.link }}" title="{{ menuChildrenItem2.name }}"{% if menuChildrenItem2.newTab == true %} target="_blank"{% endif %}>
+                                                                        <div class="nav-mobile-box_link">
+                                                                            <div class="nav-mobile_text">{{ menuChildrenItem2.name }}</div>
+                                                                        </div>
+                                                                    </a>
+                                                                </p>
+                                                            </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </nav>

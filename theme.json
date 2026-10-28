@@ -1,0 +1,259 @@
+{
+  "engine": "liquid",
+  "typeId": 9,
+  "checkoutId": 1,
+  "themeId": 3,
+  "baseThemeVersion": "v1.14.36",
+  "exportedAt": "2026-07-01T18:53:46.520Z",
+  "assets": [
+    {
+      "key": "assets/theme-all.css"
+    },
+    {
+      "key": "assets/theme-custom.css"
+    },
+    {
+      "key": "assets/theme-defer.js"
+    },
+    {
+      "key": "assets/theme-plugins.css"
+    },
+    {
+      "key": "assets/theme-solar-calculator.css"
+    },
+    {
+      "key": "assets/theme-solar-calculator.js"
+    },
+    {
+      "key": "assets/theme.js"
+    },
+    {
+      "key": "config.json"
+    },
+    {
+      "key": "layout/theme.liquid"
+    },
+    {
+      "key": "sections/404-content.liquid"
+    },
+    {
+      "key": "sections/check-cookie.liquid"
+    },
+    {
+      "key": "sections/checkout-order-summary.liquid"
+    },
+    {
+      "key": "sections/checkout-payment.liquid"
+    },
+    {
+      "key": "sections/checkout-shipping.liquid"
+    },
+    {
+      "key": "sections/checkout-summary.liquid"
+    },
+    {
+      "key": "sections/customer-account-menu.liquid"
+    },
+    {
+      "key": "sections/customer-addresses-edit.liquid"
+    },
+    {
+      "key": "sections/diagnostico-360.liquid"
+    },
+    {
+      "key": "sections/footer.liquid"
+    },
+    {
+      "key": "sections/header-checkout.liquid"
+    },
+    {
+      "key": "sections/header.liquid"
+    },
+    {
+      "key": "sections/menus-model-1.liquid"
+    },
+    {
+      "key": "sections/menus-model-2.liquid"
+    },
+    {
+      "key": "sections/page-contact-form.liquid"
+    },
+    {
+      "key": "sections/page-nav.liquid"
+    },
+    {
+      "key": "sections/page-solar-calculator-products.liquid"
+    },
+    {
+      "key": "sections/page-solar-calculator.liquid"
+    },
+    {
+      "key": "sections/product-buy-to-gether.liquid"
+    },
+    {
+      "key": "sections/product-content.liquid"
+    },
+    {
+      "key": "sections/product-group-purchase.liquid"
+    },
+    {
+      "key": "sections/product-kit-script.liquid"
+    },
+    {
+      "key": "sections/product-kit.liquid"
+    },
+    {
+      "key": "sections/product-last-viewed.liquid"
+    },
+    {
+      "key": "sections/product-related.liquid"
+    },
+    {
+      "key": "sections/product-schema.liquid"
+    },
+    {
+      "key": "sections/search-filter.liquid"
+    },
+    {
+      "key": "sections/search-order.liquid"
+    },
+    {
+      "key": "sections/showcase-model-1.liquid"
+    },
+    {
+      "key": "sections/showcase-model-10-script.liquid"
+    },
+    {
+      "key": "sections/showcase-model-10-video.liquid"
+    },
+    {
+      "key": "sections/showcase-model-10.liquid"
+    },
+    {
+      "key": "sections/showcase-model-11.liquid"
+    },
+    {
+      "key": "sections/showcase-model-12.liquid"
+    },
+    {
+      "key": "sections/showcase-model-13.liquid"
+    },
+    {
+      "key": "sections/showcase-model-14.liquid"
+    },
+    {
+      "key": "sections/showcase-model-2.liquid"
+    },
+    {
+      "key": "sections/showcase-model-3.liquid"
+    },
+    {
+      "key": "sections/showcase-model-4.liquid"
+    },
+    {
+      "key": "sections/showcase-model-5.liquid"
+    },
+    {
+      "key": "sections/showcase-model-6.liquid"
+    },
+    {
+      "key": "sections/showcase-model-7.liquid"
+    },
+    {
+      "key": "sections/showcase-model-8.liquid"
+    },
+    {
+      "key": "sections/showcase-model-9.liquid"
+    },
+    {
+      "key": "sections/showcase-model-product-buy-to-gether.liquid"
+    },
+    {
+      "key": "sections/showcase-model-product-promotion.liquid"
+    },
+    {
+      "key": "sections/showcase-model-product.liquid"
+    },
+    {
+      "key": "sections/showcase-video-init.liquid"
+    },
+    {
+      "key": "sections/showcases-model-1.liquid"
+    },
+    {
+      "key": "sections/showcases-model-13.liquid"
+    },
+    {
+      "key": "sections/showcases-model-2.liquid"
+    },
+    {
+      "key": "sections/showcases-model-3.liquid"
+    },
+    {
+      "key": "sections/showcases-model-5.liquid"
+    },
+    {
+      "key": "sections/showcases-model-9.liquid"
+    },
+    {
+      "key": "sections/sidenav-forgot-password.liquid"
+    },
+    {
+      "key": "sections/sidenav-overlay-account.liquid"
+    },
+    {
+      "key": "sections/sidenav-overlay-cart-script.liquid"
+    },
+    {
+      "key": "sections/sidenav-overlay-cart.liquid"
+    },
+    {
+      "key": "sections/sidenav-payment-calculation.liquid"
+    },
+    {
+      "key": "sections/sidenav-shipping-calculation.liquid"
+    },
+    {
+      "key": "sections/sidenav-user-password.liquid"
+    },
+    {
+      "key": "sections/theme-schema.liquid"
+    },
+    {
+      "key": "templates/404.liquid"
+    },
+    {
+      "key": "templates/account.liquid"
+    },
+    {
+      "key": "templates/checkout-order.liquid"
+    },
+    {
+      "key": "templates/checkout.liquid"
+    },
+    {
+      "key": "templates/customer-addresses.liquid"
+    },
+    {
+      "key": "templates/customer-orders.liquid"
+    },
+    {
+      "key": "templates/home.liquid"
+    },
+    {
+      "key": "templates/page.diagnostico.liquid"
+    },
+    {
+      "key": "templates/page.liquid"
+    },
+    {
+      "key": "templates/product.liquid"
+    },
+    {
+      "key": "templates/register.liquid"
+    },
+    {
+      "key": "templates/search.liquid"
+    }
+  ]
+}

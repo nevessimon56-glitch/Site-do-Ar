@@ -1,0 +1,59 @@
+<!-- Showcase Model 5 - Banner Grid -->
+<section class="showcase showcase-model-{{ showcaseSection.typeId }} showcase-{{ showcaseSection.id }}">
+    {% assign bannerGridConfig = showcaseSection.config %}
+    <div class="container">
+        <!-- Título da Vitrine -->
+        {% if showcaseSection.name %}
+            {% assign styleTitle = '' %}
+            {% case bannerGridConfig.namePosition %}
+                {% when 'center' %}
+                    {% assign styleTitle = 'text-align: center;' %}
+                {% when 'left' %}
+                    {% assign styleTitle = 'text-align: left;' %}
+                {% when 'right' %}
+                    {% assign styleTitle = 'text-align: right;' %}
+                {% when "hidden" %}
+                    {% assign styleTitle = "display: none;" %}
+            {% endcase %}
+            <h2 class="showcase-title" style="{{ styleTitle }}">
+                {{ showcaseSection.name }}
+            </h2>
+        {% endif %}
+        <div class="showcase-banners showcase-banners_carousel showcase-banners_carousel__{{ bannerGridConfig.columnQuantity }}">
+            <div class="showcase-list showcase-list-{{ bannerGridConfig.columnQuantity }}">
+                <ul class="banners-slider banners-slider-{{ bannerGridConfig.columnQuantity }}">
+                    {% for showcaseMedia in showcaseSection.config.medias %}
+                        {% assign banneLink = 'javascript:void(0)' %}
+                        {% if showcaseMedia.link %}
+                            {% assign banneLink = showcaseMedia.link %}
+                        {% endif %}
+                        <li class="showcase-banners_item">
+                            <a class="showcase-banners_link" href="{{ banneLink }}"
+                            title="{{ showcaseMedia.title }}">
+                                {% if showcaseMedia.path %}
+                                    <picture>
+                                        <img class="banner-grid banner-main_img lazy-slider" data-src="{{ showcaseMedia.path | imgUrl  }}" alt="{{ showcaseMedia.title }}">
+                                    </picture>
+                                {% else %}
+                                    {{ themeConfig.icons.image }}
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% assign classCenterSliderArrow = '' %}
+                {% if bannerGridConfig.namePosition == 'hidden' %}
+                    {% assign classCenterSliderArrow = ' slider__arrow--center' %}
+                {% endif %}
+                <div class="controls controls-arrow" aria-label="Carousel Navigation" tabindex="0">
+                    <button class="slider__arrow slider__arrow--prev{{ classCenterSliderArrow }}" aria-label="Anterior">
+                        {{ themeConfig.icons.arrow.prev }}
+                    </button>
+                    <button class="slider__arrow slider__arrow--next{{ classCenterSliderArrow }}" aria-label="Próximo">
+                        {{ themeConfig.icons.arrow.next }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
