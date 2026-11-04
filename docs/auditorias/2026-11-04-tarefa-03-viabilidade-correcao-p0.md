@@ -383,3 +383,48 @@ A divergência visual principal entre card e PDP está **corrigida por configura
 - repetir a amostra em produtos sem promoção válida, quando houver um produto positivo disponível para esse teste.
 
 O P0 está **corrigido visualmente e parcialmente validado**, mas não deve ser considerado totalmente encerrado até a validação manual das formas de pagamento no checkout.
+
+## Continuação — validação das formas de pagamento
+
+### Produto candidato
+
+Foi identificado como candidato o produto **Ar-Condicionado Split Piso Teto Inverter Elgin 48.000 BTUs Frio 220V**, ID `100`:
+
+- disponibilidade exibida na PDP: **Imediata**;
+- preço normal: **R$ 10.848,69**;
+- preço Pix: **R$ 10.306,26**;
+- parcelamento exibido: **6x de R$ 1.808,12 no cartão**.
+
+O produto atende aos critérios públicos de preço positivo e disponibilidade imediata. A habilitação efetiva de Pix e Cielo no checkout não pôde ser confirmada porque o teste foi bloqueado antes da etapa de pagamento.
+
+### Bloqueio encontrado
+
+Ao abrir o carrinho/checkout para iniciar o teste, a sessão ainda continha o produto Hitachi do teste anterior. O resumo exibiu:
+
+```text
+Preço unitário:                 R$ 12.621,05
+Subtotal:                       R$ 12.621,05
+Desconto da forma de pagamento: -R$ 631,05
+Total:                          R$ 11.990,00
+```
+
+O checkout mostrou a mensagem:
+
+```text
+Por favor, remova os produtos sem estoque ou altere a quantidade conforme o estoque disponível antes de finalizar.
+```
+
+Como a regra desta etapa determina interromper diante de um bloqueio, não foram removidos itens, não foi tentado contornar a validação de estoque, não houve seleção de forma de pagamento e nenhum pedido foi submetido.
+
+### Resultado desta etapa
+
+- produto candidato identificado: **sim**;
+- preço positivo e disponibilidade pública: **confirmados**;
+- Pix habilitado no checkout: **não confirmado**;
+- Cielo selecionável: **não confirmado**;
+- alternância Pix/Cielo: **não testada**;
+- atualização de totais após alternância: **não testada**;
+- parcelamento no checkout: **não testado** nesta etapa;
+- compra ou pagamento real: **não realizados**.
+
+O bloqueio de estoque deve ser resolvido em uma etapa posterior, com autorização para limpar o carrinho de teste ou iniciar uma sessão limpa. Até lá, não é correto declarar a validação das formas de pagamento aprovada.
