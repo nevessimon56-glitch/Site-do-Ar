@@ -6,6 +6,7 @@ Esta pasta registra diagnósticos e investigações realizados no tema WDNA do S
 
 - [`2026-11-04-diagnostico-tarefa-01.md`](./2026-11-04-diagnostico-tarefa-01.md): diagnóstico de consistência e organização do site.
 - [`2026-11-04-investigacao-p0-origem-dados-comerciais.md`](./2026-11-04-investigacao-p0-origem-dados-comerciais.md): investigação somente de leitura sobre a origem dos preços nos cards e no PDP, incluindo a tentativa revertida.
+- [`2026-11-04-tarefa-03-viabilidade-correcao-p0.md`](./2026-11-04-tarefa-03-viabilidade-correcao-p0.md): verificação de viabilidade da correção, limites de inspeção do PDP e critérios para execução segura.
 
 ## Regra de segurança
 
