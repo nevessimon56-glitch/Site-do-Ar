@@ -262,8 +262,124 @@ O estado esperado é visual. Ele não autoriza alterar o valor efetivamente cobr
 11. Verificar console e comportamento desktop/mobile.
 12. Manter o backup do tema e registrar o rollback possível.
 
-## Status da TAREFA 03
+## Atualização P0 — correção pela configuração oficial do canal
 
-A viabilidade foi investigada em modo somente leitura. A divergência foi confirmada e a menor arquitetura segura foi definida, mas a disponibilidade de `product.prices` no contexto do PDP ainda não foi comprovada. Não há autorização nem base suficiente para executar uma correção.
+Durante a continuidade da investigação, foi identificada a causa operacional no painel WDNA: em **Canal Site Do Ar → Valores em destaque**, o Pix não estava selecionado como destaque primário.
 
-**Aguardar aprovação explícita para a próxima fase.**
+A configuração foi ajustada no painel, sem alteração em arquivos Liquid, CSS ou JavaScript:
+
+- símbolo de moeda: `R$`;
+- destaque primário: `Pix`;
+- destaque secundário: `Cielo - Cartão de crédito`.
+
+Após salvar a configuração, a PDP do produto Hitachi 190 passou a apresentar visualmente o mesmo preço Pix do card:
+
+- preço normal riscado: `R$ 12.621,05`;
+- preço Pix na PDP: `R$ 11.990,00`;
+- indicação: `5% DE DESCONTO NO PIX`;
+- cartão: `6x de R$ 2.103,51 no cartão`.
+
+Essa evidência confirma que a divergência visual podia ser resolvida pela configuração oficial de **Valores em destaque**, sem modificar `mainPrice`, `product.price`, `product.primaryPrice`, carrinho ou checkout.
+
+## Validação 1 — preço original e preço Pix na PDP
+
+**Status: aprovado visualmente.**
+
+Na URL pública do produto 190, a renderização observada foi:
+
+```text
+R$ 12.621,05   (preço normal riscado)
+R$ 11.990,00   (Pix)
+5% DE DESCONTO NO PIX
+```
+
+O card correspondente continuou exibindo `R$ 11.990,00 no Pix`. O preço original permaneceu disponível como referência riscada.
+
+Observação técnica: o `textarea.product-compare-json` interno do PDP ainda apresentou `listPrice: 12621.05` e `pixPrice: 12621.05` em uma captura, enquanto o preço visível já era `R$ 11.990,00`. Isso indica que o ajuste de **Valores em destaque** alterou a apresentação principal do PDP, mas não necessariamente o JSON auxiliar de comparação. Esse dado oculto não foi usado para alterar o código e deve ser validado separadamente se houver alguma funcionalidade que consuma esse JSON.
+
+## Validação 2 — parcelamento Cielo
+
+**Status: aprovado na apresentação; seleção completa no checkout pendente.**
+
+Na PDP do produto 190, o parcelamento continuou sendo exibido como:
+
+```text
+6x de R$ 2.103,51 no cartão
+```
+
+Nenhuma alteração de `product.secondaryPrice`, cálculo de parcela ou arquivo do tema foi realizada.
+
+Foi aberto o carrinho e o checkout com uma unidade do produto. O fluxo exibiu o item e manteve o resumo financeiro. Entretanto, o avanço para uma etapa posterior ficou bloqueado por uma mensagem da própria loja:
+
+```text
+Por favor, remova os produtos sem estoque ou altere a quantidade conforme o estoque disponível antes de finalizar.
+```
+
+Por isso, não foi possível selecionar explicitamente a opção Cielo na etapa final. Não foi feita nenhuma tentativa de contornar a mensagem nem qualquer submissão de pedido.
+
+## Validação 3 — desconto Pix no carrinho e checkout
+
+**Status: confirmado no resumo; seleção manual da forma de pagamento pendente.**
+
+No carrinho e no checkout, o resumo exibiu:
+
+```text
+Preço unitário:                 R$ 12.621,05
+Subtotal:                       R$ 12.621,05
+Desconto da forma de pagamento: -R$ 631,05
+Total:                          R$ 11.990,00
+```
+
+O desconto corresponde a 5% de `R$ 12.621,05` e confirma que o valor total apresentado no fluxo observado permaneceu em `R$ 11.990,00`.
+
+A etapa de pagamento não foi concluída porque o checkout bloqueou o avanço por estoque. Assim, a evidência confirma o desconto no resumo carregado, mas ainda não confirma a alternância manual entre Pix e Cielo dentro da etapa de pagamento.
+
+## Validação 4 — consistência em outro produto
+
+**Status: aprovado visualmente na amostra realizada.**
+
+Foi testado o produto Elgin 48.000 BTUs, ID `100`.
+
+No card da vitrine:
+
+```text
+Preço normal: R$ 10.848,69
+Preço Pix:    R$ 10.306,26
+```
+
+Na PDP correspondente, a apresentação visual observada foi:
+
+```text
+Preço normal riscado: R$ 10.848,69
+Preço Pix:            R$ 10.306,26
+5% DE DESCONTO NO PIX
+6x de R$ 1.808,12 no cartão
+```
+
+Isso demonstra que a configuração oficial também foi aplicada visualmente a outro produto promocionado, não apenas ao Hitachi 190.
+
+Assim como no produto 190, a estrutura auxiliar `product-compare-json` pode conter registros de comparação diferentes dos valores visuais principais. A validação realizada foi da apresentação comercial visível ao cliente.
+
+## Status atualizado do P0
+
+A divergência visual principal entre card e PDP está **corrigida por configuração oficial do canal**, sem alteração de código.
+
+### Confirmado
+
+- causa operacional: Pix não estava selecionado como destaque primário;
+- configuração aplicada em **Valores em destaque**;
+- PDP do Hitachi mostra `R$ 11.990,00` no Pix;
+- preço normal continua riscado em `R$ 12.621,05`;
+- parcelamento continua visível em `6x de R$ 2.103,51`;
+- carrinho/checkout exibiram desconto de `R$ 631,05` e total de `R$ 11.990,00`;
+- segundo produto testado também apresentou alinhamento visual entre card e PDP;
+- nenhum arquivo do tema foi alterado nesta correção.
+
+### Pendente
+
+- selecionar manualmente Cielo na etapa final do checkout;
+- alternar explicitamente Pix e Cielo com um produto aceito pelo estoque do checkout;
+- verificar se o `product-compare-json` auxiliar é consumido por alguma função de comparação e se seus valores devem refletir o destaque Pix;
+- repetir a amostra em produtos sem promoção válida, quando houver um produto positivo disponível para esse teste.
+
+O P0 está **corrigido visualmente e parcialmente validado**, mas não deve ser considerado totalmente encerrado até a validação manual das formas de pagamento no checkout.
