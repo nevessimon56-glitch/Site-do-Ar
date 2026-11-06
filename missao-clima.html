@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Missao Clima | Site Do Ar</title>
+  <meta name="description" content="Uma experiencia interativa para descobrir o melhor caminho de climatizacao para seu ambiente.">
+  <style>
+    :root {
+      --blue: #0878ef;
+      --blue-2: #00a2ff;
+      --navy: #09294a;
+      --green: #42bf4f;
+      --orange: #ffb13b;
+      --ice: #f0f8ff;
+      --white: #ffffff;
+      --muted: #6e8195;
+      --line: #d9e8f6;
+      --shadow: 0 18px 45px rgba(7, 64, 123, 0.18);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--navy);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 90% 5%, rgba(0, 162, 255, 0.28), transparent 28rem),
+        radial-gradient(circle at 10% 15%, rgba(66, 191, 79, 0.18), transparent 24rem),
+        linear-gradient(135deg, #f7fbff 0%, #e8f5ff 55%, #ffffff 100%);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      font-size: 1.15rem;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      box-shadow: 0 10px 25px rgba(8, 120, 239, 0.25);
+    }
+
+    .topbar-note {
+      color: var(--muted);
+      font-size: 0.94rem;
+      text-align: right;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid rgba(8, 120, 239, 0.14);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .intro {
+      padding: clamp(26px, 4vw, 48px);
+      position: relative;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--blue);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #eaf5ff;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 620px;
+      margin-bottom: 18px;
+      font-size: clamp(2.4rem, 6vw, 5.5rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+    }
+
+    .lead {
+      max-width: 590px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.65;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 900;
+      text-decoration: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      box-shadow: 0 12px 24px rgba(8, 120, 239, 0.26);
+    }
+
+    .btn.alt {
+      color: var(--blue);
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: none;
+    }
+
+    .scene {
+      min-height: 520px;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(8, 120, 239, 0.95), rgba(0, 162, 255, 0.74)),
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55), transparent 17rem);
+    }
+
+    .room {
+      position: absolute;
+      inset: 64px 42px 42px;
+      border-radius: 34px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 26px 48px rgba(1, 42, 85, 0.24);
+      overflow: hidden;
+    }
+
+    .room-wall {
+      position: absolute;
+      inset: 0 0 42%;
+      background: linear-gradient(180deg, #f8fbff, #eaf5ff);
+    }
+
+    .room-floor {
+      position: absolute;
+      inset: 58% 0 0;
+      background: linear-gradient(135deg, #e1effd, #ffffff);
+    }
+
+    .window {
+      position: absolute;
+      top: 56px;
+      left: 42px;
+      width: 116px;
+      height: 108px;
+      border: 8px solid #d7ebff;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #bde9ff, #ffffff);
+    }
+
+    .sun {
+      position: absolute;
+      top: 26px;
+      right: 30px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 0 13px rgba(255, 177, 59, 0.17);
+    }
+
+    .split {
+      position: absolute;
+      top: 54px;
+      right: 44px;
+      width: 170px;
+      height: 54px;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 15px 28px rgba(9, 41, 74, 0.14);
+    }
+
+    .split::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 10px;
+      height: 6px;
+      border-radius: 999px;
+      background: #d9e8f6;
+    }
+
+    .sofa {
+      position: absolute;
+      left: 62px;
+      bottom: 76px;
+      width: 190px;
+      height: 76px;
+      border-radius: 28px 28px 18px 18px;
+      background: #0d69c5;
+    }
+
+    .sofa::before,
+    .sofa::after {
+      content: "";
+      position: absolute;
+      top: -34px;
+      width: 72px;
+      height: 54px;
+      border-radius: 24px 24px 10px 10px;
+      background: #1582ef;
+    }
+
+    .sofa::before {
+      left: 16px;
+    }
+
+    .sofa::after {
+      right: 16px;
+    }
+
+    .plant {
+      position: absolute;
+      right: 62px;
+      bottom: 78px;
+      width: 50px;
+      height: 80px;
+      border-radius: 0 0 18px 18px;
+      background: #176e49;
+    }
+
+    .plant::before {
+      content: "";
+      position: absolute;
+      left: -28px;
+      top: -48px;
+      width: 94px;
+      height: 82px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .comfort-card {
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      bottom: 26px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 20px 38px rgba(9, 41, 74, 0.18);
+    }
+
+    .gauge {
+      --value: 52%;
+      display: grid;
+      place-items: center;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      color: var(--blue);
+      font-weight: 900;
+      background:
+        radial-gradient(circle closest-side, #fff 70%, transparent 72%),
+        conic-gradient(var(--green) var(--value), #d9e8f6 0);
+    }
+
+    .comfort-card strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .comfort-card span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .mission {
+      margin-top: 26px;
+      padding: clamp(22px, 4vw, 34px);
+    }
+
+    .mission-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 22px;
+    }
+
+    .mission-head h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: -0.045em;
+    }
+
+    .points {
+      min-width: 120px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      color: var(--green);
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
+      background: #edfff0;
+    }
+
+    .points small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.76rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .choice-card {
+      min-height: 150px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      text-align: left;
+      color: var(--navy);
+      background: #fff;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .choice-card:hover,
+    .choice-card.active {
+      transform: translateY(-3px);
+      border-color: var(--blue);
+      background: #edf7ff;
+    }
+
+    .choice-card .icon {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      margin-bottom: 14px;
+      border-radius: 16px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+    }
+
+    .choice-card strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 1.05rem;
+    }
+
+    .choice-card small {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .mission-tools {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .tool-box {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #f8fbff;
+    }
+
+    .tool-box h3 {
+      margin-bottom: 8px;
+    }
+
+    .range-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 16px 0 10px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--blue);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .chip {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-weight: 800;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      color: #fff;
+      border-color: transparent;
+      background: var(--blue);
+    }
+
+    .result {
+      display: none;
+      margin-top: 22px;
+      padding: 24px;
+      border-radius: 24px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.28), transparent 18rem),
+        linear-gradient(135deg, var(--navy), var(--blue));
+    }
+
+    .result.show {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .result h3 {
+      margin-bottom: 8px;
+      font-size: 1.7rem;
+    }
+
+    .result p {
+      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.84);
+      line-height: 1.55;
+    }
+
+    .result .btn {
+      color: var(--blue);
+      background: #fff;
+      box-shadow: none;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .mission-tools {
+        grid-template-columns: 1fr;
+      }
+
+      .scene {
+        min-height: 420px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .page {
+        width: min(100% - 20px, 1180px);
+        padding: 18px 0;
+      }
+
+      .topbar,
+      .mission-head,
+      .result.show {
+        display: block;
+      }
+
+      .topbar-note {
+        margin-top: 10px;
+        text-align: left;
+      }
+
+      .scene {
+        min-height: 360px;
+      }
+
+      .room {
+        inset: 40px 18px 24px;
+      }
+
+      .split {
+        right: 22px;
+        width: 138px;
+      }
+
+      .window {
+        left: 24px;
+        width: 94px;
+      }
+
+      .comfort-card {
+        left: 16px;
+        right: 16px;
+        grid-template-columns: 1fr;
+      }
+
+      .btn,
+      .result .btn {
+        width: 100%;
+        margin-top: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">❄</span>
+        <span>Site Do Ar</span>
+      </div>
+      <div class="topbar-note">Experiencia de engajamento para levar o cliente ate a escolha ideal.</div>
+    </header>
+
+    <section class="hero">
+      <div class="panel intro">
+        <p class="tag">Nova proposta</p>
+        <h1>Missao Clima: salve seu ambiente do calor</h1>
+        <p class="lead">
+          Em vez de parecer uma calculadora, esta ideia apresenta uma missao rapida. O cliente monta o perfil do ambiente e recebe um plano de climatizacao com chamada para comprar ou falar com especialista.
+        </p>
+        <div class="btn-row">
+          <a class="btn" href="#mission">Iniciar missao</a>
+          <a class="btn alt" href="https://www.sitedoar.com.br/" target="_blank" rel="noopener">Voltar para loja</a>
+        </div>
+      </div>
+
+      <div class="panel scene" aria-label="Ambiente ilustrado">
+        <div class="room">
+          <div class="room-wall"></div>
+          <div class="room-floor"></div>
+          <div class="window"><span class="sun"></span></div>
+          <div class="split"></div>
+          <div class="sofa"></div>
+          <div class="plant"></div>
+        </div>
+        <div class="comfort-card">
+          <div class="gauge" id="gauge">52%</div>
+          <div>
+            <strong id="statusTitle">Conforto em construcao</strong>
+            <span id="statusText">Escolha o ambiente para comecar a missao.</span>
+          </div>
+          <button class="btn alt" type="button" id="quickResult">Ver plano</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="mission" class="panel mission">
+      <div class="mission-head">
+        <div>
+          <p class="tag">Passo 1</p>
+          <h2>Escolha o tipo de missao</h2>
+          <p class="lead">Cada perfil muda a recomendacao final e deixa a experiencia com cara de consultoria rapida.</p>
+        </div>
+        <div class="points" id="points">
+          120
+          <small>pontos clima</small>
+        </div>
+      </div>
+
+      <div class="cards" data-group="profile">
+        <button class="choice-card active" type="button" data-value="home">
+          <span class="icon">🏠</span>
+          <strong>Casa confortavel</strong>
+          <small>Quartos, salas e ambientes de uso familiar.</small>
+        </button>
+        <button class="choice-card" type="button" data-value="business">
+          <span class="icon">🏢</span>
+          <strong>Comercio produtivo</strong>
+          <small>Loja, recepcao, escritorio ou sala comercial.</small>
+        </button>
+        <button class="choice-card" type="button" data-value="premium">
+          <span class="icon">⚡</span>
+          <strong>Conforto premium</strong>
+          <small>Economia, tecnologia inverter e controle por Wi-Fi.</small>
+        </button>
+      </div>
+
+      <div class="mission-tools">
+        <div class="tool-box">
+          <h3>Nivel de calor do ambiente</h3>
+          <p class="lead">Use como um termometro simples para deixar a experiencia mais visual.</p>
+          <div class="range-label">
+            <span>Leve</span>
+            <strong><span id="heatValue">55</span>%</strong>
+            <span>Intenso</span>
+          </div>
+          <input id="heatRange" type="range" min="10" max="100" value="55">
+        </div>
+
+        <div class="tool-box">
+          <h3>Desafios do ambiente</h3>
+          <p class="lead">O cliente seleciona os fatores que atrapalham o conforto.</p>
+          <div class="chips">
+            <button class="chip active" type="button" data-factor="sun">Muito sol</button>
+            <button class="chip" type="button" data-factor="people">Muitas pessoas</button>
+            <button class="chip" type="button" data-factor="noise">Quero silencio</button>
+            <button class="chip" type="button" data-factor="wifi">Quero Wi-Fi</button>
+            <button class="chip" type="button" data-factor="winter">Usar no frio</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" type="button" id="generate">Gerar plano de climatizacao</button>
+        <button class="btn alt" type="button" id="reset">Limpar escolhas</button>
+      </div>
+
+      <div class="result" id="result" aria-live="polite">
+        <div>
+          <h3 id="resultTitle">Seu plano clima esta pronto</h3>
+          <p id="resultText">Selecione as opcoes e gere uma recomendacao.</p>
+        </div>
+        <a class="btn" id="resultLink" href="https://www.sitedoar.com.br/" target="_blank" rel="noopener">Ver recomendados</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      profile: 'home',
+      heat: 55,
+      factors: new Set(['sun'])
+    };
+
+    const profileLinks = {
+      home: 'https://www.sitedoar.com.br/ar-split/12000-btus?pg=1',
+      business: 'https://www.sitedoar.com.br/ar-split/24000-btus?pg=1',
+      premium: 'https://www.sitedoar.com.br/split-inverter?pg=1'
+    };
+
+    const heatRange = document.getElementById('heatRange');
+    const heatValue = document.getElementById('heatValue');
+    const points = document.getElementById('points');
+    const gauge = document.getElementById('gauge');
+    const statusTitle = document.getElementById('statusTitle');
+    const statusText = document.getElementById('statusText');
+    const result = document.getElementById('result');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultText = document.getElementById('resultText');
+    const resultLink = document.getElementById('resultLink');
+
+    function updateScore() {
+      const factorScore = state.factors.size * 18;
+      const heatScore = Math.round(state.heat * 0.8);
+      const profileBonus = state.profile === 'premium' ? 35 : state.profile === 'business' ? 25 : 15;
+      const score = Math.min(100, Math.round((heatScore + factorScore + profileBonus) / 1.7));
+
+      heatValue.textContent = state.heat;
+      gauge.textContent = `${score}%`;
+      gauge.style.setProperty('--value', `${score}%`);
+      points.innerHTML = `${120 + score}<small>pontos clima</small>`;
+
+      if (score < 45) {
+        statusTitle.textContent = 'Ambiente facil de climatizar';
+        statusText.textContent = 'Uma solucao residencial pode atender bem.';
+      } else if (score < 72) {
+        statusTitle.textContent = 'Missao intermediaria';
+        statusText.textContent = 'Vale olhar modelos inverter e capacidade adequada.';
+      } else {
+        statusTitle.textContent = 'Missao de alta performance';
+        statusText.textContent = 'Recomendacao com mais potencia e apoio especializado.';
+      }
+    }
+
+    function generatePlan() {
+      const hasWifi = state.factors.has('wifi');
+      const hasWinter = state.factors.has('winter');
+      const hasNoise = state.factors.has('noise');
+      let title = 'Plano ideal para sua casa';
+      let text = 'Comece por modelos split inverter entre 9.000 e 12.000 BTUs, conforme o tamanho do ambiente. Eles equilibram conforto e economia.';
+      let link = profileLinks.home;
+
+      if (state.profile === 'business') {
+        title = 'Plano para ambiente comercial';
+        text = 'Para loja, escritorio ou recepcao, priorize capacidade maior, instalacao bem planejada e equipamentos com bom rendimento em uso prolongado.';
+        link = profileLinks.business;
+      }
+
+      if (state.profile === 'premium') {
+        title = 'Plano conforto premium';
+        text = 'A melhor rota e buscar modelos inverter, preferencialmente com Wi-Fi e recursos de economia para uso diario.';
+        link = profileLinks.premium;
+      }
+
+      if (state.heat >= 75) {
+        text += ' Como o nivel de calor esta alto, evite subdimensionar o equipamento.';
+      }
+
+      if (hasWifi) {
+        text += ' Inclua filtro para modelos com Wi-Fi.';
+      }
+
+      if (hasWinter) {
+        text += ' Considere opcoes quente/frio.';
+      }
+
+      if (hasNoise) {
+        text += ' Dê preferencia para linhas silenciosas e inverter.';
+      }
+
+      resultTitle.textContent = title;
+      resultText.textContent = text;
+      resultLink.href = link;
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    document.querySelector('[data-group="profile"]').addEventListener('click', (event) => {
+      const card = event.target.closest('.choice-card');
+      if (!card) return;
+
+      document.querySelectorAll('.choice-card').forEach((item) => item.classList.remove('active'));
+      card.classList.add('active');
+      state.profile = card.dataset.value;
+      updateScore();
+    });
+
+    document.querySelector('.chips').addEventListener('click', (event) => {
+      const chip = event.target.closest('.chip');
+      if (!chip) return;
+
+      chip.classList.toggle('active');
+      if (chip.classList.contains('active')) {
+        state.factors.add(chip.dataset.factor);
+      } else {
+        state.factors.delete(chip.dataset.factor);
+      }
+      updateScore();
+    });
+
+    heatRange.addEventListener('input', () => {
+      state.heat = Number(heatRange.value);
+      updateScore();
+    });
+
+    document.getElementById('generate').addEventListener('click', generatePlan);
+    document.getElementById('quickResult').addEventListener('click', generatePlan);
+    document.getElementById('reset').addEventListener('click', () => {
+      state.profile = 'home';
+      state.heat = 55;
+      state.factors = new Set(['sun']);
+      heatRange.value = 55;
+      document.querySelectorAll('.choice-card').forEach((item) => item.classList.toggle('active', item.dataset.value === 'home'));
+      document.querySelectorAll('.chip').forEach((chip) => chip.classList.toggle('active', chip.dataset.factor === 'sun'));
+      result.classList.remove('show');
+      updateScore();
+    });
+
+    updateScore();
+  </script>
+</body>
+</html>

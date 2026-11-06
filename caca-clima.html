@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Caca ao Clima Perfeito | Site Do Ar</title>
+  <meta name="description" content="Uma experiencia mais ousada para engajar visitantes com missoes, recompensas e indicacoes de climatizacao.">
+  <style>
+    :root {
+      --night: #081a35;
+      --night-2: #0d2f62;
+      --blue: #0c82ff;
+      --cyan: #36d5ff;
+      --lime: #52df61;
+      --gold: #ffd166;
+      --pink: #ff4fa3;
+      --white: #ffffff;
+      --muted: #a9bad0;
+      --card: rgba(255, 255, 255, 0.1);
+      --card-strong: rgba(255, 255, 255, 0.16);
+      --line: rgba(255, 255, 255, 0.18);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(54, 213, 255, 0.26), transparent 26rem),
+        radial-gradient(circle at 90% 5%, rgba(255, 79, 163, 0.2), transparent 25rem),
+        linear-gradient(135deg, var(--night), var(--night-2) 58%, #041326);
+      overflow-x: hidden;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 44px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-icon {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--cyan), var(--lime));
+      box-shadow: 0 14px 26px rgba(54, 213, 255, 0.24);
+    }
+
+    .nav-badge {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .glass {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.07));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-copy {
+      padding: clamp(26px, 5vw, 54px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-copy::after {
+      content: "";
+      position: absolute;
+      right: -72px;
+      top: -72px;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: rgba(82, 223, 97, 0.14);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 9px 14px;
+      border: 1px solid rgba(54, 213, 255, 0.36);
+      border-radius: 999px;
+      color: var(--cyan);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(54, 213, 255, 0.1);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 660px;
+      margin-bottom: 18px;
+      font-size: clamp(2.7rem, 6.8vw, 6.5rem);
+      line-height: 0.88;
+      letter-spacing: -0.08em;
+    }
+
+    .lead {
+      position: relative;
+      z-index: 1;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.68;
+    }
+
+    .actions {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 999px;
+      color: #041326;
+      font-weight: 900;
+      text-decoration: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--gold), #ffec9b);
+      box-shadow: 0 14px 26px rgba(255, 209, 102, 0.23);
+    }
+
+    .btn.alt {
+      color: var(--white);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+    }
+
+    .arcade {
+      min-height: 560px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .planet {
+      position: absolute;
+      left: 50%;
+      top: 52px;
+      width: min(350px, 70%);
+      aspect-ratio: 1;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 38% 30%, #ffffff 0 7%, transparent 8%),
+        radial-gradient(circle at 62% 62%, rgba(255, 255, 255, 0.9) 0 8%, transparent 9%),
+        linear-gradient(135deg, var(--blue), var(--cyan));
+      box-shadow:
+        inset -35px -45px 70px rgba(4, 19, 38, 0.2),
+        0 30px 70px rgba(54, 213, 255, 0.28);
+    }
+
+    .orbit {
+      position: absolute;
+      left: 50%;
+      top: 220px;
+      width: 430px;
+      height: 120px;
+      border: 2px solid rgba(255, 255, 255, 0.16);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) rotate(-10deg);
+    }
+
+    .item {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 74px;
+      height: 74px;
+      border-radius: 24px;
+      font-size: 1.8rem;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
+      animation: float 3.2s ease-in-out infinite;
+    }
+
+    .item.one {
+      left: 54px;
+      top: 120px;
+    }
+
+    .item.two {
+      right: 50px;
+      top: 190px;
+      animation-delay: 0.4s;
+    }
+
+    .item.three {
+      left: 120px;
+      bottom: 126px;
+      animation-delay: 0.8s;
+    }
+
+    .control {
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      bottom: 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(4, 19, 38, 0.72);
+      border: 1px solid var(--line);
+    }
+
+    .control strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1.04rem;
+    }
+
+    .control span {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.4;
+    }
+
+    .temperature {
+      display: grid;
+      place-items: center;
+      width: 86px;
+      height: 86px;
+      border-radius: 28px;
+      color: var(--night);
+      font-size: 1.4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #ffffff, #e4f8ff);
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-16px) rotate(4deg);
+      }
+    }
+
+    .game {
+      margin-top: 26px;
+      padding: clamp(22px, 4vw, 36px);
+    }
+
+    .game-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 22px;
+    }
+
+    .game-head h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.9rem, 4.2vw, 3.4rem);
+      letter-spacing: -0.055em;
+    }
+
+    .score {
+      min-width: 152px;
+      padding: 16px;
+      border-radius: 22px;
+      color: var(--night);
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--lime), #c6ff9d);
+    }
+
+    .score small {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .mission-card {
+      min-height: 178px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      color: var(--white);
+      text-align: left;
+      background: var(--card);
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .mission-card:hover,
+    .mission-card.active {
+      transform: translateY(-4px);
+      border-color: rgba(54, 213, 255, 0.7);
+      background: var(--card-strong);
+    }
+
+    .mission-card.active {
+      box-shadow: inset 0 0 0 2px rgba(54, 213, 255, 0.28);
+    }
+
+    .mission-icon {
+      display: grid;
+      place-items: center;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 14px;
+      border-radius: 18px;
+      color: var(--night);
+      font-size: 1.45rem;
+      background: linear-gradient(135deg, #ffffff, #dff8ff);
+    }
+
+    .mission-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.04rem;
+    }
+
+    .mission-card small {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .loot {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .loot-box {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .loot-box h3 {
+      margin-bottom: 8px;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--cyan);
+    }
+
+    .value-badge {
+      min-width: 76px;
+      padding: 10px;
+      border-radius: 16px;
+      color: var(--night);
+      text-align: center;
+      font-weight: 900;
+      background: var(--gold);
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+    }
+
+    .badge.active {
+      color: var(--night);
+      border-color: transparent;
+      background: var(--gold);
+    }
+
+    .result {
+      display: none;
+      margin-top: 20px;
+      padding: 24px;
+      border-radius: 26px;
+      color: var(--night);
+      background:
+        radial-gradient(circle at 90% 20%, rgba(255, 255, 255, 0.8), transparent 16rem),
+        linear-gradient(135deg, #ffffff, #dcf8ff);
+    }
+
+    .result.show {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .result h3 {
+      margin-bottom: 8px;
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+    }
+
+    .result p {
+      margin-bottom: 0;
+      color: #49637d;
+      line-height: 1.55;
+    }
+
+    .result .btn {
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--night-2));
+      box-shadow: none;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .loot {
+        grid-template-columns: 1fr;
+      }
+
+      .mission-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 20px, 1180px);
+        padding-top: 18px;
+      }
+
+      .nav,
+      .game-head,
+      .result.show {
+        display: block;
+      }
+
+      .nav-badge,
+      .score {
+        margin-top: 12px;
+      }
+
+      .arcade {
+        min-height: 430px;
+      }
+
+      .planet {
+        top: 42px;
+      }
+
+      .orbit {
+        width: 310px;
+      }
+
+      .item {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+      }
+
+      .item.one {
+        left: 22px;
+      }
+
+      .item.two {
+        right: 22px;
+      }
+
+      .item.three {
+        left: 54px;
+        bottom: 142px;
+      }
+
+      .control {
+        grid-template-columns: 1fr;
+        left: 16px;
+        right: 16px;
+      }
+
+      .mission-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .actions,
+      .slider-row {
+        display: block;
+      }
+
+      .btn,
+      .result .btn {
+        width: 100%;
+        margin-top: 12px;
+      }
+
+      .value-badge {
+        display: inline-block;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="nav">
+      <div class="brand">
+        <span class="brand-icon">❄</span>
+        <span>Site Do Ar</span>
+      </div>
+      <div class="nav-badge">Proposta mais ousada: campanha interativa + recompensa</div>
+    </header>
+
+    <section class="hero">
+      <div class="glass hero-copy">
+        <p class="kicker">Experiencia promocional</p>
+        <h1>Caca ao Clima Perfeito</h1>
+        <p class="lead">
+          Uma acao mais atrevida para prender a atencao: o visitante escolhe missoes, desbloqueia um perfil de conforto e recebe uma recompensa comercial no final.
+        </p>
+        <div class="actions">
+          <a class="btn" href="#game">Entrar na caca</a>
+          <a class="btn alt" href="https://www.sitedoar.com.br/" target="_blank" rel="noopener">Ir para loja</a>
+        </div>
+      </div>
+
+      <div class="glass arcade" aria-label="Ilustracao da caca ao clima">
+        <div class="orbit"></div>
+        <div class="planet"></div>
+        <div class="item one">🔥</div>
+        <div class="item two">❄</div>
+        <div class="item three">⚡</div>
+        <div class="control">
+          <div>
+            <strong id="controlTitle">Mapa do clima carregando...</strong>
+            <span id="controlText">Escolha missoes para desbloquear sua rota de conforto.</span>
+          </div>
+          <div class="temperature" id="tempBox">24°</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="game" class="glass game">
+      <div class="game-head">
+        <div>
+          <p class="kicker">Como funciona</p>
+          <h2>Escolha 1 ou mais missoes</h2>
+          <p class="lead">Aqui o foco nao e apenas BTU. A proposta e criar curiosidade, perfil de compra e chamada para atendimento/produtos.</p>
+        </div>
+        <div class="score" id="score">
+          240
+          <small>pontos de clima</small>
+        </div>
+      </div>
+
+      <div class="mission-grid" id="missions">
+        <button class="mission-card active" type="button" data-mission="economy">
+          <span class="mission-icon">💸</span>
+          <strong>Missao Economia</strong>
+          <small>Encontrar conforto gastando menos energia no dia a dia.</small>
+        </button>
+        <button class="mission-card" type="button" data-mission="silence">
+          <span class="mission-icon">🌙</span>
+          <strong>Missao Silencio</strong>
+          <small>Ideal para quartos, home office e ambientes de descanso.</small>
+        </button>
+        <button class="mission-card" type="button" data-mission="speed">
+          <span class="mission-icon">🚀</span>
+          <strong>Missao Gelar Rapido</strong>
+          <small>Para quem quer resposta forte em dias de calor intenso.</small>
+        </button>
+        <button class="mission-card" type="button" data-mission="smart">
+          <span class="mission-icon">📱</span>
+          <strong>Missao Smart</strong>
+          <small>Controle por Wi-Fi, rotina, praticidade e tecnologia.</small>
+        </button>
+      </div>
+
+      <div class="loot">
+        <div class="loot-box">
+          <h3>Temperatura da sua urgencia</h3>
+          <p class="lead">Quanto maior, mais direta fica a chamada para atendimento ou produtos de maior performance.</p>
+          <div class="slider-row">
+            <input id="heat" type="range" min="18" max="38" value="28">
+            <span class="value-badge"><span id="heatValue">28</span>°C</span>
+          </div>
+        </div>
+
+        <div class="loot-box">
+          <h3>Recompensa final</h3>
+          <p class="lead">Pode virar cupom, WhatsApp, vitrine personalizada ou somente recomendacao.</p>
+          <div class="badges" id="rewards">
+            <button class="badge active" type="button" data-reward="coupon">Cupom surpresa</button>
+            <button class="badge" type="button" data-reward="whatsapp">Especialista</button>
+            <button class="badge" type="button" data-reward="products">Produtos</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="generate" type="button">Desbloquear recompensa</button>
+        <button class="btn alt" id="reset" type="button">Reiniciar caca</button>
+      </div>
+
+      <div class="result" id="result" aria-live="polite">
+        <div>
+          <h3 id="resultTitle">Voce desbloqueou uma rota de conforto</h3>
+          <p id="resultText">Escolha suas missoes e desbloqueie a recomendacao.</p>
+        </div>
+        <a class="btn" id="resultLink" href="https://www.sitedoar.com.br/" target="_blank" rel="noopener">Resgatar</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      missions: new Set(['economy']),
+      reward: 'coupon',
+      heat: 28
+    };
+
+    const missionLabels = {
+      economy: 'economia',
+      silence: 'silencio',
+      speed: 'alta performance',
+      smart: 'tecnologia'
+    };
+
+    const rewardLinks = {
+      coupon: 'https://www.sitedoar.com.br/',
+      whatsapp: 'https://wa.me/5519984176960',
+      products: 'https://www.sitedoar.com.br/split-inverter?pg=1'
+    };
+
+    const heat = document.getElementById('heat');
+    const heatValue = document.getElementById('heatValue');
+    const tempBox = document.getElementById('tempBox');
+    const score = document.getElementById('score');
+    const controlTitle = document.getElementById('controlTitle');
+    const controlText = document.getElementById('controlText');
+    const result = document.getElementById('result');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultText = document.getElementById('resultText');
+    const resultLink = document.getElementById('resultLink');
+
+    function updateHud() {
+      const missionScore = state.missions.size * 90;
+      const heatScore = Math.max(0, state.heat - 18) * 8;
+      const total = 120 + missionScore + heatScore;
+      const missions = Array.from(state.missions).map((mission) => missionLabels[mission]);
+
+      heatValue.textContent = state.heat;
+      tempBox.textContent = `${state.heat}°`;
+      score.innerHTML = `${total}<small>pontos de clima</small>`;
+
+      if (missions.length === 0) {
+        controlTitle.textContent = 'Mapa do clima em espera';
+        controlText.textContent = 'Escolha pelo menos uma missao para liberar a rota.';
+        return;
+      }
+
+      controlTitle.textContent = `Rota: ${missions.join(' + ')}`;
+      controlText.textContent = state.heat >= 32
+        ? 'Calor critico detectado: destaque atendimento rapido e modelos de alta performance.'
+        : 'Perfil de conforto criado: direcione para produtos, cupom ou atendimento.';
+    }
+
+    function generateReward() {
+      const missions = Array.from(state.missions);
+      if (missions.length === 0) {
+        resultTitle.textContent = 'Escolha uma missao primeiro';
+        resultText.textContent = 'A caca precisa de pelo menos um objetivo para liberar a recompensa.';
+        resultLink.href = 'https://www.sitedoar.com.br/';
+        resultLink.textContent = 'Ver loja';
+        result.classList.add('show');
+        return;
+      }
+
+      const readable = missions.map((mission) => missionLabels[mission]).join(', ');
+
+      if (state.reward === 'coupon') {
+        resultTitle.textContent = 'Cupom surpresa desbloqueado';
+        resultText.textContent = `Perfil encontrado: ${readable}. Ideia: exibir um cupom limitado, como CLIMA5, para transformar a brincadeira em conversao.`;
+        resultLink.textContent = 'Usar cupom na loja';
+      }
+
+      if (state.reward === 'whatsapp') {
+        resultTitle.textContent = 'Especialista desbloqueado';
+        resultText.textContent = `Perfil encontrado: ${readable}. Leve o cliente direto para o WhatsApp com uma mensagem pronta sobre o ambiente.`;
+        resultLink.textContent = 'Chamar especialista';
+      }
+
+      if (state.reward === 'products') {
+        resultTitle.textContent = 'Vitrine secreta desbloqueada';
+        resultText.textContent = `Perfil encontrado: ${readable}. Mostre uma vitrine filtrada com modelos inverter, Wi-Fi ou quente/frio.`;
+        resultLink.textContent = 'Ver vitrine';
+      }
+
+      resultLink.href = rewardLinks[state.reward];
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    document.getElementById('missions').addEventListener('click', (event) => {
+      const card = event.target.closest('.mission-card');
+      if (!card) return;
+
+      card.classList.toggle('active');
+      if (card.classList.contains('active')) {
+        state.missions.add(card.dataset.mission);
+      } else {
+        state.missions.delete(card.dataset.mission);
+      }
+      updateHud();
+    });
+
+    document.getElementById('rewards').addEventListener('click', (event) => {
+      const badge = event.target.closest('.badge');
+      if (!badge) return;
+
+      document.querySelectorAll('.badge').forEach((item) => item.classList.remove('active'));
+      badge.classList.add('active');
+      state.reward = badge.dataset.reward;
+      updateHud();
+    });
+
+    heat.addEventListener('input', () => {
+      state.heat = Number(heat.value);
+      updateHud();
+    });
+
+    document.getElementById('generate').addEventListener('click', generateReward);
+    document.getElementById('reset').addEventListener('click', () => {
+      state.missions = new Set(['economy']);
+      state.reward = 'coupon';
+      state.heat = 28;
+      heat.value = 28;
+      document.querySelectorAll('.mission-card').forEach((card) => {
+        card.classList.toggle('active', card.dataset.mission === 'economy');
+      });
+      document.querySelectorAll('.badge').forEach((badge) => {
+        badge.classList.toggle('active', badge.dataset.reward === 'coupon');
+      });
+      result.classList.remove('show');
+      updateHud();
+    });
+
+    updateHud();
+  </script>
+</body>
+</html>
