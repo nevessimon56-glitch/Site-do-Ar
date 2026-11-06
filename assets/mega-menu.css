@@ -396,3 +396,340 @@
   margin: 0 auto;
   object-fit: contain;
 }
+
+.showcase-product_image .showcase-offer,
+.showcase-product_image .showcase-tag {
+  z-index: 5;
+}
+
+/* Faixa de especificações nos cards — pills coloridas (SPEC-TAGS-COLORS-v1) */
+
+.showcase-spec-wrap {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px 8px;
+}
+
+.showcase-spec-bar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: transparent;
+  border: 0;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.showcase-spec-bar__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  height: 20px;
+  padding: 0 7px;
+  margin: 0;
+  border: 1px solid #c5d3de;
+  border-radius: 4px;
+  background: #fff;
+  color: #3a5f7d;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-sizing: border-box;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.showcase-spec-bar__tag--procel {
+  border-color: #16a34a;
+  background: #22c55e;
+  color: #fff;
+  min-width: 20px;
+  padding: 0 5px;
+}
+
+.showcase-spec-bar__tag--cycle-qf {
+  border-color: #fb923c;
+  background: #fff1e8;
+  color: #c2410c;
+}
+
+.showcase-spec-bar__tag--cycle-frio {
+  border-color: #38bdf8;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.showcase-spec-bar__tag--inverter {
+  border-color: #a78bfa;
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.showcase-spec-bar__tag--cobre {
+  border-color: #d4a574;
+  background: #fef3e2;
+  color: #b45309;
+}
+
+.showcase-spec-bar__tag--voltage {
+  border-color: #60a5fa;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.showcase-spec-bar__tag--wifi {
+  border-color: #2dd4bf;
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+/* Preços do card — Pix + parcelas */
+
+.showcase-product .card-footer .showcase-prices--card {
+  text-align: center !important;
+  line-height: 1.3 !important;
+  padding: 4px 0 8px !important;
+}
+
+.showcase-product .card-footer .showcase-prices--card .showcase-prices_strike,
+.showcase-product .card-footer .showcase-prices--card del.showcase-prices_strike {
+  display: block !important;
+  font-size: 13px !important;
+  color: #9aa8b5 !important;
+  margin: 0 0 4px !important;
+  line-height: 1.2 !important;
+}
+
+.showcase-product .card-footer .showcase-prices--card .showcase-prices_price {
+  margin: 0 0 6px !important;
+  font-size: 24px !important;
+  line-height: 1.1 !important;
+  color: #1a6eb5 !important;
+}
+
+.showcase-product .card-footer .showcase-prices--card .showcase-prices_price b {
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  color: #1a6eb5 !important;
+}
+
+.showcase-product .card-footer .showcase-prices--card .showcase-prices_pix {
+  display: inline-block !important;
+  margin: 0 0 8px !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  background: #e8f7ec !important;
+  color: #2d8a47 !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.showcase-product .card-footer .showcase-prices--card .showcase-prices_installment {
+  margin: 0 !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  color: #5a6f82 !important;
+}
+
+.showcase-product .card-footer .showcase-prices--card .showcase-prices_installment-prefix {
+  margin-right: 4px !important;
+  color: #8a9aab !important;
+}
+
+.showcase-product .card-footer .showcase-prices--card .showcase-prices_installment-text b {
+  font-weight: 800 !important;
+  color: #3d5a73 !important;
+}
+
+.showcase-prices {
+  text-align: center;
+  line-height: 1.3;
+}
+
+.showcase-prices_strike {
+  display: block;
+  font-size: 12px;
+  color: #9aa8b5;
+  margin-bottom: 4px;
+}
+
+.showcase-prices_price {
+  margin: 0 0 6px;
+  font-size: 22px;
+  line-height: 1.15;
+  color: #1a6eb5;
+}
+
+.showcase-prices_price b {
+  font-weight: 800;
+}
+
+.showcase-prices_pix {
+  display: inline-block;
+  margin: 0 0 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e8f7ec;
+  color: #2d8a47;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.showcase-prices_installment {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #5a6f82;
+}
+
+.showcase-prices_installment-prefix {
+  margin-right: 4px;
+  color: #8a9aab;
+  text-transform: lowercase;
+}
+
+.showcase-prices_installment-text b {
+  font-weight: 800;
+  color: #3d5a73;
+}
+
+/* Pills só abaixo do título — esconde duplicatas dentro da imagem */
+.showcase-product_image .showcase-spec-bar,
+.showcase-product_image .showcase-spec-wrap,
+.showcase-product_image .showcase-spec-bar__item,
+.showcase-product_image .showcase-spec-bar__badge,
+.showcase-product_image svg.showcase-spec-bar__svg,
+.card-image .showcase-spec-bar,
+.card-image .showcase-spec-wrap,
+.card-image .showcase-spec-bar__item,
+.card-image .showcase-spec-bar__badge {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+@media (max-width: 767px) {
+  .showcase-item .showcase-product.card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid #dce8f2;
+    box-shadow: 0 4px 16px rgba(44, 119, 187, 0.12);
+    background: #fff;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .showcase-item .showcase-product.card:active {
+    transform: scale(0.985);
+    box-shadow: 0 2px 10px rgba(44, 119, 187, 0.1);
+  }
+
+  .showcase-product_image.card-image {
+    overflow: hidden;
+    padding: 8px 8px 0;
+    background: #fff;
+    min-height: 0;
+    flex-shrink: 0;
+  }
+
+  .showcase-product .card-header {
+    padding: 8px 10px 0;
+  }
+
+  .showcase-spec-wrap {
+    padding: 0 10px 4px;
+  }
+
+  .showcase-spec-bar {
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .showcase-spec-bar__tag {
+    height: 20px;
+    padding: 0 6px;
+    font-size: 8px;
+  }
+
+  .showcase-product .card-header h3 {
+    font-size: 12px;
+    line-height: 1.25;
+    margin-bottom: 4px;
+  }
+
+  .showcase-product .card-header h3 a {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .showcase-product .card-footer {
+    padding: 6px 10px 12px;
+    margin-top: auto;
+  }
+
+  .showcase-product .card-footer .showcase-prices--card .showcase-prices_price,
+  .showcase-product .card-footer .showcase-prices--card .showcase-prices_price b {
+    font-size: 21px !important;
+  }
+
+  .showcase-product .card-footer .showcase-prices--card .showcase-prices_pix {
+    font-size: 11px !important;
+    padding: 4px 10px !important;
+  }
+
+  .showcase-product .card-footer .showcase-prices--card .showcase-prices_installment {
+    font-size: 12px !important;
+  }
+
+  .showcase-product .showcase-product_buy {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 10px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    box-shadow: 0 3px 10px rgba(44, 119, 187, 0.25);
+  }
+
+  .showcase-product_image .showcase-offer {
+    z-index: 6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@media (max-width: 480px) {
+  .showcase-spec-bar {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .showcase-spec-bar::-webkit-scrollbar {
+    display: none;
+  }
+}
