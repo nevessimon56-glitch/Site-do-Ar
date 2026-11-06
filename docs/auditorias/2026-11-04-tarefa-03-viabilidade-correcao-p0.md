@@ -495,3 +495,62 @@ Entretanto, a etapa de pagamento não foi alcançada porque o checkout solicita 
 - compra ou pagamento real: **não realizados**.
 
 O Teste 3 — desconto Pix no checkout — permanece pendente e não foi iniciado nesta etapa.
+
+## Teste 3 — desconto Pix no checkout
+
+### Etapas executadas
+
+Foi aberto o checkout público com o carrinho de teste já existente, contendo:
+
+- Hitachi SPC48B3IV: `R$ 12.621,05`;
+- Elgin 48.000 BTUs: `R$ 10.848,69`.
+
+Não foram inseridos documentos, dados pessoais ou informações fictícias. Não foi gerado pedido e nenhum pagamento foi realizado.
+
+### Evidência do resumo do checkout
+
+O checkout apresentou:
+
+```text
+Subtotal:                       R$ 23.469,74
+Desconto da forma de pagamento: -R$ 1.173,48
+Total:                          R$ 22.296,26
+```
+
+O texto exibido pela plataforma foi **“Desconto da forma de pagamento”**. O resumo não exigiu o preenchimento de dados pessoais para exibir esses valores.
+
+### Conferência matemática
+
+O subtotal é:
+
+```text
+R$ 12.621,05 + R$ 10.848,69 = R$ 23.469,74
+```
+
+Cinco por cento do subtotal exato é `R$ 1.173,487`. O valor observado de `R$ 1.173,48` é compatível com o arredondamento em centavos por item:
+
+```text
+Hitachi: (R$ 12.621,05 × 5%) = R$ 631,0525 → R$ 631,05
+Elgin:   (R$ 10.848,69 × 5%) = R$ 542,4345 → R$ 542,43
+Soma:                                        R$ 1.173,48
+```
+
+Também é compatível com o truncamento do desconto agregado para duas casas decimais. O total observado confere exatamente:
+
+```text
+R$ 23.469,74 - R$ 1.173,48 = R$ 22.296,26
+```
+
+### Resultado do Teste 3
+
+- desconto de 5% exibido no fluxo do carrinho/checkout: **confirmado no resumo**;
+- base de cálculo observada: **subtotal de R$ 23.469,74**;
+- desconto observado: **R$ 1.173,48**;
+- total observado: **R$ 22.296,26**;
+- coerência matemática entre subtotal, desconto e total: **confirmada**;
+- seleção manual da opção Pix na etapa de pagamento: **não testada**;
+- alternância entre Pix e Cielo: **não testada**;
+- confirmação de que o gateway efetivaria o pagamento Pix: **não testada**;
+- compra ou pagamento real: **não realizados**.
+
+O checkout permaneceu antes da etapa de pagamento, que solicita dados do destinatário, endereço e documento. Conforme as restrições, o teste foi encerrado nesse ponto. Portanto, a evidência confirma o desconto apresentado no resumo, mas não confirma a seleção manual do método Pix nem a liquidação de uma transação.
