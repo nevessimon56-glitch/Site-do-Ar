@@ -1,0 +1,71 @@
+<!-- Showcase Model 2 - Banner Full -->
+<section class="showcase showcase-model-{{ showcaseSection.typeId }} showcase-{{ showcaseSection.id }}">
+    {% assign sectionMedias = showcaseSection.config.medias %}
+    {% assign classSliderBannerFull = '' %}
+    <div class="showcase-banners showcase-banners_full showcase-banners_full__desktop hide-sm">
+        <div class="showcase-banners_list">
+            <ul class="banner-full_slider">
+                {% for showcaseMedia in sectionMedias %}
+                    {% assign banneLink = 'javascript:void(0)' %}
+                    {% if showcaseMedia.link %}
+                        {% assign banneLink = showcaseMedia.link %}
+                    {% endif %}
+                    <li class="showcase-banners_item">
+                        <a class="showcase-banners_link" href="{{ banneLink }}"
+                           title="{{ showcaseMedia.title }}">
+                            {% if showcaseMedia.path %}
+                                <picture>
+                                    <img class="banner-main_img lazy-slider" data-src="{{ showcaseMedia.path | imgUrl  }}" alt="{{ showcaseMedia.title }}">
+                                </picture>
+                            {% else %}
+                                {{ themeConfig.icons.image }}
+                            {% endif %}
+                        </a>
+                    </li>
+                {% else %}
+                    {% for i in (1..4) %}
+                        <li class="showcase-banners_item showcase-banners_item__exemple">
+                            <a class="showcase-banners_link" href="javascript:void(O)"
+                               title="Banner Full -  Imagem {{ i }}">
+                                {{ themeConfig.icons.image }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="showcase-banners showcase-banners_full showcase-banners_full__mobile hide-xxl show-sm">
+        <div class="showcase-banners_list">
+            <ul class="banner-full_slider">
+                {% for showcaseMedia in sectionMedias %}
+                    {% assign banneLink = 'javascript:void(0)' %}
+                    {% if showcaseMedia.link %}
+                        {% assign banneLink = showcaseMedia.link %}
+                    {% endif %}
+                    <li class="showcase-banners_item">
+                        <a class="showcase-banners_link" href="{{ banneLink }}"
+                           title="{{ showcaseMedia.title }}">
+                            {% if showcaseMedia.path %}
+                                <picture>
+                                    <img class="banner-main_img lazy-slider" data-src="{{ showcaseMedia.path | imgUrl }}" alt="{{ showcaseMedia.title }}">
+                                </picture>
+                            {% else %}
+                                {{ themeConfig.icons.image }}
+                            {% endif %}
+                        </a>
+                    </li>
+                {% else %}
+                    {% for i in (1..4) %}
+                        <li class="showcase-banners_item showcase-banners_item__exemple">
+                            <a class="showcase-banners_link" href="javascript:void(O)"
+                               title="Banner Full -  Imagem {{ i }}">
+                                {{ themeConfig.icons.image }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>

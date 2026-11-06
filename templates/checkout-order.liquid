@@ -1,0 +1,669 @@
+{% layout 'layout/theme' %}
+{% block content %}
+{% render 'sections/header-checkout', store: store, menu: menu, theme: theme, seo: seo, themeConfig: themeConfig %}
+<main class="checkout-main checkout-main-1" x-data="setupSocket()" x-init="init()">
+    <div class="checkout-summary-content content">
+        <div class="container">
+            <div class="columns">
+                <div class="column col-12">
+                    <details class="checkout-accordion checkout-accordion_top accordion">
+                        <summary class="accordion-header">
+                            <div class="accordion-title">
+                                <span>
+                                    Ver detalhes do pedido
+                                </span>
+                            </div>
+                            <div class="accordion-price">
+                                {{ order.total | money }}
+                                {{ themeConfig.icons.arrow.down }}
+                            </div>
+                        </summary>
+                        <div class="accordion-body">
+                            {%- render 'sections/checkout-order-summary', order: order, themeConfig: themeConfig -%}
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="checkout-header-content content">
+        <div class="container">
+            <div class="columns">
+                <div class="column col-12">
+                    <ul class="tab tab-block tab-checkout-status tab-checkout-status_all">
+                        <li class="tab-item active">
+                            <a href="javascript:void(0)" title="Entrega">
+                                <figure class="avatar avatar-md" data-initial="1"></figure>
+                                <span>Entrega</span>
+                            </a>
+                        </li>
+                        <li class="tab-item active">
+                            <a href="javascript:void(0);" title="Pagamento">
+                                <figure class="avatar avatar-md" data-initial="2"></figure>
+                                <span>Pagamento</span>
+                            </a>
+                        </li>
+                        <li class="tab-item active">
+                            <a href="javascript:void(0);" title="Finalizado">
+                                <figure class="avatar avatar-md" data-initial="3"></figure>
+                                <span>
+                                    Finalizado
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="checkout-body-content content">
+        <div class="container">
+            <div class="columns">
+                <div class="column col-12">
+                    <div class="columns">
+                        <div class="column col-7 col-lg-12">
+                            <div class="card checkout-card checkout-card-finish_header">
+                                <div class="card-body">
+                                    <template x-if="!getStatus(6)">
+                                        <div class="checkout-icon">
+                                            {{ themeConfig.icons.check }}
+                                        </div>
+                                    </template>
+                                    <template x-if="getStatus(6)">
+                                        <div class="checkout-icon">
+                                            {{ themeConfig.icons.close }}
+                                        </div>
+                                    </template>
+                                    <div class="checkout-text">
+                                        <b>
+                                            Pedido: {{ order.id }}
+                                        </b>
+                                        {% comment %}TODO: Alterar texto pelo websocket de acordo com status pagamento{% endcomment %}
+
+                                        <template x-if="(state.paymentStatusId == 1 || !state.paymentStatusId) && !getStatus(6)">
+                                            <p>Aguardando Pagamento</p>
+                                        </template>
+                                        <template x-if="state.paymentStatusId == 2 && !getStatus(6)">
+                                            <p>Pagamento Confirmado</p>
+                                        </template>
+                                        <template x-if="state.paymentStatusId == 3">
+                                            <p>Pagamento Reembolsado</p>
+                                        </template>
+                                        <template x-if="state.paymentStatusId == 4 && !getStatus(6)">
+                                            <p>Pagamento em Análise</p>
+                                        </template>
+                                        {% if order.paymentText %}
+                                            <p>
+                                                {{ order.paymentText | newline_to_br }}
+                                            </p>
+                                        {% endif %}
+                                        {% comment %}TODO: Se caso tiver mais informções ou detalhes do pagamento, add aqui{% endcomment %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% comment %}TODO: Se tiver com status do pedido Aprovado oculta{% endcomment %}
+                            {% if order.paymentLink or order.paymentQrcode or order.paymentTypeableLine %}
+                                <template x-if="getStatus()">
+                                    <div class="card checkout-card checkout-card-finish_payment">
+                                        {% if order.paymentLink %}
+                                            <div class="card-body">
+                                                <div class="card-title">
+                                                    <div class="checkout-icon">
+                                                        {% if order.paymentType == 'billet' %}
+                                                            {{ themeConfig.icons.barcode }}
+                                                        {% else %}
+                                                            {{ themeConfig.icons.payment.money }}
+                                                        {% endif %}
+                                                    </div>
+                                                    <a class="checkout-text" href="{{ order.paymentLink }}" target="_blank">
+                                                        {% if order.payments[0] and order.payments[0].type == 'billet' %}
+                                                            <p>Clique aqui para abrir o boleto </p>
+                                                        {% else %}
+                                                            <p>Clique aqui para acessar a tela de pagamento</p>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if order.paymentTypeableLine %}
+                                            <div class="card-body">
+                                                <div class="card-title">
+                                                    {% assign digitavel = order.paymentTypeableLine %}
+                                                    <div class="checkout-icon">
+                                                        <a href="javascript:void()" onclick="copyLinkLocation('{{digitavel}}')" title="Clique aqui para copiar a linha digitavel">
+                                                            {{ themeConfig.icons.copy }}
+                                                        </a>
+                                                    </div>
+                                                    <div class="checkout-text">
+                                                        Linha digitável: <a href="javascript:void()" onclick="copyLinkLocation('{{digitavel}}')" title="Clique aqui para copiar a linha digitavel">
+                                                            {{digitavel}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if order.paymentQrcode %}
+                                            <div class="card-body">
+                                                <div class="text-center flex-centered columns">
+                                                    <div class="col-6 col-xl-12 column">
+                                                        <div class="checkout-title">
+                                                            Pague com o QR Code
+                                                        </div>
+                                                        <div >
+                                                            {{ order.paymentQrcode.svg }}
+                                                        </div>
+                                                    </div>
+                                                    {% if order.paymentQrcode.pixType or order.paymentQrcode.pixKeyRaw or order.paymentQrcode.merchantName or order.paymentQrcode.pixCopyAndPaste %}
+                                                        <div class="col-6 col-xl-12 column">
+                                                            <div class="checkout-box-text">
+                                                                <div class="checkout-title">
+                                                                    Faça uma Transferência PIX
+                                                                </div>
+                                                            </div>
+                                                            {% if order.paymentQrcode.pixType %}
+                                                                <div class="checkout-box-text">
+                                                                    <div class="checkout-subtitle">
+                                                                        Tipo de Chave:
+                                                                    </div>
+                                                                    <div class="checkout-text">
+                                                                        {{ order.paymentQrcode.pixType }}
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if order.paymentQrcode.pixKeyRaw %}
+                                                                <div class="checkout-box-text">
+                                                                    <div class="checkout-subtitle">
+                                                                        Chave Pix:
+                                                                    </div>
+                                                                    {% assign pixKey = order.paymentQrcode.pixKeyRaw %}
+                                                                    <a class="checkout-text checkout-text_icon" href="javascript:void()" onclick="copyLinkLocation('{{pixKey}}')" title="Clique aqui para copiar">
+                                                                        <span class="checkout-icon">{{ themeConfig.icons.copy }}</span>
+                                                                        <span>{{pixKey}}</span>
+                                                                    </a>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if order.paymentQrcode.pixCopyAndPaste %}
+                                                                <div class="checkout-box-text">
+                                                                    <div class="checkout-subtitle">
+                                                                        Pix copia e cola
+                                                                    </div>
+                                                                    {% assign pixCopyAndPaste = order.paymentQrcode.pixCopyAndPaste  | truncate: 25 %}
+                                                                    {% assign copyAndPaste = order.paymentQrcode.pixCopyAndPaste %}
+                                                                    <a class="checkout-text checkout-text_icon" href="javascript:void()" onclick="copyLinkLocation('{{copyAndPaste}}')" title="Clique aqui para copiar">
+                                                                        <span class="checkout-icon">{{ themeConfig.icons.copy }}</span>
+                                                                        <span>{{pixCopyAndPaste}}</span>
+                                                                    </a>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if order.paymentQrcode.merchantName %}
+                                                                <div class="checkout-box-text">
+                                                                    <div class="checkout-subtitle">
+                                                                        Favorecido:
+                                                                    </div>
+                                                                    <div class="checkout-text">
+                                                                        {{ order.paymentQrcode.merchantName }}
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </template>
+                            {% endif %}
+                            {% comment %}TODO: destino {% endcomment %}
+                            <div class="card checkout-card checkout-card-finish_body">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <div class="checkout-icon">
+                                            {{ themeConfig.icons.truck }}
+                                        </div>
+                                        <div class="checkout-text">
+                                            Destino: {{ order.address.street }}, {{ order.address.number }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="timeline">
+                                        <div class="timeline-item" :class="!getStatus(1) ? 'disable' : 'active'">
+                                            <div class="timeline-left">
+                                                <a class="timeline-icon" href="javascript:void(0)">
+                                                    {{ themeConfig.icons.check }}
+                                                </a>
+                                            </div>
+                                            <div class="timeline-content">
+                                                <div class="tile">
+                                                    <div class="tile-content">
+                                                        <p class="tile-title">Pedido realizado</p>
+                                                        <template x-if="getStatus(1)">
+                                                            <p x-text="StoreSDK.utils.toDateString((getStatus(1)).createdAt)" class="tile-text"></p>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <template x-if="!getStatus(6)">
+                                            <div class="timeline-item" :class="!getStatus(2)  ? 'disable' : 'active'">
+                                                <div class="timeline-left">
+                                                    <a class="timeline-icon" href="javascript:void(0)">
+                                                        {{ themeConfig.icons.check }}
+                                                    </a>
+                                                </div>
+                                                <div class="timeline-content">
+                                                    <div class="tile">
+                                                        <div class="tile-content">
+                                                            <p class="tile-title">Pedido confirmado</p>
+                                                            <template x-if="getStatus(2)">
+                                                                <p x-text="StoreSDK.utils.toDateString((getStatus(2)).createdAt)"
+                                                                class="tile-text"></p>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template x-if="!getStatus(6)">
+                                            <div class="timeline-item" :class="!getStatus(3)  ? 'disable' : 'active'">
+                                                <div class="timeline-left">
+                                                    <a class="timeline-icon" href="javascript:void(0)">
+                                                        {{ themeConfig.icons.check }}
+                                                    </a>
+                                                </div>
+                                                <div class="timeline-content">
+                                                    <div class="tile">
+                                                        <div class="tile-content">
+                                                            <p class="tile-title">Pedido em preparo</p>
+                                                            <template x-if="getStatus(3)">
+                                                                <p x-text="StoreSDK.utils.toDateString((getStatus(3)).createdAt)"
+                                                                class="tile-text"></p>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template x-if="!getStatus(6)">
+                                            <div class="timeline-item" :class="!getStatus(4)  ? 'disable' : 'active'">
+                                                <div class="timeline-left">
+                                                    <a class="timeline-icon" href="javascript:void(0)">
+                                                        {{ themeConfig.icons.check }}
+                                                    </a>
+                                                </div>
+                                                <div class="timeline-item">
+                                                    <div class="timeline-content">
+                                                        <div class="tile">
+                                                            <div class="tile-content">
+                                                                <p class="tile-title">Pedido enviado</p>
+                                                                <template x-if="getStatus(4)">
+                                                                    <p x-text="StoreSDK.utils.toDateString((getStatus(4)).createdAt)"
+                                                                    class="tile-text"></p>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template x-if="getStatus(6)">
+                                            <div class="timeline-item" class="!getStatus(6)  ? 'disable' : 'active'">
+                                                <div class="timeline-left">
+                                                    <a class="timeline-icon" href="javascript:void(0)">
+                                                        {{ themeConfig.icons.check }}
+                                                    </a>
+                                                </div>
+                                                <div class="timeline-content">
+                                                    <div class="tile">
+                                                        <div class="tile-content">
+                                                            <p class="tile-title">Pedido cancelado</p>
+                                                            <template x-if="getStatus(6)">
+                                                                <p x-text="StoreSDK.utils.toDateString((getStatus(6)).createdAt)" class="tile-text"></p>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                            {% comment %}TODO: Email -> Depois implementar parte de add email {% endcomment %}
+                            <div class="card checkout-card checkout-card-finish_footer">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        {% if customer %}
+                                            Enviamos uma cópia desse pedido para o email informado{% if order.customer.email %}, {{ order.customer.email }}{% endif %}.
+                                        {% else %}
+                                            Enviamos uma cópia desse pedido e uma senha temporária para o email informado{% if order.customer.email %}, {{ order.customer.email }}{% endif %}.
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column column-summary col-5 col-lg-12">
+                            {%- render 'sections/checkout-order-summary', order: order, themeConfig: themeConfig -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig, theme: theme %}
+<script>
+    function setupSocket() {
+        const initialState = {{ order | json }};
+        const orderView = {{ orderView | json }};
+        const cart = {{ cart | json }};
+
+        let state = {
+            statusHistory: initialState.statusHistory,
+            paymentStatusId: initialState.paymentStatusId,
+            orderView: orderView,
+            order: initialState,
+        }
+
+        function init() {
+            const pathParts = window.location.pathname.replace(/\/+$/, '').split('/');
+            const urlToken = pathParts[pathParts.length - 1] || '';
+            StoreSDK.request.post('/ws/token', {orderHash: urlToken})
+                .then((response) => {
+                    const token = response.userAuth;
+
+                    const socket = io(undefined, {
+                        auth: {token: `Bearer ${token}`},
+                        transports: ["websocket"],
+                    });
+
+                    socket.on('connect_error', (error) => {
+                        if (error.data && error.data.type === 'UnauthorizedError') {
+                            console.error('Error user auth')
+                        }
+                    });
+
+                    socket.on('order:updated', (data) => {
+                        if (data.statusHistory && data.statusHistory[0]) {
+                            if (!Array.isArray(data.statusHistory[0])) {
+                                const lengthHistory = data.statusHistory.length;
+                                this.state.statusHistory.push(data.statusHistory[lengthHistory - 1]);
+                            } else {
+                                const newHistory = data.statusHistory[0].filter((f) => (
+                                    !this.state.statusHistory.some((hist) => hist?.id === f?.id)
+                                ));
+
+                                this.state.statusHistory.push(...newHistory);
+                            }
+                        }
+                        if (data.paymentStatusId) {
+                            this.state.paymentStatusId = data.paymentStatusId;
+                        }
+                    });
+                });
+            if (!this.state.orderView) {
+                purchaseFacebookPixel(this.state.order);
+                purchaseGA(this.state.order);
+                purchaseMailbiz(this.state.order);
+            }
+        }
+
+        function purchaseMailbiz(order) {
+            if (typeof mb_track !== 'undefined') {
+                const tempPurchaseMailbiz = purchaseMailbizTransform(order);
+                window.mb_track('orderComplete', tempPurchaseMailbiz);
+            }
+        }
+
+        function purchaseMailbizTransform(order) {
+            const result = {
+                order: {
+                    order_id: order.id,
+                    cart_id: order?.metadata?.cartId,
+                    currency: 'BRL',
+                    subtotal: parseFloat(order.subtotal).toFixed(2),
+                    freight: parseFloat(order.subtotalShipping).toFixed(2),
+                    tax: 0,
+                    discounts: order.discounts.reduce((total, discount) => {
+                        return total + parseFloat(discount.value);
+                    }, 0),
+                    total: parseFloat(order.total).toFixed(2),
+                    payment_methods: order?.payments.map((payment) => {
+                        return {
+                            type: payment.paymentName,
+                            amount: parseFloat(payment.value).toFixed(2),
+                        }
+                    }),
+                    delivery_methods: order?.shippings.map((shipping) => {
+                        return {
+                            type: shipping.shippingName,
+                            amount: parseFloat(shipping.value).toFixed(2),
+                        }
+                    }),
+                    delivery_address: {
+                        postal_code: order.address.zipcode,
+                        address_line1: order.address.street,
+                        address_number: order.address.number,
+                        address_line2: order.address.complement || '',
+                        city: order.address.city,
+                        state: order.address.state,
+                        country: order.address.country,
+                        neighborhood: order.address.neighborhood,
+                    },
+                    items: order.products.map((product) => {
+                        const resultProduct = {
+                            product_id: product.id,
+                            sku: product.sku || product.id,
+                            name: product.title,
+                            category: product.category,
+                            brand: product.brand,
+                            price: parseFloat(product.price).toFixed(2),
+                            price_from: parseFloat(product.price).toFixed(2),
+                            quantity: product.quantity,
+                            image_url: product.image?.thumbUrl,
+                            properties: {},
+                        };
+                        if (product.grids) {
+                            product.grids.forEach((grid) => {
+                                if (grid.value) {
+                                    resultProduct.properties[grid.name] = grid.value;
+                                }
+                            });
+                        }
+                        return resultProduct;
+                    }),
+                }
+            };
+            return result;
+        }
+
+        function purchaseFacebookPixel(order) {
+            if (typeof fbq !== 'undefined') {
+                const tempPurchaseFacebookPixel = purchaseFacebookPixelTransform(order);
+                fbq('track', 'Purchase', tempPurchaseFacebookPixel);
+            }
+        }
+
+        function purchaseFacebookPixelTransform(order) {
+            const result = {
+                content_ids: order.products.map((product) => (product.id)),
+                content_type: `${order.products.length > 1 ? 'product_group' : 'product'}`,
+                contents: order.products.map((product) => {
+                    const resultProduct = {
+                        id: product.id,
+                        title: product.title,
+                        quantity: product.quantity,
+                        unitPrice: product.unitPrice,
+                        totalPrice: product.totalPrice,
+                    };
+                    if (product.sku) {
+                        resultProduct.sku = product.sku;
+                    }
+                    return resultProduct;
+                }),
+                currency: 'BRL',
+                num_items: order.products.length,
+                value: parseFloat(order.total).toFixed(2),
+            };
+            return result;
+        }
+
+        function purchaseGA(order) {
+            if (typeof gtag !== 'undefined') {
+                const tempPurchaseGA = purchaseGATransform(order);
+                gtag("event", "purchase", tempPurchaseGA);
+            }
+        }
+
+        function purchaseGATransform(order) {
+            const tempPurchase = order.products.map((product) => {
+                const returnProduct = {
+                    item_id: product.sku ? product.sku : product.id,
+                    item_name: product.title,
+                    currency: 'BRL',
+                    price: (product.price).toFixed(2),
+                    quantity: product.quantity
+                }
+                if (product.grids) {
+                    let tempItemVariant = '';
+                    product.grids.forEach((grid) => {
+                        if (grid.value) {
+                            tempItemVariant += `${grid.value} / `
+                        }
+                    });
+                    returnProduct['item_variant'] = tempItemVariant.replace(/ \/ $/, '')
+                }
+                return returnProduct;
+            });
+
+
+            let deliveryTime = '';
+            if (order.shippings && (order.shippings.length > 0)) {
+                const shippingsOrder = order.shippings.filter((shipping) => (shipping.scheduleDate && shipping.scheduleDate !== null));
+                if (shippingsOrder.length > 0) {
+                    const scheduleDate = new Date(shippingsOrder.sort((a, b) => (new Date(b.scheduleDate) - new Date(a.scheduleDate)))[0].scheduleDate);
+                    const scheduleDateYear = scheduleDate.toLocaleDateString('pt-BR', {year: "numeric"});
+                    const scheduleDateMonth = scheduleDate.toLocaleDateString('pt-BR', {month: "numeric"});
+                    const scheduleDateDay = scheduleDate.toLocaleDateString('pt-BR', {day: "numeric"});
+                    deliveryTime = `${scheduleDateYear}-${scheduleDateMonth}-${scheduleDateDay}`;
+                }
+            }
+
+            const returnPurchase = {
+                transaction_id: order.id,
+                value: (order.total).toFixed(2),
+                shipping: (order.subtotalShipping).toFixed(2),
+                currency: "BRL",
+                email: order?.customer?.email || '',
+                deliveryTime: deliveryTime,
+                items: tempPurchase,
+            };
+
+            if (order.discounts) {
+                const orderDiscount = order.discounts.filter((discount) => (discount.observation.includes('Cupom')));
+                if (orderDiscount.length > 0) {
+                    returnPurchase['coupon'] = orderDiscount[0].observation.replace('Cupom ', '');
+                }
+            }
+
+            return returnPurchase;
+        }
+
+        function getStatus(statusId = null) {
+            if (!statusId) {
+                if (this.state.paymentStatusId === 2) {
+                    return false;
+                }
+
+                const lastHistory = this.state.statusHistory[this.state.statusHistory.length - 1];
+                if (lastHistory?.statusId > 1) {
+                    return false;
+                }
+                return true;
+            }
+
+            if (!this.state.statusHistory) {
+                return null;
+            }
+
+            if (statusId === 1) return this.state.statusHistory[0];
+
+            const lastHistory = this.state.statusHistory[this.state.statusHistory.length - 1];
+            if (lastHistory?.statusId < statusId) {
+                return null;
+            }
+
+            const history = this.state.statusHistory.findLast((status) => statusId === status.statusId);
+            if (!history) {
+                const nextHistory = this.state.statusHistory.reduce((last, item) => {
+                    if (!last && item?.statusId >= statusId) {
+                        last = item;
+                    }
+
+                    return last;
+                }, null);
+
+                return nextHistory;
+            }
+            return history;
+        }
+
+        return {
+            init,
+            state,
+            getStatus,
+        }
+    }
+</script>
+
+<script>
+    window.renderOptIn = function() {
+        const googleCustomerReviewsOrder = {{ order | json }};
+        const googleCustomerReviewsOrderView = {{ orderView | json }};
+
+        if (googleCustomerReviewsOrderView) {
+            return;
+        }
+
+        function formatGoogleDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
+        }
+
+        function getEstimatedDeliveryDate(order) {
+            const shippingDates = (order.shippings || [])
+                .map((shipping) => shipping.scheduleDate)
+                .filter(Boolean)
+                .map((date) => new Date(date))
+                .filter((date) => !Number.isNaN(date.getTime()));
+
+            if (shippingDates.length > 0) {
+                shippingDates.sort((a, b) => b - a);
+                return formatGoogleDate(shippingDates[0]);
+            }
+
+            const fallbackDate = new Date();
+            fallbackDate.setDate(fallbackDate.getDate() + 7);
+
+            return formatGoogleDate(fallbackDate);
+        }
+
+        if (!window.gapi || !googleCustomerReviewsOrder?.id || !googleCustomerReviewsOrder?.customer?.email) {
+            return;
+        }
+
+        window.gapi.load('surveyoptin', function() {
+            window.gapi.surveyoptin.render({
+                merchant_id: window.WDNA_GOOGLE_MERCHANT_ID || 5783325896,
+                order_id: String(googleCustomerReviewsOrder.id),
+                email: googleCustomerReviewsOrder.customer.email,
+                delivery_country: 'BR',
+                estimated_delivery_date: getEstimatedDeliveryDate(googleCustomerReviewsOrder)
+            });
+        });
+    };
+</script>
+<script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
+{% endblock %}

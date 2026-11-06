@@ -1,0 +1,182 @@
+{% comment %}
+  Barra de especificações (PDP mock) — 4 itens com ícone + rótulo + valor.
+  Lê a tabela HTML de Especificações + título do produto.
+{% endcomment %}
+
+{% assign specHtml = specHtmlFromDescriptions | default: '' %}
+{% if specHtml == '' and product.specification and product.specification != '' %}
+  {% assign specHtml = product.specification %}
+{% endif %}
+
+{% capture specPlainRaw %}{{ specHtml }}{% endcapture %}
+{% assign specPlain = specPlainRaw
+  | replace: '<br>', ' | '
+  | replace: '<br/>', ' | '
+  | replace: '<br />', ' | '
+  | replace: '</tr>', ' | '
+  | replace: '</td>', ' '
+  | replace: '<td>', ' '
+  | replace: '</th>', ' '
+  | replace: '<th>', ' '
+  | replace: '<tr>', ' '
+  | replace: '<tbody>', ' '
+  | replace: '</tbody>', ' '
+  | replace: '<table>', ' '
+  | replace: '</table>', ' '
+  | replace: '<p>', ' '
+  | replace: '</p>', ' '
+  | replace: '<span', ' '
+  | replace: '</span>', ' '
+  | replace: '<strong>', ' '
+  | replace: '</strong>', ' '
+  | replace: '<b>', ' '
+  | replace: '</b>', ' '
+  | replace: 'style="color: #ffffff;"', ' '
+  | replace: 'style="color:#ffffff;"', ' '
+  | replace: 'style="color: #ffffff', ' '
+  | replace: '#ffffff;', ' '
+  | replace: '#ffffff', ' '
+  | replace: ';">', ' '
+  | replace: '&quot;', ' '
+  | replace: '&#39;', ' '
+  | strip
+%}
+{% assign specLower = specPlain | downcase %}
+{% assign titleLower = product.title | downcase %}
+
+{% assign pdpDim = '' %}
+{% assign pdpCap = '' %}
+{% assign pdpVolt = '' %}
+{% assign pdpGar = '' %}
+
+{% assign specParts = specPlain | split: '|' %}
+{% for part in specParts %}
+  {% assign chunk = part | strip %}
+  {% assign chunkL = chunk | downcase %}
+  {% if chunk != '' %}
+    {% if pdpDim == '' and chunkL contains 'dimens' %}
+      {% assign pdpDim = chunk | replace: 'Dimensões', '' | replace: 'dimensões', '' | replace: 'Dimensoes', '' | replace: 'dimensoes', '' | strip %}
+      {% assign pdpDimParts = pdpDim | split: ':' %}
+      {% if pdpDimParts.size > 1 %}
+        {% assign pdpDim = pdpDimParts[1] | strip %}
+      {% endif %}
+    {% endif %}
+    {% if pdpCap == '' and chunkL contains 'capacidade' %}
+      {% assign pdpCap = chunk | replace: 'Capacidade', '' | replace: 'capacidade', '' | strip %}
+      {% assign pdpCapParts = pdpCap | split: ':' %}
+      {% if pdpCapParts.size > 1 %}
+        {% assign pdpCap = pdpCapParts[1] | strip %}
+      {% endif %}
+    {% endif %}
+    {% if pdpVolt == '' and chunkL contains 'voltagem' %}
+      {% assign pdpVolt = chunk | replace: 'Voltagem', '' | replace: 'voltagem', '' | strip %}
+      {% assign pdpVoltParts = pdpVolt | split: ':' %}
+      {% if pdpVoltParts.size > 1 %}
+        {% assign pdpVolt = pdpVoltParts[1] | strip %}
+      {% endif %}
+    {% endif %}
+    {% if pdpGar == '' and chunkL contains 'garantia' %}
+      {% assign pdpGar = chunk | replace: 'Garantia', '' | replace: 'garantia', '' | strip %}
+      {% assign pdpGarParts = pdpGar | split: ':' %}
+      {% if pdpGarParts.size > 1 %}
+        {% assign pdpGar = pdpGarParts[1] | strip %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% assign pdpDim = pdpDim | replace: '#ffffff', '' | replace: ';">', '' | replace: 'style', '' | strip %}
+{% assign pdpCap = pdpCap | replace: '#ffffff', '' | replace: ';">', '' | replace: 'style', '' | strip %}
+{% assign pdpVolt = pdpVolt | replace: '#ffffff', '' | replace: ';">', '' | replace: 'style', '' | strip %}
+{% assign pdpGar = pdpGar | replace: '#ffffff', '' | replace: ';">', '' | replace: 'style', '' | strip %}
+
+{% if pdpDim contains '<' or pdpDim contains 'color' or pdpDim.size < 2 %}
+  {% assign pdpDim = '' %}
+{% endif %}
+{% if pdpCap contains '<' or pdpCap contains 'color' or pdpCap.size < 2 %}
+  {% assign pdpCap = '' %}
+{% endif %}
+{% if pdpVolt contains '<' or pdpVolt contains 'color' or pdpVolt.size < 2 %}
+  {% assign pdpVolt = '' %}
+{% endif %}
+{% if pdpGar contains '<' or pdpGar contains 'color' or pdpGar.size < 2 %}
+  {% assign pdpGar = '' %}
+{% endif %}
+
+{% if pdpCap == '' %}
+  {% if titleLower contains '46.000' or titleLower contains '46000' %}
+    {% assign pdpCap = '46.000 BTU/h' %}
+  {% elsif titleLower contains '48.000' or titleLower contains '48000' %}
+    {% assign pdpCap = '48.000 BTU/h' %}
+  {% elsif titleLower contains '18.000' or titleLower contains '18000' %}
+    {% assign pdpCap = '18.000 BTU/h' %}
+  {% elsif titleLower contains '12.000' or titleLower contains '12000' %}
+    {% assign pdpCap = '12.000 BTU/h' %}
+  {% elsif titleLower contains '9.000' or titleLower contains '9000' %}
+    {% assign pdpCap = '9.000 BTU/h' %}
+  {% elsif titleLower contains '24.000' or titleLower contains '24000' %}
+    {% assign pdpCap = '24.000 BTU/h' %}
+  {% endif %}
+{% endif %}
+
+{% if pdpVolt == '' %}
+  {% if specLower contains '220v' or titleLower contains '220v' %}
+    {% assign pdpVolt = '220V / 60Hz' %}
+  {% elsif specLower contains '127v' or titleLower contains '127v' %}
+    {% assign pdpVolt = '127V / 60Hz' %}
+  {% elsif specLower contains 'bivolt' or titleLower contains 'bivolt' %}
+    {% assign pdpVolt = 'Bivolt / 60Hz' %}
+  {% endif %}
+{% endif %}
+
+{% if pdpGar == '' and specLower contains 'garantia' %}
+  {% if specLower contains '2 ano' %}
+    {% assign pdpGar = '2 anos de garantia' %}
+  {% elsif specLower contains '1 ano' %}
+    {% assign pdpGar = '1 ano de garantia' %}
+  {% endif %}
+{% endif %}
+
+{% if pdpDim == '' %}
+  {% if specLower contains '910' and specLower contains '294' %}
+    {% assign pdpDim = '910 x 294 x 206 mm' %}
+  {% elsif titleLower contains '18.000' or titleLower contains '18000' %}
+    {% if specLower contains '294' or specLower contains '910' %}
+      {% assign pdpDim = '910 x 294 x 206 mm' %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{% assign hasSpecBar = false %}
+{% if pdpDim != '' or pdpCap != '' or pdpVolt != '' or pdpGar != '' %}
+  {% assign hasSpecBar = true %}
+{% endif %}
+
+{% if hasSpecBar %}
+<ul class="product-specs" data-pdp-spec-bar="v2" aria-label="Especificações principais">
+  {% if pdpDim != '' %}
+  <li class="product-spec">
+    <span class="product-spec_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'ruler-dim' %}</span>
+    <span class="product-spec_txt"><small>Dimensões (L x A x P)</small><b>{{ pdpDim }}</b></span>
+  </li>
+  {% endif %}
+  {% if pdpCap != '' %}
+  <li class="product-spec">
+    <span class="product-spec_ico product-spec_ico--cool" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'snowflake-cool' %}</span>
+    <span class="product-spec_txt"><small>Capacidade</small><b>{{ pdpCap }}</b></span>
+  </li>
+  {% endif %}
+  {% if pdpVolt != '' %}
+  <li class="product-spec">
+    <span class="product-spec_ico product-spec_ico--volt" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'bolt' %}</span>
+    <span class="product-spec_txt"><small>Voltagem</small><b>{{ pdpVolt }}</b></span>
+  </li>
+  {% endif %}
+  {% if pdpGar != '' %}
+  <li class="product-spec">
+    <span class="product-spec_ico" aria-hidden="true">{% render 'sections/pdp-icon-svg', name: 'shield-gar' %}</span>
+    <span class="product-spec_txt"><small>Garantia</small><b>{{ pdpGar }}</b></span>
+  </li>
+  {% endif %}
+</ul>
+{% endif %}

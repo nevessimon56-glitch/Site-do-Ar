@@ -1,0 +1,128 @@
+<div class="content">
+    <div class="columns">
+        <div class="column col-3 col-lg-6 col-md-6">
+            <div class="form-group form-group_custom">
+                <label class="form-label" for="addressGroup">Tipo</label>
+                <select x-model="state.addressOnEdit.addressGroupId" class="form-select" name="addressGroup">
+                    <template x-for="(addressGroup, index) in state.addressGroups" :key="index">
+                        <option x-text="addressGroup.name" :value="addressGroup.id"></option>
+                    </template>
+                </select>
+            </div>
+        </div>
+        <div class="column col-3 col-lg-6 col-md-6">
+            <div class="form-group form-group_custom" :class="{ 'onFocus': state.addressOnEdit.zipcode === '' }">
+                <label class="form-label" for="zipcode">CEP *</label>
+                <input
+                        :class="{ 'is-error': !!state.errors.zipcode }"
+                        autocomplete="postal-code"
+                        class="form-input masked-input"
+                        data-mask='#####-###'
+                        name="zipcode"
+                        type="tel"
+                        pattern="[0-9\-]+"
+                        x-model="state.addressOnEdit.zipcode"
+                        @focusout="handleZipcodeChange()"
+                >
+                <p x-show="state.errors.zipcode" x-text="state.errors.zipcode" class="form-input-hint"></p>
+            </div>
+        </div>
+        <div class="column col-6 col-lg-9 col-md-12">
+            <div class="form-group form-group_custom" :class="{ 'onFocus': state.addressOnEdit.street === '' }">
+                <label class="form-label" for="street">Endereço *</label>
+                <input
+                        class="form-input"
+                        name="street"
+                        type="text"
+                        :class="{ 'is-error': !!state.errors.street }"
+                        x-model="state.addressOnEdit.street"
+                >
+                <p x-show="state.errors.street" x-text="state.errors.street" class="form-input-hint"></p>
+            </div>
+        </div>
+        <div class="column col-2 col-lg-3 col-md-43">
+            <div class="form-group form-group_custom" :class="{ 'onFocus': state.addressOnEdit.number === '' }">
+                <label class="form-label" for="number">Número *</label>
+                <input
+                        class="form-input"
+                        name="number"
+                        type="text"
+                        :class="{ 'is-error': !!state.errors.number }"
+                        x-model="state.addressOnEdit.number"
+                >
+                <p x-show="state.errors.number" x-text="state.errors.number" class="form-input-hint"></p>
+            </div>
+        </div>
+        <div class="column col-5 col-lg-6 col-md-9">
+            <div class="form-group form-group_custom" :class="{ 'onFocus': state.addressOnEdit.complement === '' }">
+                <label class="form-label" for="complement">Complemento</label>
+                <input
+                        class="form-input"
+                        name="complement"
+                        type="text"
+                        x-model="state.addressOnEdit.complement"
+                >
+            </div>
+        </div>
+        <div class="column col-5 col-lg-6 col-md-6">
+            <div class="form-group form-group_custom" :class="{ 'onFocus': state.addressOnEdit.district === '' }">
+                <label class="form-label" for="district">Bairro *</label>
+                <input
+                        class="form-input"
+                        name="district"
+                        type="text"
+                        x-model="state.addressOnEdit.district"
+                        :class="{ 'is-error': !!state.errors.district }"
+                >
+                <p x-show="state.errors.district" x-text="state.errors.district" class="form-input-hint"></p>
+            </div>
+        </div>
+        <div class="column col-4 col-md-6">
+            <div class="form-group form-group_custom" :class="{ 'onFocus': state.addressOnEdit.city === '' }">
+                <label class="form-label" for="city">Cidade *</label>
+                <input
+                        class="form-input"
+                        name="city"
+                        type="text"
+                        x-model="state.addressOnEdit.city"
+                >
+                <p x-show="state.errors.city" x-text="state.errors.city" class="form-input-hint"></p>
+            </div>
+        </div>
+        <div class="column col-4 col-md-6">
+            <div class="form-group form-group_custom">
+                <label class="form-label" for="state">Estado *</label>
+                <select
+                        class="form-select"
+                        name="state"
+                        x-model="state.addressOnEdit.state"
+                >
+                    <template x-for="(federation, index) in state.states" :key="index">
+                        <option x-text="federation.value" :value="federation.value"></option>
+                    </template>
+                </select>
+            </div>
+        </div>
+        <div class="column col-4 col-md-6">
+            <div class="form-group form-group_custom">
+                <label class="form-label" for="country">País *</label>
+                <select
+                        @change="fetchStates(state.customer.address.country)"
+                        class="form-select"
+                        name="country"
+                        x-model="state.addressOnEdit.country"
+                >
+                    <template x-for="(country, index) in state.countries" :key="index">
+                        <option x-text="country.name" :value="country.value"></option>
+                    </template>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column col-12">
+            <button class="btn btn-edit" @click="saveAddress()" class="btn btn-lg" title="Salvar">Salvar</button>
+            <button class="btn btn-cancel" @click="cancelEditAddress()" title="Cancelar">Cancelar</button>
+        </div>
+    </div>
+</div>

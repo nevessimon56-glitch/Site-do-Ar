@@ -1,0 +1,8 @@
+.mobile-catalog-dock__btn
+.mobile-catalog-dock__icon svg
+.mobile-catalog-dock__inner
+.mobile-catalog-dock__inner--logged
+.mobile-catalog-dock__inner--logged .sda-dock-account-hidden
+@media (max-width: 991px) { .mobile-catalog-dock__inner--quad
+body.has-mobile-catalog-dock
+body.has-mobile-catalog-dock .footer, body.has-mobile-catalog-dock footer.footer

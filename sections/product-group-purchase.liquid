@@ -1,0 +1,23 @@
+{% if groupPurchase.length > 0 and product.manageStock == false or product.stockTotal > 0 %}
+    <div class="product-group-purchase">
+        <ul class="menu-group-purchase menu">
+            <template x-for="(groupPurchaseItem, indexGroupPurchase, collection) in state.groupPurchase" :key="indexGroupPurchase">
+                <li class="menu-item">
+                    <label class="form-checkbox">
+                    <input x-model="groupPurchaseItem.status" type="checkbox" x-bind:disabled="(groupPurchaseItem.manageStock && Number(groupPurchaseItem.stockTotal) <= 0) || (!groupPurchaseItem.price.status)">
+                    <i class="form-icon"></i>
+                    <span x-text="groupPurchaseItem.title"></span>
+                    </label>
+                    <div class="menu-badge">
+                        <label class="label" x-text="`${groupPurchaseItem.finalPrimaryPrice ? StoreSDK.utils.money(groupPurchaseItem.finalPrimaryPrice) : StoreSDK.utils.money(groupPurchaseItem.finalPrice)}`"></label>
+                    </div>
+                    <template x-if="(state.groupPurchase.length !== indexGroupPurchase + 1)">
+                        <div class="divider"></div>
+                    </template>
+                </li>
+            </template>
+        </ul>
+    </div>
+{% endif %}
+
+

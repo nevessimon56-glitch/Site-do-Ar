@@ -1,0 +1,237 @@
+<footer class="footer footer--dark">
+    {% assign linkPhone = '' %}
+    {% assign textPhone = '' %}
+    {% assign linkWhatsapp = 'https://wa.me/5519984176960' %}
+
+    {% if store.phone.size > 0 %}
+        {% assign linkPhone = 'tel:+' | append: store.phone %}
+        {% assign textPhone = store.phone | maskTel %}
+    {% endif %}
+
+    {% assign emailStore = '' %}
+    {% if store.email %}
+        {% assign emailStore = store.email %}
+    {% endif %}
+
+    <div class="footer-cta">
+        <div class="container">
+            <div class="footer-cta_wrap">
+                <div class="footer-cta_content">
+                    <p class="footer-cta_eyebrow">Atendimento especializado</p>
+                    <h2 class="footer-cta_title">Precisa de ajuda para escolher?</h2>
+                    <p class="footer-cta_text">Nossos especialistas te ajudam a encontrar a melhor opção para o seu ambiente.</p>
+                </div>
+                <div class="footer-cta_actions">
+                    <a class="footer-cta_btn footer-cta_btn__whatsapp" href="{{ linkWhatsapp }}" target="_blank" rel="noopener">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.558 4.116 1.535 5.845L.057 23.492a.5.5 0 0 0 .614.6l5.788-1.517A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.006-1.37l-.36-.214-3.733.979.995-3.638-.234-.374A9.818 9.818 0 1 1 12 21.818z"/></svg>
+                        WhatsApp
+                    </a>
+                    {% if linkPhone != '' %}
+                    <a class="footer-cta_btn footer-cta_btn__phone" href="{{ linkPhone }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+                        {{ textPhone }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-main">
+        <div class="container">
+            <div class="footer-grid">
+
+                <div class="footer-col footer-col--info">
+                    <div class="footer-brand">
+                        <a href="/" class="footer-logo">
+                         <img src="https://salescdn.net/cCZurK5c5Ek7ZdqrOw7mnicqQY4=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1777059085610.webp" alt="Site do Ar" loading="lazy">
+                        </a>
+                        <p class="footer-brand_desc">
+                            Há mais de 10 anos atendendo a Região Metropolitana de Campinas com as melhores marcas em ar-condicionado e climatização. Atendimento especializado para residências, comércios e indústrias.
+                        </p>
+                    </div>
+
+                    <div class="footer-contact">
+                        <p class="footer-section_title">Fale Conosco</p>
+                        <ul class="footer-contact_list">
+                            {% if linkPhone != '' %}
+                            <li>
+                                <a class="footer-contact_item footer-contact_item--tel" href="{{ linkPhone }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+                                    {{ textPhone }}
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if emailStore != '' %}
+                            <li>
+                                <a class="footer-contact_item footer-contact_item--email" href="mailto:{{ emailStore }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                                    {{ emailStore }}
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li>
+                                <a class="footer-contact_item footer-contact_item--whatsapp" href="{{ linkWhatsapp }}" target="_blank" rel="noopener">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.558 4.116 1.535 5.845L.057 23.492a.5.5 0 0 0 .614.6l5.788-1.517A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.006-1.37l-.36-.214-3.733.979.995-3.638-.234-.374A9.818 9.818 0 1 1 12 21.818z"/></svg>
+                                    WhatsApp
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {% if social.size > 0 %}
+                        <div class="footer-social">
+                            <p class="footer-section_title">Redes Sociais</p>
+                            <ul class="footer-social_list">
+                                {% for itemSocial in social %}
+                                    {% if itemSocial.url.size > 0 or itemSocial.svg.size > 0 %}
+                                        <li class="footer-social_item footer-social_{{ itemSocial.slug }}">
+                                            {% assign linkSocial = 'javascript:void(0)' %}
+                                            {% if itemSocial.link %}
+                                                {% assign linkSocial = itemSocial.link %}
+                                            {% endif %}
+                                            <a class="footer-social_link" href="{{ linkSocial }}" title="{{ itemSocial.title }}" rel="noopener" target="_blank">
+                                                {% if itemSocial.isSvg == true %}
+                                                    {{ itemSocial.svg }}
+                                                {% else %}
+                                                    <picture>
+                                                        <img class="lazy" data-src="{{ itemSocial.url }}" alt="{{ itemSocial.title }}">
+                                                    </picture>
+                                                {% endif %}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% for grouped in pages %}
+                    <div class="footer-col footer-col--nav">
+                        <nav class="footer-nav">
+                            <p class="footer-section_title">{{ grouped.name }}</p>
+                            <ul class="footer-nav_list">
+                                {% for page in grouped.pages %}
+                                    <li class="footer-nav_item">
+                                        {% if page.url.length > 0 %}
+                                            <a class="footer-nav_link" href="{{ page.url }}" title="{{ page.title || page.name }}">
+                                                {{ page.title || page.name }}
+                                            </a>
+                                        {% else %}
+                                            <span class="footer-nav_link">{{ page.title || page.name }}</span>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </nav>
+                    </div>
+                {% endfor %}
+
+                <div class="footer-col footer-col--trust">
+                    {% if payments.size > 0 %}
+                        <div class="footer-payment">
+                            <p class="footer-section_title">Formas de Pagamento</p>
+                            <ul class="footer-payment_list">
+                                {% for payment in payments %}
+                                    {% if payment.svg.size > 0 or payment.url.size > 0 %}
+                                        <li class="footer-payment_item footer-payment_item__{{ payment.slug }}">
+                                            {% if payment.isSvg == true %}
+                                                {{ payment.svg }}
+                                            {% else %}
+                                                <picture>
+                                                    <img class="lazy" data-src="{{ payment.url }}" alt="{{ payment.title }}">
+                                                </picture>
+                                            {% endif %}
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    {%- assign paymentsDefault = "visa pagseguro itau elo master_card amex" | split: ' ' -%}
+                                    {% for payment in paymentsDefault %}
+                                        <li class="footer-payment_item">
+                                            <picture>
+                                                <img class="lazy" data-src="https://salescdn.net/static/images/payment/white/{{ payment }}.png" alt="{{ payment }}">
+                                            </picture>
+                                        </li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {% if stamps.size > 0 %}
+                        <div class="footer-stamp">
+                            <p class="footer-section_title">Segurança</p>
+                            <ul class="footer-stamp_list">
+                                {% for stamp in stamps %}
+                                    {% if stamp.svg.size > 0 or stamp.url.size > 0 %}
+                                        <li class="footer-stamp_item footer-stamp_item__{{ stamp.slug }}">
+                                            {% assign linkStamp = 'javascript:void(0)' %}
+                                            {% if stamp.link %}
+                                                {% assign linkStamp = stamp.link %}
+                                            {% endif %}
+                                            {% if stamp.isSvg == true %}
+                                                {{ stamp.svg }}
+                                            {% else %}
+                                                <picture>
+                                                    <a class="footer-stamp_link" title="{{ stamp.title }}" href="{{ linkStamp }}">
+                                                        <img class="lazy" data-src="{{ stamp.url }}" alt="{{ stamp.title }}">
+                                                    </a>
+                                                </picture>
+                                            {% endif %}
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    {%- assign stampsDefault = "SSL" | split: ' ' -%}
+                                    {%- for stamp in stampsDefault -%}
+                                        {%- assign slugStamp = stamp | downcase -%}
+                                        <li class="footer-stamp_item footer-stamp_item__{{ slugStamp.slug }}">
+                                            <a class="footer-stamp_link" href="javascript:void(0)" title="{{ stamp }}">
+                                                {{ themeConfig.icons.stamps[slugStamp] }}
+                                            </a>
+                                        </li>
+                                    {%- endfor -%}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="footer-bottom_wrap">
+               <p class="footer-bottom_copy">
+    &copy; {{ 'now' | date: '%Y' }} {{ store.name }} | CNPJ: 04.602.194/0001-56 e 04.602.194/0002-37 | 
+    Rua Catarina Moranza Belintami, 171 – Jardim Alvorada – Sumaré/SP – CEP 13170-740   | 
+    {% if store.email %}{{ store.email }}{% else %}contato@sitedoar.com.br{% endif %} | {% if store.phone.size > 0 %}{{ store.phone | maskTel }}{% else %}(19) 3883-4945{% endif %} | 
+    Todos os direitos reservados.
+</p>
+                <a href="https://wdna.com.br" title="Crie sua loja virtual com a Plataforma E-Commerce WDNA." target="_blank" rel="noopener" class="footer-bottom_wdna">
+                    <span>Plataforma</span>
+                    {{ store.logoWdna.negative }}
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- BEGIN MerchantWidget Code -->
+<script id="merchantWidgetScript" src="https://www.gstatic.com/shopping/merchant/merchantwidget.js" defer></script>
+<script>
+  merchantWidgetScript.addEventListener('load', function () {
+    merchantwidget.start({
+      merchant_id: window.WDNA_GOOGLE_MERCHANT_ID || 5783325896,
+      position: 'LEFT_BOTTOM'
+    });
+  });
+</script>
+<!-- END MerchantWidget Code -->
+
+{% render 'sections/sidenav-overlay-account', customer: customer, themeConfig: themeConfig %}
+{% render 'sections/sidenav-user-password', themeConfig: themeConfig %}
+{% render 'sections/sidenav-forgot-password', themeConfig: themeConfig %}

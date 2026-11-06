@@ -1,0 +1,457 @@
+/**
+ * Favoritos — Site do Ar (WDNA)
+ * Par do assets/favorites.js (vitrine, contador, página /pagina/favoritos)
+ */
+
+:root {
+  --fav-blue: #2c77bb;
+  --fav-border: #e2e8f0;
+  --fav-text: #1c2b4a;
+  --fav-heart: #e11d48;
+}
+
+/* —— Botão coração (vitrine / PDP) —— */
+.showcase-product_image,
+.showcase-product .card-image {
+  position: relative;
+}
+
+.showcase-favorite-btn,
+.product-favorite-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 15;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--fav-border);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.showcase-favorite-btn:hover,
+.product-favorite-btn:hover {
+  transform: scale(1.06);
+  border-color: var(--fav-blue);
+  box-shadow: 0 4px 12px rgba(44, 119, 187, 0.2);
+}
+
+.showcase-favorite-btn svg,
+.product-favorite-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--fav-blue);
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+.showcase-favorite-btn.is-active,
+.product-favorite-btn.is-active {
+  border-color: var(--fav-heart);
+  background: #fff5f7;
+}
+
+.showcase-favorite-btn.is-active svg,
+.product-favorite-btn.is-active svg {
+  fill: var(--fav-heart);
+  stroke: var(--fav-heart);
+}
+
+/* Contador no header (funciona com ou sem .header-v2) */
+[data-favorites-count] {
+  font-variant-numeric: tabular-nums;
+}
+
+.header-v2-action__badge[data-favorites-count]:empty,
+.header-v2-action__badge[data-favorites-count][data-count="0"] {
+  display: none;
+}
+
+/* —— Página /pagina/favoritos —— */
+.favoritos-page {
+  padding: 32px 0 48px;
+}
+
+.favoritos-page__title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--fav-text);
+  margin: 0 0 8px;
+}
+
+.favoritos-page__subtitle {
+  color: #64748b;
+  margin: 0 0 24px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.favoritos-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.favoritos-page__empty {
+  text-align: center;
+  padding: 48px 24px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.favoritos-page__empty p {
+  margin: 0 0 16px;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.favoritos-card {
+  border: 1px solid var(--fav-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.15s ease;
+}
+
+.favoritos-card:hover {
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.favoritos-card__img {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  padding: 12px;
+}
+
+.favoritos-card__img a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.favoritos-card__img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.favoritos-card__body {
+  padding: 12px 14px 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.favoritos-card__title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.favoritos-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.favoritos-card__title a:hover {
+  color: var(--fav-blue);
+}
+
+.favoritos-card__price {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--fav-blue);
+  margin: 0;
+}
+
+.favoritos-card__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  flex-wrap: wrap;
+}
+
+.favoritos-card__cta {
+  flex: 1;
+  min-width: 100px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 9px 12px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1px solid var(--fav-blue);
+  background: var(--fav-blue);
+  color: #fff;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.favoritos-card__cta:hover {
+  background: #2366a3;
+  border-color: #2366a3;
+  color: #fff;
+}
+
+.favoritos-card__remove {
+  background: #fff;
+  border: 1px solid var(--fav-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.favoritos-card__remove:hover {
+  border-color: var(--fav-heart);
+  color: var(--fav-heart);
+}
+
+@media (max-width: 575px) {
+  .favoritos-page__title {
+    font-size: 22px;
+  }
+
+  .favoritos-page__grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+}
+
+/* —— Painel lateral (header → Favoritos) —— */
+.sidenav-overlay_favorites .sidenav-header {
+  border-bottom: 1px solid var(--fav-border);
+}
+
+.sidenav-overlay_favorites .favorites-panel__heading {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fav-text);
+}
+
+.sidenav-overlay_favorites .favorites-panel__body {
+  padding: 0 0 8px;
+}
+
+.sidenav-overlay_favorites .favorites-panel__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidenav-overlay_favorites .favorites-panel__item {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--fav-border);
+  align-items: flex-start;
+}
+
+.sidenav-overlay_favorites .favorites-panel__thumb {
+  flex: 0 0 88px;
+  width: 88px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid var(--fav-border);
+  overflow: hidden;
+}
+
+.sidenav-overlay_favorites .favorites-panel__thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.sidenav-overlay_favorites .favorites-panel__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidenav-overlay_favorites .favorites-panel__head {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.sidenav-overlay_favorites .favorites-panel__title {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--fav-text);
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sidenav-overlay_favorites .favorites-panel__title:hover {
+  color: var(--fav-blue);
+}
+
+.sidenav-overlay_favorites .favorites-panel__remove {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.55;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.sidenav-overlay_favorites .favorites-panel__remove:hover {
+  opacity: 1;
+  background: #fff5f7;
+}
+
+.sidenav-overlay_favorites .favorites-panel__remove svg {
+  width: 14px;
+  height: 14px;
+  fill: #64748b;
+}
+
+.sidenav-overlay_favorites .favorites-panel__remove:hover svg {
+  fill: var(--fav-heart);
+}
+
+.sidenav-overlay_favorites .favorites-panel__price {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--fav-blue);
+  line-height: 1.2;
+}
+
+.sidenav-overlay_favorites .favorites-panel__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1px solid var(--fav-blue);
+  background: var(--fav-blue);
+  color: #fff;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.sidenav-overlay_favorites .favorites-panel__cta:hover {
+  background: #2366a3;
+  border-color: #2366a3;
+  color: #fff;
+}
+
+.sidenav-overlay_favorites .favorites-panel__cta--ghost {
+  background: #fff;
+  color: var(--fav-blue);
+}
+
+.sidenav-overlay_favorites .favorites-panel__cta--ghost:hover {
+  background: #eef5fb;
+  color: #2366a3;
+}
+
+.sidenav-overlay_favorites .favorites-panel__cta--block {
+  align-self: stretch;
+  width: 100%;
+}
+
+.sidenav-overlay_favorites .favorites-panel__empty .text {
+  text-align: center;
+  color: #64748b;
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.sidenav-overlay_favorites .favorites-panel__empty .cart-section_empty {
+  padding: 28px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.sidenav-overlay_favorites .favorites-panel__footer {
+  border-top: 1px solid var(--fav-border);
+  padding-top: 12px;
+}
+
+/* —— Mobile: coração à esquerda, abaixo do selo 5% OFF (comparar fica no canto direito) —— */
+@media (max-width: 991px) {
+  .showcase-product.card .showcase-product_image .showcase-favorite-btn,
+  .showcase-product.card .showcase-product_image [data-favorite-toggle],
+  .showcase-product.card .card-image .showcase-favorite-btn {
+    top: 28px;
+    right: auto;
+    left: 6px;
+    width: 30px;
+    height: 30px;
+    z-index: 7;
+  }
+
+  .showcase-product.card .showcase-product_image .showcase-favorite-btn svg,
+  .showcase-product.card .showcase-product_image [data-favorite-toggle] svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Card sem selo de desconto */
+  .showcase-product.card .showcase-product_image:not(:has(.showcase-offer)) .showcase-favorite-btn,
+  .showcase-product.card .showcase-product_image:not(:has(.showcase-offer)) [data-favorite-toggle] {
+    top: 8px;
+  }
+
+  /* Dois selos (ex.: promo + frete) */
+  .showcase-product.card .showcase-product_image:has(.showcase-offer ~ .showcase-offer) .showcase-favorite-btn,
+  .showcase-product.card .showcase-product_image:has(.showcase-offer ~ .showcase-tag) .showcase-favorite-btn,
+  .showcase-product.card .showcase-product_image:has(.showcase-offer ~ .showcase-offer) [data-favorite-toggle],
+  .showcase-product.card .showcase-product_image:has(.showcase-offer ~ .showcase-tag) [data-favorite-toggle] {
+    top: 44px;
+  }
+}

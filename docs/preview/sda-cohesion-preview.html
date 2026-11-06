@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SDA Cohesion Preview — cards + compare bar</title>
+  <link rel="stylesheet" href="../../assets/sda-tokens.css" />
+  <link rel="stylesheet" href="../../assets/product-compare.css" />
+  <link rel="stylesheet" href="../../assets/sda-conversion-redesign.css" />
+  <link rel="stylesheet" href="../../assets/sda-card.css" />
+  <style>
+    body { margin: 0; background: var(--sda-bg); font-family: var(--sda-font); }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 16px; box-sizing: border-box; }
+    h1 { font-size: 18px; color: var(--sda-navy); }
+    .grid { display: flex; flex-wrap: wrap; gap: 16px; }
+    .grid .showcase-item { width: calc(25% - 12px); list-style: none; display: flex; }
+    @media (max-width: 991px) {
+      .grid .showcase-item { width: calc(50% - 8px); }
+      body.has-mobile-catalog-dock { padding-bottom: 58px; }
+    }
+    .mobile-catalog-dock { display: none; }
+    @media (max-width: 991px) {
+      .mobile-catalog-dock {
+        display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 1300;
+        height: 58px; background: #fff; border-top: 1px solid #e2e8f0; text-align: center; line-height: 58px;
+        font-size: 12px; font-weight: 700; color: #64748b;
+      }
+    }
+  </style>
+</head>
+<body class="has-mobile-catalog-dock">
+  <div class="wrap">
+    <h1>Preview local — SDA ZERO v2 (não é produção)</h1>
+    <ul class="grid showcase-list">
+      <li class="showcase-item" data-showcase-tpl="v5-zero">
+        <div class="showcase-product card sda-product-card sda-card">
+          <button type="button" class="showcase-favorite-btn sda-card__favorite" aria-label="Favoritar"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="#64748b" d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"/></svg></button>
+          <div class="showcase-product_image card-image">
+            <div class="showcase-offer"><div class="showcase-offer_text"><span>5%</span><span>OFF</span></div></div>
+            <a class="showcase-product_link showcase-product_link__image" href="#"><img src="https://www.sitedoar.com.br/upload/template/public/placeholder.png" alt="Ar split" style="max-height:140px" onerror="this.style.display='none'"></a>
+          </div>
+          <div class="showcase-spec-wrap sda-card-specs"><div class="showcase-spec-bar"><span class="showcase-spec-bar__tag">12000 BTU</span><span class="showcase-spec-bar__tag">Inverter</span></div></div>
+          <div class="showcase-card-body sda-card-main"><div class="card-header"><h3><a class="showcase-product_link showcase-product_link_title" href="#">Ar Split 12000 BTUs Frio Inverter 220V</a></h3></div></div>
+          <div class="card-footer sda-card-footer">
+            <div class="showcase-prices showcase-prices--card">
+              <p class="showcase-prices_from">De <del class="showcase-prices_strike"><s>R$ 2.499,00</s></del></p>
+              <p class="showcase-prices_price showcase-prices_price--pix"><b>R$ 2.124,00</b> <span class="showcase-prices_pix-label">no Pix</span></p>
+              <p class="showcase-prices_installment showcase-prices_installment--desktop"><span class="showcase-prices_installment-text"><b>10x</b> de <b>R$ 249,90</b> sem juros</span></p>
+            </div>
+            <div class="showcase-card-actions">
+              <a class="showcase-product_buy btn" href="javascript:void(0)">Comprar agora</a>
+              <button type="button" class="showcase-compare-btn showcase-compare-btn--secondary is-selected" data-compare-id="1" aria-pressed="true"><span class="showcase-compare-btn__label">Comparar</span></button>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="showcase-item"><div class="showcase-product card sda-product-card sda-card" style="opacity:.85"><div class="showcase-product_image card-image"><a class="showcase-product_link showcase-product_link__image" href="#"><div style="height:120px;display:flex;align-items:center;justify-content:center;color:#94a3b8">9000 BTU</div></a></div><div class="showcase-spec-wrap sda-card-specs"><div class="showcase-spec-bar"><span class="showcase-spec-bar__tag">9000 BTU</span></div></div><div class="showcase-card-body sda-card-main"><div class="card-header"><h3><a class="showcase-product_link showcase-product_link_title" href="#">Ar 9000 BTUs</a></h3></div></div><div class="card-footer sda-card-footer"><div class="showcase-prices showcase-prices--card"><p class="showcase-prices_price showcase-prices_price--pix"><b>R$ 1.899,00</b> <span class="showcase-prices_pix-label">no Pix</span></p></div><div class="showcase-card-actions"><a class="showcase-product_buy btn" href="#">Comprar agora</a><button type="button" class="showcase-compare-btn showcase-compare-btn--secondary"><span class="showcase-compare-btn__label">Comparar</span></button></div></div></div></li>
+    </ul>
+  </div>
+  <div class="mobile-catalog-dock">Dock navegação (simulado)</div>
+  <div id="product-compare-bar" class="product-compare-bar">
+    <div class="product-compare-bar__inner">
+      <div class="product-compare-bar__info"><span class="product-compare-bar__badge">2</span><span class="product-compare-bar__text">produtos selecionados</span></div>
+      <div class="product-compare-bar__actions"><button class="product-compare-bar__btn product-compare-bar__btn--ghost">Limpar</button><button class="product-compare-bar__btn product-compare-bar__btn--primary">Comparar</button></div>
+    </div>
+  </div>
+  <script>document.body.classList.add('has-compare-bar');</script>
+</body>
+</html>

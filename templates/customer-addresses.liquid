@@ -1,0 +1,447 @@
+{% layout 'layout/theme' %}
+{% block content %}
+{% render 'sections/header', store: store, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
+<main class="adresses-main" x-data="setupAddresses()">
+    <div class="adresses-content content">
+        <div class="adresses-container container">
+            <div class="columns">
+                <div class="column col-3 col-xxl-4 hide-lg col-custom1">
+                    <div class="card card-pages-nav">
+                        <div class="card-header">
+                            Painel do cliente
+                        </div>
+                        <div class="card-body">
+                            {%- render 'sections/customer-account-menu', themeConfig: themeConfig -%}
+                        </div>
+                    </div>
+                </div>
+                <div class="column col-9 col-xxl-8 col-lg-12 hide-lg col-custom2">
+                    <div class="card card-page card-page-table card-page-table_adresses">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span>Meus endereços</span>
+                                <button @click="addNewAddress()" class="btn" title="Adicionar">Adicionar</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="page-table">
+                                <div class="page-thead">
+                                    <div class="page-table-list">
+                                        <div class="page-table-item">
+                                            <span class="label">Tipo</span>
+                                        </div>
+                                        <div class="page-table-item">
+                                            <span class="label">CEP</span>
+                                        </div>
+                                        <div class="page-table-item">
+                                            <span class="label">Endereço</span>
+                                        </div>
+                                        <div class="page-table-item">
+                                            <span class="label">Cidade - Estado</span>
+                                        </div>
+                                        <div class="page-table-item">
+                                            <span class="label">Ações</span>
+                                        </div>
+                                        <div class="page-table-item">
+                                            <span class="label">Padrão</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="page-tbody">
+                                    <template x-if="state.isEditing === 0">
+                                        <div class="page-table-content page-table-content_new">
+                                            <div class="page-table-box page-table-box_edit">
+                                                {%- render 'sections/customer-addresses-edit', themeConfig: themeConfig -%}
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template x-for="(address, index) in state.customer.address" :key="index">
+                                        <div class="page-table-content">
+                                            <div class="page-table-box page-table-box_main">
+                                                <div class="page-table-list">
+                                                    <div class="page-table-item">
+                                                        <div x-text="getAddressType(address.addressGroupId)"></div>
+                                                    </div>
+                                                    <div class="page-table-item">
+                                                        <div x-text="address.zipcode"></div>
+                                                    </div>
+                                                    <div class="page-table-item">
+                                                        <p x-text="`${address.street}, ${address.number}`"></p>
+                                                        <p class="page-table-item_text__info"
+                                                           x-text="address.district"></p>
+                                                    </div>
+                                                    <div class="page-table-item">
+                                                        <p x-text="`${address.city} - ${address.state}`"></p>
+                                                        <p class="page-table-item_text__info"
+                                                           x-text="address.country"></p>
+                                                    </div>
+                                                    <div class="page-table-item">
+                                                        <div>
+                                                            <button class="btn btn-table-item btn-edit"
+                                                                    @click="editAddress(address)" title="Editar">
+                                                                Editar
+                                                            </button>
+                                                            <button class="btn btn-table-item btn-delete"
+                                                                    @click="deleteAddress(address)" title="Excluir">
+                                                                Excluir
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="page-table-item">
+                                                        <label class="form-switch">
+                                                            <input
+                                                                    x-model="address.main"
+                                                                    @change="changeMainStatus(address)"
+                                                                    type="checkbox"
+                                                            >
+                                                            <i class="form-icon"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="page-table-box page-table-box_edit" x-show="state.isEditing === address.id">
+                                                {%- render 'sections/customer-addresses-edit', address: address, themeConfig: themeConfig -%}
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <!-- Verificar se tem endereço cadastrado -->
+                                    <template x-if="state.customer.address.length < 0">
+                                        <div class="page-table-content">
+                                            <div class="page-table-box page-table-box_main">
+                                                <p>Nenhum endereço cadastrado</p>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column col-12 hide-xxl show-lg">
+                    <details class="page-accordion page-accordion_top accordion">
+                        <summary class="accordion-header">
+                            <div class="accordion-title">
+                                <span>
+                                    Painel do cliente
+                                </span>
+                            </div>
+                            {{ themeConfig.icons.arrow.down }}
+                        </summary>
+                        <div class="accordion-body">
+                            {%- render 'sections/customer-account-menu', themeConfig: themeConfig -%}
+                        </div>
+                    </details>
+                    <div class="page-title">
+                        <span>Meus endereços</span>
+                        <button @click="addNewAddress()" class="btn">Adicionar</button>
+                    </div>
+                    <template x-if="state.isEditing === 0">
+                        <div class="page-table-box_edit page-table-content_new">
+                            {%- render 'sections/customer-addresses-edit', themeConfig: themeConfig, address: address -%}
+                        </div>
+                    </template>
+                    <template x-for="(address, index) in state.customer.address" :key="index">
+                        <details class="page-accordion-info page-accordion_address accordion" :open="state.isEditing === address.id ? '' : false">
+                            <summary class="accordion-header">
+                                <ul class="accordion-list accordion-header-list">
+                                    <li class="accordion-item accordion-header-item">
+                                        <p class="accordion-text" x-text="address.zipcode"></p>
+                                    </li>
+                                    <li class="accordion-item accordion-header-item">
+                                        <button class="btn btn-table-item btn-edit"
+                                                @click="editAddress(address)" class="btn btn-primary">
+                                            {{ themeConfig.icons.edit2 }}
+                                        </button>
+                                        <button class="btn btn-table-item btn-delete"
+                                                @click="deleteAddress(address)" class="btn btn-error">
+                                            {{ themeConfig.icons.delete }}
+                                        </button>
+                                    </li>
+                                    <li class="accordion-item accordion-header-item">
+                                        <label class="form-switch">
+                                            <input
+                                                    x-model="address.main"
+                                                    @change="changeMainStatus(address)"
+                                                    type="checkbox"
+                                            >
+                                            <i class="form-icon"></i>
+                                        </label>
+                                    </li>
+                                </ul>
+                                {{ themeConfig.icons.arrow.down }}
+                            </summary>
+                            <div class="accordion-body">
+                                <ul class="accordion-list accordion-body-list">
+                                    <li class="accordion-item accordion-body-item">
+                                        <div class="accordion-item-box">
+                                            <p class="accordion-text" x-text="getAddressType(address.addressGroupId)"></p>
+                                        </div>
+                                    </li>
+                                    <li class="accordion-item accordion-body-item">
+                                        <div class="accordion-item-box">
+                                            <p class="accordion-text" x-text="`${address.street}, ${address.number}`"></p>
+                                            <p class="accordion-title" x-text="address.district"></p>
+                                        </div>
+                                    </li>
+                                    <li class="accordion-item accordion-body-item">
+                                        <div class="accordion-item-box">
+                                            <p class="accordion-text" x-text="`${address.city} - ${address.state}`"></p>
+                                            <p class="accordion-title" x-text="address.country"></p>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="page-table-box_edit" x-show="state.isEditing === address.id">
+                                    {%- render 'sections/customer-addresses-edit', themeConfig: themeConfig, address: address -%}
+                                </div>
+                            </div>
+                        </details>
+                    </template>
+                    <template x-if="state.customer.address < 0">
+                        <div class="page-table-box page-table-box_main">
+                            <p>Nenhum endereço cadastrado</p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig %}
+<script>
+    function setupAddresses() {
+        const state = {
+            addressGroups: JSON.parse('{{ addressGroups | json }}') || {},
+            countries: JSON.parse('{{ countries | json }}') || {},
+            states: JSON.parse('{{ states | json }}') || {},
+            addressOnEdit: {},
+            isEditing: false,
+            isNew: false,
+            errors: [
+                { zipcode: ''},
+                { street: ''},
+                { number: ''},
+                { district: ''},
+                { city: ''},
+            ],
+            customer: {
+                {% if customer.address %}
+                address: [
+                    {% for customerAddress in customer.address %}
+                    {
+                        street: {% if customerAddress.street %}('{{ customerAddress.street | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        receiver: {% if customerAddress.receiver %}('{{ customerAddress.receiver | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        number: {% if customerAddress.number %}('{{ customerAddress.number | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        zipcode: {% if customerAddress.zipcode %}'{{ customerAddress.zipcode }}'{% else %}''{% endif %},
+                        complement: {% if customerAddress.complement %}('{{ customerAddress.complement | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        district: {% if customerAddress.district %}('{{ customerAddress.district | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        city: {% if customerAddress.city %}('{{ customerAddress.city | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        state: {% if customerAddress.state %}'{{ customerAddress.state }}'{% else %}''{% endif %},
+                        country: {% if customerAddress.country %}'{{ customerAddress.country }}'{% else %}''{% endif %},
+                        addressGroupId: {% if customerAddress.addressGroupId %}{{ customerAddress.addressGroupId }}{% else %}''{% endif %},
+                        main: {% if customerAddress.main %}{{ customerAddress.main }}{% else %}false{% endif %},
+                        userId: {% if customerAddress.userId %}{{ customerAddress.userId }}{% else %}''{% endif %},
+                        createdAt: {% if customerAddress.createdAt %}'{{ customerAddress.createdAt }}'{% else %}''{% endif %},
+                        id: {% if customerAddress.id %}{{ customerAddress.id }}{% else %}''{% endif %},
+                    },
+                    {% endfor %}
+                ],
+                {% else %}
+                {}
+                {% endif %}
+            },
+            addresses:
+                {% if addresses %}
+                [
+                    {% for addresseItem in addresses %}
+                    {
+                        id: {% if addresseItem.id %}{{ addresseItem.id }}{% else %}''{% endif %},
+                        street: {% if addresseItem.street %}('{{ addresseItem.street | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        number: {% if addresseItem.number %}('{{ addresseItem.number | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        zipcode: {% if addresseItem.zipcode %}'{{ addresseItem.zipcode }}'{% else %}''{% endif %},
+                        complement: {% if addresseItem.complement %}('{{ addresseItem.complement | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        district: {% if addresseItem.district %}('{{ addresseItem.district | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        city: {% if addresseItem.city %}('{{ addresseItem.city | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        state: {% if addresseItem.state %}'{{ addresseItem.state }}'{% else %}''{% endif %},
+                        receiver: {% if addresseItem.receiver %}('{{ addresseItem.receiver | escape }}').replaceAll("&#39;", "'").replaceAll("&#34;", '"'){% else %}''{% endif %},
+                        main: {% if addresseItem.main %}{{ addresseItem.main }}{% else %}''{% endif %},
+                        addressGroupId: {% if addresseItem.addressGroupId %}{{ addresseItem.addressGroupId }}{% else %}''{% endif %},
+                        userId: {% if addresseItem.userId %}{{ addresseItem.userId }}{% else %}''{% endif %},
+                        createdAt: {% if addresseItem.createdAt %}'{{ addresseItem.createdAt }}'{% else %}''{% endif %},
+                        country: {% if addresseItem.country %}'{{ addresseItem.country }}'{% else %}''{% endif %},
+                    },
+                    {% endfor %}
+                ]
+                {% else %}
+                {}
+                {% endif %}
+        }
+
+        if (state.addresses) {
+            state.customer.address = state.addresses;
+        }
+
+        function fetchStates(country) {
+            StoreSDK.request.get(`/user/${country}/states`)
+                .then((response) => {
+                    this.state.states = response.statesList;
+                })
+        }
+
+        function changeMainStatus(address) {
+            address.main = true;
+            this.state.addressOnEdit = address;
+
+            this.state.customer.address.forEach(addr => {
+                if (addr.id !== address.id) {
+                    addr.main = false;
+                }
+            })
+
+            this.saveAddress();
+        }
+
+        function getAddressType(addressGroupId) {
+            let name = '';
+
+            this.state.addressGroups.forEach((address) => {
+                if (address.id === addressGroupId) {
+                    name = address.name;
+                }
+            })
+
+            return name;
+        }
+
+        function validate() {
+            if (!this.state.addressOnEdit.zipcode) {
+                this.state.errors.zipcode = 'CEP obrigatório'
+                return false;
+            }
+
+            if (!this.state.addressOnEdit.street) {
+                this.state.errors.street = 'Endereço obrigatório'
+                return false;
+            }
+
+            if (!this.state.addressOnEdit.number) {
+                this.state.errors.number = 'Número obrigatório'
+                return false;
+            }
+
+            if (!this.state.addressOnEdit.district) {
+                this.state.errors.district = 'Bairro obrigatório'
+                return false;
+            }
+
+            if (!this.state.addressOnEdit.city) {
+                this.state.errors.city = 'Cidade obrigatória'
+                return false;
+            }
+
+            return true;
+        }
+
+        function addNewAddress() {
+            this.state.addressOnEdit = {
+                city: "",
+                complement: "",
+                country: "BR",
+                district: "",
+                number: "",
+                state: "AC",
+                street: "",
+                zipcode: "",
+                addressGroupId: 1,
+            }
+
+            this.state.isEditing = 0;
+        }
+
+        function cancelEditAddress() {
+            this.state.isEditing = false;
+            this.state.addressOnEdit = {};
+        }
+
+        function editAddress(address) {
+            this.state.addressOnEdit = address;
+            this.state.isEditing = address.id;
+            // onChangeFormGroupCustom();
+        }
+
+        function saveAddress() {
+            if (!this.validate()) {
+                return;
+            }
+
+            openLoadingMain();
+            this.state.isEditing = true;
+
+            if (!this.state.addressOnEdit.id) {
+                StoreSDK.request.post(`/ajax/customer/addresses`, this.state.addressOnEdit)
+                    .then((response) => {
+                        this.state.isEditing = false;
+                        this.state.addressOnEdit = {};
+                        window.location.href = '/enderecos';
+                    }).catch((error) => {
+                    closeLoadingMain();
+                    notyf.open({type: 'warning', message: 'Não foi possível salvar as edições'});
+                });
+
+                return;
+            }
+
+            StoreSDK.request.put(
+                `/ajax/customer/addresses/${this.state.addressOnEdit.id}`,
+                this.state.addressOnEdit
+            ).then((response) => {
+                this.state.isEditing = false;
+                this.state.addressOnEdit = {};
+                window.location.href = '/enderecos';
+            }).catch((error) => {
+                closeLoadingMain();
+                notyf.open({type: 'warning', message: 'Não foi possível salvar as edições'});
+            });
+        }
+
+        function deleteAddress(address) {
+            openLoadingMain();
+            StoreSDK.request.del(`/ajax/customer/addresses/${address.id}`)
+                .then((response) => {
+                    window.location.href = '/enderecos';
+                }).catch((error) => {
+                closeLoadingMain();
+                notyf.open({type: 'warning', message: 'Não foi possível salvar as edições'});
+            });
+        }
+
+        function handleZipcodeChange() {
+            if (!this.state.addressOnEdit.zipcode) {
+                return;
+            }
+            StoreSDK.request.get(`/ajax/address/${this.state.addressOnEdit.country || 'BR'}/${this.state.addressOnEdit.zipcode}`)
+                .then((response) => {
+                    if (response.address) {
+                        this.state.addressOnEdit.street = response.address.street;
+                        this.state.addressOnEdit.district = response.address.district;
+                        this.state.addressOnEdit.city = response.address.city;
+                        this.state.addressOnEdit.state = response.address.state;
+                    }
+                });
+        }
+
+        return {
+            state,
+            fetchStates,
+            getAddressType,
+            addNewAddress,
+            editAddress,
+            saveAddress,
+            cancelEditAddress,
+            deleteAddress,
+            changeMainStatus,
+            validate,
+            handleZipcodeChange
+        }
+    }
+</script>
+{% endblock %}

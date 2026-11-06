@@ -1,0 +1,111 @@
+<section class="showcase showcase-{{ showcaseSection.id }} showcase-model-{{ showcaseSection.typeId }}">
+    {% assign sectionConfig = showcaseSection.config %}
+    <div class="container">
+        <!-- Título da Vitrine1 -->
+        {% if showcaseSection.name %}
+            {% assign styleTitle = '' %}
+            {% assign classTitle = '' %}
+            {% case sectionConfig.namePosition %}
+                {% when 'center' %}
+                    {% if sectionConfig.display == 'carousel' %}
+                        {% assign classTitle = ' showcase-title_carousel' %}
+                    {% endif %}
+                    {% assign styleTitle = 'text-align: center;' %}
+                {% when 'left' %}
+                    {% if sectionConfig.display == 'carousel' %}
+                        {% assign classTitle = ' showcase-title_carousel' %}
+                    {% endif %}
+                    {% assign styleTitle = 'text-align: left;' %}
+                {% when 'right' %}
+                    {% if sectionConfig.display == 'carousel' %}
+                        {% assign classTitle = ' showcase-title_carousel' %}
+                    {% endif %}
+                    {% assign styleTitle = 'text-align: right;' %}
+                {% when "hidden" %}
+                    {% assign styleTitle = "display: none;" %}
+            {% endcase %}
+            <h2 class="showcase-title{{ classTitle }}" style="{{ styleTitle }}">
+                {{ showcaseSection.name }}
+            </h2>
+        {% endif %}
+        {% assign sectionMedias = showcaseSection.config.medias %}
+        {% assign classSliderBannerFull = '' %}
+        <div class="showcase-box">
+            <div class="showcase-banners showcase-banners__desktop hide-sm">
+                <div class="showcase-banners_list">
+                    <ul class="banner-slider">
+                        {% for showcaseMedia in sectionMedias %}
+                            {% assign banneLink = 'javascript:void(0)' %}
+                            {% if showcaseMedia.link %}
+                                {% assign banneLink = showcaseMedia.link %}
+                            {% endif %}
+                            <li class="showcase-banners_item">
+                                <a class="showcase-banners_link" href="{{ banneLink }}"
+                                   title="{{ showcaseMedia.title }}">
+                                    {% if showcaseMedia.path %}
+                                        <picture>
+                                            <img class="banner-main_img lazy-slider" data-src="{{ showcaseMedia.path | imgUrl  }}" alt="{{ showcaseMedia.title }}">
+                                        </picture>
+                                    {% else %}
+                                        {{ themeConfig.icons.image }}
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="showcase-banners showcase-banners__mobile hide-xxl show-sm">
+                <div class="showcase-banners_list">
+                    <ul class="banner-slider">
+                        {% for showcaseMedia in sectionMedias %}
+                            {% assign banneLink = 'javascript:void(0)' %}
+                            {% if showcaseMedia.link %}
+                                {% assign banneLink = showcaseMedia.link %}
+                            {% endif %}
+                            <li class="showcase-banners_item">
+                                <a class="showcase-banners_link" href="{{ banneLink }}"
+                                   title="{{ showcaseMedia.title }}">
+                                    {% if showcaseMedia.path %}
+                                        {% comment %}{{ TODO: Pegar imagem mobile }}{% endcomment %}
+                                        <picture>
+                                            <img class="banner-main_img lazy-slider" data-src="{{ showcaseMedia.path | imgUrl }}" alt="{{ showcaseMedia.title }}">
+                                        </picture>
+                                    {% else %}
+                                        {{ themeConfig.icons.image }}
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="showcase-products showcase-products_{{ sectionConfig.display }} showcase-products_{{ sectionConfig.display }}__{{ sectionConfig.columnQuantity }}">
+                {% case sectionConfig.display %}
+                    {% when 'grid' %}
+                        <ul class="showcase-list">
+                            {%- render 'sections/showcase-model-product', showcaseSection: showcaseSection, sectionConfig: sectionConfig, products: products, renderModelExample: true, themeConfig: themeConfig -%}
+                        </ul>
+                    {% when 'carousel' %}
+                        <div class="showcase-list showcase-list-{{ sectionConfig.columnQuantity }} showcase4-list-{{ sectionConfig.columnQuantity }}">
+                            <ul class="showcase-slider showcase-slider-{{ sectionConfig.columnQuantity }}">
+                                {%- render 'sections/showcase-model-product', showcaseSection: showcaseSection, sectionConfig: sectionConfig, products: products, renderModelExample: true, themeConfig: themeConfig -%}
+                            </ul>
+                            {% assign classCenterSliderArrow = '' %}
+                            {% if sectionConfig.namePosition == 'hidden' %}
+                                {% assign classCenterSliderArrow = ' slider__arrow--center' %}
+                            {% endif %}
+                            <div class="controls controls-arrow" aria-label="Carousel Navigation" tabindex="0">
+                                <button class="slider__arrow slider__arrow--prev{{ classCenterSliderArrow }}" aria-label="Anterior">
+                                    {{ themeConfig.icons.arrow.prev }}
+                                </button>
+                                <button class="slider__arrow slider__arrow--next{{ classCenterSliderArrow }}" aria-label="Próximo">
+                                    {{ themeConfig.icons.arrow.next }}
+                                </button>
+                            </div>
+                        </div>
+                {% endcase %}
+            </div>
+        </div>
+    </div>
+</section>

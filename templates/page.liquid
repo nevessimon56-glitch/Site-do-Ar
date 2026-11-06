@@ -1,0 +1,80 @@
+{% layout 'layout/theme' %}
+{% block content %}
+{% render 'sections/header', store: store, pages: pages, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
+<main class="account-main change-account-main">
+    <div class="account-content content">
+        <div class="account-container container">
+            <div class="columns">
+                {% if showSideMenu == true and menuSide %}
+                    <div class="column col-12 hide-xxl show-lg">
+                        {% for menu in menuSide %}
+                            <details class="page-accordion page-accordion_top accordion">
+                                <summary class="accordion-header">
+                                    <div class="accordion-title">
+                                    <span>
+                                        {{ menu.name }}
+                                    </span>
+                                    </div>
+                                    {{ themeConfig.icons.arrow.down }}
+                                </summary>
+                                <div class="accordion-body">
+                                    {%- render 'sections/page-nav', menu: menu, themeConfig: themeConfig -%}
+                                </div>
+                            </details>
+                        {% endfor %}
+                    </div>
+                    <div class="column col-3 col-xxl-4 hide-lg">
+                        {% for menu in menuSide %}
+                            <div class="card card-pages-nav">
+                                {% if menu.name %}
+                                    <div class="card-header">
+                                        {{ menu.name }}
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    {%- render 'sections/page-nav', menu: menu, themeConfig: themeConfig -%}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% assign col-card-page = 'col-12' %}
+                {% if showSideMenu == true %}
+                    {% assign col-card-page = 'col-9 col-xxl-8 col-lg-12' %}
+                {% endif %}
+                <div class="column {{ col-card-page }}">
+                    <div class="card card-page card-page-form">
+                        {% if title %}
+                            <div class="card-header">
+                                <h1 class="card-title">
+                                    {{ title }}
+                                </h1>
+                            </div>
+                        {% endif %}
+                        {% if code %}
+                            <div class="card-body card-body_custom">
+                                {{ code }}
+                            </div>
+                        {% endif %}
+                        {% if themeAsset.size > 0 %}
+                            {% if url == 'calculadora-solar' and variableKwp %}
+                                <div class="card-body">
+                                    {%- render themeAsset, variableKwp: variableKwp -%}
+                                </div>
+                            {% else %}
+                                <div class="card-body">
+                                    {%- render themeAsset -%}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    {% if url == 'calculadora-solar' %}
+                        <div class="products-view"></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig, theme: theme %}
+{% endblock %}

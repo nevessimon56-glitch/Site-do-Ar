@@ -1,0 +1,197 @@
+<!-- Showcase Model 9 - Promotion -->
+
+{% assign isPromotion = false %}
+{% for product in products %}
+    {% if product.price.datePromotionEnd and product.price.showPrice and product.price.promotionPrice > 0 %}
+        {% assign isPromotion = true %}
+        {% break %}
+    {% endif %}
+{% endfor %}
+{% if isPromotion %}
+    {% assign maximumProducts = 30 %}
+    <section class="showcase showcase-{{ showcaseSection.id }} showcase-model-{{ showcaseSection.typeId }} showcase-model-promotion" x-init="getShowcasePromotion()" x-data="setupShowcasePromotionID{{ showcaseSection.id }}()" :class="{ 'd-hide': !state.isVisibleShowcase }">
+        {% assign sectionConfig = showcaseSection.config %}
+        <div class="container">
+            <h2 class="showcase-title{{ classTitle }}" style="display: none; opacity: 0;">
+                {{ showcaseSection.name }}
+            </h2>
+            <div class="showcase-promotions">
+                <ul class="showcase-promotions-list showcase-promotions-list-{{ showcaseSection.id }} slider-products">
+                    {% assign products = showcaseSection.products %}
+                    {% if sectionConfig.rowQuantity and sectionConfig.columnQuantity %}
+                        {% assign maximumProducts = sectionConfig.rowQuantity | times: sectionConfig.columnQuantity %}
+                    {% endif %}
+                    {% if products %}
+                        {% assign products = products %}
+                    {% endif %}
+                    {% for product in products limit: maximumProducts %}
+                        {% if product.price.datePromotionEnd and product.price.showPrice and product.price.promotionPrice > 0 %}
+                            <li class="showcase-promotion-item showcase-promotion-item_{{ product.id }}">
+                                <div x-init="getShowcasePromotion{{ forloop.index }}()" x-data="setupShowcasePromotionID{{ showcaseSection.id }}Index{{ forloop.index }}()">
+                                    <div class="showcase-timer">
+                                        <div class="showcase-timer-box">
+                                            <div class="showcase-timer-header">
+                                                <p class="showcase-timer-title">
+                                                    {{ showcaseSection.name }}
+                                                </p>
+                                            </div>
+                                            <div class="showcase-timer-content">
+                                                <p class="showcase-timer-content_title">Faltam apenas</p>
+                                                <ul class="showcase-timer-content_list">
+                                                    <li class="showcase-timer-content_item">
+                                                        <p class="showcase-timer-content_number">
+                                                            <span x-text="state.countdownTimer.days"></span>
+                                                        </p>
+                                                        <p class="showcase-timer-content_text">
+                                                            Dias
+                                                        </p>
+                                                    </li>
+                                                    <li class="showcase-timer-content_item">
+                                                        <p class="showcase-timer-content_number">
+                                                            <span x-text="state.countdownTimer.hours"></span>
+                                                        </p>
+                                                        <p class="showcase-timer-content_text">
+                                                            Horas
+                                                        </p>
+                                                    </li>
+                                                    <li class="showcase-timer-content_item">
+                                                        <p class="showcase-timer-content_number">
+                                                            <span x-text="state.countdownTimer.minutes"></span>
+                                                        </p>
+                                                        <p class="showcase-timer-content_text">
+                                                            Minutos
+                                                        </p>
+                                                    </li>
+                                                    <li class="showcase-timer-content_item">
+                                                        <p class="showcase-timer-content_number">
+                                                            <span x-text="state.countdownTimer.seconds"></span>
+                                                        </p>
+                                                        <p class="showcase-timer-content_text">
+                                                            Segundos
+                                                        </p>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="showcase-timer-footer">
+                                                <div class="showcase-timer-footer_icon">
+                                                    {{ themeConfig.icons.flags }}
+                                                </div>
+                                                <div class="showcase-timer-footer_text">
+                                                    Término da promoção {{ product.price | promotionEndDate }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="showcase-promotion-product">
+                                        {%- render 'sections/showcase-model-product-promotion', product: product, themeConfig: themeConfig -%}
+                                    </div>
+                                    <script>
+                                        function setupShowcasePromotionID{{ showcaseSection.id }}Index{{ forloop.index }}() {
+                                            const state = {
+                                                datePromotionEnd: '{{ product.price.datePromotionEnd | formatPromotionEndDateCountDown}}',
+                                                countDownDate: '',
+                                                countdownTimer: {}
+                                            }
+
+                                            function getShowcasePromotion{{ forloop.index }} () {
+                                                setInterval(() => {
+                                                    if (this.state.datePromotionEnd) {
+                                                        this.state.countDownDate = new Date(this.state.datePromotionEnd).getTime();
+                                                    }
+                                                    this.state.countdownTimer = countdownTimer(this.state.countDownDate);
+                                                }, 1000)
+                                            }
+                                            return {
+                                                state,
+                                                getShowcasePromotion{{ forloop.index }},
+                                            }
+                                        }
+                                    </script>
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+    <script>
+        const settingsSliderShowcaseModel9ID{{ showcaseSection.id }} = {
+            container: document.querySelectorAll('.showcase-model-{{ showcaseSection.typeId }}.showcase-{{ showcaseSection.id }} .slider-products')[0],
+            animateIn: "fadeIn",
+            animateOut: "fadeOut",
+            autoplay: true,
+            autoplayButtonOutput: false,
+            autoplayTimeout: 10000,
+            controls: false,
+            items: 1,
+            lazyload: true,
+            lazyloadSelector: ".lazy",
+            mode: 'gallery',
+            mouseDrag: true,
+            nav: false,
+            rewind: true,
+            speed: 1200,
+        }
+        let sliderShowcaseModel{{ showcaseSection.typeId }}ID{{ showcaseSection.id }} = tns(settingsSliderShowcaseModel9ID{{ showcaseSection.id }});
+        const productsShowcaseID{{ showcaseSection.id }} = [
+            {% for productItem in showcaseSection.products %}
+            {% if productItem.price.datePromotionEnd and productItem.price.showPrice and productItem.price.promotionPrice > 0 %}
+            {
+                id: '{{ productItem.id }}',
+                title: '{{ productItem.title }}',
+                datePromotionEnd: '{{ productItem.price.datePromotionEnd }}',
+                datePromotionEndFormatted: '{{ productItem.price.datePromotionEnd | formatPromotionEndDateCountDown}}',
+                display: true,
+                displayInitial: true,
+            },
+            {% endif %}
+            {% endfor %}
+        ];
+        function setupShowcasePromotionID{{ showcaseSection.id }}() {
+            const state = {
+                isVisibleShowcase: true,
+                products: productsShowcaseID{{ showcaseSection.id }}
+            }
+
+            function getShowcasePromotion() {
+                this.checkTimePromotion();
+            }
+
+            function checkTimePromotion() {
+                if (this.state.products && this.state.products.length > 0) {
+                    setInterval(() => {
+                        this.state.products = this.state.products.map((productItem) => {
+                            let newDisplay = productItem.display;
+
+                            if (productItem.datePromotionEndFormatted && productItem.display) {
+                                const countDownDate = new Date(productItem.datePromotionEndFormatted).getTime();
+                                const countdownResult = countdownTimer(countDownDate);
+                                newDisplay = countdownResult.days >= 0;
+
+                                if (countdownResult.days < 0) {
+                                    sliderShowcaseModel{{ showcaseSection.typeId }}ID{{ showcaseSection.id }}.destroy();
+                                    var elementRemove = document.querySelectorAll(`.showcase-{{ showcaseSection.id }}.showcase-model-{{ showcaseSection.typeId }} .showcase-promotion-item_${productItem.id}`);
+                                    for (var i = 0; i < elementRemove.length; i++) {
+                                        elementRemove[i].parentNode.removeChild(elementRemove[i]);
+                                    }
+                                    sliderShowcaseModel{{ showcaseSection.typeId }}ID{{ showcaseSection.id }}.rebuild(settingsSliderShowcaseModel9ID{{ showcaseSection.id }});
+                                }
+                            }
+                            return {
+                                ...productItem,
+                                display: newDisplay,
+                            };
+                        });
+                        this.state.isVisibleShowcase = this.state.products.filter((productItem) => (productItem.display)).length > 0;
+                    }, 1000)
+                }
+            }
+            return {
+                state,
+                checkTimePromotion,
+                getShowcasePromotion,
+            }
+        }
+    </script>
+{% endif %}

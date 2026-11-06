@@ -1,4 +1,4 @@
-{% layout 'theme' %}
+{% layout 'layout/theme' %}
 
 {% block head %}
 <style>
@@ -25,9 +25,13 @@
     width: 100% !important;
   }
 </style>
-<script>document.body.classList.add('diag360-page');</script>
 {% endblock %}
 
 {% block content %}
-  {% section 'diagnostico-360' %}
+  {% render 'sections/diagnostico-360' %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.classList.add('diag360-page');
+    });
+  </script>
 {% endblock %}

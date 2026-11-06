@@ -1,0 +1,381 @@
+{%- assign paymentTaxValue = order.payments[0].storeTaxValue | plus: order.payments[0].gatewayTaxValue  -%}
+<div class="card checkout-card checkout-card-summary checkout-card-summary_order">
+    <div class="card-body">
+        {% for product in order.products %}
+            {%- assign productSlug =  product.title | downcase | replace: ' ', '-' -%}
+            <section class="checkout-product">
+                <div class="checkout-product-left">
+                    <a class="checkout-product-image" title="{{ product.title }}"
+                       href="//{{ store.url }}/{{ productSlug }}-p{{product.productId}}">
+                        {% if product.image %}
+                            <picture>
+                                <img class="lazy" data-src="{{ product.image.path | imgUrl: 250 }}" alt="{{ product.title }}">
+                            </picture>
+                        {% else %}
+                            {{ themeConfig.icons.image }}
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="checkout-product-center">
+                    <a class="checkout-product-title" title="{{ product.title }}"
+                       href="//{{ store.url }}/{{ productSlug }}-p{{product.productId}}">
+                       <p>{{ product.title }}</p>
+                       <p>Quantidade: {{ product.quantity }}</p>
+                       {% if product.grids %}
+                        <p>
+                            {% for grid in product.grids %}
+                                <span>{{grid.name}}: {{grid.value}}</span>
+                            {% endfor %}
+                        </p>
+                       {% endif %}
+                        {% if product.products %}
+                                {% for productKit in product.products %}
+                                    <p style="padding-top: 4px; {% if forloop.index > 1 %} margin-top: 0; {% endif %}">
+                                        <span>
+                                            {{ productKit.quantity }}x {{ productKit.title }}
+                                        </span>
+                                    </p>
+                                {% endfor %}
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="checkout-product-right">
+                    {% if product.groupPurchase %}
+                        <p class="checkout-product-price">
+                            {{ product.price | times: product.quantity | money }}
+                        </p>
+                    {% else %}
+                        <p class="checkout-product-price">
+                            {{ product.price | times: product.quantity | money }}
+                        </p>
+                    {% endif %}
+                </div>
+                {% if product.groupPurchase and product.groupPurchase.size > 0 %}
+                    <div class="col-12 checkout-product-info">
+                        <ul class="checkout-product-groupPurchase_list">
+                            {% for productGroupPurchase in product.groupPurchase %}
+                                <li class="checkout-product-groupPurchase_item">
+                                    <div class="checkout-product-groupPurchase_box checkout-product-groupPurchase-box_image">
+
+                                        <div class="checkout-product-image">
+                                            {% if productGroupPurchase.image %}
+                                                <picture>
+                                                    <img class="lazy" data-src="{{ productGroupPurchase.image }}" alt="{{ productGroupPurchase.title }}">
+                                                </picture>
+                                            {% else %}
+                                                {{ themeConfig.icons.image }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="checkout-product-groupPurchase_box checkout-product-groupPurchase-box_title">
+                                        <div class="checkout-product-title">
+                                            <p>{{ productGroupPurchase.title }}</p>
+                                            <p>Quantidade: {{ product.quantity }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="checkout-product-groupPurchase_box checkout-product-groupPurchase-box_price">
+                                        <p class="checkout-product-price">{{ productGroupPurchase.price | times: product.quantity | money }}</p>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </section>
+        {% endfor %}
+    </div>
+    <div class="card-footer">
+        <section class="checkout-product-subtotal_price">
+            <div class="checkout-product-left">
+                <p class="checkout-product-title">
+                    Subtotal
+                </p>
+            </div>
+            <div class="checkout-product-right">
+                <p class="checkout-product-price">
+                    {{ order.subtotal | money }}
+                </p>
+            </div>
+        </section>
+        {% if paymentTaxValue and paymentTaxValue < 0 %}
+            <section class="checkout-product-payment_price">
+                <div class="checkout-product-left">
+                    <p class="checkout-product-title">Desconto da forma de pagamento:</p>
+                </div>
+                <div class="checkout-product-right">
+                    <p class="checkout-product-price">{{ paymentTaxValue | money }}</p>
+                </div>
+            </section>
+        {% endif %}
+        {% if order.shippings.length %}
+            <section class="checkout-product-shipping_price{% if order.shippings[0].toCombine and order.shippings[0].toCombine == true %} d-hide{% endif %}">
+                <div class="checkout-product-left">
+                    <p class="checkout-product-title">
+                        Custo do frete
+                    </p>
+                </div>
+                <div class="checkout-product-right">
+                    <p class="checkout-product-price">
+                        {{ order.subtotalShipping | money }}
+                    </p>
+                </div>
+            </section>
+        {% endif %}
+        {% for orderDiscount in order.discounts %}
+            {% if orderDiscount.value %}
+                <section class="checkout-product-coupon_price" >
+                    <div class="checkout-product-left">
+                        <p class="checkout-product-title">
+                            {% if orderDiscount.observation %}
+                                {{ orderDiscount.observation }}
+                            {% else %}
+                                Desconto
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="checkout-product-right">
+                        <p class="checkout-product-price">
+                            - {{ orderDiscount.value | money }}
+                        </p>
+                    </div>
+                </section>
+            {% endif %}
+        {% endfor %}
+        {% if paymentTaxValue and paymentTaxValue > 0 %}
+            <section>
+                <div class="checkout-product-left">
+                    <p class="checkout-product-title">Acréscimo da forma de pagamento:</p>
+                </div>
+                <div class="checkout-product-right">
+                    <p class="checkout-product-price">{{ paymentTaxValue | money }}</p>
+                </div>
+            </section>
+        {% endif %}
+        <section class="checkout-product-total">
+            <div class="checkout-product-left">
+                <p class="checkout-product-title">
+                    Total
+                </p>
+            </div>
+            <div class="checkout-product-right">
+                <p class="checkout-product-price">
+                    {{ order.total | money }}
+                </p>
+            </div>
+        </section>
+    </div>
+</div>
+<div class="card checkout-card checkout-card-summary_info">
+    <div class="card-header">
+        <div class="card-title">
+            Como acompanhar a entrega
+        </div>
+    </div>
+    <div class="card-body">
+        <p class="card-subtitle">
+            <a href="javascript:void(0)" onclick="copyLinkLocation('{{store.url}}/checkout/order/view/{{order.hash}}')" title="Clique aqui para copiar e salva o link desta página">Clique aqui</a>
+            <span>para copiar e salvar o link desta página.</span>
+            <input style="display: none !important;" id="order-link" value="{{ order.link }}">
+        </p>
+    </div>
+    <div class="card-header">
+        <div class="card-title">
+            Dados de entrega
+        </div>
+    </div>
+    <div class="card-body">
+        <p class="card-subtitle">
+            {% if order.address.receiver %}
+                {{ order.address.receiver }}
+            {% endif %}
+            {% if order.customer.name == order.address.receiver %}
+                {% if order.customer.name and order.customer.name != '' and order.customer.document %}
+                    -
+                {% endif %}
+                {% if order.customer.document %}
+                    {% assign textDoc = order.customer.document | replace: '/', '' | replace: '-', '' | replace: '.', '' | replace: ' ', '' %}
+                    {% assign titleDoc = 'CPF' %}
+                    {% if textDoc.size > 12 %}
+                        {% assign titleDoc = 'CNPJ' %}
+                    {% endif %}
+                    {{ titleDoc }}: {{ order.customer.document }}
+                {% endif %}
+            {% endif %}
+        </p>
+        {% if order.address.phone %}
+            <p class="card-subtitle">
+                {{ order.address.phone }}
+            </p>
+        {% endif %}
+        {% if order.address.street or order.address.number %}
+            <p class="card-subtitle">
+                {{ order.address.street }}
+                {% if order.address.street and order.address.number.lenght %}
+                    ,
+                {% endif %}
+                {{ order.address.number }}
+            </p>
+        {% endif %}
+        {% if order.address.zipcode %}
+            <p class="card-subtitle">
+                CEP: {{ order.address.zipcode }}
+            </p>
+        {% endif %}
+        {% if order.address.state or order.address.city %}
+            <p class="card-subtitle">
+                {{ order.address.city }}
+                {% if order.address.city and order.address.state %}
+                    ,
+                {% endif %}
+                {{ order.address.state }}.
+            </p>
+        {% endif %}
+    </div>
+    {% if order.customer.name != order.address.receiver %}
+        <div class="card-header">
+            <div class="card-title">
+                Dados do comprador
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="card-subtitle">
+                {% if order.customer.name %}
+                    {{ order.customer.name }}
+                {% endif %}
+                {% if order.customer.name and order.customer.name != '' and order.customer.document %}
+                    -
+                {% endif %}
+                {% if order.customer.document %}
+                    {% assign textDoc = order.customer.document | replace: '/', '' | replace: '-', '' | replace: '.', '' | replace: ' ', '' %}
+                    {% assign titleDoc = 'CPF' %}
+                    {% if textDoc.size > 12 %}
+                        {% assign titleDoc = 'CNPJ' %}
+                    {% endif %}
+                    {{ titleDoc }}: {{ order.customer.document }}
+                {% endif %}
+            </p>
+            {% if order.customer.phone %}
+                <p class="card-subtitle">
+                    {{ order.customer.phone }}
+                </p>
+            {% endif %}
+            {% if order.customer.street or order.customer.number %}
+                <p class="card-subtitle">
+                    {{ order.customer.street }}
+                    {% if order.customer.street and order.customer.number.lenght %}
+                        ,
+                    {% endif %}
+                    {{ order.customer.number }}
+                </p>
+            {% endif %}
+            {% if order.customer.zipcode %}
+                <p class="card-subtitle">
+                    CEP: {{ order.customer.zipcode }}
+                </p>
+            {% endif %}
+            {% if order.customer.state or order.customer.city %}
+                <p class="card-subtitle">
+                    {{ order.customer.city }}
+                    {% if order.customer.city and order.customer.state %}
+                        ,
+                    {% endif %}
+                    {{ order.customer.state }}.
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+    <div class="card-header">
+        <div class="card-title">Forma de entrega</div>
+    </div>
+    <div class="card-body">
+        {% for orderShipping in order.shippings %}
+            <p class="card-subtitle">
+                {{ orderShipping.shippingName }}
+            </p>
+
+            {% if orderShipping.typeTime == 'd' %}
+                <p class="card-subtitle">
+                    Data prevista de entrega: {{ orderShipping.scheduleDate | date: "%d/%m/%Y" }}
+                </p>
+            {% else %}
+                <p class="card-subtitle">
+                    Data prevista de entrega: {{ orderShipping.scheduleDate | date: "%d/%m/%Y %H:%M" }}
+                </p>
+            {% endif %}
+            {% if orderShipping.trackingCode.length > 0 or orderShipping.trackingUrl.length > 0 %}
+                <p class="card-subtitle">
+                    Código de rastreamento:
+                    {% if orderShipping.trackingUrl.length > 0 and orderShipping.trackingCode.length > 0 %}
+                        <a href="{{ orderShipping.trackingUrl }}"
+                           target="_blank"
+                           title="Clique aqui para abrir url de rastreio">
+                            {{ orderShipping.trackingCode }}
+                        </a>
+                    {% elsif orderShipping.trackingUrl.length > 0 %}
+                        <a href="{{ orderShipping.trackingUrl }}"
+                           target="_blank"
+                           title="Clique aqui para abrir url de rastreio">
+                            Clique aqui para abrir url de rastreio
+                        </a>
+                    {% else %}
+                        <span>
+                            {{ orderShipping.trackingCode }}
+                        </span>
+                    {% endif %}
+                </p>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {% assign visibleInvoice = false %}
+    {% for orderShipping in order.shippings %}
+        {% if orderShipping.invoiceUrl.length > 0 or orderShipping.invoiceDanfeUrl.length > 0 %}
+            {% assign visibleInvoice = true %}
+            {% break %}
+        {% endif %}
+    {% endfor %}
+    {% if visibleInvoice %}
+        <div class="card-header">
+            <div class="card-title">Nota Fiscal</div>
+        </div>
+        <div class="card-body">
+            {% for orderShipping in order.shippings %}
+                {% if orderShipping.invoiceUrl.length > 0 %}
+                    <p class="card-subtitle">
+                        <a target="_blank" href="{{orderShipping.invoiceUrl}}">Clique aqui</a>
+                        <span> para baixar o <b>XML</b> da nota fiscal</span>
+                    </p>
+                {% endif %}
+
+                {% if orderShipping.invoiceDanfeUrl.length > 0 %}
+                    <p class="card-subtitle">
+                        <a target="_blank" href="{{orderShipping.invoiceDanfeUrl}}">Clique aqui</a>
+                        <span> para acessar o <b>DANFE</b> da nota fiscal</span>
+                    </p>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card-header">
+        <div class="card-title">Forma de pagamento</div>
+    </div>
+    <div class="card-body">
+        <p class="card-subtitle">
+            {{ order.payments[0].paymentName }}
+            {% if order.payments[0].type == 'credit-card' or order.payments[0].installments > 1 %}
+                (pagamento em {{order.payments[0].installments}}x)
+            {% endif %}
+        </p>
+    </div>
+    {% if order.observation %}
+        <div class="card-header">
+            <div class="card-title">Observações</div>
+        </div>
+        <div class="card-body">
+            <p class="card-subtitle">
+                {{ order.observation | newline_to_br }}
+            </p>
+        </div>
+    {% endif %}
+</div>

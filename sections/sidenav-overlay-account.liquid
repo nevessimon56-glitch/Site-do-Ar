@@ -1,0 +1,96 @@
+<div x-data="setupCustomer()" x-init="getCustomer()" class="sidenav-overlay sidenav-overlay_account">
+    <div class="sidenav-container">
+        <div class="sidenav-header">
+            <a class="btn-sidenav-close float-right" href="javascript:void(0)" aria-label="Close" onclick="closeSideNavOverlay()">
+                {{ themeConfig.icons.close }}
+            </a>
+            <div class="sidenav-title" x-text="`${data.isLogged === true ? 'Painel do usuário' : 'Bem vindo'}`"></div>
+        </div>
+        <template x-if="data.isLogged === true">
+            <div class="sidenav-body sidenav-body_logged">
+                {%- render 'sections/customer-account-menu', themeConfig: themeConfig -%}
+            </div>
+        </template>
+        <template x-if="data.isLogged === true">
+            <div class="sidenav-footer">
+                <a class="btn btn-access" href="javascript:void(0)" title="Sair" @click="customerLogout()">
+                    {{ themeConfig.icons.getOut }}
+                    <span>
+                    Sair
+                </span>
+                </a>
+            </div>
+        </template>
+        <template x-if="data.isLogged === false">
+            <div class="sidenav-body sidenav-body_welcome">
+                <form class="form-login">
+                    <p class="s-subtitle">
+                        Iniciar sessão
+                    </p>
+                    <div class="form-group" :class="{ 'has-error': !!data.errors.login }">
+                        <label class="form-label" for="login">Email *</label>
+                        <input
+                                class="form-input"
+                                id="login"
+                                name="login"
+                                type="email"
+                                autocomplete="username"
+                                required="required"
+                                autofocus="autofocus"
+                                x-model="data.login"
+                        >
+                        <p class="form-input-hint" x-text="data.errors.login"></p>
+                    </div>
+                    <div class="form-group" :class="{ 'has-error': !!data.errors.password }">
+                        <label class="form-label" for="current-password">Senha *</label>
+                        <input
+                                class="form-input form-input-password"
+                                id="current-password"
+                                name="current-password"
+                                type="password"
+                                autocomplete="current-password"
+                                required="required"
+                                x-model="data.password"
+                                @keydown.enter="customerLogin(data)"
+                        >
+                        {{ themeConfig.icons.passwordHide }}
+                        {{ themeConfig.icons.passwordShow }}
+                        <p class="form-input-hint" x-text="data.errors.password"></p>
+                    </div>
+                    <div class="form-group">
+                        <button
+                                class="btn btn-login btn-block"
+                                title="Entrar"
+                                type="button"
+                                aria-label="Entrar"
+                                @click="customerLogin(data)"
+                        >
+                            Entrar
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label class="forget-password">
+                            Esqueceu sua senha?
+                            <a href="javascript:void(0)" title="Esqueceu sua senha? Clique aqui" onclick="openForgotPassword()">
+                                Clique aqui
+                            </a>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="label-custom">
+                            Ainda não é cliente?
+                        </label>
+                        <a
+                                class="btn btn-new_user btn-block"
+                                href="javascript:void(0)"
+                                title="Criar Cadastro"
+                                onclick="location.href=' /cadastro'"
+                        >
+                            Criar Cadastro
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </template>
+    </div>
+</div>

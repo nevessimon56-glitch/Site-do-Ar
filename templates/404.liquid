@@ -1,0 +1,6 @@
+{% layout 'layout/theme' %}
+{% block content %}
+{% render 'sections/header', store: store, pages: pages, menu: menu, theme: theme, cart: cart, seo: seo, themeConfig: themeConfig %}
+{% render 'sections/404-content', msg: msg, themeConfig: themeConfig, btnSearch: btnSearch %}
+{% render 'sections/footer', store: store, customer: customer, cart: cart, pages: pages, payments: payments, stamps: stamps, social: social, themeConfig: themeConfig, theme: theme %}
+{% endblock %}

@@ -1,0 +1,949 @@
+<script>
+    let msgWhenCheckoutIsBlocked ='Por favor, remova os produtos sem estoque ou altere a quantidade conforme o estoque disponível antes de finalizar.';
+    function setupCart() {
+        return {
+            state: {
+                checkoutIsAllowed: false,
+                msgWhenCheckoutIsBlocked: msgWhenCheckoutIsBlocked,
+            },
+            cart: {},
+            loading: false,
+            themeConfig: {
+                checkoutPlugin: '{{ themeConfig.checkout.plugin  }}',
+                priceType: '{{ themeConfig.price.type  }}',
+            },
+            updateCartQuantity: function (cart) {
+                var elCartQuantity = document.querySelectorAll('[data-cart-quantity]');
+                for (var i = 0; i < elCartQuantity.length; i++) {
+                    elCartQuantity[i].innerText = cart.totalQuantity;
+                }
+                this.checkAvailableStock();
+            },
+
+            getCart: function getCart() {
+                StoreSDK.request.get('/ajax/cart').then((cart) => {
+                    this.cart = cart;
+
+                    var elCartQuantity = document.querySelectorAll('[data-cart-quantity]');
+                    for (var i = 0; i < elCartQuantity.length; i++) {
+                        elCartQuantity[i].innerText = cart.totalQuantity;
+                    }
+
+                    if (cart.products) {
+                        cart.products.map((product) => {
+                            if (product.id && product.quantity) {
+                                window.dispatchEvent(
+                                    new CustomEvent("change-quantity-cart", {
+                                        detail: {
+                                            id: product.id,
+                                            quantity: parseInt(product.quantity),
+                                            optionId: product.optionId,
+                                            optionName: product.optionName,
+                                        }
+                                    })
+                                );
+                            }
+                        })
+                    }
+                    if (cart.productsNotAvailable?.length) {
+                        let messageProductsNotAvailable = '';
+                        cart.productsNotAvailable.forEach((productNotAvailable) => {
+                            messageProductsNotAvailable += `${productNotAvailable.title} / `;
+                        });
+                        messageProductsNotAvailable = messageProductsNotAvailable.replace(/ \/ ([^ / ]*)$/, '' + '$1');
+                        messageProductsNotAvailable += `, se encontra${cart.productsNotAvailable.length > 1 ? 'm' : ''} indisponíve${cart.productsNotAvailable.length > 1 ? 'is' : 'l'} e fo${cart.productsNotAvailable.length > 1 ? 'ram' : 'i'} excluído${cart.productsNotAvailable.length > 1 ? 's' : ''} do seu carrinho.`;
+
+                        const notyf = new Notyf({
+                            position: {x: 'right', y: 'top',},
+                            dismissible: true,
+                            ripple: false,
+                            duration: 12000,
+                            icon: false,
+                            types: [{type: 'warning', background: 'orange', className: 'notyf-warning', icon: false,}]
+                        });
+                        notyf.open({
+                            type: 'warning',
+                            message: messageProductsNotAvailable,
+                        });
+                    }
+                });
+            },
+            chatCheckout: function chatCheckout() {
+                if (this.cart.products) {
+                    if (this.themeConfig.checkoutPlugin === 'whatsapp') {
+                        const msgChat = StoreSDK.utils.msgChatBuyProduct(this.themeConfig.checkoutPlugin, this.cart.products, window.location.hostname, this.themeConfig.priceType);
+                        sendWhatsPlugin(msgChat);
+                    }
+                }
+            },
+            checkAvailableStockOpen: function checkAvailableStockOpen() {
+                StoreSDK.request.get('/ajax/cart')
+                    .then((cart) => {
+                        this.loading = false;
+                        this.cart = cart;
+                        this.updateCartQuantity(this.cart);
+                    })
+                    .catch(() => {
+                        this.loading = false;
+                    });
+                this.checkAvailableStock();
+            },
+            checkAvailableStock: function checkAvailableStock() {
+                this.state.checkoutIsAllowed = false;
+                if (this.cart.products) {
+                    this.cart.products = this.cart.products.map((product) => {
+                        /** TypeId
+                         *  1 - Padrão
+                         *  2 - Variação Pai
+                         *  3 - Variações
+                         *  4 - Kit
+                         *  5 - Monte seu kit
+                         */
+                        switch (product.typeId) {
+                            case 4:
+                                return this.checkAvailableStockOfTheKitProduct(product, this.cart.products);
+                            case 5:
+                                return this.checkAvailableStockOfMountYourKit(product, this.cart.products);
+                            default:
+                                if (product.groupPurchase && product.groupPurchase.length > 0) {
+                                    return this.checkAvailableStockOfGroupPurchase(product, this.cart.products);
+                                } else {
+                                    return this.checkAvailableStockOfCommonProducts(product, this.cart.products);
+                                }
+                        }
+                    });
+
+                    /* Verifica se tem msg de falta de estoque ou produto inativo */
+                    const filterOutOfStock = this.cart.products.filter((product) => (product.outOfStock || (product.productsUnavailable)));
+                    if (filterOutOfStock.length <= 0) {
+                        this.state.checkoutIsAllowed = true;
+                    } else {
+                        const someOutOfStock = this.cart.products.some((product) => (product.outOfStock));
+                        const somePriceGroupDisabled = this.cart.products.some((product) => (product.productsUnavailable));
+
+                        if (someOutOfStock && somePriceGroupDisabled ) {
+                            this.state.msgWhenCheckoutIsBlocked = 'Para produtos indisponíveis, por favor remova. E para os produtos sem estoque estoque, remova ou altere a quantidade conforme o estoque disponível.';
+                        } else if (!someOutOfStock && somePriceGroupDisabled ) {
+                            this.state.msgWhenCheckoutIsBlocked = 'Por favor, remova os produtos indisponíveis antes de finalizar.';
+                        } else {
+                            this.state.msgWhenCheckoutIsBlocked = msgWhenCheckoutIsBlocked;
+                        }
+                    }
+
+                    this.cart.products = this.cart.products.sort((a, b) => ((b.outOfStock?.length > 0) - (a.outOfStock?.length > 0 || 0)));
+                }
+            },
+            checkAvailableStockOfCommonProducts: function checkAvailableStockOfCommonProducts(product, products) {
+                /**
+                 * Produto comum
+                 */
+                const totalQuantityOfAllProducts = this.totalQuantityAllProducts(product, products);
+                let outOfStock = null;
+                let productsUnavailable = null;
+                let totalStock = product.stockTotal ? product.stockTotal : product.stocks.length > 0 ? product.stocks[0].quantity - product.stocks[0].reserved : 0;
+
+                if (!product.price.status) {
+                    productsUnavailable = [
+                        {
+                            text: `Produto indisponível`
+                        }
+                    ];
+                }
+
+                if ((totalStock <= 0) && product.manageStock) {
+                    outOfStock = [
+                        {
+                            text: `Estoque Disponível: ${totalStock > 0 ? totalStock : 0}`
+                        }
+                    ];
+                } else if ((totalQuantityOfAllProducts > totalStock) && product.manageStock) {
+                    outOfStock = [
+                        {
+                            text: `Estoque Disponível: ${totalStock > 0 ? totalStock : 0}`
+                        }
+                    ];
+                }
+                return {
+                    ...product,
+                    outOfStock: outOfStock,
+                    productsUnavailable: productsUnavailable
+                };
+            },
+            checkAvailableStockOfTheKitProduct: function checkAvailableStockOfTheKitProduct(product, products) {
+                /**
+                 * Produto Kit
+                 */
+                const totalQuantityOfAllProducts = this.totalQuantityAllProducts(product, products);
+                let outOfStock = null;
+                let productsUnavailable = null;
+                let totalStock = product.stockTotal ? product.stockTotal : product.stocks.length > 0 ? product.stocks[0].quantity - product.stocks[0].reserved : 0;
+
+                if (product.products) {
+                    const tempProductsUnavailable = [];
+                    product.products.forEach((productItem) => {
+                        if (productItem || productItem.length > 0) {
+                            if (!productItem.price.status) {
+                                tempProductsUnavailable.push({
+                                    text: `${productItem.title}: Indisponível para venda`
+                                });
+                            }
+                        }
+                    });
+                    productsUnavailable = tempProductsUnavailable.length > 0 ? tempProductsUnavailable : null;
+                }
+
+                if (!product.price.status) {
+                    productsUnavailable = [
+                        {
+                            text: `Produto indisponível para venda.`
+                        }
+                    ];
+                }
+
+                if ((totalStock <= 0) && product.manageStock) {
+                    outOfStock = [
+                        {
+                            text: `Estoque Disponível: ${totalStock > 0 ? totalStock : 0}`
+                        }
+                    ];
+                } else if ((totalQuantityOfAllProducts > totalStock) && product.manageStock) {
+                    outOfStock = [
+                        {
+                            text: `Estoque Disponível: ${totalStock > 0 ? totalStock : 0}`
+                        }
+                    ];
+                } else {
+                    if (product.kitProducts) {
+                        /* Todos os produtos menos o produto selecionado */
+                        const allProducts = products.filter((productItem) => (productItem.id !== product.id));
+
+                        product.kitProducts = product.kitProducts.map((kitProduct) => {
+                            const sameItemProduct = allProducts.find((productItem) => (parseInt(productItem.id) === parseInt(kitProduct.productId)));
+                            return {
+                                ...kitProduct,
+                                quantityTotal: parseInt(kitProduct.quantity) * parseInt(product.quantity),
+                                quantityTotalCartTemp: sameItemProduct?.quantity ? parseInt(sameItemProduct?.quantity) + (parseInt(kitProduct.quantity) * parseInt(product.quantity)) : parseInt(kitProduct.quantity) * parseInt(product.quantity),
+                                stockTotal: sameItemProduct?.stockTotal ? sameItemProduct.stockTotal : (kitProduct?.stockTotal ? kitProduct.stockTotal : (kitProduct.stock.quantity || 0))
+                            };
+                        });
+
+                        const tempOutOfStock = [];
+                        product.kitProducts.forEach((kitProductItem) => {
+                            if (kitProductItem.manageStock) {
+                                const totalStockKitProductItem = kitProductItem.stockTotal;
+                                const quantityKitProductItem = kitProductItem.quantityTotalCartTemp;
+
+                                if (totalStockKitProductItem <= 0) {
+                                    tempOutOfStock.push({
+                                        text: `${kitProductItem.title}: 0`
+                                    });
+                                } else if (quantityKitProductItem > totalStockKitProductItem) {
+                                    tempOutOfStock.push({
+                                        text: `${kitProductItem.title}: Disponível ${totalStockKitProductItem > 0 ? totalStockKitProductItem : 0}`
+                                    });
+                                }
+                            }
+                        });
+                        outOfStock = tempOutOfStock.length > 0 ? tempOutOfStock : null;
+                    }
+                }
+                return {
+                    ...product,
+                    outOfStock: outOfStock,
+                    productsUnavailable: productsUnavailable,
+                };
+            },
+            checkAvailableStockOfMountYourKit: function checkAvailableStockOfMountYourKit(product, products) {
+                /**
+                 * Monte seu Kit
+                 */
+                const totalQuantityOfAllProducts = this.totalQuantityAllProducts(product, products);
+                let outOfStock = null;
+                let productsUnavailable = null;
+                let editAssembleYourKit = false;
+
+                let totalStock = product.stockTotal ? product.stockTotal : product.stocks.length > 0 ? product.stocks[0].quantity - product.stocks[0].reserved : 0;
+
+                if (product.products) {
+                    const tempProductsUnavailable = [];
+                    product.products.forEach((productItem) => {
+                        if (productItem || productItem.length > 0) {
+                            if (!productItem.price.status) {
+                                tempProductsUnavailable.push({
+                                    text: `${productItem.title}: Indisponível para venda`
+                                });
+                            }
+                        }
+                    });
+                    productsUnavailable = tempProductsUnavailable.length > 0 ? tempProductsUnavailable : null;
+                }
+
+                if (!product.price.status) {
+                    productsUnavailable = [
+                        {
+                            text: `Produto indisponível para venda.`
+                        }
+                    ];
+                }
+
+                if ((totalStock <= 0) && product.manageStock) {
+                    outOfStock = [
+                        {
+                            text: `Estoque Disponível: ${totalStock > 0 ? totalStock : 0}`
+                        }
+                    ];
+                } else if ((totalQuantityOfAllProducts > totalStock) && product.manageStock) {
+                    if (totalQuantityOfAllProducts >= 1) {
+                        outOfStock = [
+                            {
+                                text: `Estoque Disponível: ${totalStock > 0 ? totalStock : 0}.`
+                            },
+                            {
+                                text: `Por favor excluir este produto ou escolher outro "${product.title}".`
+                            }
+                        ];
+                    } else {
+                        outOfStock = [
+                            {
+                                text: `Estoque Disponível: ${totalStock > 0 ? totalStock : 0}`
+                            }
+                        ];
+                    }
+                } else {
+                    if (product.products) {
+                        /* Filtrando apenas os produtos com mesmo id, e que tenha itens */
+                        const filteredProducts = products.filter((productTemp) => ((productTemp.id === product.id) && (productTemp.products.length > 0)));
+                        /* Array de itens */
+                        const allProducts = products.filter((product)=>(!product.products));
+                        const allItems = filteredProducts.map((productTemp) => (productTemp.products.flat())).flat().concat(allProducts);
+
+                        /* Para mesmos itens, somar quantidade */
+                        const allItemsTemp = allItems.map((allItem) => {
+                            let quantityTemp = 0;
+                            const allItemFilter = allItems.filter((productItem) => (productItem.id === allItem.id));
+                            allItemFilter.forEach((itemFilter) => {
+                                const quantityItemTemp = itemFilter.quantityTotal||itemFilter.quantity;
+                                quantityTemp = quantityItemTemp + quantityTemp
+                            });
+                            return {
+                                ...allItem,
+                                quantity: quantityTemp
+                            }
+                        });
+
+                        /* Removendo duplicidade de itens */
+                        const allFinalItems = allItemsTemp.filter((v, i, a) => a.findIndex(v2 => (v2.id === v.id)) === i);
+
+                        const tempOutOfStock = [];
+                        product.products.forEach((productItem) => {
+                            if (productItem || productItem.length > 0) {
+                                if (productItem.manageStock) {
+                                    let totalStockProductItem = productItem.stockTotal ? productItem.stockTotal : productItem.stocks[0].quantity - productItem.stocks[0].reserved;
+                                    const totalQuantityProductItem = allFinalItems.filter((item) => (item.id === productItem.id))[0].quantity;
+                                    if ((totalStockProductItem <= 0) && productItem.manageStock) {
+                                        editAssembleYourKit = true;
+                                        tempOutOfStock.push({
+                                            text: `${productItem.title}: Disponível ${totalStockProductItem > 0 ? totalStockProductItem : 0}`
+                                        });
+                                    } else if ((totalQuantityProductItem > totalStockProductItem) && productItem.manageStock) {
+                                        editAssembleYourKit = true;
+                                        tempOutOfStock.push({
+                                            text: `${productItem.title}: Disponível ${totalStockProductItem > 0 ? totalStockProductItem : 0}`
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                        outOfStock = tempOutOfStock.length > 0 ? tempOutOfStock : null;
+                    }
+                }
+                return {
+                    ...product,
+                    outOfStock: outOfStock,
+                    editAssembleYourKit: editAssembleYourKit,
+                    productsUnavailable: productsUnavailable,
+                };
+            },
+            checkAvailableStockOfGroupPurchase: function checkAvailableStockOfGroupPurchase(product, products) {
+                /**
+                 * Compre agrupado
+                 */
+                const totalQuantityOfAllProducts = this.totalQuantityAllProducts(product, products);
+                let outOfStock = null;
+                let productsUnavailable = null;
+                let editAssembleYourKit = false;
+
+                if (product.groupPurchase) {
+                    const tempProductsUnavailable = [];
+                    product.groupPurchase.forEach((productItem) => {
+                        if (productItem || productItem.length > 0) {
+                            if (!productItem.price.status) {
+                                tempProductsUnavailable.push({
+                                    text: `${productItem.title}: Indisponível para venda`
+                                });
+                            }
+                        }
+                    });
+                    productsUnavailable = tempProductsUnavailable.length > 0 ? tempProductsUnavailable : null;
+                }
+
+                if (!product.price.status) {
+                    productsUnavailable = [
+                        {
+                            text: `Produto indisponível para venda.`
+                        }
+                    ];
+                }
+
+                let totalStock = product.stockTotal ? product.stockTotal : product.stocks.length > 0 ? product.stocks[0].quantity - product.stocks[0].reserved : 0;
+                if ((totalStock <= 0) && product.manageStock) {
+                    outOfStock = [
+                        {
+                            text: `Estoque Disponível: ${totalStock > 0 ? totalStock : 0}`
+                        }
+                    ];
+                } else if ((totalQuantityOfAllProducts > totalStock) && product.manageStock) {
+                    if (totalQuantityOfAllProducts >= 1) {
+                        outOfStock = [
+                            {
+                                text: `Estoque Disponível: ${totalStock > 0 ? totalStock : 0}.`
+                            },
+                            {
+                                text: `Por favor excluir este produto ou escolher outro "${product.title}".`
+                            }
+                        ];
+                    } else {
+                        outOfStock = [
+                            {
+                                text: `Estoque Disponível: ${totalStock > 0 ? totalStock : 0}`
+                            }
+                        ];
+                    }
+                } else {
+                    if (product.groupPurchase) {
+                        /* Filtrando apenas os produtos com mesmo id, e que tenha itens */
+                        const filteredProducts = products.filter((productTemp) => ((productTemp.id === product.id) && (productTemp.groupPurchase) && (productTemp.groupPurchase.length > 0)));
+                        /* Array de itens */
+                        const allProducts = products.filter((product)=>(!product.groupPurchase));
+                        const allItems = filteredProducts.map((productTemp) => (productTemp.groupPurchase.flat())).flat().concat(allProducts);
+
+                        /* Para mesmos itens, somar quantidade */
+                        const allItemsTemp = allItems.map((allItem) => {
+                            let quantityTemp = 0;
+                            const allItemFilter = allItems.filter((productItem) => (productItem.id === allItem.id));
+                            allItemFilter.forEach((itemFilter) => {
+                                const quantityItemTemp = itemFilter.quantityTotal||itemFilter.quantity;
+                                quantityTemp = quantityItemTemp + quantityTemp
+                            });
+                            return {
+                                ...allItem,
+                                quantity: quantityTemp
+                            }
+                        });
+
+                        /* Removendo duplicidade de itens */
+                        const allFinalItems = allItemsTemp.filter((v, i, a) => a.findIndex(v2 => (v2.id === v.id)) === i);
+
+                        const tempOutOfStock = [];
+                        product.groupPurchase.forEach((productItem) => {
+                            if (productItem || productItem.length > 0) {
+                                if (productItem.manageStock && (productItem.quantity > 0)) {
+                                    let totalStockProductItem = productItem.stockTotal;
+                                    const totalQuantityProductItem = allFinalItems.filter((item) => (item.id === productItem.id))[0].quantity;
+                                    if ((totalStockProductItem <= 0) && productItem.manageStock) {
+                                        tempOutOfStock.push({
+                                            text: `${productItem.title}: Disponível ${totalStockProductItem > 0 ? totalStockProductItem : 0}`
+                                        });
+                                    } else if ((totalQuantityProductItem > totalStockProductItem) && productItem.manageStock) {
+                                        tempOutOfStock.push({
+                                            text: `${productItem.title}: Disponível ${totalStockProductItem > 0 ? totalStockProductItem : 0}`
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                        outOfStock = tempOutOfStock.length > 0 ? tempOutOfStock : null;
+                    }
+                }
+                return {
+                    ...product,
+                    outOfStock: outOfStock,
+                    productsUnavailable: productsUnavailable
+                };
+            },
+            totalQuantityAllProducts: function totalQuantityAllProducts(product, products) {
+                /* Aqui pega todos os produtos */
+                const allProducts = products.filter((allPtroduct) => (allPtroduct.id === product.id)).map((allPtroduct) => ({
+                    title: allPtroduct.title,
+                    id: allPtroduct.id,
+                    quantity: allPtroduct.quantity
+                }));
+
+                /* Aqui pega todos os itens filhos do monte seu kit */
+                const allProductsMountYourKit = products.filter((allProductMountYourKitFilter) => (allProductMountYourKitFilter.products)).map((allProductMountYourKit) => ({
+                    ...allProductMountYourKit,
+                    products: allProductMountYourKit.products.map((productItem) => ({
+                        ...productItem,
+                        quantity: parseInt(productItem.quantity) * parseInt(allProductMountYourKit.quantity)
+                    }))
+                })).map((allProductMountYourKit) => (allProductMountYourKit.products.flat())).flat().filter((allItemsMountYourKitFilter) => (allItemsMountYourKitFilter.id === product.id)).map((allItemMountYourKit) => ({
+                    title: allItemMountYourKit.title,
+                    id: allItemMountYourKit.id,
+                    quantity: allItemMountYourKit.quantity
+                }));
+
+                /* Aqui pega todos os item filhos do kit */
+                const allProductsKit = products.filter((allProductKitFilter) => (allProductKitFilter.kitProducts)).map((allProductKit) => ({
+                    ...allProductKit,
+                    kitProducts: allProductKit.kitProducts.map((productItem) => ({
+                        ...productItem,
+                        quantity: parseInt(productItem.quantity) * parseInt(allProductKit.quantity)
+                    }))
+                })).map((allProductKit) => (allProductKit.kitProducts.flat())).flat().filter((allItemsKitFilter) => (allItemsKitFilter.productId === product.id)).map((allItemKit) => ({
+                    id: allItemKit.productId,
+                    quantity: allItemKit.quantity,
+                    title: allItemKit.title
+                }));
+
+                /* Aqui pega todos os itens relacionados na compra agrupado */
+                const allProductsGroupPurchase = products.filter((allProductGroupPurchaseFilter) => (allProductGroupPurchaseFilter.groupPurchase)).map((allProductGroupPurchase) => ({
+                    ...allProductGroupPurchase,
+                    groupPurchase: allProductGroupPurchase.groupPurchase.map((productItem) => ({
+                        ...productItem,
+                        quantity: 1 * parseInt(allProductGroupPurchase.quantity)
+                    }))
+                })).map((allProductGroupPurchase) => (allProductGroupPurchase.groupPurchase.flat())).flat().filter((allItemsGroupPurchaseFilter) => (Number(allItemsGroupPurchaseFilter.id) === Number(product.id))).map((allItemGroupPurchase) => ({
+                    title: allItemGroupPurchase.title,
+                    id: allItemGroupPurchase.id,
+                    quantity: allItemGroupPurchase.quantity
+                }));
+
+
+                /* Aqui soma a quantidade de todos os produtos com mesmo id*/
+                let totalQuantityOfAllProducts = 0;
+                allProducts.concat(allProductsMountYourKit).concat(allProductsKit).concat(allProductsGroupPurchase).forEach((allProduct) => {
+                    totalQuantityOfAllProducts = totalQuantityOfAllProducts + allProduct.quantity;
+                });
+                return totalQuantityOfAllProducts;
+            },
+            editProduct: function editProduct(product) {
+                const productItensTemp = product.products.map((item) => ({
+                    id: item.id,
+                    title: item.title,
+                    quantity: item.quantity,
+                    optionId: item.optionId,
+                    optionName: item.optionName
+                }));
+
+                const productTemp = [
+                    {
+                        uid: product.uid,
+                        id: product.id,
+                        title: product.title,
+                        quantity: product.quantity,
+                        products: productItensTemp
+                    }
+                ];
+
+                window.location.href = `/${product.slug}-p${product.id}?dataCart=${JSON.stringify(productTemp)}`;
+            },
+
+            addProduct: function addProduct(data) {
+                if (!data) {
+                    return;
+                }
+                this.loading = true;
+                data = this.checkQuantityOfCartItems(data);
+
+                StoreSDK.request.post('/ajax/cart/add', data)
+                    .then((cart) => {
+                        this.loading = false;
+                        this.cart = cart;
+                        this.addToCartFacebookPixel(this.cart, data[0]);
+                        this.addToCartGA(this.cart, data);
+                        this.updateCartQuantity(this.cart);
+                        this.checkAvailableStock();
+                        const dataCart = JSON.parse(new URLSearchParams(location.search).get('dataCart'));
+                        if (dataCart) {
+                            window.location.href = '/';
+                        }
+                    }).catch(() => {
+                    this.loading = false;
+                });
+            },
+            checkQuantityOfCartItems: function checkQuantityOfCartItems(data) {
+                return data.map((item) => {
+                    let tempQuantity = (typeof item.quantity === 'string' ? parseInt(item.quantity) : item.quantity);
+                    const tempProduct = this.cart.products.find((product) => (parseInt(product.id) === parseInt(item.id)));
+                    if (tempProduct) {
+                        if (tempProduct.products?.length && item.products?.length) {
+                            const kitProductsWithSameId = this.cart.products.filter((productCartTemp) => ((parseInt(productCartTemp.id) === parseInt(item.id)) && productCartTemp.products?.length));
+                            const kitProductAlreadyExists = kitProductsWithSameId.some((productCart) => {
+                                return item.products.every((itemProduct) => {
+                                    return productCart?.products.some((kitProductWithSameId) => {
+                                        return (kitProductWithSameId.id === itemProduct.id) && (kitProductWithSameId.quantity === itemProduct.quantity);
+                                    });
+                                });
+                            });
+                            if (tempProduct.quantity && kitProductAlreadyExists) {
+                                tempQuantity = parseInt(tempProduct.quantity) + parseInt(item.quantity);
+                            }
+                        } else if (tempProduct.groupPurchase?.length && item.groupPurchase?.length) {
+                            const groupProductsWithSameId = this.cart.products.filter((productCartTemp) => ((parseInt(productCartTemp.id) === parseInt(item.id)) && productCartTemp.groupPurchase?.length));
+                            const groupProductAlreadyExists = groupProductsWithSameId.some((productCart) => {
+                                return item.groupPurchase.filter((itemProduct) => (!itemProduct.manageStock || (itemProduct.manageStock && itemProduct.stockTotal > 0))).every((itemProduct) => {
+                                    return productCart?.groupPurchase.some((groupProductWithSameId) => {
+                                        return (Number(groupProductWithSameId.id) === Number(itemProduct.id)) && (Number(groupProductWithSameId.quantity) === Number(itemProduct.quantity));
+                                    });
+                                });
+                            });
+
+                            if (tempProduct.quantity && groupProductAlreadyExists) {
+                                const tempProduct = this.cart.products.filter((productCart) => {
+                                    const isGroupPurchaseProduct = item.groupPurchase.filter((itemProduct) => (!itemProduct.manageStock || (itemProduct.manageStock && itemProduct.stockTotal > 0))).every((itemProduct) => {
+                                        if (productCart.groupPurchase) {
+                                            return productCart?.groupPurchase.some((groupProductWithSameId) => {
+                                                return (Number(groupProductWithSameId.id) === Number(itemProduct.id)) && (Number(groupProductWithSameId.quantity) === Number(itemProduct.quantity));
+                                            });
+                                        }
+                                    });
+                                    if (isGroupPurchaseProduct) {
+                                        return {
+                                            ...productCart
+                                        };
+                                    }
+                                })[0];
+                                tempQuantity = parseInt(tempProduct.quantity) + parseInt(item.quantity);
+                            }
+                        } else {
+                            if (tempProduct.quantity) {
+                                tempQuantity = parseInt(tempProduct.quantity) + parseInt(item.quantity);
+                            }
+                        }
+                    }
+                    return {
+                        ...item,
+                        quantity: tempQuantity,
+                    };
+                });
+            },
+            removeProduct: function removeProduct(uid, product) {
+                this.loading = true;
+                StoreSDK.request.del('/ajax/cart/products/' + uid)
+                    .then((cart) => {
+                        this.loading = false;
+                        this.cart = cart;
+                        this.updateCartQuantity(this.cart);
+                        this.checkAvailableStock();
+
+                        this.removeFromCartGA(product);
+                        this.updateCartProductMailbiz(product, 0);
+                    }).catch(() => {
+                    this.loading = false;
+                });
+            },
+            checkProductsReachesQuantityLimit: function checkProductsReachesQuantityLimit(uid, cartProducts, product) {
+                return cartProducts.map((cartProduct) => {
+                    let msgReachedQuantityLimit = null;
+                    if ((cartProduct.uid === uid) && (cartProduct.manageStock)) {
+                        if (product.quantity > cartProduct.maxQuantity) {
+                            msgReachedQuantityLimit = `Quantidade máxima deste item é: ${cartProduct.maxQuantity}`;
+                        }
+                    }
+                    return {
+                        ...cartProduct,
+                        msgReachedQuantityLimit: msgReachedQuantityLimit
+                    }
+
+                });
+            },
+            saveQuantity: StoreSDK.utils.debounce(function (uid) {
+                const product = this.cart.products.find(prdct => prdct.uid === uid);
+
+                const data = [{
+                    id: product.id,
+                    quantity: parseInt(product.quantity),
+                    uid: uid,
+                }];
+
+                if(product.products?.length){
+                    data[0].products = product.products.map((item) => ({ id: item.id, quantity: item.quantity, uid: item.uid }))
+                }
+
+                if ((product.groupPurchase?.length && data && data[0].uid)) {
+                    data[0].groupPurchase = product.groupPurchase;
+                    data[0].tempUid = data[0].uid;
+                }
+
+                this.loading = true;
+                StoreSDK.request.post('/ajax/cart/add', data)
+                    .then((cart) => {
+                        if (cart.products) {
+                            cart.products = this.checkProductsReachesQuantityLimit(uid, cart.products, product);
+                        }
+
+                        this.loading = false;
+                        this.cart = cart;
+                        this.updateCartQuantity(this.cart);
+                    })
+                    .catch(() => {
+                        this.loading = false;
+                    });
+            }, 250, false, true),
+            handleIncreaseQuantity: function(uid) {
+                this.cart.products = this.cart.products.map((product) => {
+                    if  (product.uid === uid) {
+                        if (product.products?.length) {
+                            product.products = product.products;
+                        }
+                        product.quantity = parseInt(product.quantity);
+                        product.quantity += 1;
+                        product.totalPrice = product.unitPrice * product.quantity;
+
+                        this.updateCartProductMailbiz(product, parseInt(product.quantity), this.cart);
+                        window.dispatchEvent(
+                            new CustomEvent("change-quantity-cart", {detail: {id: product.id, quantity: product.quantity}})
+                        );
+                    }
+                    return product;
+                })
+                this.saveQuantity(uid);
+            },
+            handleDecreaseQuantity: function(uid) {
+                this.cart.products = this.cart.products.map((product) => {
+                    if  (product.uid === uid) {
+                        product.quantity = parseInt(product.quantity);
+                        product.quantity -= 1
+                        product.totalPrice = product.unitPrice * product.quantity;
+                        this.updateCartProductMailbiz(product, parseInt(product.quantity), this.cart);
+                        window.dispatchEvent(
+                            new CustomEvent("change-quantity-cart", {detail: {id: product.id, quantity: product.quantity}})
+                        );
+                    }
+                    return product;
+                });
+                this.saveQuantity(uid);
+            },
+            handleQuantity: function(uid) {
+                this.cart.products = this.cart.products.map((product) => {
+                    if  (product.uid === uid) {
+                        product.totalPrice = product.unitPrice * parseInt(product.quantity);
+                        this.updateCartProductMailbiz(product, parseInt(product.quantity), this.cart);
+                        window.dispatchEvent(
+                            new CustomEvent("change-quantity-cart", {detail: {id: product.id, quantity: parseInt(product.quantity)}})
+                        );
+                    }
+                    return product;
+                });
+                this.saveQuantity(uid);
+            },
+            cartOpen: function cartOpen(data) {
+                if(data && data.isViewCart){
+                    if (this.cart?.products.length) {
+                        this.viewCartGA(this.cart);
+                    }
+                    this.checkAvailableStockOpen();
+                }
+            },
+            addToCartFacebookPixel: function addToCartFacebookPixel(cart, data) {
+                if (typeof fbq !== 'undefined') {
+                    const tempAddToCartFacebookPixel = this.addToCartFacebookPixelTransform(cart, data);
+                    fbq('track', 'AddToCart', tempAddToCartFacebookPixel);
+                }
+            },
+            addToCartFacebookPixelTransform: function addToCartFacebookPixelTransform(cart, data) {
+                const selectedProduct = cart.products.filter((item) => (item.id === parseInt(data.id)))[0];
+
+                const result = {
+                    content_ids: [data.id],
+                    content_name: `Adicionar produto ao carrinho - ${selectedProduct.title}`,
+                    content_type: 'product',
+                    contents: [
+                        {
+                            id: data.id,
+                            title: selectedProduct.title,
+                            quantity: data.quantity,
+                            unitPrice: selectedProduct.unitPrice,
+                            totalPrice: selectedProduct.totalPrice,
+                        }
+                    ],
+                    currency: 'BRL',
+                    value: parseFloat(selectedProduct.totalPrice).toFixed(2),
+                };
+
+                if (selectedProduct.sku) {
+                    result.contents[0].sku = selectedProduct.sku;
+                }
+
+                return result;
+            },
+            addToCartGA: function addToCartGA(cart, data) {
+                if (typeof gtag !== 'undefined') {
+                    const tempAddCart = this.addToCartGATransform(cart, data);
+                    gtag("event", "add_to_cart", tempAddCart);
+                }
+            },
+            addToCartGATransform: function addToCartGATransform(cart, data) {
+                const tempAddCartItems = data.map((dataItem) => {
+                    const cartItem = cart.products.filter((item) => (item.id === parseInt(dataItem.id)))[0];
+                    const tempCartItem = {
+                        currency: 'BRL',
+                        item_id: cartItem.sku ? cartItem.sku : cartItem.id,
+                        item_name: cartItem.title,
+                        price: (cartItem.unitPrice).toFixed(2),
+                        quantity: dataItem.quantity
+                    };
+                    if (cartItem.categories && (cartItem.categories.length > 0)) {
+                        const categorieMain = cartItem.categories.reduce((categorie) => (categorie.main === true));
+                        const tempCategory = categorieMain.treeName ? categorieMain.treeName.split('##') : null;
+                        if (tempCategory) {
+                            tempCategory.forEach((category, index) => {
+                                if (index <= 0) {
+                                    tempCartItem['item_category'] = category;
+                                } else {
+                                    tempCartItem[`item_category${index + 1}`] = category;
+                                }
+                            });
+                        }
+                    }
+                    if (cartItem.grids) {
+                        let tempItemVariant = '';
+                        cartItem.grids.forEach((grid) => {
+                            if (grid.value) {
+                                tempItemVariant += `${grid.value} / `
+                            }
+                        });
+                        tempCartItem['item_variant'] = tempItemVariant.replace(/ \/ $/, '')
+                    }
+                    return tempCartItem;
+                });
+
+                const tempAddCart = {
+                    currency: 'BRL',
+                    items: tempAddCartItems,
+                    value: (tempAddCartItems[0].price * tempAddCartItems[0].quantity).toFixed(2)
+                };
+                return tempAddCart;
+            },
+            viewCartGA: function viewCartGA(cart) {
+                if (typeof gtag !== 'undefined') {
+                    const tempViewCart = this.viewGATransform(cart);
+                    gtag("event", "view_cart", tempViewCart);
+                }
+            },
+            viewGATransform: function viewGATransform(cart) {
+                const tempViewItems = cart.products.map((cartItem) => {
+                    const tempCartItem = {
+                        currency: 'BRL',
+                        item_id: cartItem.sku ? cartItem.sku : cartItem.id,
+                        item_name: cartItem.title,
+                        price: (cartItem.unitPrice).toFixed(2),
+                        quantity: cartItem.quantity
+                    };
+                    if (cartItem.categories && (cartItem.categories.length > 0)) {
+                        const categorieMain = cartItem.categories.reduce((categorie) => (categorie.main === true));
+                        const tempCategory = categorieMain.treeName ? categorieMain.treeName.split('##') : null;
+                        if (tempCategory) {
+                            tempCategory.forEach((category, index) => {
+                                if (index <= 0) {
+                                    tempCartItem['item_category'] = category;
+                                } else {
+                                    tempCartItem[`item_category${index + 1}`] = category;
+                                }
+                            });
+                        }
+                    }
+                    if (cartItem.grids) {
+                        let tempItemVariant = '';
+                        cartItem.grids.forEach((grid) => {
+                            if (grid.value) {
+                                tempItemVariant += `${grid.value} / `
+                            }
+                        });
+                        tempCartItem['item_variant'] = tempItemVariant.replace(/ \/ $/, '')
+                    }
+                    return tempCartItem;
+                });
+
+                const tempViewCart = {
+                    currency: 'BRL',
+                    items: tempViewItems,
+                    value: (parseFloat(cart.total)).toFixed(2)
+                };
+                return tempViewCart;
+            },
+            removeFromCartGA: function removeFromCartGA(product) {
+                if (typeof gtag !== 'undefined') {
+                    const tempRemoveFromCart = this.removeFromCartGATransform(product);
+                    gtag("event", "remove_from_cart", tempRemoveFromCart);
+                }
+            },
+            removeFromCartGATransform: function removeFromCartGATransform(cartItem) {
+                const tempCartItem = {
+                    currency: 'BRL',
+                    item_id: cartItem.sku ? cartItem.sku : cartItem.id,
+                    item_name: cartItem.title,
+                    price: (cartItem.unitPrice).toFixed(2),
+                    quantity: cartItem.quantity
+                };
+                if (cartItem.categories && (cartItem.categories.length > 0)) {
+                    const categorieMain = cartItem.categories.reduce((categorie) => (categorie.main === true));
+                    const tempCategory = categorieMain.treeName ? categorieMain.treeName.split('##') : null;
+                    if (tempCategory) {
+                        tempCategory.forEach((category, index) => {
+                            if (index <= 0) {
+                                tempCartItem['item_category'] = category;
+                            } else {
+                                tempCartItem[`item_category${index + 1}`] = category;
+                            }
+                        });
+                    }
+                }
+                if (cartItem.grids) {
+                    let tempItemVariant = '';
+                    cartItem.grids.forEach((grid) => {
+                        if (grid.value) {
+                            tempItemVariant += `${grid.value} / `
+                        }
+                    });
+                    tempCartItem['item_variant'] = tempItemVariant.replace(/ \/ $/, '')
+                }
+
+                const tempRemoveFromCart = {
+                    currency: 'BRL',
+                    items: tempCartItem,
+                    value: (tempCartItem.price * tempCartItem.quantity).toFixed(2)
+                };
+                return tempRemoveFromCart;
+            },
+
+            updateCartProductMailbiz: function updateCartProductMailbiz(product, quantity = 0, cart = this.cart) {
+                if (typeof mb_track !== 'undefined') {
+                    window.mb_track('cartItemUpdate', {
+                        cart_id: cart.id,
+                        product_id: product.id,
+                        sku: product.sku || '',
+                        quantity,
+                    });
+                }
+            },
+
+            updateCartPlugins: function updateCartPlugins(data) {
+                StoreSDK.request.get('/ajax/cart', data)
+                    .then((cart) => {
+                        cart.products.map((itemCart) => {
+                            const newData = [
+                                {
+                                    id: itemCart.id,
+                                    quantity: itemCart.quantity
+                                }
+                            ];
+                            this.addToCartGA(cart, newData);
+                            this.addToCartFacebookPixel(cart, newData[0]);
+                        });
+                    }).catch(() => {
+                });
+            },
+        }
+    }
+</script>

@@ -1,0 +1,21 @@
+<section class="showcase showcase-related">
+    {% assign sectionConfig = showcaseSection.config %}
+    <h2 class="showcase-title">
+        Produtos Relacionados
+    </h2>
+    <div class="showcase-products">
+        <div class="showcase-list showcase-list-related">
+            <ul class="showcase-slider showcase-slider-related">
+                {%- render 'sections/showcase-model-product', products: relatedProducts, sectionConfig: sectionConfig, themeConfig: themeConfig -%}
+            </ul>
+            <div class="controls controls-arrow" aria-label="Carousel Navigation" tabindex="0">
+                <button class="slider__arrow slider__arrow--prev" data-glide-dir="<" aria-label="Anterior" title="Anterior">
+                    {{ themeConfig.icons.arrow.prev }}
+                </button>
+                <button class="slider__arrow slider__arrow--next" data-glide-dir=">" aria-label="Próximo" title="Próximo">
+                    {{ themeConfig.icons.arrow.next }}
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

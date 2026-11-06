@@ -1,0 +1,141 @@
+{% if product %}
+    {% if product.kitOptions.size <= 0 %}
+        {% if themeConfig.price.type != 'hide' or themeConfig.buyAction.type != 'hide' %}
+            {% if themeConfig.buyAction.type != 'login' %}
+
+                {% assign colorSchema = '' %}
+                {% if product.gridOptions %}
+                    {% for gridOption in product.gridOptions %}
+                        {% if gridOption.name == 'Cor' %}
+                            {% for variation in gridOption.options %}
+                                {% if variation.selected and variation.value %}
+                                    {% assign colorSchema = variation.value %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% assign priceValidUntil = product.price.datePromotionEnd %}
+                {% assign hasPromotionEnd = false %}
+                {% if product.price.datePromotionEnd != null and product.price.datePromotionEnd != '' %}
+                    {% assign hasPromotionEnd = true %}
+                {% endif %}
+
+                {% assign availabilitySchema = 'https://schema.org/OutOfStock' %}
+                {% if product.manageStock == false or product.stockTotal > 0 %}
+                    {% if product.price.showPrice %}
+                        {% if themeConfig.price.type == 'hide' %}
+                            {% assign availabilitySchema = 'https://schema.org/PreSale' %}
+                        {% else %}
+                            {% assign availabilitySchema = 'https://schema.org/InStock' %}
+                        {% endif %}
+                    {% else %}
+                        {% assign availabilitySchema = 'https://schema.org/PreSale' %}
+                    {% endif %}
+                {% endif %}
+
+
+                {% assign productTitle = product.title %}
+                {% if product.multiple > 1 %}
+                    {% assign productTitle = productTitle | append: ' - ' | append: product.multiple %}
+                    {% if product.unitName %}
+                        {% assign productUnitName = product.unitName | downcase %}
+                        {% assign productTitle = productTitle | append: ' ' | append: productUnitName | append: 's' %}
+                    {% endif %}
+                {% endif %}
+
+                {% assign descriptionSchemaDowncase = productTitle | downcase %}
+                {% assign descriptionSchema = descriptionSchemaDowncase | capitalize %}
+                {% if product.seoDescription %}
+                    {% assign descriptionSchemaDowncase = product.seoDescription | downcase %}
+                    {% assign descriptionSchema = descriptionSchemaDowncase | capitalize %}
+                {% else %}
+                    {% if product.descriptions.size > 0 %}
+                        {% assign descriptionSchemaDowncase = product.descriptions[0].text | downcase %}
+                        {% assign descriptionSchema = descriptionSchemaDowncase | capitalize %}
+                    {% endif %}
+                {% endif %}
+
+                {% assign productPricePrimary = product.price %}
+                {% if product.primaryPrice %}
+                    {% assign productPricePrimary = product.primaryPrice %}
+                {% endif %}
+                {% if product.secondaryPrice %}
+                    {% assign productPriceSecond = product.secondaryPrice %}
+                {% endif %}
+                {% assign mainPricePrimary = productPricePrimary.price %}
+                {% if productPricePrimary.promotionPrice > 0 %}
+                    {% assign mainPricePrimary = productPricePrimary.promotionPrice %}
+                    {% assign promotionPrice = productPricePrimary.price %}
+                {% endif %}
+
+                {% assign productID = '' %}
+                {% if product.sku %}
+                    {% assign productID = product.sku | escape %}
+                {% else %}
+                    {% assign productID = product.id %}
+                {% endif %}
+                <script id="product-schema" type="application/ld+json"></script>
+                <script>
+                    function updateSchema(state) {
+                        const schemaProduct = {
+                            "@context": "https://schema.org",
+                            "@type": "Product",
+                            "description": "{{ descriptionSchema }}",
+                            "productID": "{{ productID }}",
+                            "name": "{{ productTitle | escape }}",
+                            "image": "{{ product.medias[0].path | imgUrl: 250 }}",
+                            {% if product.mpn %}"mpn": "{{ product.mpn }}",{% endif %}
+                            {% if product.ncm %}"ncm": "{{ product.ncm }}",{% endif %}
+                            {% if product.sku %}"sku": "{{ product.sku  |  escape }}",{% endif %}
+                            {% if colorSchema %}"color": "{{ colorSchema }}",{% endif %}
+                            {% if product.barcode %}"gtin": "{{ product.barcode }}",{% endif %}
+                            {% if product.brandName %}
+                            "brand": [
+                                {
+                                    "@type": "Brand",
+                                    "name": "{{ product.brandName }}"
+                                }
+                            ],
+                            {% endif %}
+                            "offers": [
+                                {
+                                    "@type": "Offer",
+                                    "availability": "{{ availabilitySchema }}",
+                                    "description": "{{ descriptionSchema }}",
+                                    "price": "{{ mainPricePrimary }}",
+                                    "priceCurrency": "BRL",
+                                    {% if hasPromotionEnd %}"priceValidUntil": "{{ priceValidUntil | date: '%Y-%m-%d' }}",{% endif %}
+                                    {% if product.sku %}"sku": "{{ product.sku }}",{% endif %}
+                                    "url": "{{ product.slug | linkProduct: product.id }}"
+                                }
+                            ],
+                            "shippingDetails": [
+                                {
+                                    "@type": "OfferShippingDetails",
+                                    "shippingDestination": [
+                                        {
+                                            "@type": "DefinedRegion",
+                                            "addressCountry": "BR"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+
+                        if (state?.review?.total > 0) {
+                            schemaProduct.aggregateRating = {
+                                "@type": "AggregateRating",
+                                "ratingValue": state.review.media,
+                                "reviewCount": state.review.total
+                            };
+                        }
+
+                        document.getElementById("product-schema").textContent = JSON.stringify(schemaProduct);
+                    }
+                </script>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endif %}

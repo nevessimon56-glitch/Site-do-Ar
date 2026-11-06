@@ -1,0 +1,125 @@
+<!-- Showcase Model 13 - Banner Full Mosaic  -->
+<section class="showcase showcase-model-{{ showcaseSection.typeId }} showcase-model-{{ showcaseSection.typeId }}_{{ showcaseSection.config.device }} showcase-{{ showcaseSection.id }}">
+    <div class="content">
+        <div class="showcase-banners-full showcase-banners-full_desktop {% if showcaseSection.config.device == 'mobile' %}d-hide{% else %}hide-sm{% endif %}">
+            <div class="columns">
+                {% assign showcaseMedia1 = '' %}
+                {% assign showcaseMedia2 = '' %}
+                {% assign showcaseMedia3 = '' %}
+                {% assign showcaseMedia4 = '' %}
+
+                {% for showcaseMedia in showcaseSection.config.medias limit: 4 %}
+                    {% if forloop.index == 1 %}
+                        {% assign showcaseMedia1 = showcaseMedia %}
+                    {% elsif forloop.index == 2 %}
+                        {% assign showcaseMedia2 = showcaseMedia %}
+                    {% elsif forloop.index == 3 %}
+                        {% assign showcaseMedia3 = showcaseMedia %}
+                    {% elsif forloop.index == 4 %}
+                        {% assign showcaseMedia4 = showcaseMedia %}
+                    {% endif %}
+                {% endfor %}
+                <div class="column col-position-1 col-3">
+                    <div class="showcase-banner_group showcase-banner-group_1">
+                        {% if showcaseMedia1 and showcaseMedia1.path %}
+                            <a class="showcase-banner_link showcase-banner-link_1" href="{% if showcaseMedia1.link %}{{ showcaseMedia1.link }}{% else %}javascript:void(0){% endif %}" title="{{ showcaseMedia1.title }}">
+                                <picture>
+                                    <img class="showcase-banner_img showcase-banner-img_1 img-lazy" data-src="{{ showcaseMedia1.path | imgUrl : 424 }}" alt="{{ showcaseMedia1.title }}">
+                                </picture>
+                            </a>
+                        {% else %}
+                            <a class="showcase-banner_link showcase-banner-link_1 showcase-banner-link_exemple" href="javascript:void(0);" title="Imagem 1">
+                                <div class="showcase-banner_image__empty">
+                                    {{ themeConfig.icons.image }}
+                                </div>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="column col-position-2 col-6">
+                    <div class="showcase-banner_group showcase-banner-group_2">
+                        {% if showcaseMedia2 and showcaseMedia2.path %}
+                            <a class="showcase-banner_link showcase-banner-link_2" href="{% if showcaseMedia2.link %}{{ showcaseMedia2.link }}{% else %}javascript:void(0){% endif %}" title="{{ showcaseMedia2.title }}">
+                                <picture>
+                                    <img class="showcase-banner_img showcase-banner-img_2 img-lazy" data-src="{{ showcaseMedia2.path | imgUrl : 952 }}" alt="{{ showcaseMedia2.title }}">
+                                </picture>
+                            </a>
+                        {% else %}
+                            <a class="showcase-banner_link showcase-banner-link_2 showcase-banner-link_exemple" href="javascript:void(0);" title="Imagem 2">
+                                <div class="showcase-banner_image__empty">
+                                    {{ themeConfig.icons.image }}
+                                </div>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="column col-position-3 col-3">
+                    <div class="showcase-banner_group showcase-banner-group_3">
+                        {% if showcaseMedia3 and showcaseMedia3.path %}
+                            <a class="showcase-banner_link showcase-banner-link_3 showcase-banner-link_exemple" href="{% if showcaseMedia3.link %}{{ showcaseMedia3.link }}{% else %}javascript:void(0){% endif %}" title="{{ showcaseMedia3.title }}">
+                                <picture>
+                                    <img class="showcase-banner_img showcase-banner-img_3 img-lazy" data-src="{{ showcaseMedia3.path | imgUrl : 512 }}" alt="{{ showcaseMedia3.title }}">
+                                </picture>
+                            </a>
+                        {% else %}
+                            <a class="showcase-banner_link showcase-banner-link_3 showcase-banner-link_exemple" href="javascript:void(0);" title="Imagem 3">
+                                <div class="showcase-banner_image__empty">
+                                    {{ themeConfig.icons.image }}
+                                </div>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="showcase-banner_group showcase-banner-group_4">
+                        {% if showcaseMedia4 and showcaseMedia4.path %}
+                            <a class="showcase-banner_link showcase-banner-link_4" href="{% if showcaseMedia4.link %}{{ showcaseMedia4.link }}{% else %}javascript:void(0){% endif %}" title="{{ showcaseMedia4.title }}">
+                                <picture>
+                                    <img class="showcase-banner_img showcase-banner-img_4 img-lazy" data-src="{{ showcaseMedia4.path | imgUrl : 512 }}" alt="{{ showcaseMedia4.title }}">
+                                </picture>
+                            </a>
+                        {% else %}
+                            <a class="showcase-banner_link showcase-banner-link_4 showcase-banner-link_exemple" href="javascript:void(0);" title="Imagem 4">
+                                <div class="showcase-banner_image__empty">
+                                    {{ themeConfig.icons.image }}
+                                </div>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="showcase-banners-full showcase-banners-full_mobile {% if showcaseSection.config.device == 'desktop' %}show-sm{% endif %}">
+            <div class="showcase-banners_list">
+                <ul class="banner-full_slider">
+                    {% assign sectionMedias = showcaseSection.config.medias %}
+                    {% for showcaseMedia in sectionMedias %}
+                        {% assign banneLink = 'javascript:void(0)' %}
+                        {% if showcaseMedia.link %}
+                            {% assign banneLink = showcaseMedia.link %}
+                        {% endif %}
+                        <li class="showcase-banners_item">
+                            <a class="showcase-banners_link" href="{{ banneLink }}"
+                               title="{{ showcaseMedia.title }}">
+                                {% if showcaseMedia.path %}
+                                    <picture>
+                                        <img class="banner-main_img lazy-slider" data-src="{{ showcaseMedia.path | imgUrl  }}" alt="{{ showcaseMedia.title }}">
+                                    </picture>
+                                {% else %}
+                                    {{ themeConfig.icons.image }}
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% else %}
+                        {% for i in (1..4) %}
+                            <li class="showcase-banners_item showcase-banners_item__exemple">
+                                <a class="showcase-banners_link" href="javascript:void(O)"
+                                   title="Banner Full -  Imagem {{ i }}">
+                                    {{ themeConfig.icons.image }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

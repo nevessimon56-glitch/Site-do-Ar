@@ -1,0 +1,139 @@
+<!-- Showcase Model 9 - Promotion -->
+
+{% assign isPromotion = false %}
+{% for product in products %}
+    {% if product.price.datePromotionEnd and product.price.showPrice and product.price.promotionPrice > 0 %}
+        {% assign isPromotion = true %}
+        {% break %}
+    {% endif %}
+{% endfor %}
+{% if isPromotion %}
+    <section class="showcase showcase-{{ showcaseSection.id }} showcase-model-{{ showcaseSection.typeId }} showcase-model-promotion">
+        {% assign sectionConfig = showcaseSection.config %}
+        <div class="container">
+            <h2 class="showcase-title{{ classTitle }}" style="display: none; opacity: 0;">
+                {{ showcaseSection.name }}
+            </h2>
+            <div class="showcase-promotions">
+                <ul class="showcase-promotions-list slider-products">
+                    {% assign maximumProducts = 30 %}
+                    {% assign products = showcaseSection.products %}
+                    {% if sectionConfig.rowQuantity and sectionConfig.columnQuantity %}
+                        {% assign maximumProducts = sectionConfig.rowQuantity | times: sectionConfig.columnQuantity %}
+                    {% endif %}
+                    {% if products %}
+                        {% assign products = products %}
+                    {% endif %}
+                    {% for product in products limit: maximumProducts %}
+                        {% if product.price.datePromotionEnd and product.price.showPrice and product.price.promotionPrice > 0 %}
+                            <li class="showcase-promotion-item" x-init="getShowcasePromotion{{ forloop.index }}()" x-data="setupShowcasePromotion{{ forloop.index }}()">
+                                <div class="showcase-timer">
+                                    <div class="showcase-timer-box">
+                                        <div class="showcase-timer-header">
+                                            <p class="showcase-timer-title">
+                                                {{ showcaseSection.name }}
+                                            </p>
+                                        </div>
+                                        <div class="showcase-timer-content">
+                                            <p class="showcase-timer-content_title">Faltam apenas</p>
+                                            <ul class="showcase-timer-content_list">
+                                                <li class="showcase-timer-content_item">
+                                                    <p class="showcase-timer-content_number">
+                                                        <span x-text="state.countdownTimer.days"></span>
+                                                    </p>
+                                                    <p class="showcase-timer-content_text">
+                                                        Dias
+                                                    </p>
+                                                </li>
+                                                <li class="showcase-timer-content_item">
+                                                    <p class="showcase-timer-content_number">
+                                                        <span x-text="state.countdownTimer.hours"></span>
+                                                    </p>
+                                                    <p class="showcase-timer-content_text">
+                                                        Horas
+                                                    </p>
+                                                </li>
+                                                <li class="showcase-timer-content_item">
+                                                    <p class="showcase-timer-content_number">
+                                                        <span x-text="state.countdownTimer.minutes"></span>
+                                                    </p>
+                                                    <p class="showcase-timer-content_text">
+                                                        Minutos
+                                                    </p>
+                                                </li>
+                                                <li class="showcase-timer-content_item">
+                                                    <p class="showcase-timer-content_number">
+                                                        <span x-text="state.countdownTimer.seconds"></span>
+                                                    </p>
+                                                    <p class="showcase-timer-content_text">
+                                                        Segundos
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="showcase-timer-footer">
+                                            <div class="showcase-timer-footer_icon">
+                                                {{ themeConfig.icons.flags }}
+                                            </div>
+                                            <div class="showcase-timer-footer_text">
+                                                Término da promoção {{ product.price | promotionEndDate }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="showcase-promotion-product">
+                                    {%- render 'sections/showcase-model-product-promotion', product: product, themeConfig: themeConfig -%}
+                                </div>
+                                <script>
+                                    function setupShowcasePromotion{{ forloop.index }}() {
+                                        const state = {
+                                            datePromotionEnd: '{{ product.price.datePromotionEnd | formatPromotionEndDateCountDown}}',
+                                            countDownDate: '',
+                                            countdownTimer: {}
+                                        }
+
+                                        function getShowcasePromotion{{ forloop.index }} () {
+                                            setInterval(() => {
+                                                if (this.state.datePromotionEnd) {
+                                                    this.state.countDownDate = new Date(this.state.datePromotionEnd).getTime();
+                                                }
+                                                this.state.countdownTimer = countdownTimer{{ forloop.index }}(this.state.countDownDate);
+                                            }, 1000)
+                                        }
+
+                                        function countdownTimer{{ forloop.index }}(countDownDate){
+                                            // Get today's date and time
+                                            const now = new Date().getTime();
+
+                                            // Find the distance between now and the count down date
+                                            const distance = countDownDate - now;
+                                            return {
+                                                days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                                                hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                                                minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                                                seconds: Math.floor((distance % (1000 * 60)) / 1000)
+                                            };
+                                        }
+                                        return {
+                                            state,
+                                            getShowcasePromotion{{ forloop.index }},
+                                            countdownTimer{{ forloop.index }},
+                                        }
+                                    }
+                                </script>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                <div class="controls controls-arrow" aria-label="Carousel Navigation" tabindex="0">
+                    <button class="slider__arrow slider__arrow--prev{{ classCenterSliderArrow }}" aria-label="Anterior">
+                        {{ themeConfig.icons.arrow.default }}
+                    </button>
+                    <button class="slider__arrow slider__arrow--next{{ classCenterSliderArrow }}" aria-label="Próximo">
+                        {{ themeConfig.icons.arrow.default }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endif %}

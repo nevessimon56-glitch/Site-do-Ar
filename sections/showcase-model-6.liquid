@@ -1,0 +1,65 @@
+<section class="showcase showcase-{{ showcaseSection.id }} showcase-model-{{ showcaseSection.typeId }}">
+    {% assign sectionConfig = showcaseSection.config %}
+    <div class="container">
+        <!-- Título da Vitrine 6 -->
+        {% if showcaseSection.name %}
+            {% assign styleTitle = '' %}
+            {% case sectionConfig.namePosition %}
+                {% when 'center' %}
+                    {% assign styleTitle = 'text-align: center;' %}
+                {% when 'left' %}
+                    {% assign styleTitle = 'text-align: left;' %}
+                {% when 'right' %}
+                    {% assign styleTitle = 'text-align: right;' %}
+                {% when "hidden" %}
+                    {% assign styleTitle = "display: none;" %}
+            {% endcase %}
+            <h2 class="showcase-title" style="{{ styleTitle }}">
+                {{ showcaseSection.name }}
+            </h2>
+        {% endif %}
+        <div class="showcase-banners">
+            <div class="showcase-image-carousel-{{ sectionConfig.columnQuantity }}">
+                <ul class="showcase-image-{{ sectionConfig.columnQuantity }} autoplay-{{ sectionConfig.carouselAutoplay }}">
+                    {% for showcaseMedia in showcaseSection.config.medias %}
+                        {% assign banneLink = 'javascript:void(0)' %}
+                        {% if showcaseMedia.link %}
+                            {% assign banneLink = showcaseMedia.link %}
+                        {% endif %}
+                        <li class="showcase-banners_item">
+                            <a class="showcase-banners_link" href="{{ banneLink }}" title="{{ showcaseMedia.title }}">
+                                {% if showcaseMedia.path %}
+                                <picture>
+                                    <img class="banner-grid lazy-slider"
+                                        data-src="{{ showcaseMedia.path | imgUrl  }}"
+                                        alt="{{ showcaseMedia.title }}"
+                                    >
+                                </picture>
+                                {% else %}
+                                    {{ themeConfig.icons.image }}
+                                {% endif %}
+                            </a>
+                            {% if showcaseSection.config.mediaTitleDisplay %}
+                                <h5 class="showcase-image-title">
+                                    {{ showcaseMedia.title }}
+                                </h5>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% assign classCenterSliderArrow = '' %}
+                {% if sectionConfig.namePosition == 'hidden' %}
+                    {% assign classCenterSliderArrow = ' slider__arrow--center' %}
+                {% endif %}
+                <div class="controls controls-arrow" aria-label="Carousel Navigation" tabindex="0">
+                    <button class="slider__arrow slider__arrow--prev{{ classCenterSliderArrow }}" aria-label="Anterior">
+                        {{ themeConfig.icons.arrow.prev }}
+                    </button>
+                    <button class="slider__arrow slider__arrow--next{{ classCenterSliderArrow }}" aria-label="Próximo">
+                        {{ themeConfig.icons.arrow.next }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

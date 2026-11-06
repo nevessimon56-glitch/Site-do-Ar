@@ -1,0 +1,179 @@
+<div class="sidenav-overlay sidenav-shipping-calculation"
+     x-data="setupShippingCalculation()"
+     x-on:change-quantity.window="changeQuantity($event.detail)"
+>
+    <form class="sidenav-container form-shipping-calculation" x-on:submit.prevent>
+        <div class="sidenav-header">
+            <a class="btn-sidenav-close float-right" href="javascript:void(0)" aria-label="Close" onclick="closeSideNavOverlay()">
+                {{ themeConfig.icons.close }}
+            </a>
+            <div class="sidenav-title">
+                Calcular o frete
+            </div>
+        </div>
+        <div class="sidenav-body">
+            <p class="s-subtitle">
+                Digite seu CEP
+            </p>
+            <div class="form-group">
+                <label class="form-label" for="zipcode">Digite seu CEP</label>
+                <input
+                        autocomplete="postal-code"
+                        autofocus="autofocus"
+                        class="form-input masked-input"
+                        data-mask='#####-###'
+                        id="zipcode"
+                        name="zipcode"
+                        required="required"
+                        type="tel"
+                        @keydown.enter="handleShippingCalculate(true, true)"
+                        x-model="state.zipcode"
+                        :class="{ 'is-error': !!state.errors.zipcode }"
+                >
+                <p class="form-input-hint" x-text="state.errors.zipcode"></p>
+                <template x-if="state.shippingCalculated.showAll === true">
+                    <i class="icon icon-check"></i>
+                </template>
+            </div>
+            <template x-if="state.shippingCalculated.showAll === true">
+                <table>
+                    <template x-for="(optionShipping, index) in state.shippingCalculated.options" :key="index">
+                        <tr>
+                            <td>
+                                <p x-text="optionShipping.name"></p>
+                                <p>
+                                    <span x-text="optionShipping.deadlineText"></span>
+                                </p>
+                                <template x-if="optionShipping.errors && (optionShipping.errors.length >= 1)">
+                                    <div>
+                                        <template x-for="(errorItem, idx) in optionShipping.errors" :key="idx">
+                                            <div x-show="errorItem.showItems || (idx == 0)">
+                                                <span style="color: red;" x-text="errorItem.message"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </td>
+                            <td>
+                                <template x-if="optionShipping.toCombine">
+                                    <p x-text="'A combinar'"></p>
+                                </template>
+                                <template x-if="optionShipping.value === 0 && !optionShipping.toCombine">
+                                    <p x-text="'Grátis'"></p>
+                                </template>
+                                <template x-if="optionShipping.value > 0 && !optionShipping.toCombine">
+                                    <p x-text="StoreSDK.utils.toCurrency(optionShipping.value)"></p>
+                                </template>
+                            </td>
+                        </tr>
+                    </template>
+                </table>
+                <p>
+                    *Prazo contado a partir da data de envio do pedido
+                </p>
+            </template>
+        </div>
+        <div class="sidenav-footer">
+            <div class="form-group">
+                <button class="btn btn-login btn-block" type="button" aria-label="Salvar"
+                        @click="handleShippingCalculate(true, true)">
+                    <template x-if="state.shippingCalculated.showAll === true">
+                        <span>Calcular novamente</span>
+                        <i class="icon icon-refresh"></i>
+                    </template>
+                    <template x-if="state.shippingCalculated.showAll === false">
+                        <span>Calcular</span>
+                    </template>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function setupShippingCalculation() {
+        const state = {
+            products: [],
+            zipcode: localStorage.getItem('customer_zipcode') || '',
+            shippingCalculated: {
+                showAll: false,
+                options: [],
+            },
+            errors: {
+                zipcode: '',
+            },
+        }
+
+        function handleShippingCalculate(isLoading = false, isValidate = false) {
+            if (isValidate === false && this.state.zipcode === '' || this.state.products.length < 0) {
+                return;
+            }
+
+            if (isLoading === true) {
+                openLoadingSideOverlay('.sidenav-shipping-calculation');
+            }
+
+            if (!this.validateShippingZipcode()) {
+                return;
+            }
+
+            const body = {
+                zipcode: this.state.zipcode,
+                products: this.state.products
+            };
+            localStorage.setItem('customer_zipcode', body.zipcode);
+
+            // Cálculo de frete
+            StoreSDK.request.post('/ajax/shippings/calculator', body)
+                .then((response) => {
+                    if (!response.shippingCalculated.options.length) {
+                        notyf.open({
+                            type: 'warning',
+                            message: 'Desculpe, não encontramos um serviço de entrega para o seu endereço',
+                        });
+                    }
+                    this.state.shippingCalculated.options = response.shippingCalculated.options;
+                    this.state.shippingCalculated.showAll = true;
+                    localStorage.setItem('shippingCalculated', JSON.stringify(this.state.shippingCalculated));
+                    setTimeout(function () {
+                        closeLoadingSideOverlay('.sidenav-shipping-calculation');
+                    }, 500);
+                }).catch(() => {
+                this.state.shippingCalculated.showAll = false;
+                setTimeout(function () {
+                    closeLoadingSideOverlay('.sidenav-shipping-calculation');
+                }, 500);
+            });
+        }
+
+
+        function initShipping() {
+            if (this.state.zipcode) {
+                this.handleShippingCalculate(false, false);
+            } else {
+                closeLoadingSideOverlay();
+            }
+        }
+
+        function changeQuantity(products) {
+            this.state.products = products;
+            this.handleShippingCalculate(true, false);
+        }
+
+        function validateShippingZipcode() {
+            this.state.errors.zipcode = '';
+            if (!this.state.zipcode) {
+                this.state.errors.zipcode = 'Informe o CEP';
+                return false;
+            }
+            return true;
+        }
+
+        return {
+            state,
+            changeQuantity,
+            handleShippingCalculate,
+            initShipping,
+            validateShippingZipcode,
+        }
+    }
+</script>

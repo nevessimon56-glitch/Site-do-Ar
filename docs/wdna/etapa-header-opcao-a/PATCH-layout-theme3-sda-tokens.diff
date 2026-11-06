@@ -1,0 +1,8 @@
+--- layout/theme.liquid (tema 3 publicado — baseline painel, ANTES)
++++ layout/theme.liquid (proposta Fase 1 — NÃO aplicado)
+@@ - após theme-custom.css, antes do comentário/bloco mega-menu.css
+     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
++    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/sda-tokens.css' | themeAssetUrl }}">
+     {%- comment -%}
+       Custom CSS (ordem importa):
+       1. mega-menu.css — ...

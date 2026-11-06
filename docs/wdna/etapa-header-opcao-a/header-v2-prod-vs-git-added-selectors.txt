@@ -1,0 +1,36 @@
+.header-v2-mobile-catalog
+.header-v2-mobile-strip
+.header-v2-mobile-strip__link
+.header-v2-mobile-strip__link--ambiente
+.header-v2-mobile-strip__link--diag
+.header-v2-mobile-strip__scroll
+.header-v2-mobile-strip__scroll::-webkit-scrollbar
+.header.header-v2 .header-v2-action__icon svg, .header.header-v2 .header-utility__svg, .header.header-v2 svg.sda-ico-stroke, .header.header-v2 .logo svg, .header.header-v2 .logo picture + svg
+.header:not(.header-checkout) .search-desktop .form-input::placeholder
+.sda-header-v2 .header-box_whatsapp, .sda-header-v2 .header-box-account_tel
+.sda-header-v2 .nav-main_link[href*="diagnostico"], .sda-header-v2 .nav-main_link[href*="Diagnostico"]
+.sda-header-v2 .navbar-center
+.sda-header-v2 .navbar-center .header-box_account.header-box-account-info
+@media (max-width: 991px) { .header-v2 .header-utility
+@media (min-width: 992px) { .header-v2 .header-v2-action
+body .header.header-v2:not(.header-checkout)
+body .header.header-v2:not(.header-checkout) .header-content
+body .header.header-v2:not(.header-checkout) .header-content .navbar, body .header.header-v2:not(.header-checkout) .header-content .navbar.header-v2-navbar
+body .header.header-v2:not(.header-checkout) .header-v2-search .form-input, body .header.header-v2:not(.header-checkout) .header-v2-search-pill__input, body .header.header-v2:not(.header-checkout) .search-desktop .form-input
+body .header.header-v2:not(.header-checkout) .header-v2-search .form-input::placeholder, body .header.header-v2:not(.header-checkout) .header-v2-search-pill__input::placeholder, body .header.header-v2:not(.header-checkout) .search-desktop .form-input::placeholder
+body .header:not(.header-checkout) .account_link, body .header:not(.header-checkout) .header-link_text, body .header:not(.header-checkout) .header-link_text a, body .header:not(.header-checkout) .header-account-kicker, body .header:not(.header-checkout) .header-account-label
+body .header:not(.header-checkout) .header a.header-link_cart:hover, body .header:not(.header-checkout) .header a.header-link_cart:focus, body .header:not(.header-checkout) .header a.cart_link:hover, body .header:not(.header-checkout) .header a.cart_link:focus, body .header:not(.header-checkout) .header-link_cart:hover, body .header:not(.header-checkout) .header-link_cart:focus, body .header:not(.header-checkout) .cart_link:hover, body .header:not(.header-checkout) .cart_link:focus
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:hover, body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:hover, body .header:not(.header-checkout) .header-link-account_info:hover .header-link_text a.account_link:last-child, body .header:not(.header-checkout) .header-box-account-info:hover .header-link_text a.account_link:last-child, body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:hover, body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:hover, body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_text a.account_link:first-child, body .header:not(.header-checkout) .header-box-account_tel:hover .header-link_text a.account_link:first-child
+body .header:not(.header-checkout) .header-box_account .header-link_text .account_link, body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link, body .header:not(.header-checkout) .header-link_account .header-link_text .account_link, body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link
+body .header:not(.header-checkout) .header-link svg, body .header:not(.header-checkout) .icon-ssl svg
+body .header:not(.header-checkout) .header-link-account_info .header-link_icon svg, body .header:not(.header-checkout) .header-link-account_tel .header-link_icon svg
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg, body .header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg, body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg, body .header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg
+body .header:not(.header-checkout) .header-link_cart .cart_quantity, body .header:not(.header-checkout) .cart_link .cart_quantity, body .header:not(.header-checkout) .cart_quantity, body .header:not(.header-checkout) [data-cart-quantity].cart_quantity, body .header:not(.header-checkout) .header-link_cart [data-cart-quantity]
+body .header:not(.header-checkout) .header-link_cart svg, body .header:not(.header-checkout) .header-link_cart .icon_cart, body .header:not(.header-checkout) .cart_link svg
+body .header:not(.header-checkout) .header-link_cart:hover svg, body .header:not(.header-checkout) .header-link_cart:focus svg, body .header:not(.header-checkout) .header-link_cart:hover .icon_cart, body .header:not(.header-checkout) .header-link_cart:focus .icon_cart, body .header:not(.header-checkout) .cart_link:hover svg, body .header:not(.header-checkout) .cart_link:focus svg
+body .header:not(.header-checkout) .header-link_menu__mobile .icon-bar, body .header:not(.header-checkout) .search_link .icon-bar:first-child
+body .header:not(.header-checkout) .search-desktop .btn
+body .header:not(.header-checkout) .search-desktop .btn svg
+body .header:not(.header-checkout) .search-desktop .form-input
+body .header:not(.header-checkout) .search-desktop .form-input::placeholder
+main.home-main, main.search-main, main.product-main

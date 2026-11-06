@@ -1,0 +1,18 @@
+<div class="pages-nav">
+    {% for page in menu.pages %}
+        {% assign linkPage = 'javascript:void(0)' %}
+        {% assign titlePage = '' %}
+        {% if page.url.length > 0 %}
+            {% assign linkPage = page.url %}
+        {% endif %}
+        {% if page.title %}
+            {% assign titlePage = page.title %}
+        {% else %}
+            {% assign titlePage = page.name %}
+        {% endif %}
+        <a class="btn btn-access" href="/{{ linkPage }}" title="{{ titlePage }}">
+            {{ themeConfig.icons.edit }}
+            <span>{{ titlePage }}</span>
+        </a>
+    {% endfor %}
+</div>

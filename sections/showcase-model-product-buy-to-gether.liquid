@@ -1,0 +1,47 @@
+{% if product %}
+    <div class="showcase-product card">
+        <div class="card-header">
+            <h3>
+                <a class="showcase-product_link showcase-product_link_title"
+                   href="{{ product.url }}">
+                    {{ product.title }}
+                </a>
+            </h3>
+        </div>
+        <div class="showcase-product_image card-image">
+            <div class="showcase-tags">
+                {% if product.promotion %}
+                    <div class="showcase-tag">
+                        {{ product.promotion.label }}
+                    </div>
+                {% endif %}
+                {% if product.freeShipping == true %}
+                    <div class="showcase-tag showcase-tag-free_shipping">
+                        Frete Grátis
+                    </div>
+                {% endif %}
+                {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                    <div class="showcase-tag showcase-tag-offer show-lg">
+                        <span>-{{ product.price.promotionMargin | round }}%</span>
+                    </div>
+                {% endif %}
+            </div>
+            {% if product.price.promotionMargin > 0 and product.price.promotionPrice != null %}
+                <div class="showcase-offer hide-lg">
+                    <span class="showcase-offer_text">-{{ product.price.promotionMargin | round }}%</span>
+                </div>
+            {% endif %}
+            <a class="showcase-product_link showcase-product_link__image"
+               href="{{ product.url }}">
+                {% if product.medias[0].path != blank %}
+                    <img class="lazy" data-src="{{ product.medias[0].path | imgUrl: 250 }}" alt="{{ product.title }}">
+                    <meta content="{{ product.medias[0].path | imgUrl: 250 }}">
+                {% else %}
+                    {{ themeConfig.icons.image }}
+                {% endif %}
+            </a>
+        </div>
+        <input type="hidden" name="promotionPrice[{{ product.id }}]" value="{{ promotionPrice }}">
+        <input type="hidden" name="price[{{ product.id }}]" value="{{ mainPrice }}">
+    </div>
+{% endif %}
