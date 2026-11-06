@@ -1,0 +1,918 @@
+<meta charset="UTF-8">
+<!-- CALCULADORA BTUs — 3 ETAPAS | visual laranja/navy | cole TUDO na página adicional WDNA (modo HTML) -->
+<!-- CALCULADORA BTUs — Site do Ar | Cole TODO este arquivo no conteúdo HTML da página adicional WDNA -->
+
+<style>
+  .sda-calc, .sda-calc * { box-sizing: border-box; }
+  .sda-calc {
+    --blue:#0756a8; --blue-2:#0b78c8; --navy:#08284f; --orange:#f57c00;
+    --ink:#142238; --muted:#617084; --line:#dce5ef; --soft:#f4f8fc;
+    --green:#1c8b55; --danger:#b3261e; font-family:Arial, sans-serif; color:var(--ink);
+    max-width:1060px; margin:0 auto; padding:18px 16px 48px;
+  }
+  .sda-calc button, .sda-calc input, .sda-calc select { font:inherit; }
+  .sda-calc .hero {
+    position:relative; overflow:hidden; border-radius:18px; padding:30px 30px 34px;
+    background:linear-gradient(120deg,var(--navy),var(--blue-2)); color:#fff;
+  }
+  .sda-calc .hero:after { content:""; position:absolute; width:280px; height:280px; border:42px solid rgba(255,255,255,.1); border-radius:50%; right:-90px; top:-120px; }
+  .sda-calc .hero-logo { position:relative; z-index:1; display:inline-block; margin-bottom:18px; }
+  .sda-calc .hero-logo img { width:145px; height:auto; display:block; filter:brightness(0) invert(1); }
+  .sda-calc h1 { position:relative; z-index:1; margin:0 0 8px; font-size:clamp(24px,4vw,36px); line-height:1.15; }
+  .sda-calc .hero p { position:relative; z-index:1; max-width:650px; margin:0; color:#e4f1ff; font-size:15px; line-height:1.55; }
+  .sda-calc .progress-wrap { display:flex; align-items:center; gap:12px; margin:24px 0 16px; }
+  .sda-calc .progress { height:7px; flex:1; overflow:hidden; border-radius:99px; background:#e8eef5; }
+  .sda-calc .progress-bar { width:33.33%; height:100%; background:var(--orange); transition:width .25s ease; }
+  .sda-calc .progress-text { min-width:78px; color:var(--muted); font-size:13px; font-weight:700; text-align:right; }
+  .sda-calc .step-card { display:none; padding:26px; border:1px solid var(--line); border-radius:16px; background:#fff; box-shadow:0 8px 25px rgba(18,52,86,.07); }
+  .sda-calc .step-card.active { display:block; animation:sda-in .25s ease; }
+  @keyframes sda-in { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+  .sda-calc .step-head { display:flex; align-items:center; gap:12px; margin-bottom:22px; }
+  .sda-calc .step-num { display:grid; place-items:center; width:34px; height:34px; flex:0 0 34px; border-radius:50%; color:#fff; background:var(--blue); font-weight:800; }
+  .sda-calc .step-head h2 { margin:0; font-size:21px; color:var(--navy); }
+  .sda-calc .step-head p { margin:3px 0 0; color:var(--muted); font-size:13px; }
+  .sda-calc .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+  .sda-calc .field { display:flex; min-width:0; flex-direction:column; gap:7px; }
+  .sda-calc .field.full { grid-column:1/-1; }
+  .sda-calc label { color:#34465d; font-size:13px; font-weight:800; }
+  .sda-calc .required { color:var(--orange); }
+  .sda-calc input, .sda-calc select { width:100%; min-height:48px; border:1.5px solid var(--line); border-radius:10px; padding:0 13px; outline:0; color:var(--ink); background:#fff; }
+  .sda-calc select { appearance:none; padding-right:38px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23617084' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; }
+  .sda-calc input:focus, .sda-calc select:focus { border-color:var(--blue-2); box-shadow:0 0 0 4px rgba(11,120,200,.12); }
+  .sda-calc .field.invalid input, .sda-calc .field.invalid select { border-color:#d93025; background:#fff8f7; }
+  .sda-calc .hint { color:var(--muted); font-size:12px; line-height:1.4; }
+  .sda-calc .step-actions { display:flex; justify-content:space-between; gap:12px; margin-top:26px; }
+  .sda-calc .btn { min-height:48px; border:0; border-radius:10px; padding:0 22px; cursor:pointer; font-weight:800; }
+  .sda-calc .btn-primary { color:#fff; background:linear-gradient(135deg,var(--blue),var(--blue-2)); }
+  .sda-calc .btn-primary:hover { filter:brightness(1.07); }
+  .sda-calc .btn-secondary { color:var(--blue); border:1px solid #b8cbe0; background:#fff; }
+  .sda-calc .btn-orange { color:#fff; background:var(--orange); }
+  .sda-calc .error { display:none; margin-top:14px; padding:12px 14px; border:1px solid #f1b4ae; border-radius:10px; color:var(--danger); background:#fff1f0; font-size:14px; line-height:1.45; }
+  .sda-calc .error.show { display:block; }
+  .sda-calc .result { display:none; margin-top:18px; overflow:hidden; border:1px solid #b8d9ed; border-radius:16px; background:linear-gradient(145deg,#edf8ff,#eefaf4); }
+  .sda-calc .result.show { display:block; animation:sda-in .3s ease; }
+  .sda-calc .result-main { padding:25px 26px 20px; }
+  .sda-calc .eyebrow { margin:0 0 6px; color:var(--green); font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:.04em; }
+  .sda-calc .result h2 { margin:0 0 4px; color:var(--navy); font-size:clamp(28px,5vw,46px); line-height:1.05; }
+  .sda-calc .result h2 span { color:var(--blue); font-size:18px; }
+  .sda-calc .result-lead { margin:0 0 18px; color:var(--muted); font-size:14px; }
+  .sda-calc .recommendation { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px; border:1px solid #b9dec8; border-radius:12px; background:#fff; }
+  .sda-calc .recommendation strong { display:block; margin-bottom:4px; color:var(--navy); font-size:16px; }
+  .sda-calc .recommendation span { color:var(--muted); font-size:13px; }
+  .sda-calc .recommendation .capacity { color:var(--green); font-size:25px; font-weight:900; white-space:nowrap; }
+  .sda-calc .info-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:16px; }
+  .sda-calc .info-item { padding:13px; border:1px solid var(--line); border-radius:10px; background:#fff; }
+  .sda-calc .info-val { color:var(--navy); font-size:20px; font-weight:900; }
+  .sda-calc .info-key { margin-top:3px; color:var(--muted); font-size:12px; }
+  .sda-calc .result-details { padding:19px 26px 24px; border-top:1px solid #cfe2ee; }
+  .sda-calc .result-details summary { cursor:pointer; color:var(--blue); font-size:14px; font-weight:900; }
+  .sda-calc .breakdown { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:14px; }
+  .sda-calc .breakdown-item { display:flex; justify-content:space-between; gap:10px; padding:9px 11px; border:1px solid var(--line); border-radius:8px; background:#fff; color:#415269; font-size:12px; }
+  .sda-calc .breakdown-item span:last-child { color:var(--blue); font-weight:800; white-space:nowrap; }
+  .sda-calc .recs-title { margin:22px 0 10px; color:#34465d; font-size:13px; font-weight:900; text-transform:uppercase; }
+  .sda-calc .rec-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .sda-calc .rec-card { padding:14px 10px; border:1px solid #c8dced; border-radius:10px; background:#fff; text-align:center; }
+  .sda-calc .rec-tag { display:inline-block; padding:4px 8px; border-radius:99px; color:#fff; background:var(--blue); font-size:10px; font-weight:900; text-transform:uppercase; }
+  .sda-calc .rec-card.recommended { border:2px solid var(--green); }
+  .sda-calc .rec-card.recommended .rec-tag { background:var(--green); }
+  .sda-calc .rec-btu { margin:9px 0 3px; color:var(--navy); font-size:22px; font-weight:900; }
+  .sda-calc .rec-label { min-height:34px; color:var(--muted); font-size:11px; line-height:1.35; }
+  .sda-calc .rec-link { display:inline-block; margin-top:10px; padding:8px 11px; border-radius:7px; color:#fff; background:var(--blue); font-size:11px; font-weight:800; text-decoration:none; }
+  .sda-calc .tip { margin-top:16px; padding:13px 15px; border:1px solid #f2d28a; border-radius:10px; color:#714b00; background:#fff8df; font-size:13px; line-height:1.5; }
+  .sda-calc .result-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+  .sda-calc .result-actions .btn { min-height:44px; }
+  @media (max-width:680px) {
+    .sda-calc { padding:10px 10px 34px; }
+    .sda-calc .hero { padding:22px 18px 25px; border-radius:14px; }
+    .sda-calc .hero-logo img { width:118px; }
+    .sda-calc .step-card { padding:19px 15px; border-radius:13px; }
+    .sda-calc .grid, .sda-calc .breakdown { grid-template-columns:1fr; gap:14px; }
+    .sda-calc .field.full { grid-column:auto; }
+    .sda-calc .step-actions { position:sticky; bottom:8px; z-index:3; margin-left:-5px; margin-right:-5px; padding:8px 5px; background:rgba(255,255,255,.94); }
+    .sda-calc .btn { flex:1; padding:0 12px; }
+    .sda-calc .recommendation { align-items:flex-start; flex-direction:column; gap:8px; }
+    .sda-calc .recommendation .capacity { font-size:24px; }
+    .sda-calc .info-grid, .sda-calc .rec-grid { grid-template-columns:1fr; }
+    .sda-calc .result-main, .sda-calc .result-details { padding-left:16px; padding-right:16px; }
+  }
+</style>
+
+<style>
+.sda-calc {
+  --blue:#0877c9;
+  --blue-2:#12a5e8;
+  --navy:#061f43;
+  --orange:#ff7900;
+  --orange-2:#ffad32;
+  --ink:#10233d;
+  --muted:#64758b;
+  --line:#d9e7f3;
+  --soft:#f2f8fd;
+  max-width:1120px;
+  padding:26px 18px 58px;
+  background:
+    radial-gradient(circle at 4% 18%, rgba(255,121,0,.10), transparent 22%),
+    radial-gradient(circle at 96% 48%, rgba(18,165,232,.11), transparent 25%);
+}
+.sda-calc .hero {
+  min-height:250px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:42px 46px 46px;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:28px;
+  background:
+    linear-gradient(125deg, rgba(6,31,67,.98), rgba(8,119,201,.96) 60%, rgba(18,165,232,.92)),
+    radial-gradient(circle at 88% 10%, #ff7900 0 8%, transparent 9%);
+  box-shadow:0 20px 50px rgba(6,31,67,.23);
+}
+.sda-calc .hero:before {
+  content:"";
+  position:absolute;
+  width:230px;
+  height:230px;
+  right:78px;
+  bottom:-150px;
+  border:34px solid rgba(255,121,0,.42);
+  border-radius:50%;
+  transform:rotate(-18deg);
+}
+.sda-calc .hero:after {
+  width:190px;
+  height:190px;
+  right:-66px;
+  top:-70px;
+  border:30px solid rgba(255,173,50,.28);
+}
+.sda-calc .hero-logo { margin-bottom:24px; }
+.sda-calc .hero-logo:after {
+  content:"";
+  display:block;
+  width:44px;
+  height:4px;
+  margin-top:13px;
+  border-radius:9px;
+  background:var(--orange);
+}
+.sda-calc .hero-logo img { width:154px; }
+.sda-calc h1 { max-width:670px; font-size:clamp(28px,4.5vw,46px); letter-spacing:-.7px; }
+.sda-calc .hero p { max-width:650px; font-size:16px; color:#dceeff; }
+.sda-calc .progress-wrap { margin:28px 4px 18px; }
+.sda-calc .progress { height:9px; background:#dbeaf6; box-shadow:inset 0 1px 3px rgba(6,31,67,.12); }
+.sda-calc .progress-bar { background:linear-gradient(90deg,var(--orange),var(--orange-2)); box-shadow:0 0 12px rgba(255,121,0,.35); }
+.sda-calc .progress-text { color:var(--navy); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+.sda-calc .step-card {
+  position:relative;
+  border:0;
+  border-radius:22px;
+  padding:32px;
+  box-shadow:0 14px 38px rgba(18,65,104,.10);
+  background:rgba(255,255,255,.96);
+}
+.sda-calc .step-card:before {
+  content:"";
+  position:absolute;
+  left:0;
+  top:24px;
+  bottom:24px;
+  width:5px;
+  border-radius:0 8px 8px 0;
+  background:linear-gradient(var(--orange),var(--orange-2));
+}
+.sda-calc .step-head { margin-bottom:26px; }
+.sda-calc .step-num {
+  width:42px;
+  height:42px;
+  flex-basis:42px;
+  background:linear-gradient(140deg,var(--orange),var(--orange-2));
+  box-shadow:0 7px 15px rgba(255,121,0,.24);
+  font-size:16px;
+}
+.sda-calc .step-head h2 { font-size:23px; letter-spacing:-.3px; }
+.sda-calc .step-head p { font-size:14px; }
+.sda-calc .grid { gap:22px; }
+.sda-calc label { color:var(--navy); font-size:12px; letter-spacing:.03em; text-transform:uppercase; }
+.sda-calc .required { color:var(--orange); }
+.sda-calc input, .sda-calc select {
+  min-height:52px;
+  border:1.5px solid #d3e2ef;
+  border-radius:13px;
+  background:#fbfdff;
+  box-shadow:inset 0 1px 2px rgba(6,31,67,.03);
+}
+.sda-calc input:hover, .sda-calc select:hover { border-color:#9bc8e7; }
+.sda-calc input:focus, .sda-calc select:focus {
+  border-color:var(--orange);
+  box-shadow:0 0 0 4px rgba(255,121,0,.14);
+}
+.sda-calc .hint { font-size:12px; color:#718399; }
+.sda-calc .btn { min-height:52px; border-radius:13px; letter-spacing:.01em; box-shadow:0 7px 16px rgba(6,31,67,.10); }
+.sda-calc .btn-primary { background:linear-gradient(135deg,var(--blue),var(--blue-2)); }
+.sda-calc .btn-orange { background:linear-gradient(135deg,var(--orange),var(--orange-2)); box-shadow:0 9px 20px rgba(255,121,0,.26); }
+.sda-calc .btn-secondary { border-color:#b8d2e5; color:var(--navy); }
+.sda-calc .error { border-radius:12px; border-left:4px solid #d93025; }
+.sda-calc .result {
+  border:0;
+  border-radius:22px;
+  background:linear-gradient(145deg,var(--navy),#0a477e 74%,#0c91cf);
+  box-shadow:0 18px 42px rgba(6,31,67,.22);
+}
+.sda-calc .result-main { padding:32px; }
+.sda-calc .eyebrow { color:#ffb24e; letter-spacing:.1em; }
+.sda-calc .result h2 { color:#fff; font-size:clamp(34px,6vw,58px); letter-spacing:-1px; }
+.sda-calc .result h2 span { color:#ffb24e; }
+.sda-calc .result-lead { color:#d6ecfb; }
+.sda-calc .recommendation { border:0; border-left:5px solid var(--orange); box-shadow:0 8px 20px rgba(0,0,0,.13); }
+.sda-calc .recommendation strong { color:var(--navy); }
+.sda-calc .recommendation .capacity { color:var(--orange); }
+.sda-calc .info-item, .sda-calc .rec-card, .sda-calc .breakdown-item { border-color:#d6e6f1; }
+.sda-calc .info-item { background:#fafdff; }
+.sda-calc .info-val { color:var(--navy); }
+.sda-calc .rec-card { box-shadow:0 7px 16px rgba(6,31,67,.06); }
+.sda-calc .rec-card.recommended { border-color:var(--orange); box-shadow:0 8px 20px rgba(255,121,0,.17); }
+.sda-calc .rec-card.recommended .rec-tag { background:linear-gradient(90deg,var(--orange),var(--orange-2)); }
+.sda-calc .rec-tag { background:var(--blue); }
+.sda-calc .rec-btu { color:var(--navy); }
+.sda-calc .rec-link { background:var(--blue); border-radius:8px; }
+.sda-calc .rec-card.recommended .rec-link { background:var(--orange); }
+.sda-calc .result-details { border-top-color:rgba(255,255,255,.2); }
+.sda-calc .result-details summary { color:#ffbd68; }
+.sda-calc .breakdown-item { background:rgba(255,255,255,.97); }
+.sda-calc .tip { border-color:#ffc66f; background:#fff6df; }
+.sda-calc .result-actions .btn-secondary { color:var(--navy); background:#fff; border:0; }
+.sda-calc .result-actions .btn-primary { background:linear-gradient(135deg,var(--orange),var(--orange-2)); }
+@media (max-width:680px) {
+  .sda-calc { padding:10px 10px 38px; }
+  .sda-calc .hero { min-height:270px; padding:28px 22px 34px; border-radius:20px; }
+  .sda-calc .hero-logo img { width:126px; }
+  .sda-calc .hero:before { right:-70px; bottom:-110px; }
+  .sda-calc .step-card { padding:25px 18px; border-radius:18px; }
+  .sda-calc .step-card:before { top:20px; bottom:20px; width:4px; }
+  .sda-calc .step-head h2 { font-size:20px; }
+  .sda-calc .result-main { padding:25px 18px; }
+}
+</style>
+
+<div class="sda-calc" id="sda-calculadora">
+  <section class="hero" aria-labelledby="sda-title">
+    <a class="hero-logo" href="/" aria-label="Site do Ar"><img src="https://salescdn.net/dMZp3WM664QcLLC56w9d6vbSFBU=/adaptive-fit-in/260x0/prod/store/13805/medias/storage/pastedfilezu3esl1683117789577orangeforte-1789578843.webp" alt="Site do Ar"></a>
+    <h1 id="sda-title">Descubra a pot&#234;ncia ideal para o seu ambiente</h1>
+    <p>Responda a 3 etapas r&#225;pidas. Usaremos as medidas, o uso e as caracter&#237;sticas do espa&#231;o para indicar a capacidade mais adequada.</p>
+  </section>
+
+  <div class="progress-wrap" aria-label="Progresso da calculadora">
+    <div class="progress"><div class="progress-bar" id="sda-progressBar"></div></div>
+    <div class="progress-text" id="sda-progressText">Etapa 1 de 3</div>
+  </div>
+
+  <div id="sda-form" class="sda-calc-form">
+    <section class="step-card active" data-step="1">
+      <div class="step-head"><span class="step-num">1</span><div><h2>Medidas do ambiente</h2><p>Come&#231;amos pelo tamanho do espa&#231;o.</p></div></div>
+      <div class="grid">
+        <div class="field" data-required="true"><label for="sda-comp">Comprimento (m) <span class="required">*</span></label><input type="text" id="sda-comp" placeholder="Ex.: 4 ou 4,5" inputmode="decimal" autocomplete="off"><span class="hint">Me&#231;a a maior dist&#226;ncia do ambiente.</span></div>
+        <div class="field" data-required="true"><label for="sda-larg">Largura (m) <span class="required">*</span></label><input type="text" id="sda-larg" placeholder="Ex.: 3 ou 3,2" inputmode="decimal" autocomplete="off"><span class="hint">Use a medida interna, de parede a parede.</span></div>
+        <div class="field"><label for="sda-pe">Altura do teto (m)</label><input type="text" id="sda-pe" value="2,6" inputmode="decimal" autocomplete="off"><span class="hint">Padr&#227;o: 2,60 m. Acima de 3 m, aplicamos acr&#233;scimo.</span></div>
+      </div>
+      <div class="error" id="sda-error-step1" role="alert"></div>
+      <div class="step-actions"><span></span><button type="button" class="btn btn-primary" data-next onclick="return sdaWizardNext(event)">Continuar</button></div>
+    </section>
+
+    <section class="step-card" data-step="2">
+      <div class="step-head"><span class="step-num">2</span><div><h2>Uso do ambiente</h2><p>Esses fatores ajudam a estimar a carga real.</p></div></div>
+      <div class="grid">
+        <div class="field"><label for="sda-uso">Tipo de ambiente</label><select id="sda-uso"><option value="quarto">Quarto / Dormit&#243;rio</option><option value="sala" selected>Sala / Escrit&#243;rio</option><option value="cozinha">Cozinha / &#193;rea de servi&#231;o</option><option value="comercio">Com&#233;rcio / Loja</option></select></div>
+        <div class="field"><label for="sda-pessoas">Pessoas simult&#226;neas</label><input type="text" id="sda-pessoas" value="2" inputmode="numeric" autocomplete="off"><span class="hint">Considere o uso normal do ambiente.</span></div>
+        <div class="field"><label for="sda-equip">Equipamentos</label><select id="sda-equip"><option value="0">Nenhum</option><option value="600">Poucos (TV, ilumina&#231;&#227;o)</option><option value="1500" selected>Moderado (computadores)</option><option value="3000">Muitos (servidores, maquin&#225;rio)</option></select></div>
+        <div class="field"><label for="sda-horas">Horas de uso di&#225;rio</label><select id="sda-horas"><option value="noite">S&#243; &#224; noite (6&ndash;8 h)</option><option value="tarde_noite" selected>Tarde e noite (8&ndash;12 h)</option><option value="dia_todo">O dia todo (12+ h)</option><option value="comercial">Comercial (abertura &#224; fechamento)</option></select></div>
+        <div class="field"><label for="sda-ciclo">Ciclo desejado</label><select id="sda-ciclo"><option value="frio" selected>S&#243; refrigera&#231;&#227;o (Frio)</option><option value="quente_frio">Quente e Frio</option></select></div>
+      </div>
+      <div class="error" id="sda-error-step2" role="alert"></div>
+      <div class="step-actions"><button type="button" class="btn btn-secondary" data-prev onclick="return sdaWizardPrev(event)">Voltar</button><button type="button" class="btn btn-primary" data-next onclick="return sdaWizardNext(event)">Continuar</button></div>
+    </section>
+
+    <section class="step-card" data-step="3">
+      <div class="step-head"><span class="step-num">3</span><div><h2>Exposi&#231;&#227;o e constru&#231;&#227;o</h2><p>Refinamos a indica&#231;&#227;o para o seu caso.</p></div></div>
+      <div class="grid">
+        <div class="field"><label for="sda-sol">Insola&#231;&#227;o</label><select id="sda-sol"><option value="sem_sol">Sem sol direto / Sombra</option><option value="sol_manha" selected>Sol pela manh&#227;</option><option value="sol_tarde">Sol &#224; tarde (forte)</option></select></div>
+        <div class="field"><label for="sda-andar">Andar do im&#243;vel</label><select id="sda-andar"><option value="intermediario" selected>Andar intermedi&#225;rio</option><option value="terreo">T&#233;rreo / Sob loja</option><option value="cobertura">Cobertura / &#218;ltimo andar</option></select></div>
+        <div class="field"><label for="sda-janelas">Janelas e vidros</label><select id="sda-janelas"><option value="poucas">Poucas (0&ndash;1 janela pequena)</option><option value="moderadas" selected>Moderadas (2&ndash;3 janelas)</option><option value="muitas">Muitas (4+ ou vidros amplos)</option></select></div>
+        <div class="field"><label for="sda-isol">Isolamento t&#233;rmico</label><select id="sda-isol"><option value="bom">Bom (EPS, l&#227;, vidro duplo)</option><option value="regular" selected>Regular (alvenaria comum)</option><option value="ruim">Ruim / antigo (sem isolamento)</option></select></div>
+        <div class="field"><label for="sda-layout">Layout do ambiente</label><select id="sda-layout"><option value="fechado" selected>Ambiente fechado</option><option value="planta_aberta">Planta aberta / integrada</option><option value="mezanino">Mezanino / p&#233;-direito duplo</option></select></div>
+        <div class="field"><label for="sda-clima">Clima da regi&#227;o</label><select id="sda-clima"><option value="ameno">Ameno (at&#233; ~32&#176;C no ver&#227;o)</option><option value="quente" selected>Quente (33&ndash;36&#176;C)</option><option value="muito_quente">Muito quente (acima de 36&#176;C)</option><option value="frio_inverno">Faz frio no inverno</option></select></div>
+        <div class="field"><label for="sda-umidade">Umidade do ambiente</label><select id="sda-umidade"><option value="normal" selected>Normal</option><option value="alta">Alta (cozinha, lavanderia, litoral)</option><option value="muito_alta">Muito alta (banheiro sem exaust&#227;o)</option></select></div>
+      </div>
+      <div class="error" id="sda-error" role="alert"></div>
+      <div class="step-actions"><button type="button" class="btn btn-secondary" data-prev onclick="return sdaWizardPrev(event)">Voltar</button><button type="button" class="btn btn-orange" data-calc-submit onclick="return sdaWizardCalc(event)">Calcular BTUs</button></div>
+    </section>
+  </div>
+
+  <section class="result" id="sda-resultBox" aria-live="polite">
+    <div class="result-main">
+      <p class="eyebrow">Resultado estimado</p>
+      <h2 id="sda-resultNum">&mdash; <span>BTUs/h</span></h2>
+      <p class="result-lead" id="sda-resultSub"></p>
+      <div class="recommendation"><div><strong>Recomenda&#231;&#227;o de compra</strong><span id="sda-recommendationText">Capacidade comercial mais pr&#243;xima.</span></div><div class="capacity" id="sda-recommendationBtu">&mdash;</div></div>
+      <div class="info-grid" id="sda-infoGrid"></div>
+      <div class="recs-title">Op&#231;&#245;es compat&#237;veis</div><div class="rec-grid" id="sda-recCards"></div>
+      <div class="tip" id="sda-tipBox"></div>
+      <div class="result-actions"><button type="button" class="btn btn-secondary" id="sda-reset" onclick="return sdaWizardReset(event)">Refazer c&#225;lculo</button><a class="btn btn-primary" id="sda-whatsapp" href="https://wa.me/5519984176960" target="_blank" rel="noopener">Falar com especialista</a></div>
+    </div>
+    <details class="result-details"><summary>Ver detalhamento do c&#225;lculo</summary><div class="breakdown" id="sda-breakdown"></div></details>
+  </section>
+</div>
+
+<style>
+.sda-calc .hero-logo {
+  width:max-content;
+  padding:10px 16px;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 9px 22px rgba(0,0,0,.15);
+}
+.sda-calc .hero-logo img {
+  width:154px;
+  filter:none;
+}
+.sda-calc .hero-logo:after { margin-top:9px; }
+.sda-calc .step-card[data-step="2"] .grid {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.sda-calc .step-card[data-step="2"] .field {
+  position:relative;
+  min-height:150px;
+  justify-content:flex-end;
+  padding:18px 16px 15px;
+  overflow:hidden;
+  border:1px solid #d6e5f1;
+  border-radius:17px;
+  background:linear-gradient(145deg,#fff 0%,#f5faff 100%);
+  box-shadow:0 6px 16px rgba(11,78,126,.06);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.sda-calc .step-card[data-step="2"] .field:hover,
+.sda-calc .step-card[data-step="2"] .field:has(input:focus),
+.sda-calc .step-card[data-step="2"] .field:has(select:focus) {
+  transform:translateY(-3px);
+  border-color:var(--orange);
+  box-shadow:0 10px 22px rgba(255,121,0,.14);
+}
+.sda-calc .step-card[data-step="2"] .field:before {
+  position:absolute;
+  top:14px;
+  right:15px;
+  display:grid;
+  place-items:center;
+  width:31px;
+  height:31px;
+  border-radius:10px;
+  color:#fff;
+  background:linear-gradient(140deg,var(--blue),var(--blue-2));
+  font-size:11px;
+  font-weight:900;
+}
+.sda-calc .step-card[data-step="2"] .field:nth-child(1):before { content:'01'; }
+.sda-calc .step-card[data-step="2"] .field:nth-child(2):before { content:'02'; background:linear-gradient(140deg,var(--orange),var(--orange-2)); }
+.sda-calc .step-card[data-step="2"] .field:nth-child(3):before { content:'03'; }
+.sda-calc .step-card[data-step="2"] .field:nth-child(4):before { content:'04'; background:linear-gradient(140deg,var(--orange),var(--orange-2)); }
+.sda-calc .step-card[data-step="2"] .field:nth-child(5):before { content:'05'; }
+.sda-calc .step-card[data-step="2"] .field label {
+  max-width:75%;
+  margin-bottom:auto;
+  padding-right:34px;
+  color:var(--navy);
+  font-size:11px;
+}
+.sda-calc .step-card[data-step="2"] .field input,
+.sda-calc .step-card[data-step="2"] .field select {
+  min-height:50px;
+  border-color:#c9dceb;
+  background:#fff;
+  font-size:15px;
+  font-weight:700;
+}
+.sda-calc .step-card[data-step="2"] .field input { color:var(--orange); font-size:22px; }
+.sda-calc .step-card[data-step="2"] .field .hint {
+  min-height:17px;
+  margin-top:1px;
+  font-size:11px;
+}
+.sda-calc .step-card[data-step="2"] .field:has(select) .hint { display:none; }
+.sda-calc .step-card[data-step="2"] .field:has(select) select { color:var(--blue); }
+.sda-calc .step-card[data-step="2"] .field:has(select:focus) select,
+.sda-calc .step-card[data-step="2"] .field:has(input:focus) input { border-color:var(--orange); }
+.sda-calc .step-card[data-step="2"] .step-actions { margin-top:22px; }
+@media (max-width:680px) {
+  .sda-calc .hero-logo { padding:8px 12px; }
+  .sda-calc .hero-logo img { width:126px; }
+  .sda-calc .step-card[data-step="2"] .grid { grid-template-columns:1fr; }
+  .sda-calc .step-card[data-step="2"] .field { min-height:132px; }
+}
+</style>
+
+<style>
+.sda-calc .step-card[data-step="1"] .grid,
+.sda-calc .step-card[data-step="3"] .grid { gap:14px; }
+.sda-calc .step-card[data-step="1"] .field,
+.sda-calc .step-card[data-step="3"] .field {
+  position:relative;
+  min-height:145px;
+  justify-content:flex-end;
+  padding:18px 16px 15px;
+  overflow:hidden;
+  border:1px solid #d6e5f1;
+  border-radius:17px;
+  background:linear-gradient(145deg,#fff 0%,#f5faff 100%);
+  box-shadow:0 6px 16px rgba(11,78,126,.06);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.sda-calc .step-card[data-step="1"] .field:hover,
+.sda-calc .step-card[data-step="3"] .field:hover,
+.sda-calc .step-card[data-step="1"] .field:has(input:focus),
+.sda-calc .step-card[data-step="3"] .field:has(select:focus) {
+  transform:translateY(-3px);
+  border-color:var(--orange);
+  box-shadow:0 10px 22px rgba(255,121,0,.14);
+}
+.sda-calc .step-card[data-step="1"] .field:before,
+.sda-calc .step-card[data-step="3"] .field:before {
+  position:absolute;
+  top:14px;
+  right:15px;
+  display:grid;
+  place-items:center;
+  width:31px;
+  height:31px;
+  border-radius:10px;
+  color:#fff;
+  background:linear-gradient(140deg,var(--blue),var(--blue-2));
+  font-size:11px;
+  font-weight:900;
+}
+.sda-calc .step-card[data-step="1"] .field:nth-child(1):before { content:'01'; background:linear-gradient(140deg,var(--orange),var(--orange-2)); }
+.sda-calc .step-card[data-step="1"] .field:nth-child(2):before { content:'02'; }
+.sda-calc .step-card[data-step="1"] .field:nth-child(3):before { content:'03'; background:linear-gradient(140deg,var(--orange),var(--orange-2)); }
+.sda-calc .step-card[data-step="3"] .field:nth-child(1):before { content:'01'; background:linear-gradient(140deg,var(--orange),var(--orange-2)); }
+.sda-calc .step-card[data-step="3"] .field:nth-child(2):before { content:'02'; }
+.sda-calc .step-card[data-step="3"] .field:nth-child(3):before { content:'03'; background:linear-gradient(140deg,var(--orange),var(--orange-2)); }
+.sda-calc .step-card[data-step="3"] .field:nth-child(4):before { content:'04'; }
+.sda-calc .step-card[data-step="3"] .field:nth-child(5):before { content:'05'; background:linear-gradient(140deg,var(--orange),var(--orange-2)); }
+.sda-calc .step-card[data-step="3"] .field:nth-child(6):before { content:'06'; }
+.sda-calc .step-card[data-step="3"] .field:nth-child(7):before { content:'07'; background:linear-gradient(140deg,var(--orange),var(--orange-2)); }
+.sda-calc .step-card[data-step="1"] .field label,
+.sda-calc .step-card[data-step="3"] .field label {
+  max-width:78%;
+  margin-bottom:auto;
+  padding-right:34px;
+  color:var(--navy);
+  font-size:11px;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+}
+.sda-calc .step-card[data-step="1"] .field input,
+.sda-calc .step-card[data-step="3"] .field select {
+  min-height:50px;
+  border-color:#c9dceb;
+  background:#fff;
+  font-weight:700;
+}
+.sda-calc .step-card[data-step="1"] .field input { color:var(--orange); font-size:22px; }
+.sda-calc .step-card[data-step="3"] .field select { color:var(--blue); font-size:14px; }
+.sda-calc .step-card[data-step="1"] .field .hint,
+.sda-calc .step-card[data-step="3"] .field .hint { min-height:17px; font-size:11px; }
+.sda-calc .step-card[data-step="3"] .field .hint { display:none; }
+.sda-calc .result.cycle-hot .eyebrow { color:#ffb24e; }
+.sda-calc .result.cycle-hot .recommendation { border-left-color:var(--orange); }
+.sda-calc .result.cycle-hot .recommendation .capacity { color:var(--orange); }
+.sda-calc .result.cycle-hot .rec-card.recommended { border-color:var(--orange); }
+.sda-calc .result.cycle-hot .rec-card.recommended .rec-tag,
+.sda-calc .result.cycle-hot .rec-card.recommended .rec-link { background:linear-gradient(90deg,var(--orange),var(--orange-2)); }
+.sda-calc .result.cycle-cold .eyebrow { color:#7dd6ff; }
+.sda-calc .result.cycle-cold .recommendation { border-left-color:var(--blue-2); }
+.sda-calc .result.cycle-cold .recommendation .capacity { color:var(--blue); }
+.sda-calc .result.cycle-cold .rec-card.recommended { border-color:var(--blue-2); }
+.sda-calc .result.cycle-cold .rec-card.recommended .rec-tag,
+.sda-calc .result.cycle-cold .rec-card.recommended .rec-link { background:linear-gradient(90deg,var(--blue),var(--blue-2)); }
+@media (max-width:680px) {
+  .sda-calc .step-card[data-step="1"] .grid,
+  .sda-calc .step-card[data-step="3"] .grid { grid-template-columns:1fr; }
+  .sda-calc .step-card[data-step="1"] .field,
+  .sda-calc .step-card[data-step="3"] .field { min-height:132px; }
+  .sda-calc .step-card[data-step="3"] .field select { font-size:13px; }
+}
+</style>
+<script>
+(function () {
+  'use strict';
+
+  if (window.__SDA_BTU_WIZARD__) return;
+
+  var root = null;
+  var step = 1;
+  var TOTAL = 3;
+
+  var catalog = [
+    { btu: 9000, label: '9.000', tipo: 'Split Inverter', url: '/split-inverter/9000-btus' },
+    { btu: 12000, label: '12.000', tipo: 'Split Inverter', url: '/split-inverter/12000-Btus' },
+    { btu: 18000, label: '18.000', tipo: 'Split Inverter', url: '/split-inverter/18000-Btus' },
+    { btu: 24000, label: '24.000', tipo: 'Split Inverter', url: '/split-inverter/24000-Btus' },
+    { btu: 30000, label: '30.000', tipo: 'Split Inverter', url: '/split-inverter/30000-Btus' },
+    { btu: 36000, label: '36.000', tipo: 'Piso Teto', url: '/Piso-Teto/36000-Btus' },
+    { btu: 46000, label: '46.000', tipo: 'Piso Teto', url: '/Piso-Teto/46000-Btus' },
+    { btu: 48000, label: '48.000', tipo: 'Piso Teto', url: '/Piso-Teto/48000-Btus' },
+    { btu: 56000, label: '56.000', tipo: 'Piso Teto', url: '/Piso-Teto/56000-btus' },
+  ];
+
+  var factors = {
+    sol: { sem_sol: 1, sol_manha: 1.1, sol_tarde: 1.25 },
+    uso: { quarto: 1, sala: 1.1, cozinha: 1.2, comercio: 1.5 },
+    andar: { terreo: 1.05, intermediario: 1, cobertura: 1.15 },
+    janelas: { poucas: 1, moderadas: 1.08, muitas: 1.18 },
+    isol: { bom: 0.95, regular: 1, ruim: 1.12 },
+    layout: { fechado: 1, planta_aberta: 1.15, mezanino: 1.2 },
+    clima: { ameno: 1, quente: 1.08, muito_quente: 1.15, frio_inverno: 1 },
+    horas: { noite: 1, tarde_noite: 1.05, dia_todo: 1.1, comercial: 1.15 },
+    umid: { normal: 1, alta: 1.05, muito_alta: 1.1 },
+  };
+
+  var labels = {
+    sol: { sem_sol: 'Sem sol direto', sol_manha: 'Sol pela manh\u00e3', sol_tarde: 'Sol \u00e0 tarde' },
+    uso: { quarto: 'Quarto', sala: 'Sala/escrit\u00f3rio', cozinha: 'Cozinha', comercio: 'Com\u00e9rcio' },
+    andar: { terreo: 'T\u00e9rreo', intermediario: 'Andar intermedi\u00e1rio', cobertura: 'Cobertura' },
+    janelas: { poucas: 'Poucas janelas', moderadas: 'Janelas moderadas', muitas: 'Muitas janelas' },
+    isol: { bom: 'Isolamento bom', regular: 'Isolamento regular', ruim: 'Isolamento ruim' },
+    layout: { fechado: 'Ambiente fechado', planta_aberta: 'Planta aberta', mezanino: 'Mezanino' },
+    clima: { ameno: 'Clima ameno', quente: 'Clima quente', muito_quente: 'Muito quente', frio_inverno: 'Frio no inverno' },
+    horas: { noite: 'Uso noturno', tarde_noite: 'Tarde/noite', dia_todo: 'Dia todo', comercial: 'Uso comercial' },
+    umid: { normal: 'Umidade normal', alta: 'Umidade alta', muito_alta: 'Umidade muito alta' },
+  };
+
+  function get(id) {
+    return document.getElementById(id);
+  }
+
+  function fmt(n) {
+    return Math.round(n).toLocaleString('pt-BR');
+  }
+
+  function pct(n) {
+    var d = Math.round((n - 1) * 100);
+    return d === 0 ? '0%' : (d > 0 ? '+' : '') + d + '%';
+  }
+
+  function val(id) {
+    var el = get(id);
+    return el ? el.value : '';
+  }
+
+  function parseNum(id, fallback) {
+    var raw = String(val(id))
+      .trim()
+      .replace(/\s/g, '')
+      .replace(',', '.');
+    var n = parseFloat(raw);
+    return isFinite(n) ? n : fallback;
+  }
+
+  function entry(i) {
+    return catalog[Math.max(0, Math.min(catalog.length - 1, i))];
+  }
+
+  function errorElForStep(n) {
+    return get('sda-error-step' + n) || get('sda-error');
+  }
+
+  function hideAllErrors() {
+    var s;
+    for (s = 1; s <= TOTAL; s++) {
+      var el = errorElForStep(s);
+      if (el) {
+        el.classList.remove('show');
+        el.style.display = 'none';
+      }
+    }
+  }
+
+  function showError(stepNum, msg) {
+    hideAllErrors();
+    var el = errorElForStep(stepNum);
+    if (el) {
+      el.textContent = msg;
+      el.classList.add('show');
+      el.style.display = 'block';
+    }
+  }
+
+  function showStep(n) {
+    if (!root) return;
+    step = n;
+    var cards = root.querySelectorAll('.step-card');
+    var ci;
+    for (ci = 0; ci < cards.length; ci++) {
+      var sn = parseInt(cards[ci].getAttribute('data-step'), 10);
+      if (sn === n) cards[ci].classList.add('active');
+      else cards[ci].classList.remove('active');
+    }
+    var bar = get('sda-progressBar');
+    var txt = get('sda-progressText');
+    if (bar) bar.style.width = (n / TOTAL) * 100 + '%';
+    if (txt) txt.textContent = 'Etapa ' + n + ' de ' + TOTAL;
+    hideAllErrors();
+    try {
+      window.scrollTo({ top: root.getBoundingClientRect().top + window.scrollY - 12, behavior: 'smooth' });
+    } catch (e) {
+      window.scrollTo(0, root.offsetTop - 12);
+    }
+  }
+
+  function markField(id, bad) {
+    var el = get(id);
+    if (el && el.closest) {
+      var field = el.closest('.field');
+      if (field) field.classList.toggle('invalid', bad);
+    }
+  }
+
+  function validate(n) {
+    var msg = '';
+    if (n === 1) {
+      var c = parseNum('sda-comp', NaN);
+      var l = parseNum('sda-larg', NaN);
+      markField('sda-comp', !(c > 0));
+      markField('sda-larg', !(l > 0));
+      if (!(c > 0) && !(l > 0)) msg = 'Informe o comprimento e a largura do ambiente para continuar.';
+      else if (!(c > 0)) msg = 'Informe o comprimento do ambiente para continuar.';
+      else if (!(l > 0)) msg = 'Informe a largura do ambiente para continuar.';
+    }
+    if (msg) {
+      showError(n, msg);
+      return false;
+    }
+    hideAllErrors();
+    return true;
+  }
+
+  function calculate() {
+    if (!validate(1)) {
+      showStep(1);
+      return false;
+    }
+    var comp = parseNum('sda-comp', 0);
+    var larg = parseNum('sda-larg', 0);
+    var pe = parseNum('sda-pe', 2.6);
+    var pessoas = Math.max(1, parseInt(val('sda-pessoas') || '1', 10) || 1);
+    var equip = parseInt(val('sda-equip') || '0', 10) || 0;
+    var area = comp * larg;
+    var p = {
+      sol: val('sda-sol'),
+      uso: val('sda-uso'),
+      andar: val('sda-andar'),
+      janelas: val('sda-janelas'),
+      isol: val('sda-isol'),
+      layout: val('sda-layout'),
+      clima: val('sda-clima'),
+      horas: val('sda-horas'),
+      umid: val('sda-umidade'),
+    };
+    var fs = {};
+    var fk;
+    for (fk in factors) {
+      if (Object.prototype.hasOwnProperty.call(factors, fk)) {
+        fs[fk] = factors[fk][p[fk]] || 1;
+      }
+    }
+    fs.pe = pe > 3 ? pe / 2.6 : 1;
+    var combined =
+      fs.sol * fs.uso * fs.pe * fs.andar * fs.janelas * fs.isol * fs.layout * fs.clima * fs.horas * fs.umid;
+    var base = area * 600;
+    var extras = (pessoas > 1 ? (pessoas - 1) * 600 : 0) + equip;
+    var load = Math.ceil((base * combined + extras) / 500) * 500;
+    var idx = -1;
+    var ii;
+    for (ii = 0; ii < catalog.length; ii++) {
+      if (catalog[ii].btu >= load) {
+        idx = ii;
+        break;
+      }
+    }
+    if (idx < 0) idx = catalog.length - 1;
+    var rec = entry(idx);
+    var min = entry(idx - 1);
+    var max = entry(idx + 1);
+
+    var resultNum = get('sda-resultNum');
+    var resultSub = get('sda-resultSub');
+    var recBtu = get('sda-recommendationBtu');
+    var recText = get('sda-recommendationText');
+    if (resultNum) resultNum.innerHTML = fmt(load) + ' <span>BTUs/h</span>';
+    if (resultSub) {
+      resultSub.textContent =
+        'Carga t\u00e9rmica estimada para ' +
+        area.toFixed(1).replace('.', ',') +
+        ' m\u00b2 \u00b7 ' +
+        pessoas +
+        ' pessoa' +
+        (pessoas > 1 ? 's' : '') +
+        '.';
+    }
+    if (recBtu) recBtu.textContent = rec.label + ' BTUs';
+    if (recText) {
+      recText.textContent =
+        load === rec.btu
+          ? 'A capacidade calculada coincide com uma op\u00e7\u00e3o comercial.'
+          : 'A carga calculada fica entre capacidades comerciais; recomendamos a pr\u00f3xima faixa para evitar subdimensionamento.';
+    }
+
+    var infoGrid = get('sda-infoGrid');
+    if (infoGrid) {
+      infoGrid.innerHTML =
+        '<div class="info-item"><div class="info-val">' +
+        area.toFixed(1).replace('.', ',') +
+        ' m\u00b2</div><div class="info-key">\u00c1rea total</div></div><div class="info-item"><div class="info-val">' +
+        fmt(Math.round(base)) +
+        '</div><div class="info-key">Carga base</div></div><div class="info-item"><div class="info-val">' +
+        rec.tipo +
+        '</div><div class="info-key">Linha indicada</div></div>';
+    }
+
+    var keys = [
+      ['sol', 'Insola\u00e7\u00e3o'],
+      ['uso', 'Uso'],
+      ['pe', 'P\u00e9-direito'],
+      ['andar', 'Andar'],
+      ['janelas', 'Janelas'],
+      ['isol', 'Isolamento'],
+      ['layout', 'Layout'],
+      ['clima', 'Clima'],
+      ['horas', 'Horas'],
+      ['umid', 'Umidade'],
+    ];
+    var breakdown = get('sda-breakdown');
+    if (breakdown) {
+      var html = '';
+      var xi;
+      for (xi = 0; xi < keys.length; xi++) {
+        var key = keys[xi][0];
+        if (key === 'pe' && pe <= 3) continue;
+        var label =
+          key === 'pe' ? 'P\u00e9-direito acima de 3 m' : labels[key][p[key]] || p[key];
+        html +=
+          '<div class="breakdown-item"><span>' +
+          keys[xi][1] +
+          ' \u00b7 ' +
+          label +
+          '</span><span>' +
+          pct(fs[key]) +
+          '</span></div>';
+      }
+      html +=
+        '<div class="breakdown-item"><span>Pessoas + equipamentos</span><span>+' +
+        fmt(extras) +
+        ' BTU</span></div>';
+      breakdown.innerHTML = html;
+    }
+
+    function card(tag, e, cls, desc) {
+      return (
+        '<div class="rec-card ' +
+        cls +
+        '"><span class="rec-tag">' +
+        tag +
+        '</span><div class="rec-btu">' +
+        e.label +
+        '</div><div class="rec-label">' +
+        desc +
+        '<br>' +
+        e.tipo +
+        '</div><a class="rec-link" href="' +
+        e.url +
+        '">Ver modelos</a></div>'
+      );
+    }
+    var recCards = get('sda-recCards');
+    if (recCards) {
+      recCards.innerHTML =
+        card('M\u00ednimo', min, '', 'Para ambientes menores') +
+        card('Recomendado', rec, 'recommended', 'Faixa indicada para o c\u00e1lculo') +
+        card('Com folga', max, '', 'Margem extra de pot\u00eancia');
+    }
+
+    var tip =
+      'Evite escolher abaixo da recomenda\u00e7\u00e3o: um aparelho subdimensionado trabalha mais e pode aumentar o consumo.';
+    if (p.layout !== 'fechado') {
+      tip = 'Planta aberta: considere a posi\u00e7\u00e3o do aparelho e a possibilidade de mais de uma unidade.';
+    }
+    if (p.clima === 'frio_inverno' || val('sda-ciclo') === 'quente_frio') {
+      tip = 'Como h\u00e1 necessidade de aquecimento, prefira um modelo com ciclo quente e frio.';
+    }
+    var tipBox = get('sda-tipBox');
+    if (tipBox) tipBox.textContent = tip;
+
+    var wa = get('sda-whatsapp');
+    if (wa) {
+      wa.href =
+        'https://wa.me/5519984176960?text=' +
+        encodeURIComponent(
+          'Ol\u00e1! Calculei ' +
+            rec.label +
+            ' BTUs para um ambiente de ' +
+            area.toFixed(1) +
+            ' m\u00b2 e gostaria de ajuda para escolher o aparelho.'
+        );
+    }
+
+    var resultBox = get('sda-resultBox');
+    if (resultBox) {
+      resultBox.classList.remove('cycle-hot', 'cycle-cold');
+      resultBox.classList.add(val('sda-ciclo') === 'quente_frio' ? 'cycle-hot' : 'cycle-cold');
+      resultBox.classList.add('show');
+      resultBox.style.display = 'block';
+      try {
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e2) {
+        resultBox.scrollIntoView();
+      }
+    }
+    return false;
+  }
+
+  function goNext(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    if (!validate(step)) return false;
+    showStep(Math.min(TOTAL, step + 1));
+    return false;
+  }
+
+  function goPrev(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    showStep(Math.max(1, step - 1));
+    return false;
+  }
+
+  function resetCalc(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    var resultBox = get('sda-resultBox');
+    if (resultBox) {
+      resultBox.classList.remove('show');
+      resultBox.style.display = 'none';
+    }
+    var pe = get('sda-pe');
+    var pessoas = get('sda-pessoas');
+    if (pe) pe.value = '2,6';
+    if (pessoas) pessoas.value = '2';
+    showStep(1);
+    return false;
+  }
+
+  function bindDelegation() {
+    document.addEventListener(
+      'click',
+      function (e) {
+        if (!root) return;
+        var t = e.target;
+        if (!t || !root.contains(t)) return;
+        var nextBtn = t.closest ? t.closest('[data-next]') : null;
+        var prevBtn = t.closest ? t.closest('[data-prev]') : null;
+        var calcBtn = t.closest ? t.closest('[data-calc-submit]') : null;
+        var resetBtn = t.id === 'sda-reset' ? t : t.closest ? t.closest('#sda-reset') : null;
+        if (nextBtn) {
+          e.preventDefault();
+          goNext(e);
+        } else if (prevBtn) {
+          e.preventDefault();
+          goPrev(e);
+        } else if (calcBtn) {
+          e.preventDefault();
+          calculate();
+        } else if (resetBtn) {
+          e.preventDefault();
+          resetCalc(e);
+        }
+      },
+      false
+    );
+  }
+
+  function init() {
+    root = document.getElementById('sda-calculadora');
+    if (!root) return;
+    if (window.__SDA_BTU_WIZARD__) return;
+    window.__SDA_BTU_WIZARD__ = true;
+    showStep(1);
+    bindDelegation();
+  }
+
+  window.sdaWizardNext = goNext;
+  window.sdaWizardPrev = goPrev;
+  window.sdaWizardCalc = calculate;
+  window.sdaWizardReset = resetCalc;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+</script>

@@ -1,0 +1,524 @@
+{% comment %}
+  Header v2 — Site do Ar
+  Substituir o header.liquid padrão do tema WDNA por este arquivo.
+{% endcomment %}
+
+{% assign iconSearchFallback = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16a6.471 6.471 0 0 0 3.23-.86l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>' %}
+{% assign iconHeadset = '<svg class="header-utility__svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5a8 8 0 0 1 16 0"/><path d="M4 11.5V14a2.5 2.5 0 0 0 2.5 2.5H7v-5H4z"/><path d="M20 11.5V14A2.5 2.5 0 0 1 17.5 16.5H17v-5h3z"/><path d="M10 19.5h4"/><path d="M12 16.5v3"/></svg>' %}
+{% assign iconBoxUtility = '<svg class="header-utility__svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 20 8v8l-8 4-8-4V8l8-4z"/><path d="M12 4v12"/><path d="M4 8l8 4 8-4"/><path d="M8.5 10.5v5.8"/></svg>' %}
+{% assign iconBoxOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 3l8 4.5V18l-8 4.5L4 18V7.5z"/><path d="M4 7.5 12 12l8-4.5M12 12v10.5"/></svg>' %}
+{% assign iconUser = '<svg class="header-utility__svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="3"/><path d="M5.5 19.5v-1c0-2.8 2.9-4.5 6.5-4.5s6.5 1.7 6.5 4.5v1"/></svg>' %}
+{% assign iconHeartOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.2-3.9-6.2-8.6c0-2.4 1.9-4.3 4.2-4.3 1.4 0 2.7.7 3.5 1.8.8-1.1 2.1-1.8 3.5-1.8 2.3 0 4.2 1.9 4.2 4.3 0 4.7-6.2 8.6-6.2 8.6z"/></svg>' %}
+{% assign iconCartOutline = '<svg class="sda-ico-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 9.2h11.3L21 7H7"/><circle cx="10" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>' %}
+{% assign iconHome = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' %}
+{% comment %}
+  Ícones Split / Piso / Janela — faixa mobile + miniatura no menu desktop (nav-main_cat-thumb).
+  Cole URLs absolutas (webp/png). Se preenchido, vence ícone do menu WDNA e SVG local.
+{% endcomment %}
+{% assign sdaMIconSplitUrlUser = 'https://salescdn.net/42SzyWLpjEDqDDqjWFMPuyRaISQ=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431178000.webp' %}
+{% assign sdaMIconPisoUrlUser = 'https://salescdn.net/DkTKglPYM8Xj7l0hM5y21Gsf1xE=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431236301.webp' %}
+{% assign sdaMIconJanelaUrlUser = 'https://salescdn.net/sH5fPAA4sqDW8yrzb22plaR8ogs=/adaptive-fit-in/0x0/prod/store/13805/medias/storage/1728431109503.webp' %}
+{% assign sdaMIconSplitUrl = sdaMIconSplitUrlUser %}
+{% assign sdaMIconPisoUrl = sdaMIconPisoUrlUser %}
+{% assign sdaMIconJanelaUrl = sdaMIconJanelaUrlUser %}
+{% assign sdaMIconSplitSvg = '' %}
+{% assign sdaMIconPisoSvg = '' %}
+{% assign sdaMIconJanelaSvg = '' %}
+{% assign sdaDiag360UrlUser = '/pagina/diagnostico-360' %}
+{% assign sdaDiag360Url = sdaDiag360UrlUser %}
+{% assign iconDiag360 = '<svg class="header-v2-cta-diag360__ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2h2V5zm2 0h2v2h-2V5zM7 9h10v10H7V9zm2 2v2h6v-2H9zm0 4v2h4v-2H9z"/></svg>' %}
+
+{% assign sdaMLinkSplit = '/split-inverter' %}
+{% assign sdaMLabelSplit = 'Split Inverter' %}
+{% assign sdaMLinkPiso = '/piso-teto' %}
+{% assign sdaMLabelPiso = 'Piso Teto' %}
+{% assign sdaMLinkJanela = '/janela' %}
+{% assign sdaMLabelJanela = 'Janela' %}
+{% for menuItem in menu.items %}
+    {% assign sdaMName = menuItem.name | downcase %}
+    {% if sdaMName contains 'split' %}
+        {% assign sdaMLinkSplit = menuItem.link %}
+        {% assign sdaMLabelSplit = menuItem.name %}
+        {% if sdaMIconSplitUrl == '' and menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
+            {% assign sdaMIconSplitUrl = menuItem.icon.file.url %}
+        {% endif %}
+        {% if sdaMIconSplitSvg == '' and menuItem.iconSvg %}
+            {% assign sdaMIconSplitSvg = menuItem.iconSvg %}
+        {% endif %}
+    {% elsif sdaMName contains 'piso' %}
+        {% assign sdaMLinkPiso = menuItem.link %}
+        {% assign sdaMLabelPiso = menuItem.name %}
+        {% if sdaMIconPisoUrl == '' and menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
+            {% assign sdaMIconPisoUrl = menuItem.icon.file.url %}
+        {% endif %}
+        {% if sdaMIconPisoSvg == '' and menuItem.iconSvg %}
+            {% assign sdaMIconPisoSvg = menuItem.iconSvg %}
+        {% endif %}
+    {% elsif sdaMName contains 'janela' %}
+        {% assign sdaMLinkJanela = menuItem.link %}
+        {% assign sdaMLabelJanela = menuItem.name %}
+        {% if sdaMIconJanelaUrl == '' and menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
+            {% assign sdaMIconJanelaUrl = menuItem.icon.file.url %}
+        {% endif %}
+        {% if sdaMIconJanelaSvg == '' and menuItem.iconSvg %}
+            {% assign sdaMIconJanelaSvg = menuItem.iconSvg %}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+<header class="header header-v2">
+    <div class="header-utility content">
+        <div class="container header-utility__inner">
+            <ul class="header-utility__links">
+                <li>
+                    <a href="https://api.whatsapp.com/send/?phone=5519984176960&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" title="Atendimento">
+                        <span class="header-utility__icon">{{ iconHeadset }}</span>
+                        <span class="header-utility__label">Atendimento</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/pedidos" title="Meus pedidos">
+                        <span class="header-utility__icon">{{ iconBoxUtility }}</span>
+                        <span class="header-utility__label">Meus pedidos</span>
+                    </a>
+                </li>
+            </ul>
+            {% if themeConfig.account.type != 'disabled' %}
+                {% assign sdaUtilityFirst = '' %}
+                {% if customer %}
+                    {% if customer.name and customer.name != '' %}
+                        {% assign sdaUtilityFirst = customer.name | split: ' ' | first %}
+                    {% elsif customer.fantasyName and customer.fantasyName != '' %}
+                        {% assign sdaUtilityFirst = customer.fantasyName | split: ' ' | first %}
+                    {% elsif customer.email and customer.email != '' %}
+                        {% assign sdaUtilityFirst = customer.email | split: '@' | first %}
+                    {% endif %}
+                {% endif %}
+                <button type="button" class="header-utility__account{% if sdaUtilityFirst != '' %} is-logged-in{% endif %}" onclick="openSideNavOverlay('.sidenav-overlay_account', true)"
+                    title="{% if sdaUtilityFirst != '' %}Olá, {{ sdaUtilityFirst }}{% else %}Entre ou cadastre-se{% endif %}">
+                    <span class="header-utility__icon">{{ iconUser }}</span>
+                    <span class="header-utility__label header-utility__label--account" data-sda-utility-account>{% if sdaUtilityFirst != '' %}Olá, {{ sdaUtilityFirst }}{% else %}<span class="header-utility__guest-long">Entre ou cadastre-se</span><span class="header-utility__guest-short">Entrar</span>{% endif %}</span>
+                </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="header-content content">
+        <div class="container">
+            <div class="navbar header-v2-navbar">
+                <div class="navbar-section">
+                    <a class="logo" href="/" title="{{ store.name }}">
+                        <h1>{{ store.name }}</h1>
+                        {% if theme.logo.path %}
+                            <picture>
+                                <img class="lazy" data-src="{{ theme.logo.path | imgUrl: 260 }}" alt="{% if theme.logo.title and theme.logo.title != '' %}{{ theme.logo.title }}{% else %}{{ store.name }}{% endif %}">
+                            </picture>
+                        {% else %}
+                            {{ themeConfig.icons.image }}
+                        {% endif %}
+                    </a>
+                </div>
+
+                <div class="header-v2-search search-desktop hide-lg">
+                    <form id="myForm2Desktop" method="POST" action="">
+                        <div class="input-group">
+                            <input type="search" id="term2Desktop" class="form-input" placeholder="Busque por produto, marca ou modelo" autocomplete="off" aria-label="Busque por produto, marca ou modelo">
+                            <button class="btn" type="button" title="Buscar" onclick="alterForm2Desktop()">
+                                {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
+                            </button>
+                        </div>
+                        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                    </form>
+                </div>
+
+                <div class="header-v2-actions hide-lg">
+                    <a class="header-v2-action" href="/pedidos" title="Meus pedidos">
+                        <span class="header-v2-action__icon">{{ iconBoxOutline }}</span>
+                        <span class="header-v2-action__label">Meus pedidos</span>
+                    </a>
+                    <a class="header-v2-action" href="javascript:void(0)" title="Favoritos" onclick="openFavoritesPanel()">
+                        <span class="header-v2-action__icon">{{ iconHeartOutline }}</span>
+                        <span class="header-v2-action__label">Favoritos</span>
+                        <span class="header-v2-action__badge" data-favorites-count data-count="0">0</span>
+                    </a>
+                    {% if themeConfig.cart.type == 'default' %}
+                        {% assign cartQtd = 0 %}
+                        {% if cart.quantity %}
+                            {% assign cartQtd = cart.quantity %}
+                        {% endif %}
+                        <a class="header-v2-action header-v2-action--cart" href="javascript:void(0)" title="Carrinho" {% if themeConfig.buyAction.type == "login" %}@click="openSideNavOverlayCartB2B()"{% else %}onclick="openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true})"{% endif %}>
+                            <span class="header-v2-action__icon">{{ iconCartOutline }}</span>
+                            <span class="header-v2-action__label">Carrinho</span>
+                            <span class="header-v2-action__badge cart_quantity" data-cart-quantity>{{ cartQtd }}</span>
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="navbar-section header-v2-mobile-tools show-lg">
+                    <a class="header-v2-mobile-icon-btn header-v2-mobile-fav-btn" href="javascript:void(0)" title="Favoritos" aria-label="Favoritos" onclick="openFavoritesPanel()">
+                        <span class="header-v2-mobile-icon-btn__icon" aria-hidden="true">{{ iconHeartOutline }}</span>
+                        <span class="header-v2-action__badge" data-favorites-count data-count="0" aria-label="Quantidade de favoritos">0</span>
+                    </a>
+                    {% if themeConfig.cart.type == 'default' %}
+                        <a class="header-v2-mobile-icon-btn header-link header-link_cart cart_link" href="javascript:void(0)" title="Carrinho" aria-label="Carrinho" {% if themeConfig.buyAction.type == "login" %}@click="openSideNavOverlayCartB2B()"{% else %}onclick="openSideNavOverlay('.sidenav-overlay_cart', false, {isViewCart: true})"{% endif %}>
+                            <span class="header-v2-mobile-icon-btn__icon" aria-hidden="true">{{ themeConfig.icons.cart }}</span>
+                            {% assign cartQtdMobile = 0 %}
+                            {% if cart.quantity %}
+                                {% assign cartQtdMobile = cart.quantity %}
+                            {% endif %}
+                            <span class="cart_quantity" data-cart-quantity aria-label="Itens no carrinho">{{ cartQtdMobile }}</span>
+                        </a>
+                    {% endif %}
+                    <a class="header-v2-mobile-icon-btn header-link header-link_menu__mobile menu-mobile_link" href="javascript:void(0)" title="Abrir menu" aria-label="Abrir menu" aria-haspopup="true" onclick="openNavMobile()">
+                        <span class="icon-bar" aria-hidden="true"></span>
+                        <span class="icon-bar" aria-hidden="true"></span>
+                        <span class="icon-bar" aria-hidden="true"></span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="header-v2-search-pill show-lg">
+                <form id="myForm2" method="POST" action="" class="header-v2-search-pill__form">
+                    <label class="header-v2-search-pill__field">
+                        <span class="header-v2-search-pill__icon" aria-hidden="true">
+                            {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
+                        </span>
+                        <input type="search" id="term2" class="form-input header-v2-search-pill__input" placeholder="Buscar produtos" autocomplete="off" aria-label="Buscar produtos" onkeydown="if (event.key === 'Enter') { event.preventDefault(); alterForm2(); }">
+                    </label>
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                </form>
+            </div>
+
+            <div class="search close">
+                <form id="myForm" method="POST" action="">
+                    <div class="input-group">
+                        <input type="search" id="term" class="form-input" placeholder="Busque por produto, marca ou modelo">
+                        <button class="btn" type="button" title="Buscar" onclick="alterForm()">
+                            {% if themeConfig.icons.search %}{{ themeConfig.icons.search }}{% else %}{{ iconSearchFallback }}{% endif %}
+                        </button>
+                    </div>
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-content content header-v2-nav-row">
+        <div class="container header-v2-nav-inner header-v2-nav-inner--scroll" role="navigation" aria-label="Categorias — deslize horizontalmente para ver mais">
+            <a class="header-v2-cta-ambiente header-v2-cta-ambiente--in-nav" href="/pagina/calculadora-btus" title="Compre por ambiente">
+                {{ iconHome }}
+                <span class="header-v2-cta-ambiente__text">Compre por ambiente</span>
+                <span class="header-v2-cta-ambiente__chev" aria-hidden="true">▾</span>
+            </a>
+            <nav class="nav-main">
+                {% for menuItem in menu.items limit: 7 %}
+                    {% assign menuLabel = menuItem.name %}
+                    {% assign menuLabelLower = menuLabel | downcase %}
+                    {% if menuLabelLower contains 'peças' or menuLabelLower contains 'pecas' or menuLabelLower contains 'acessório' or menuLabelLower contains 'acessorio' %}
+                        {% assign menuLabel = 'Modelo' %}
+                    {% endif %}
+                    {% assign sdaNavCatIconUrl = '' %}
+                    {% if menuLabelLower contains 'split' and sdaMIconSplitUrl != '' %}
+                        {% assign sdaNavCatIconUrl = sdaMIconSplitUrl %}
+                    {% elsif menuLabelLower contains 'piso' and sdaMIconPisoUrl != '' %}
+                        {% assign sdaNavCatIconUrl = sdaMIconPisoUrl %}
+                    {% elsif menuLabelLower contains 'janela' and sdaMIconJanelaUrl != '' %}
+                        {% assign sdaNavCatIconUrl = sdaMIconJanelaUrl %}
+                    {% endif %}
+                    <div class="nav-main_item dropdown">
+                        <a href="{{ menuItem.link }}" class="nav-main_link dropdown-toggle" tabindex="0" title="{{ menuLabel }}"{% if menuItem.newTab == true %} target="_blank"{% endif %}>
+                            <div class="nav-main-box_link">
+                                {% if sdaNavCatIconUrl != '' %}
+                                    <span class="nav-main_cat-thumb" aria-hidden="true">
+                                        <img class="header-v2-mcat-img header-v2-mcat-img--nav" src="{{ sdaNavCatIconUrl }}" width="40" height="40" alt="" loading="eager" decoding="async" onerror="this.closest('.nav-main_cat-thumb').remove()">
+                                    </span>
+                                {% elsif menuItem.iconSvg %}
+                                    <div class="nav-main_icon nav-main-icon_svg">{{ menuItem.iconSvg }}</div>
+                                {% elsif menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
+                                    <div class="nav-main_icon nav-main-icon_img">
+                                        <picture>
+                                            <img class="lazy" data-src="{{ menuItem.icon.file.url }}" alt="{{ menuLabel }}">
+                                        </picture>
+                                    </div>
+                                {% endif %}
+                                <div class="nav-main_text">{{ menuLabel }}</div>
+                                {% if menuItem.items.size > 0 %}
+                                    <div class="nav-main_arrow">{{ themeConfig.icons.arrow.down }}</div>
+                                {% endif %}
+                            </div>
+                        </a>
+                        {% if menuItem.items.size > 0 %}
+                            <div class="nav-main_content dropdown-content">
+                                {% assign limitMenuChildren = 6 %}
+                                {% assign limitMenuAll = limitMenuChildren | times: 6 %}
+                                {% assign startMenuChildren = 1 %}
+                                {% assign endMenuChildren = startMenuChildren | times: limitMenuChildren %}
+                                {% for menuChildrenItem1 in menuItem.items limit:limitMenuAll %}
+                                    {% if forloop.index == startMenuChildren %}<ul>{% endif %}
+                                    <li class="nav-children dropdown">
+                                        <a class="nav-main_children" title="{{ menuChildrenItem1.name }}" href="{{ menuChildrenItem1.link }}"{% if menuChildrenItem1.newTab == true %} target="_blank"{% endif %}>{{ menuChildrenItem1.name }}</a>
+                                        {% if menuChildrenItem1.items.size > 0 %}
+                                            <div class="nav-main_content nav-main_content__children dropdown-content">
+                                                {% assign limitMenuChildren1 = 6 %}
+                                                {% assign startMenuChildren1 = 1 %}
+                                                {% assign endMenuChildren1 = startMenuChildren1 | times: limitMenuChildren1 %}
+                                                {% for menuChildrenItem2 in menuChildrenItem1.items %}
+                                                    {% if forloop.index == startMenuChildren1 %}<ul>{% endif %}
+                                                    <li class="nav-children dropdown">
+                                                        <a class="nav-main_children" href="{{ menuChildrenItem2.link }}" title="{{ menuChildrenItem2.name }}"{% if menuChildrenItem2.newTab == true %} target="_blank"{% endif %}>{{ menuChildrenItem2.name }}</a>
+                                                        {% if menuChildrenItem2.items.size > 0 %}
+                                                            <div class="nav-main_content nav-main_content__children dropdown-content">
+                                                                <ul>
+                                                                    {% for menuChildrenItem3 in menuChildrenItem2.items %}
+                                                                        <li class="nav-children dropdown">
+                                                                            <a class="nav-main_children" href="{{ menuChildrenItem3.link }}" title="{{ menuChildrenItem3.name }}"{% if menuChildrenItem3.newTab == true %} target="_blank"{% endif %}>{{ menuChildrenItem3.name }}</a>
+                                                                        </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </div>
+                                                        {% endif %}
+                                                    </li>
+                                                    {% if forloop.index == endMenuChildren1 or forloop.last %}
+                                                        </ul>
+                                                        {% assign startMenuChildren1 = endMenuChildren1 | plus: 1 %}
+                                                        {% assign endMenuChildren1 = endMenuChildren1 | plus: limitMenuChildren1 %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </li>
+                                    {% if forloop.index == endMenuChildren or forloop.last %}
+                                        </ul>
+                                        {% assign startMenuChildren = endMenuChildren | plus: 1 %}
+                                        {% assign endMenuChildren = endMenuChildren | plus: limitMenuChildren %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </nav>
+        </div>
+    </div>
+
+    <div class="header-v2-mobile-catalog show-lg content" aria-label="Categorias">
+        <div class="container header-v2-mobile-catalog__scroll">
+            <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkSplit }}" title="{{ sdaMLabelSplit }}">
+                <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
+                    {% if sdaMIconSplitUrl != '' %}
+                        <img class="header-v2-mcat-img" src="{{ sdaMIconSplitUrl }}" width="40" height="40" alt="" loading="lazy" decoding="async">
+                    {% elsif sdaMIconSplitSvg != '' %}
+                        <span class="header-v2-mcat-img header-v2-mcat-img--svg">{{ sdaMIconSplitSvg }}</span>
+                    {% else %}
+                        <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-split.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% endif %}
+                </span>
+                <span class="header-v2-mobile-catalog__label">{{ sdaMLabelSplit }}</span>
+            </a>
+            <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkPiso }}" title="{{ sdaMLabelPiso }}">
+                <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
+                    {% if sdaMIconPisoUrl != '' %}
+                        <img class="header-v2-mcat-img" src="{{ sdaMIconPisoUrl }}" width="40" height="40" alt="" loading="lazy" decoding="async">
+                    {% elsif sdaMIconPisoSvg != '' %}
+                        <span class="header-v2-mcat-img header-v2-mcat-img--svg">{{ sdaMIconPisoSvg }}</span>
+                    {% else %}
+                        <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-piso.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% endif %}
+                </span>
+                <span class="header-v2-mobile-catalog__label">{{ sdaMLabelPiso }}</span>
+            </a>
+            <a class="header-v2-mobile-catalog__item" href="{{ sdaMLinkJanela }}" title="{{ sdaMLabelJanela }}">
+                <span class="header-v2-mobile-catalog__icon" aria-hidden="true">
+                    {% if sdaMIconJanelaUrl != '' %}
+                        <img class="header-v2-mcat-img" src="{{ sdaMIconJanelaUrl }}" width="40" height="40" alt="" loading="lazy" decoding="async">
+                    {% elsif sdaMIconJanelaSvg != '' %}
+                        <span class="header-v2-mcat-img header-v2-mcat-img--svg">{{ sdaMIconJanelaSvg }}</span>
+                    {% else %}
+                        <img class="header-v2-mcat-img" src="{{ 'assets/icon-mcat-janela.svg' | themeAssetUrl }}" width="40" height="40" alt="">
+                    {% endif %}
+                </span>
+                <span class="header-v2-mobile-catalog__label">{{ sdaMLabelJanela }}</span>
+            </a>
+            <a class="header-v2-mobile-catalog__item header-v2-mobile-catalog__item--ambiente" href="/pagina/calculadora-btus" title="Compre por ambiente">
+                <span class="header-v2-mobile-catalog__icon header-v2-mobile-catalog__icon--orange" aria-hidden="true">{{ iconHome }}</span>
+                <span class="header-v2-mobile-catalog__label header-v2-mobile-catalog__label--ambiente">
+                    <span class="header-v2-mobile-catalog__label-line">Compre por</span>
+                    <span class="header-v2-mobile-catalog__label-line header-v2-mobile-catalog__label-accent">ambiente</span>
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav show-lg">
+        {% if themeConfig.account.type != 'disabled' %}
+            <div class="sidebar-nav-header">
+                <div class="sidebar-nav-account">
+                    <span class="sidebar-nav-icon account_link">{{ themeConfig.icons.user }}</span>
+                    <template x-if="data.isLogged">
+                        <div class="sidebar-nav-text">
+                            <a class="sidebar-nav-link sidebar-nav-link_user account_link" href="javascript:void(0)" x-bind:title="`${data.user ? data.user : 'visitante'}`" x-text="`Olá ${data.user ? data.user : 'visitante'}`" onclick="openSideNavOverlay('.sidenav-overlay_account', true)"></a>
+                            <a class="sidebar-nav-link sidebar-nav-link_logout" href="javascript:void(0)" title="Logout" @click="headerLogout()">Logout</a>
+                        </div>
+                    </template>
+                    <template x-if="!data.isLogged">
+                        <div class="sidebar-nav-text">
+                            <a class="sidebar-nav-link account_link" href="javascript:void(0)" title="Login ou Cadastre-se" onclick="openSideNavOverlay('.sidenav-overlay_account', true)">Login ou Cadastre-se</a>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        {% endif %}
+        <div class="sidebar-nav-content content">
+            <div>
+                <ul class="nav-mobile metismenu" id="nav-mobile">
+                    <li class="nav-mobile_item">
+                        <div class="nav-mobile_link" aria-expanded="false">
+                            <p><a href="/pagina/calculadora-btus" title="Compre por ambiente"><div class="nav-mobile-box_link"><div class="nav-mobile_text">Compre por ambiente</div></div></a></p>
+                        </div>
+                    </li>
+                    <li class="nav-mobile_item">
+                        <div class="nav-mobile_link" aria-expanded="false">
+                            <p><a href="javascript:void(0)" title="Favoritos" onclick="openFavoritesPanel()"><div class="nav-mobile-box_link"><div class="nav-mobile_text">Favoritos</div></div></a></p>
+                        </div>
+                    </li>
+                    <li class="nav-mobile_item">
+                        <div class="nav-mobile_link" aria-expanded="false">
+                            <p><a href="/pedidos" title="Meus pedidos"><div class="nav-mobile-box_link"><div class="nav-mobile_text">Meus pedidos</div></div></a></p>
+                        </div>
+                    </li>
+                    {% for menuItem in menu.items %}
+                        {% assign menuLabel = menuItem.name %}
+                        {% assign menuLabelLower = menuLabel | downcase %}
+                        {% if menuLabelLower contains 'peças' or menuLabelLower contains 'pecas' or menuLabelLower contains 'acessório' or menuLabelLower contains 'acessorio' %}
+                            {% assign menuLabel = 'Modelo' %}
+                        {% endif %}
+                        {% assign sdaNavCatIconUrl = '' %}
+                        {% if menuLabelLower contains 'split' and sdaMIconSplitUrl != '' %}
+                            {% assign sdaNavCatIconUrl = sdaMIconSplitUrl %}
+                        {% elsif menuLabelLower contains 'piso' and sdaMIconPisoUrl != '' %}
+                            {% assign sdaNavCatIconUrl = sdaMIconPisoUrl %}
+                        {% elsif menuLabelLower contains 'janela' and sdaMIconJanelaUrl != '' %}
+                            {% assign sdaNavCatIconUrl = sdaMIconJanelaUrl %}
+                        {% endif %}
+                        <li class="nav-mobile_item">
+                            {% assign classArrowItem = '' %}
+                            {% if menuItem.items.size > 0 %}
+                                {% assign classArrowItem = ' has-arrow' %}
+                            {% endif %}
+                            <div class="nav-mobile_link{{ classArrowItem }}" aria-expanded="false">
+                                <p>
+                                    <a href="{{ menuItem.link }}" title="{{ menuLabel }}"{% if menuItem.newTab == true %} target="_blank"{% endif %}>
+                                        <div class="nav-mobile-box_link">
+                                            {% if sdaNavCatIconUrl != '' %}
+                                                <div class="nav-mobile_icon nav-mobile-icon_img nav-mobile-icon_sda" aria-hidden="true">
+                                                    <img class="header-v2-nav-cat-img" src="{{ sdaNavCatIconUrl }}" width="36" height="36" alt="" loading="eager" decoding="async" onerror="this.closest('.nav-mobile-icon_sda').remove()">
+                                                </div>
+                                            {% elsif menuItem.iconSvg %}
+                                                <div class="nav-mobile_icon nav-mobile-icon_svg">{{ menuItem.iconSvg }}</div>
+                                            {% elsif menuItem.icon and menuItem.icon.file and menuItem.icon.file.url %}
+                                                <div class="nav-mobile_icon nav-mobile-icon_img">
+                                                    <picture><img class="lazy" data-src="{{ menuItem.icon.file.url }}" alt="{{ menuLabel }}"></picture>
+                                                </div>
+                                            {% endif %}
+                                            <div class="nav-mobile_text">{{ menuLabel }}</div>
+                                        </div>
+                                    </a>
+                                </p>
+                            </div>
+                            {% if menuItem.items.size > 0 %}
+                                <ul>
+                                    {% for menuChildrenItem1 in menuItem.items %}
+                                        <li>
+                                            {% assign classArrowChildren1 = '' %}
+                                            {% if menuChildrenItem1.items.size > 0 %}
+                                                {% assign classArrowChildren1 = ' has-arrow' %}
+                                            {% endif %}
+                                            <div class="nav-mobile_link{{ classArrowChildren1 }}" aria-expanded="false">
+                                                <p>
+                                                    <a href="{{ menuChildrenItem1.link }}" title="{{ menuChildrenItem1.name }}"{% if menuChildrenItem1.newTab == true %} target="_blank"{% endif %}>
+                                                        <div class="nav-mobile-box_link">
+                                                            <div class="nav-mobile_text">{{ menuChildrenItem1.name }}</div>
+                                                        </div>
+                                                    </a>
+                                                </p>
+                                            </div>
+                                            {% if menuChildrenItem1.items.size > 0 %}
+                                                <ul>
+                                                    {% for menuChildrenItem2 in menuChildrenItem1.items %}
+                                                        <li>
+                                                            <div class="nav-mobile_link" aria-expanded="false">
+                                                                <p>
+                                                                    <a href="{{ menuChildrenItem2.link }}" title="{{ menuChildrenItem2.name }}"{% if menuChildrenItem2.newTab == true %} target="_blank"{% endif %}>
+                                                                        <div class="nav-mobile-box_link">
+                                                                            <div class="nav-mobile_text">{{ menuChildrenItem2.name }}</div>
+                                                                        </div>
+                                                                    </a>
+                                                                </p>
+                                                            </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        function alterForm() {
+            var input = document.getElementById("term").value;
+            if (input.length > 0) {
+                document.getElementById("myForm").action = '/busca/' + encodeURI(input).replace(/\//g, '%2f');
+            } else {
+                document.getElementById("myForm").addEventListener('submit', function(e){
+                    e.preventDefault();
+                }, false);
+                window.location.href = window.location.protocol + '//' + window.location.host + '/busca/';
+            }
+        }
+
+        function alterForm2() {
+            var inputEl = document.getElementById('term2');
+            var formEl = document.getElementById('myForm2');
+            if (!inputEl || !formEl) return;
+            var input = inputEl.value;
+            if (input.length > 0) {
+                formEl.action = '/busca/' + encodeURI(input).replace(/\//g, '%2f');
+                formEl.submit();
+            } else {
+                window.location.href = window.location.protocol + '//' + window.location.host + '/busca/';
+            }
+        }
+
+        function alterForm2Desktop() {
+            var inputEl = document.getElementById('term2Desktop');
+            var formEl = document.getElementById('myForm2Desktop');
+            if (!inputEl || !formEl) return;
+            var input = inputEl.value;
+            if (input.length > 0) {
+                formEl.action = '/busca/' + encodeURI(input).replace(/\//g, '%2f');
+                formEl.submit();
+            } else {
+                window.location.href = window.location.protocol + '//' + window.location.host + '/busca/';
+            }
+        }
+
+        function headerV2FocusMobileSearch() {
+            var input = document.getElementById('term2');
+            if (!input) {
+                openSearch();
+                return;
+            }
+            input.focus();
+            try {
+                input.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (e) {}
+        }
+    </script>
+</header>

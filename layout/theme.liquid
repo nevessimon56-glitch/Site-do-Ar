@@ -78,8 +78,219 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-plugins.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-all.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/theme-custom.css' | themeAssetUrl }}">
+    {%- comment -%}
+      Custom CSS (ordem importa):
+      1. mega-menu.css — cards, nav, hover, mega menu
+      2. header-v2.css — layout header 3 faixas
+      3. favorites.css — coração, página favoritos, contador
+      4. product-compare.css — comparador
+      5. product-hover-image.css — hover 2ª foto nos cards
+    {%- endcomment -%}
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/mega-menu.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/header-v2.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/favorites.css' | themeAssetUrl }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-compare.css' | themeAssetUrl }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ 'assets/product-hover-image.css' | themeAssetUrl }}">
+    {%- comment -%}
+      HEADER-ORANGE-INLINE-v5 — override definitivo (vence theme-all + theme-custom).
+      Publicar layout/theme.liquid no WDNA; não depende de colar CSS em arquivos separados.
+    {%- endcomment -%}
+    <style id="header-orange-inline-v5">
+/* Badge carrinho laranja (vence theme-custom #61bb47) */
+body .header:not(.header-checkout) .header-link_cart .cart_quantity,
+body .header:not(.header-checkout) .cart_link .cart_quantity,
+body .header:not(.header-checkout) .cart_quantity,
+body .header:not(.header-checkout) [data-cart-quantity].cart_quantity,
+body .header:not(.header-checkout) .header-link_cart [data-cart-quantity],
+body .header:not(.header-checkout) .header-v2-action--cart .cart_quantity,
+body .header:not(.header-checkout) .header-v2-action--cart [data-cart-quantity] {
+  background-color: #f97316 !important;
+  background: #f97316 !important;
+  border-color: #ea580c !important;
+  color: #ffffff !important;
+}
+body .header:not(.header-checkout) .header-link_cart svg,
+body .header:not(.header-checkout) .header-link_cart .icon_cart,
+body .header:not(.header-checkout) .cart_link svg,
+body .header:not(.header-checkout) .header-v2-action--cart svg {
+  fill: #4b96d4 !important;
+}
+body .header:not(.header-checkout) .header a.header-link_cart:hover,
+body .header:not(.header-checkout) .header a.header-link_cart:focus,
+body .header:not(.header-checkout) .header a.cart_link:hover,
+body .header:not(.header-checkout) .header a.cart_link:focus,
+body .header:not(.header-checkout) .header-link_cart:hover,
+body .header:not(.header-checkout) .header-link_cart:focus,
+body .header:not(.header-checkout) .cart_link:hover,
+body .header:not(.header-checkout) .cart_link:focus,
+body .header:not(.header-checkout) .header-v2-action--cart:hover,
+body .header:not(.header-checkout) .header-v2-action--cart:focus {
+  color: #f97316 !important;
+  opacity: 1 !important;
+}
+body .header:not(.header-checkout) .header-link_cart:hover svg,
+body .header:not(.header-checkout) .header-link_cart:focus svg,
+body .header:not(.header-checkout) .header-link_cart:hover .icon_cart,
+body .header:not(.header-checkout) .header-link_cart:focus .icon_cart,
+body .header:not(.header-checkout) .cart_link:hover svg,
+body .header:not(.header-checkout) .cart_link:focus svg,
+body .header:not(.header-checkout) .header-v2-action--cart:hover svg,
+body .header:not(.header-checkout) .header-v2-action--cart:focus svg {
+  fill: #f97316 !important;
+}
+/* Header v2 — ícones outline e caixas de ação (vence theme-all) */
+body .header.header-v2 .header-v2-action__icon svg.sda-ico-stroke,
+body .header.header-v2 .header-v2-action__icon .sda-ico-stroke path,
+body .header.header-v2 .header-v2-action__icon .sda-ico-stroke circle {
+  fill: none !important;
+  stroke: #4b96d4 !important;
+}
+body .header.header-v2 a.header-v2-action,
+body .header.header-v2 a.header-v2-action:hover,
+body .header.header-v2 a.header-v2-action:focus {
+  color: #4b96d4 !important;
+}
+body .header.header-v2 .header-v2-action__label {
+  color: #4b96d4 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+body .header.header-v2 > .nav-content.content {
+  background: linear-gradient(180deg, #f6f9fc 0%, #eef3f8 100%) !important;
+}
+body .header.header-v2 .nav-content .nav-main_text {
+  color: #1a2d4a !important;
+}
+/* Faixa utilitária — Akhand + tamanho mock (vence theme-all) */
+body .header.header-v2 .header-utility,
+body .header.header-v2 .header-utility a,
+body .header.header-v2 .header-utility button,
+body .header.header-v2 .header-utility .header-utility__label {
+  font-family: Akhand, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+body .header.header-v2 .header-utility {
+  background: #0c1f3d !important;
+}
+body .header.header-v2 .header-utility .header-utility__inner {
+  min-height: 0 !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+@media (max-width: 991px) {
+  body .header.header-v2 .header-utility .header-utility__inner {
+    min-height: 32px !important;
+    max-height: 32px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  body .header.header-v2 .header-content .navbar,
+  body .header.header-v2 .header-content .navbar.header-v2-navbar {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+  body .header.header-v2 .nav-content .nav-main_link {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+  body .header.header-v2 .nav-content .nav-main_text {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+  }
+}
+body .header.header-v2 .header-v2-nav-row.nav-content,
+body .header.header-v2 > .nav-content.content.header-v2-nav-row {
+  min-height: 0 !important;
+}
+body .header.header-v2 .header-v2-nav-inner {
+  min-height: 0 !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+@media (max-width: 991px) {
+  body .header.header-v2 .header-content .navbar,
+  body .header.header-v2 .header-content .navbar.header-v2-navbar {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    background: transparent !important;
+  }
+  body .header.header-v2 .nav-content .nav-main_link {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    line-height: 1.2 !important;
+  }
+  body .header.header-v2 .nav-content .nav-main_text {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-transform: none !important;
+  }
+}
+body .header:not(.header-checkout) .header-link_cart:hover .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:focus .cart_quantity,
+body .header:not(.header-checkout) .cart_link:hover .cart_quantity,
+body .header:not(.header-checkout) .cart_link:focus .cart_quantity,
+body .header:not(.header-checkout) .header-link_cart:hover [data-cart-quantity],
+body .header:not(.header-checkout) .header-link_cart:focus [data-cart-quantity],
+body .header:not(.header-checkout) .header-v2-action--cart:hover [data-cart-quantity],
+body .header:not(.header-checkout) .header-v2-action--cart:focus [data-cart-quantity] {
+  background-color: #ea580c !important;
+  background: #ea580c !important;
+  border-color: #c2410c !important;
+  color: #ffffff !important;
+}
+/* Conta + telefone — normal escuro, hover laranja (vence .header a:hover verde) */
+body .header:not(.header-checkout) .header-box_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link,
+body .header:not(.header-checkout) .header-link_account .header-link_text .account_link,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link {
+  color: #101010 !important;
+}
+body .header:not(.header-checkout) .header-link-account_info .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_icon svg {
+  fill: #4b96d4 !important;
+}
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-box_account .header-link_text a.account_link:focus,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:hover,
+body .header:not(.header-checkout) .header-link_account .header-link_text a.account_link:focus,
+body .header:not(.header-checkout) .header a.account_link:hover,
+body .header:not(.header-checkout) .header a.account_link:focus {
+  color: #101010 !important;
+  opacity: 1 !important;
+}
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:hover,
+body .header:not(.header-checkout) .header-box-account-info .header-link_text a.account_link:last-child:focus,
+body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:hover,
+body .header:not(.header-checkout) .header-link-account_info .header-link_text a.account_link:last-child:focus,
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_text a.account_link:last-child,
+body .header:not(.header-checkout) .header-box-account-info:hover .header-link_text a.account_link:last-child {
+  color: #f97316 !important;
+}
+body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:hover,
+body .header:not(.header-checkout) .header-box-account_tel .header-link_text a.account_link:first-child:focus,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:hover,
+body .header:not(.header-checkout) .header-link-account_tel .header-link_text a.account_link:first-child:focus,
+body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_text a.account_link:first-child,
+body .header:not(.header-checkout) .header-box-account_tel:hover .header-link_text a.account_link:first-child {
+  color: #f97316 !important;
+}
+body .header:not(.header-checkout) .header-link-account_info:hover .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_info:focus-within .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel:hover .header-link_icon svg,
+body .header:not(.header-checkout) .header-link-account_tel:focus-within .header-link_icon svg {
+  fill: #f97316 !important;
+}
+    </style>
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-regular.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-bold.woff2" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" as="font" href="https://salescdn.net/static/fonts/akhand2/akhand-semibold.woff2" type="font/woff2" crossorigin="anonymous">
@@ -105,7 +316,8 @@
     {%- endfor -%}
     {% block head %}{% endblock %}
 </head>
-<body x-data="setupStore()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
+<script>window.__SITE_DOAR_CUSTOMER__ = {{ customer | json }};</script>
+<body x-data="setupStore()" x-init="init()" x-on:change-customer-login.window="changeCustomerLogin($event.detail.customer)" x-on:check-login-logged.window="checkLoginLogged()">
 {%- for script in scripts.content -%}
     {{ script.code }}
 {%- endfor -%}
@@ -113,7 +325,9 @@
 <span class="loading-main loading"></span>
 {% render 'sections/check-cookie'%}
 {% render 'sections/sidenav-overlay-cart', cart: cart, store: store, themeConfig: themeConfig %}
+{% render 'sections/sidenav-overlay-favorites' %}
 {% render 'sections/mega-menu-ar' %}
+{% render 'sections/product-compare-panel' %}
 {% block content %}{% endblock %}
 {% render 'sections/theme-schema', store: store, theme: theme, seoKeywords: seoKeywords, seoDescription: seoDescription, social: social %}
 <script>
@@ -138,24 +352,30 @@
             if (key.toLowerCase() === 'linkseller') linkSellerInit = value;
             if (key.toLowerCase() === 'ref') refInit = value;
         });
-        if (linkSellerInit) {
-            localStorage.setItem('linkSeller', linkSellerInit);
-            localStorage.removeItem('seller');
-            localStorage.removeItem('ref');
-        } else if (sellerInit) {
-            localStorage.setItem('seller', sellerInit);
-            localStorage.removeItem('linkSeller');
-            localStorage.removeItem('ref');
-        } else if (refInit) {
-            localStorage.setItem('ref', refInit);
-            localStorage.removeItem('seller');
-            localStorage.removeItem('linkSeller');
-        }
+        try {
+            if (linkSellerInit) {
+                localStorage.setItem('linkSeller', linkSellerInit);
+                localStorage.removeItem('seller');
+                localStorage.removeItem('ref');
+            } else if (sellerInit) {
+                localStorage.setItem('seller', sellerInit);
+                localStorage.removeItem('linkSeller');
+                localStorage.removeItem('ref');
+            } else if (refInit) {
+                localStorage.setItem('ref', refInit);
+                localStorage.removeItem('seller');
+                localStorage.removeItem('linkSeller');
+            }
+        } catch (e) {}
     }
     window.currencyStore = {% if store.symbolPrice %}"{{ store.symbolPrice }}"{% else %}null{% endif %};
 </script>
 <script src="{{ scripts.main.src }}"></script>
+{%- comment -%} mega-menu.js define __SDA_HOVER_V2__; product-hover-image.js desliga se já ativo {%- endcomment -%}
+<script src="{{ 'assets/header-v2-mobile.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/mega-menu.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/favorites.js' | themeAssetUrl }}" defer></script>
+<script src="{{ 'assets/product-compare.js' | themeAssetUrl }}" defer></script>
 <script src="{{ 'assets/product-hover-image.js' | themeAssetUrl }}" defer></script>
 <script>
   window.addEventListener('load', function () {
@@ -168,6 +388,15 @@
     function setupStore() {
         return {
             data: { isLogged: null, user: '' },
+            init: function initStore() {
+                var c = window.__SITE_DOAR_CUSTOMER__;
+                if (c) {
+                    this.changeCustomerLogin(c);
+                } else {
+                    this.data.isLogged = false;
+                    this.data.user = '';
+                }
+            },
             headerLogout: function headerLogout() {
                 StoreSDK.request.post('/ajax/logout').then((res) => {
                     window.location.href = window.location.href
@@ -175,8 +404,20 @@
             },
             changeCustomerLogin: function changeCustomerLogin(customer) {
                 this.data.isLogged = !!customer;
-                if(customer){
-                    this.data.user = customer.name || '';
+                if (customer) {
+                    this.data.user = customer.name || customer.fantasyName || customer.email || '';
+                } else {
+                    this.data.user = '';
+                }
+                window.__SITE_DOAR_CUSTOMER__ = customer || null;
+                if (typeof window.sdaUpdateUtilityBarLabels === 'function') {
+                    window.sdaUpdateUtilityBarLabels(customer);
+                }
+                if (typeof window.sdaSyncMobileCatalogDock === 'function') {
+                    window.sdaSyncMobileCatalogDock();
+                }
+                if (window.SiteDoarFavorites && typeof window.SiteDoarFavorites.mergeGuestOnLogin === 'function') {
+                    window.SiteDoarFavorites.mergeGuestOnLogin();
                 }
                 if (this.data.isLogged) {
                     var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
@@ -197,6 +438,12 @@
                     openSideNavOverlay('.sidenav-overlay_account', true);
                 }
             },
+            utilityGreeting: function utilityGreeting() {
+                if (!this.data.user) return 'Olá';
+                var parts = String(this.data.user).trim().split(' ');
+                var first = parts[0] || '';
+                return first ? ('Olá, ' + first) : 'Olá';
+            },
             checkLoginLogged: function checkLoginLogged() {
                 if (this.data.isLogged) {
                     var elsShowcaseBtnLoginBuy = document.querySelectorAll('.login-btn_logged');
@@ -212,7 +459,8 @@
             },
         }
     }
-    const customer = {{ customer | json }};
+    window.__SITE_DOAR_CUSTOMER__ = {{ customer | json }} || null;
+    const customer = window.__SITE_DOAR_CUSTOMER__;
     if (typeof mb_track !== 'undefined') {
         mb_track('setRecoveryUrl', 'https://{{ store.url }}/checkout');
     }
@@ -220,14 +468,33 @@
         if (typeof mb_track !== 'undefined') {
             window.mb_track('accountSync', {
                 user: {
-                    user_id: customer?.customerId,
-                    email: customer?.email,
-                    phone: customer?.cellphone,
-                    name: customer?.name || customer?.fantasyName,
+                    user_id: customer.customerId,
+                    email: customer.email,
+                    phone: customer.cellphone,
+                    name: customer.name || customer.fantasyName,
                 }
             });
         }
     }
+</script>
+<script>
+(function () {
+  function sdaHideStuckLoader() {
+    var el = document.querySelector('.loading-main.loading');
+    if (el) el.classList.remove('loading');
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(sdaHideStuckLoader, 50);
+    });
+  } else {
+    setTimeout(sdaHideStuckLoader, 50);
+  }
+  window.addEventListener('load', function () {
+    setTimeout(sdaHideStuckLoader, 150);
+  });
+  setTimeout(sdaHideStuckLoader, 12000);
+})();
 </script>
 {% block script_footer %}{% endblock %}
 {%- for script in scripts.footer -%}

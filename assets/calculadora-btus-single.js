@@ -1,0 +1,365 @@
+/**
+ * Calculadora BTUs — página única (layout laranja/navy, sem wizard).
+ * Use com #sda-calculadora.sda-calc-single — NÃO carregar calculadora-btus-wizard.js junto.
+ */
+(function () {
+  'use strict';
+
+  if (window.__SDA_BTU_SINGLE__) return;
+
+  var root = null;
+
+  var catalog = [
+    { btu: 9000, label: '9.000', tipo: 'Split Inverter', url: '/split-inverter/9000-btus' },
+    { btu: 12000, label: '12.000', tipo: 'Split Inverter', url: '/split-inverter/12000-Btus' },
+    { btu: 18000, label: '18.000', tipo: 'Split Inverter', url: '/split-inverter/18000-Btus' },
+    { btu: 24000, label: '24.000', tipo: 'Split Inverter', url: '/split-inverter/24000-Btus' },
+    { btu: 30000, label: '30.000', tipo: 'Split Inverter', url: '/split-inverter/30000-Btus' },
+    { btu: 36000, label: '36.000', tipo: 'Piso Teto', url: '/Piso-Teto/36000-Btus' },
+    { btu: 46000, label: '46.000', tipo: 'Piso Teto', url: '/Piso-Teto/46000-Btus' },
+    { btu: 48000, label: '48.000', tipo: 'Piso Teto', url: '/Piso-Teto/48000-Btus' },
+    { btu: 56000, label: '56.000', tipo: 'Piso Teto', url: '/Piso-Teto/56000-btus' },
+  ];
+
+  var factors = {
+    sol: { sem_sol: 1, sol_manha: 1.1, sol_tarde: 1.25 },
+    uso: { quarto: 1, sala: 1.1, cozinha: 1.2, comercio: 1.5 },
+    andar: { terreo: 1.05, intermediario: 1, cobertura: 1.15 },
+    janelas: { poucas: 1, moderadas: 1.08, muitas: 1.18 },
+    isol: { bom: 0.95, regular: 1, ruim: 1.12 },
+    layout: { fechado: 1, planta_aberta: 1.15, mezanino: 1.2 },
+    clima: { ameno: 1, quente: 1.08, muito_quente: 1.15, frio_inverno: 1 },
+    horas: { noite: 1, tarde_noite: 1.05, dia_todo: 1.1, comercial: 1.15 },
+    umid: { normal: 1, alta: 1.05, muito_alta: 1.1 },
+  };
+
+  var labels = {
+    sol: { sem_sol: 'Sem sol direto', sol_manha: 'Sol pela manh\u00e3', sol_tarde: 'Sol \u00e0 tarde' },
+    uso: { quarto: 'Quarto', sala: 'Sala/escrit\u00f3rio', cozinha: 'Cozinha', comercio: 'Com\u00e9rcio' },
+    andar: { terreo: 'T\u00e9rreo', intermediario: 'Andar intermedi\u00e1rio', cobertura: 'Cobertura' },
+    janelas: { poucas: 'Poucas janelas', moderadas: 'Janelas moderadas', muitas: 'Muitas janelas' },
+    isol: { bom: 'Isolamento bom', regular: 'Isolamento regular', ruim: 'Isolamento ruim' },
+    layout: { fechado: 'Ambiente fechado', planta_aberta: 'Planta aberta', mezanino: 'Mezanino' },
+    clima: { ameno: 'Clima ameno', quente: 'Clima quente', muito_quente: 'Muito quente', frio_inverno: 'Frio no inverno' },
+    horas: { noite: 'Uso noturno', tarde_noite: 'Tarde/noite', dia_todo: 'Dia todo', comercial: 'Uso comercial' },
+    umid: { normal: 'Umidade normal', alta: 'Umidade alta', muito_alta: 'Umidade muito alta' },
+  };
+
+  function get(id) {
+    return document.getElementById(id);
+  }
+
+  function fmt(n) {
+    return Math.round(n).toLocaleString('pt-BR');
+  }
+
+  function pct(n) {
+    var d = Math.round((n - 1) * 100);
+    return d === 0 ? '0%' : (d > 0 ? '+' : '') + d + '%';
+  }
+
+  function val(id) {
+    var el = get(id);
+    return el ? el.value : '';
+  }
+
+  function parseNum(id, fallback) {
+    var raw = String(val(id))
+      .trim()
+      .replace(/\s/g, '')
+      .replace(',', '.');
+    var n = parseFloat(raw);
+    return isFinite(n) ? n : fallback;
+  }
+
+  function entry(i) {
+    return catalog[Math.max(0, Math.min(catalog.length - 1, i))];
+  }
+
+  function markField(id, bad) {
+    var el = get(id);
+    if (el && el.closest) {
+      var field = el.closest('.field');
+      if (field) field.classList.toggle('invalid', bad);
+    }
+  }
+
+  function showError(msg) {
+    var el = get('sda-error');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    el.style.display = 'block';
+  }
+
+  function hideError() {
+    var el = get('sda-error');
+    if (el) {
+      el.classList.remove('show');
+      el.style.display = 'none';
+    }
+  }
+
+  function validate() {
+    var c = parseNum('sda-comp', NaN);
+    var l = parseNum('sda-larg', NaN);
+    markField('sda-comp', !(c > 0));
+    markField('sda-larg', !(l > 0));
+    var msg = '';
+    if (!(c > 0) && !(l > 0)) msg = 'Informe o comprimento e a largura do ambiente.';
+    else if (!(c > 0)) msg = 'Informe o comprimento do ambiente.';
+    else if (!(l > 0)) msg = 'Informe a largura do ambiente.';
+    if (msg) {
+      showError(msg);
+      return false;
+    }
+    hideError();
+    return true;
+  }
+
+  function calculate(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    if (!validate()) return false;
+
+    var comp = parseNum('sda-comp', 0);
+    var larg = parseNum('sda-larg', 0);
+    var pe = parseNum('sda-pe', 2.6);
+    var pessoas = Math.max(1, parseInt(val('sda-pessoas') || '1', 10) || 1);
+    var equip = parseInt(val('sda-equip') || '0', 10) || 0;
+    var area = comp * larg;
+    var p = {
+      sol: val('sda-sol'),
+      uso: val('sda-uso'),
+      andar: val('sda-andar'),
+      janelas: val('sda-janelas'),
+      isol: val('sda-isol'),
+      layout: val('sda-layout'),
+      clima: val('sda-clima'),
+      horas: val('sda-horas'),
+      umid: val('sda-umidade'),
+    };
+    var fs = {};
+    var fk;
+    for (fk in factors) {
+      if (Object.prototype.hasOwnProperty.call(factors, fk)) {
+        fs[fk] = factors[fk][p[fk]] || 1;
+      }
+    }
+    fs.pe = pe > 3 ? pe / 2.6 : 1;
+    var combined =
+      fs.sol * fs.uso * fs.pe * fs.andar * fs.janelas * fs.isol * fs.layout * fs.clima * fs.horas * fs.umid;
+    var base = area * 600;
+    var extras = (pessoas > 1 ? (pessoas - 1) * 600 : 0) + equip;
+    var load = Math.ceil((base * combined + extras) / 500) * 500;
+    var idx = -1;
+    var ii;
+    for (ii = 0; ii < catalog.length; ii++) {
+      if (catalog[ii].btu >= load) {
+        idx = ii;
+        break;
+      }
+    }
+    if (idx < 0) idx = catalog.length - 1;
+    var rec = entry(idx);
+    var min = entry(idx - 1);
+    var max = entry(idx + 1);
+
+    var resultNum = get('sda-resultNum');
+    var resultSub = get('sda-resultSub');
+    var recBtu = get('sda-recommendationBtu');
+    var recText = get('sda-recommendationText');
+    if (resultNum) resultNum.innerHTML = fmt(load) + ' <span>BTUs/h</span>';
+    if (resultSub) {
+      resultSub.textContent =
+        'Carga t\u00e9rmica estimada para ' +
+        area.toFixed(1).replace('.', ',') +
+        ' m\u00b2 \u00b7 ' +
+        pessoas +
+        ' pessoa' +
+        (pessoas > 1 ? 's' : '') +
+        '.';
+    }
+    if (recBtu) recBtu.textContent = rec.label + ' BTUs';
+    if (recText) {
+      recText.textContent =
+        load === rec.btu
+          ? 'A capacidade calculada coincide com uma op\u00e7\u00e3o comercial.'
+          : 'A carga calculada fica entre capacidades comerciais; recomendamos a pr\u00f3xima faixa para evitar subdimensionamento.';
+    }
+
+    var infoGrid = get('sda-infoGrid');
+    if (infoGrid) {
+      infoGrid.innerHTML =
+        '<div class="info-item"><div class="info-val">' +
+        area.toFixed(1).replace('.', ',') +
+        ' m\u00b2</div><div class="info-key">\u00c1rea total</div></div><div class="info-item"><div class="info-val">' +
+        fmt(Math.round(base)) +
+        '</div><div class="info-key">Carga base</div></div><div class="info-item"><div class="info-val">' +
+        rec.tipo +
+        '</div><div class="info-key">Linha indicada</div></div>';
+    }
+
+    var keys = [
+      ['sol', 'Insola\u00e7\u00e3o'],
+      ['uso', 'Uso'],
+      ['pe', 'P\u00e9-direito'],
+      ['andar', 'Andar'],
+      ['janelas', 'Janelas'],
+      ['isol', 'Isolamento'],
+      ['layout', 'Layout'],
+      ['clima', 'Clima'],
+      ['horas', 'Horas'],
+      ['umid', 'Umidade'],
+    ];
+    var breakdown = get('sda-breakdown');
+    if (breakdown) {
+      var html = '';
+      var xi;
+      for (xi = 0; xi < keys.length; xi++) {
+        var key = keys[xi][0];
+        if (key === 'pe' && pe <= 3) continue;
+        var label =
+          key === 'pe' ? 'P\u00e9-direito acima de 3 m' : labels[key][p[key]] || p[key];
+        html +=
+          '<div class="breakdown-item"><span>' +
+          keys[xi][1] +
+          ' \u00b7 ' +
+          label +
+          '</span><span>' +
+          pct(fs[key]) +
+          '</span></div>';
+      }
+      html +=
+        '<div class="breakdown-item"><span>Pessoas + equipamentos</span><span>+' +
+        fmt(extras) +
+        ' BTU</span></div>';
+      breakdown.innerHTML = html;
+    }
+
+    function card(tag, e, cls, desc) {
+      return (
+        '<div class="rec-card ' +
+        cls +
+        '"><span class="rec-tag">' +
+        tag +
+        '</span><div class="rec-btu">' +
+        e.label +
+        '</div><div class="rec-label">' +
+        desc +
+        '<br>' +
+        e.tipo +
+        '</div><a class="rec-link" href="' +
+        e.url +
+        '">Ver modelos</a></div>'
+      );
+    }
+    var recCards = get('sda-recCards');
+    if (recCards) {
+      recCards.innerHTML =
+        card('M\u00ednimo', min, '', 'Para ambientes menores') +
+        card('Recomendado', rec, 'recommended', 'Faixa indicada para o c\u00e1lculo') +
+        card('Com folga', max, '', 'Margem extra de pot\u00eancia');
+    }
+
+    var tip =
+      'Evite escolher abaixo da recomenda\u00e7\u00e3o: um aparelho subdimensionado trabalha mais e pode aumentar o consumo.';
+    if (p.layout !== 'fechado') {
+      tip = 'Planta aberta: considere a posi\u00e7\u00e3o do aparelho e a possibilidade de mais de uma unidade.';
+    }
+    if (p.clima === 'frio_inverno' || val('sda-ciclo') === 'quente_frio') {
+      tip = 'Como h\u00e1 necessidade de aquecimento, prefira um modelo com ciclo quente e frio.';
+    }
+    var tipBox = get('sda-tipBox');
+    if (tipBox) tipBox.textContent = tip;
+
+    var wa = get('sda-whatsapp');
+    if (wa) {
+      wa.href =
+        'https://wa.me/5519984176960?text=' +
+        encodeURIComponent(
+          'Ol\u00e1! Calculei ' +
+            rec.label +
+            ' BTUs para um ambiente de ' +
+            area.toFixed(1) +
+            ' m\u00b2 e gostaria de ajuda para escolher o aparelho.'
+        );
+    }
+
+    var resultBox = get('sda-resultBox');
+    if (resultBox) {
+      resultBox.classList.remove('cycle-hot', 'cycle-cold');
+      resultBox.classList.add(val('sda-ciclo') === 'quente_frio' ? 'cycle-hot' : 'cycle-cold');
+      resultBox.classList.add('show');
+      resultBox.style.display = 'block';
+      try {
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e2) {
+        resultBox.scrollIntoView();
+      }
+    }
+    return false;
+  }
+
+  function resetCalc(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    var resultBox = get('sda-resultBox');
+    if (resultBox) {
+      resultBox.classList.remove('show');
+      resultBox.style.display = 'none';
+    }
+    hideError();
+    markField('sda-comp', false);
+    markField('sda-larg', false);
+    try {
+      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e3) {
+      root.scrollIntoView();
+    }
+    return false;
+  }
+
+  function markPageActive() {
+    document.documentElement.classList.add('sda-btu-page', 'sda-btu-active');
+    if (document.body) document.body.classList.add('sda-btu-page', 'sda-btu-active');
+  }
+
+  function bind() {
+    document.addEventListener(
+      'click',
+      function (e) {
+        if (!root) return;
+        var t = e.target;
+        if (!t || !root.contains(t)) return;
+        if (t.closest && t.closest('[data-calc-submit]')) {
+          e.preventDefault();
+          calculate(e);
+        } else if (t.id === 'sda-reset' || (t.closest && t.closest('#sda-reset'))) {
+          e.preventDefault();
+          resetCalc(e);
+        }
+      },
+      false
+    );
+  }
+
+  function init() {
+    root = document.getElementById('sda-calculadora');
+    if (!root || !root.classList.contains('sda-calc-single')) return;
+    window.__SDA_BTU_SINGLE__ = true;
+    markPageActive();
+    bind();
+    if (typeof window.sdaBtuApplyLayoutFix === 'function') {
+      window.sdaBtuApplyLayoutFix();
+    }
+    window.__sdaBtuSingleReady = true;
+  }
+
+  window.sdaBtuCalcular = calculate;
+  window.sdaBtuReset = resetCalc;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

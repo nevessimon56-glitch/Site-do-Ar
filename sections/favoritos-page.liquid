@@ -1,0 +1,18 @@
+{% comment %}
+  Página de favoritos — conteúdo renderizado via assets/favorites.js
+  Crie no admin WDNA: Página customizada slug favoritos → template page.favoritos
+{% endcomment %}
+
+<div class="favoritos-page content">
+  <div class="container">
+    <h1 class="favoritos-page__title">Meus favoritos</h1>
+    <p class="favoritos-page__subtitle">Produtos que você salvou para comparar ou comprar depois.</p>
+
+    <div id="favoritos-page-empty" class="favoritos-page__empty" hidden>
+      <p>Você ainda não favoritou nenhum produto.</p>
+      <a class="btn btn-primary" href="/Todos-os-Produtos">Ver catálogo</a>
+    </div>
+
+    <ul id="favoritos-page-grid" class="favoritos-page__grid" aria-live="polite"></ul>
+  </div>
+</div>

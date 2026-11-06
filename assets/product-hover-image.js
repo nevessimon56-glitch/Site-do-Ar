@@ -135,7 +135,36 @@
     }
   }
 
+  function isMobileViewport() {
+    try {
+      return (
+        window.matchMedia('(max-width: 991px)').matches ||
+        window.matchMedia('(hover: none) and (pointer: coarse)').matches
+      );
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /** Mobile: não sonda dezenas de imagens na abertura (travava a home). Só ao toque no card. */
+  function bindMobileLazyEnhance() {
+    document.addEventListener(
+      'touchstart',
+      function (e) {
+        var card = e.target && e.target.closest ? e.target.closest('.showcase-product.card') : null;
+        if (!card || card.getAttribute(PROCESSED) === '1') return;
+        enhanceCard(card);
+      },
+      { passive: true, capture: true }
+    );
+  }
+
   function init() {
+    if (isMobileViewport()) {
+      bindMobileLazyEnhance();
+      return;
+    }
+
     scan(document);
 
     if (typeof MutationObserver !== 'undefined') {
