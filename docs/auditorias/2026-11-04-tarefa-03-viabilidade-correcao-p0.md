@@ -428,3 +428,70 @@ Como a regra desta etapa determina interromper diante de um bloqueio, não foram
 - compra ou pagamento real: **não realizados**.
 
 O bloqueio de estoque deve ser resolvido em uma etapa posterior, com autorização para limpar o carrinho de teste ou iniciar uma sessão limpa. Até lá, não é correto declarar a validação das formas de pagamento aprovada.
+
+## Continuidade — Teste 1 confirmado e Teste 2: parcelamento Cielo
+
+### Teste 1 — preço original e preço Pix
+
+**Status: aprovado, conforme validação manual confirmada pelo responsável da loja.**
+
+Na página do produto Hitachi SPC48B3IV foram confirmados:
+
+- preço original: **R$ 12.621,05**;
+- preço Pix: **R$ 11.990,00**;
+- ambos apresentados corretamente na PDP.
+
+A causa da divergência entre card e PDP foi a configuração do canal WDNA, com o Pix definido como destaque primário em **Valores em destaque**. Nenhuma alteração Liquid foi necessária.
+
+### Teste 2 — condição de parcelamento Cielo
+
+**Status: aprovado para apresentação na PDP; não confirmado na seleção da etapa de pagamento.**
+
+Na PDP do Hitachi SPC48B3IV, a condição exibida foi:
+
+```text
+Preço original: R$ 12.621,05
+Parcelamento:   6x de R$ 2.103,51 no cartão
+```
+
+A mensagem utiliza explicitamente “no cartão” e permaneceu visível depois da configuração do Pix como destaque primário. Não houve alteração em `product.secondaryPrice`, no cálculo de parcelas ou em arquivos do tema.
+
+Foi feita uma conferência aritmética meramente informativa do valor exibido:
+
+```text
+6 × R$ 2.103,51 = R$ 12.621,06
+```
+
+A diferença de R$ 0,01 em relação ao preço original decorre do arredondamento da parcela exibida e não foi tratada como erro financeiro, pois o valor efetivamente cobrado não foi submetido nem alterado nesta investigação.
+
+Como amostra adicional, o produto Elgin 48.000 BTUs apresentou:
+
+```text
+Preço original: R$ 10.848,69
+Parcelamento:   6x de R$ 1.808,12 no cartão
+```
+
+Nesse caso, a soma visual das parcelas arredondadas é R$ 10.848,72, diferença de R$ 0,03 em relação ao preço original. Assim como no Hitachi, isso deve ser interpretado como arredondamento da apresentação até que a Cielo/plataforma exponha o plano detalhado de cobrança.
+
+### Verificação no checkout
+
+O checkout foi aberto sem preencher dados pessoais ou realizar pedido. A etapa de entrega ficou acessível e mostrou:
+
+- CEP: `13010-000`;
+- frete grátis para São Paulo;
+- previsão de entrega entre `09/11` e `18/11`;
+- custo do frete: `R$ 0,00`.
+
+Entretanto, a etapa de pagamento não foi alcançada porque o checkout solicita dados do destinatário, endereço e documento. Não foram preenchidos dados pessoais, não foi tentado contornar essa exigência e nenhuma opção Cielo foi selecionada.
+
+### Resultado delimitado do Teste 2
+
+- condição de parcelamento visível na PDP: **confirmada**;
+- texto “no cartão” na PDP: **confirmado**;
+- consistência da apresentação após o ajuste do Pix: **confirmada**;
+- seleção de Cielo no checkout: **não testada**;
+- alternância entre Cielo e Pix: **não testada**;
+- total efetivo após selecionar Cielo: **não testado**;
+- compra ou pagamento real: **não realizados**.
+
+O Teste 3 — desconto Pix no checkout — permanece pendente e não foi iniciado nesta etapa.
